@@ -1,0 +1,17 @@
+@CHARSET "EUC-KR";
+
+* {font-size: 14px;}
+h1 {15px 0 30px; font-size: 22px;}
+.bbs_list {width: 600px; margin: 0 auto;}
+.bbs_list table {width: 100%; text-align: center; border-collapse: collapse;}
+.bbs_list th {border-bottom: 2px solid #000;}
+.bbs_list th, .bbs_list td {padding: 8px 0; box-sizing: border-box;}
+.bbs_list td {border-bottom: 1px solid #aaa;}
+.bbs_list td:nth-child(2) {text-align: left;}
+.bbs_list textarea {width: 100%; height: 200px; box-sizing: border-box; border: none;}
+.main_footer {padding-top: 100px;}
+.comm_btns {width: 215px; margin: 0 auto;}
+.comm_btns li {list-style: none; float: left;}
+.comm_btns li:first-child {margin-right: 15px;}
+.comm_btns a {display: block; width: 100px; height: 30px; line-height: 30px; text-align: center; box-sizing: border-box; border: 1px solid #000; color: #000; text-decoration: none;}
+.comm_btns input {width: 100px; height: 30px; line-height: 30px; text-align: center; box-sizing: border-box; border: 1px solid #000; color: #000; background: none;}

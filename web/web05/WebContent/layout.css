@@ -1,0 +1,16 @@
+@CHARSET "EUC-KR";
+
+h1 {15px 0 30px; font-size: 22px;}
+.comm_btn {
+	display: block;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	box-sizing: border-box;
+	border: 1px solid darkolivegreen;
+	background: darkseagreen;
+	color: #fff;
+}

@@ -1,4 +1,11 @@
-*.jar
-db/
+*.metadata
+*.settings
+*.classpath
+*.project
 java/*.txt
 web/*.txt
+web/Servers/
+web/*/build/
+web/*/bin/
+*.jar
+db/
