@@ -1,1 +1,4 @@
-
+*.jar
+db/
+java/*.txt
+web/*.txt
