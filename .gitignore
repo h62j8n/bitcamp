@@ -2,10 +2,12 @@
 *.settings
 *.classpath
 *.project
-java/*.txt
-web/*.txt
+*.class
+*.jar
+java/*/bin
+web/*/bin/
 web/Servers/
 web/*/build/
-web/*/bin/
-*.jar
+java/*.txt
+web/*.txt
 db/
