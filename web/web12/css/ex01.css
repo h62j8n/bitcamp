@@ -1,0 +1,123 @@
+html, body {
+	height: 100%;
+}
+#ex01 {
+	height: inherit;
+	display: table;
+	margin: 0 auto;
+}
+#ex01 > div {
+	position: relative;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#ex01 h1 {
+	position: absolute;
+	top: 50%;
+	margin-top: -240px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	font-weight: bold;
+	font-size: 20px;
+	color: #444;
+}
+#ex01 form {
+	width: 300px;
+	margin: 0 auto;
+	padding: 70px 30px 25px;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	border-radius: 50px;
+	font-size: 14px;
+	color: #777;
+}
+#ex01 .box {
+	margin-bottom: 20px;
+}
+#ex01 .ipt label {
+	display: block;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+#ex01 .ipt input {
+	width: 100%;
+	height: 35px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+}
+#ex01 .chk {
+	display: table;
+	width: 100%;
+}
+#ex01 .chk label {
+	display: table-cell;
+	width: 33%;
+	position: relative;
+	padding-left: 20px;
+}
+#ex01 .chk label:before {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 0;
+	width: 15px;
+	height: 15px;
+	border: 1px solid #aaa;
+	box-sizing: border-box;
+	background: #fff;
+	z-index: 0;
+}
+#ex01 .chk label:after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 4px;
+	width: 7px;
+	height: 11px;
+	border-bottom: 1px solid #333;
+	border-right: 1px solid #333;
+	transform: rotate(45deg);
+	transition: opacity .1s linear;
+	box-sizing: border-box;
+	z-index: 1;
+	opacity: 0;
+}
+#ex01 .chk input[type=checkbox] {
+	display: none;
+}
+#ex01 .chk input:checked+label:after {
+	opacity: 1;
+}
+#ex01 .txt textarea {
+	width: 100%;
+	height: 80px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	resize: none;
+}
+#ex01 .btn {
+	display: table;
+	margin: 0 auto;
+}
+#ex01 .btn button {
+	float: left;
+	width: 60px;
+	height: 30px;
+	box-sizing: border-box;
+}
+#ex01 .btn button:first-child {
+	margin-right: 10px;
+}
+#ex01 .btn_reset {
+	background: none;
+	border: 1px solid #ccc;
+	color: #444;
+}
+#ex01 .btn_submit {
+	background: #444;
+	border: none;
+	color: #fff;
+}
