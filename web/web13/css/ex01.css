@@ -1,0 +1,31 @@
+h1, h2, p {
+	width: 400px;
+	margin: 0 auto;
+}
+
+/* @media type
+ * 
+ * all
+ * screen
+ * print
+ * speech
+ */
+
+@media print {
+	body {
+		background: aliceblue;
+		color: gray;
+	}
+}
+@media screen and (max-width: 599px) {
+	body {
+		background: darkslategray;
+		color: #fff;
+	}
+}
+@media screen and (min-width: 600px) and (max-width: 1000px) {
+	body {
+		background: darkslateblue;
+		color: #fff;
+	}
+}
