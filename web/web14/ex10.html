@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<link rel="stylesheet" href="css/ex10.css">
+	<script type="text/javascript">
+		var arr = new Array();
+
+		function newObj() {
+			var obj = {
+				"num": 0, "kor": 0, "eng": 0, "math": 0,
+				getNum() {return this.num;},
+				getKor() {return this.kor;},
+				getEng() {return this.eng;},
+				getMath() {return this.math;},
+				setNum(n) {this.num = n;},
+				setKor(n) {this.kor = n;},
+				setEng(n) {this.eng = n;},
+				setMath(n) {this.math = n;}
+			};
+			return obj;
+		};
+
+		var stu1 = newObj();
+		stu1.setNum(1);
+		stu1.setKor(99);
+		stu1.setEng(98);
+		stu1.setMath(97);
+		var stu2 = newObj();
+		stu2.setNum(2);
+		stu2.setKor(89);
+		stu2.setEng(88);
+		stu2.setMath(87);
+		var stu3 = newObj();
+		stu3.setNum(3);
+		stu3.setKor(79);
+		stu3.setEng(78);
+		stu3.setMath(77);
+		arr.push(stu1);
+		arr.push(stu2);
+		arr.push(stu3);
+
+		document.write("<h1>학생 성적 관리 프로그램</h1>");
+		document.write("<table>");
+		document.write("<tr>");
+		document.write("<th>학번</th>");
+		document.write("<th>국어</th>");
+		document.write("<th>영어</th>");
+		document.write("<th>수학</th>");
+		document.write("</tr>");
+		for (var i=0; i<arr.length; i++) {
+			obj = arr[i];
+
+			document.write("<tr>");
+			document.write("<td>"+obj.getNum()+"</td>");
+			document.write("<td>"+obj.getKor()+"</td>");
+			document.write("<td>"+obj.getEng()+"</td>");
+			document.write("<td>"+obj.getMath()+"</td>");
+			document.write("</tr>");
+		}
+		document.write("</table>");
+	</script>
+	<style type="text/css">
+	</style>
+</head>
+<body>
+</body>
+</html>
