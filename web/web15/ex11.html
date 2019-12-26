@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		function eleClk() {
+			console.log("click");
+		}
+
+		var h1;
+		// h1 = document.querySelector('h1');
+		// h1.onclick = eleClk;
+		// h1.onclick = eleClk() : 괄호까지 작성할 경우 코드를 읽는 시점에 수행됨
+		// err : 이 코드가 수행되는 시점에 html문서가 완성되지 않았음
+		onload = function() {
+			h1 = document.querySelector('h1');
+			h1.onclick = eleClk;
+		}
+	</script>
+</head>
+<body>
+	<h1>DOM Level2 Event</h1>
+	<p>
+		<a href="ex10.html">[ex10]</a>
+	</p>
+	<form action="ex09.html">
+		<input type="text" name="msg">
+		<button type="submit">전송</button>
+		<button type="button">뒤로</button>
+	</form>
+</body>
+</html>

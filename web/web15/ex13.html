@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		var input, target2;
+		onload = function() {
+			input = document.querySelector("input");
+			target2 = document.querySelector("#target2");
+			// input.onkeydown = function(e) {
+			// 	console.log("key down", e.key, e.keyCode, input.value);
+			// }
+			// input.onkeyup = function(e) {
+			// 	console.log("key up", e.key, e.keyCode, input.value);
+			// }
+			// input.onkeypress = function(e) {
+			// 	console.log("key press", e.key, e.keyCode, input.value);
+			// }
+			target2.onkeyup = function(e) {
+				console.log(e.key);
+			}
+			// 작동하지 않음 / document, window객체는 작동
+			
+			target2.style.marginLeft = "0";
+    		target2.style.marginTop = "0";
+			window.onkeyup = function(e) {
+				if (e.keyCode == 39) {
+					target2.style.marginLeft = parseInt(target2.style.marginLeft)+10+'px';
+				} else if (e.keyCode == 40) {
+					target2.style.marginTop = parseInt(target2.style.marginTop)+10+"px";
+				} else if (e.keyCode == 37) {
+					target2.style.marginLeft = parseInt(target2.style.marginLeft)-10+"px";
+				} else if (e.keyCode == 38) {
+					target2.style.marginTop = parseInt(target2.style.marginTop)-10+"px";
+				}
+			}
+		};
+	</script>
+	<style type="text/css">
+		input {display: block; width: 210px; height: 30px; margin-top: 20px;}
+		#target2 {width: 150px; height: 100px; background-image: url(https://www.bt21.com/img/character/bt21/mang.gif); background-position: center; background-size: cover;}
+	</style>
+</head>
+<body>
+	<h1>keyboard event</h1>
+	<input type="text">
+	<div id="target2"></div>
+</body>
+</html>

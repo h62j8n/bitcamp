@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		var carousel, ul;
+		var width = 200;
+		onload = function() {
+			carousel = document.querySelector("#carousel");
+			ul = carousel.querySelector("#carousel ul");
+			ul.style.marginLeft = 0;
+			window.setInterval(nextImg, 1000);
+		};
+		function nextImg() {
+			var before = parseInt(ul.style.marginLeft);
+			if (before == -width*5) {
+				before = width;
+			}
+			ul.style.marginLeft = before-width+"px";
+		};
+	</script>
+	<style type="text/css">
+		#carousel {width: 200px; margin: 20px auto; overflow: hidden;}
+		#carousel ul {display: flex;}
+		img {width: 200px;}
+	</style>
+</head>
+<body>
+	<div id="header">
+		<h1>비트 쇼핑몰</h1>
+	</div>
+	<div id="content">
+		<div id="carousel">
+			<ul>
+				<li><img src="../source/images/vegetables1.png" alt=""></li>
+				<li><img src="../source/images/vegetables3.png" alt=""></li>
+				<li><img src="../source/images/vegetables5.png" alt=""></li>
+				<li><img src="../source/images/vegetables2.png" alt=""></li>
+				<li><img src="../source/images/vegetables4.png" alt=""></li>
+				<li><img src="../source/images/vegetables6.png" alt=""></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
