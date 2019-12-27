@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<student>
+	<stu>
+		<num>1</num>
+		<name>user1</name>
+		<kor>90</kor>
+		<eng>98</eng>
+	</stu>
+	<stu>
+		<num>2</num>
+		<name>user2</name>
+		<kor>92</kor>
+		<eng>68</eng>
+	</stu>
+	<stu>
+		<num>3</num>
+		<name>user3</name>
+		<kor>92</kor>
+		<eng>78</eng>
+	</stu>
+</student>
