@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		window.onload = function() {
+			$("h1").css("color", "rebeccapurple");
+			// $("h1") == jQuery("h1")
+			console.log(jQuery);						// jQuery : 함수
+			console.log(jQuery("h1"));					// h1 : jQuery 객체
+			console.log(jQuery("h1").css("color"));		// 해당 객체의 컬러값 반환
+		};
+	</script>
+</head>
+<body>
+	<h1>title</h1>
+	<p>content</p>
+</body>
+</html>

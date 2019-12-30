@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="application/xml; charset=UTF-8"
     pageEncoding="UTF-8" import="java.sql.*"%>
 
 <%
 	int cnt = 0;
 	String name = null;
 	
-	String sql = "SELECT COUNT(IDX), MAX(ID) FROM BBS01USER WHERE ID = ? AND PW = ?";
+	String sql = "SELECT COUNT(IDX), MAX(NICK) FROM BBS01USER WHERE ID = ? AND PW = ?";
 	String driver = "oracle.jdbc.driver.OracleDriver";
 	String url = "jdbc:oracle:thin:@localhost:1521:xe";
 	String user = "scott";
