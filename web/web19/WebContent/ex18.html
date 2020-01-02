@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.bxslider.css">
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="js/jquery.bxslider.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			$(".bxslider").bxSlider({
+				auto: true,
+				autoControls: true,
+				stopAutoOnClick: true,
+				pager: true,
+				mode: 'fade',
+			    captions: true,
+				slideWidth: 400
+			});
+			*/
+			var option = {
+				auto: true,
+				autoControls: true,
+				stopAutoOnClick: true,
+				pager: true,
+				mode: 'fade',
+			    captions: true,
+				slideWidth: 400
+			};
+			$(".bxslider").bxSlider(option);
+		});
+		
+		$(window).load(function() {
+			console.log("$(window).load()");
+		});
+		$(document).ready(function() {
+			console.log("$(document).ready()");
+		});
+		$(function(){
+			console.log("$(function()");
+		});
+		(function($){
+			console.log("function($)");
+		})(jQuery);
+		window.onload = function(){
+			console.log("window.onload");
+		};
+	</script>
+	<style type="text/css">
+		.bx-wrapper {margin: 0 auto; text-align: center;}
+		.bx-wrapper .bx-caption {background: rebeccapurple;}
+	</style>
+</head>
+<body>
+	<div class="bxslider">
+		<div><img src="images/vegetables1.png" title="vegetables1"></div>
+		<div><img src="images/vegetables3.png" title="vegetables3"></div>
+		<div><img src="images/vegetables5.png" title="vegetables5"></div>
+		<div><img src="images/vegetables7.png" title="vegetables7"></div>
+		<div><img src="images/vegetables2.png" title="vegetables2"></div>
+		<div><img src="images/vegetables4.png" title="vegetables4"></div>
+		<div><img src="images/vegetables6.png" title="vegetables6"></div>
+		<div><img src="images/vegetables8.png" title="vegetables8"></div>
+	</div>
+</body>
+</html>

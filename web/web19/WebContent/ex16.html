@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("div").eq(0).animate(
+				{marginLeft: "300px"},
+				{duration: 3000, easing: "swing"}
+			);
+			$("div").eq(1).animate(
+				{marginLeft: "300px"},
+				{duration: 3000, easing: "linear"}
+			);
+			$("div").eq(2).animate(
+				{marginLeft: "300px"},
+				{duration: 3000, easing: "easeOutBounce"}
+			);
+		});
+	</script>
+</head>
+<body>
+	<h1>animation effect</h1>
+	<div>box1</div>
+	<div>box2</div>
+	<div>box3</div>
+</body>
+</html>

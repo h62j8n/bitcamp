@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			$("form input").focus(function() {
+				$(this).val("");
+			});
+			$("form input").blur(function () {
+				if ($(this).val() == "") {
+					if ($(this).is("#id")) {
+						// $(this) == $("#id") : 객체의 비교. 같은 엘리먼트지만 다른 객체로 인식되어 false
+						$(this).val("아이디 입력");
+					} else if ($(this).is("#name")) {
+						$(this).val("이름 입력");
+					}
+				}
+			});
+			*/
+			$("form input").on("focus", function() {
+				$(this).val("");
+			});
+			$("form input").on("blur", function () {
+				if ($(this).val() == "") {
+					if ($(this).is("#id")) {
+						$(this).val("아이디 입력");
+					} else if ($(this).is("#name")) {
+						$(this).val("이름 입력");
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>Sign in</h1>
+	<form>
+		<div>
+			<label for="id">아이디</label>
+			<input type="text" id="id" value="아이디 입력">
+		</div>
+		<div>
+			<label for="name">이름</label>
+			<input type="text" id="name" value="이름 입력">
+		</div>
+	</form>
+</body>
+</html>
