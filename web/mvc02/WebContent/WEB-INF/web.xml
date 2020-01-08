@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>mvc02</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <context-param>
+  	<param-name>driver</param-name>
+  	<param-value>oracle.jdbc.OracleDriver</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>url</param-name>
+  	<param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>user</param-name>
+  	<param-value>scott</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>password</param-name>
+  	<param-value>tiger</param-value>
+  </context-param>
+  
+  <!-- index -->
+  <servlet>
+  	<servlet-name>index</servlet-name>
+  	<servlet-class>com.bit.mvc02.controller.DirectController</servlet-class>
+  	<init-param>
+      <param-name>prefix</param-name>
+      <param-value>/</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>viewName</param-name>
+      <param-value>index</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>suffix</param-name>
+      <param-value>.jsp</param-value>
+  	</init-param>
+  </servlet>
+  
+  <!-- intro -->
+  <servlet>
+  	<servlet-name>intro</servlet-name>
+  	<servlet-class>com.bit.mvc02.controller.DirectController</servlet-class>
+  	<init-param>
+      <param-name>prefix</param-name>
+      <param-value>/</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>viewName</param-name>
+      <param-value>intro</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>suffix</param-name>
+      <param-value>.jsp</param-value>
+  	</init-param>
+  </servlet>
+  
+  <!-- dept/list -->
+  <servlet>
+  	<servlet-name>deptList</servlet-name>
+  	<servlet-class>com.bit.mvc02.dept.controller.ListController</servlet-class>
+  	<init-param>
+      <param-name>driver</param-name>
+      <param-value>oracle.jdbc.OracleDriver</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>url</param-name>
+      <param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>user</param-name>
+      <param-value>scott</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>password</param-name>
+      <param-value>tiger</param-value>
+  	</init-param>
+  </servlet>
+  
+  <!-- dept/add -->
+  <servlet>
+  	<servlet-name>deptAdd</servlet-name>
+  	<servlet-class>com.bit.mvc02.controller.DirectController</servlet-class>
+  	<init-param>
+      <param-name>prefix</param-name>
+      <param-value>/dept/</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>viewName</param-name>
+      <param-value>add</param-value>
+  	</init-param>
+  	<init-param>
+      <param-name>suffix</param-name>
+      <param-value>.jsp</param-value>
+  	</init-param>
+  </servlet>
+  
+  <!-- dept/insert -->
+  <servlet>
+  	<servlet-name>deptInsert</servlet-name>
+  	<servlet-class>com.bit.mvc02.dept.controller.AddController</servlet-class>
+  </servlet>
+  
+  <!-- dept/delete -->
+  <servlet>
+  	<servlet-name>deptDelete</servlet-name>
+  	<servlet-class>com.bit.mvc02.dept.controller.DeleteController</servlet-class>
+  </servlet>
+  
+  <!-- emp/list -->
+  <servlet>
+  	<servlet-name>empList</servlet-name>
+  	<servlet-class>com.bit.mvc02.emp.controller.ListController</servlet-class>
+  </servlet>
+  
+  
+  
+  <servlet-mapping>
+  	<servlet-name>index</servlet-name>
+  	<url-pattern>/index.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>intro</servlet-name>
+  	<url-pattern>/intro.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>deptList</servlet-name>
+  	<url-pattern>/dept/list.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>deptAdd</servlet-name>
+  	<url-pattern>/dept/add.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>deptInsert</servlet-name>
+  	<url-pattern>/dept/insert.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>deptDelete</servlet-name>
+  	<url-pattern>/dept/delete.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>empList</servlet-name>
+  	<url-pattern>/emp/list.html</url-pattern>
+  </servlet-mapping>
+</web-app>
