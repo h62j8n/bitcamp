@@ -19,6 +19,7 @@
 			return false;
 		});
 		$('button[type=button]').eq(0).click(function(){
+<<<<<<< HEAD
 			var del=confirm('사번 ${bean.sabun}번 사원을 삭제하시겠습니까?');
 			if(del){
 				$.post('delete.html','idx=${bean.sabun}',function(data){
@@ -28,6 +29,9 @@
 					}else alert('삭제실패');
 				},'text');
 			}
+=======
+			alert('삭제');
+>>>>>>> 0b9268d46ce442e29a716da2162ffb8bd68f1646
 		}).next().click(function(){
 			history.back();
 		});

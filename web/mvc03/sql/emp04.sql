@@ -21,6 +21,7 @@ insert into emp04 values (emp04_seq.nextval
 insert into emp04 values (emp04_seq.nextval
 					,'ев╫╨ем5','20/01/09',5000,'test');
 commit;
+<<<<<<< HEAD
 select * from emp04;
 
 
@@ -31,3 +32,6 @@ select * from emp04;
 
 
 
+=======
+select * from emp04;
+>>>>>>> 0b9268d46ce442e29a716da2162ffb8bd68f1646

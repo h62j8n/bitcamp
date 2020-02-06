@@ -140,6 +140,7 @@ public class Emp04Dao {
 		}
 		return result;
 	}
+<<<<<<< HEAD
 	
 	public int deleteOne(int sabun) throws SQLException{
 		int result=0;
@@ -155,6 +156,8 @@ public class Emp04Dao {
 		}
 		return result;
 	}
+=======
+>>>>>>> 0b9268d46ce442e29a716da2162ffb8bd68f1646
 }
 
 
