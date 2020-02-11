@@ -12,7 +12,11 @@ java/*.txt
 framework/*.txt
 framework/*/bin/
 framework/Servers/
-framework/*/build/
+framework3/*/build/
+framework3/*.txt
+framework3/*/bin/
+framework3/Servers/
+framework3/*/build/
 java/*.txt
 web/*.txt
 db/

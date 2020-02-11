@@ -8,6 +8,8 @@
 </head>
 <body>
 	<h1>test</h1>
-	
+	<div>
+		<a href="./"></a>
+	</div>
 </body>
 </html>
