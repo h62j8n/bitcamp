@@ -17,6 +17,7 @@ framework3/*.txt
 framework3/*/bin/
 framework3/Servers/
 framework3/*/build/
+framework3/*/target/
 java/*.txt
 web/*.txt
 db/
