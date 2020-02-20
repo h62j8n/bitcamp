@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<style type="text/css">
+		div {margin: 0 auto;}
+		.box1 {width: 150px; height: 150px; background-color: aliceblue;}
+		.box1 > div {width: 100px; height: 100px; background-color: cadetblue;}
+		.box1 > div > div {width: 50px; height: 50px; background-color: darkcyan;}
+	</style>
+	<script type="text/javascript">
+		var box2;
+		window.onload = function() {
+			box2 = document.getElementById("box2");
+			box2.addEventListener("mouseover", function() {
+				console.log("mouse over");
+			});
+			box2.addEventListener("mouseout", function() {
+				console.log("mouse out");
+			});
+			box2.addEventListener("mouseenter", function() {
+				console.log("mouse enter");
+			});
+			box2.addEventListener("mouseleave", function() {
+				console.log("mouse leave");
+			});
+		};
+	</script>
+</head>
+<body>
+	<div class="box1">
+		box1
+		<div id="box2">
+			box2
+			<div>
+				box3
+			</div>
+		</div>
+	</div>
+</body>
+</html>

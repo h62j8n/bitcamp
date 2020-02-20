@@ -1,0 +1,92 @@
+body {
+	min-width: 1040px;
+	font-family: 'Noto Sans', sans-serif;
+}
+.container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+header {
+	border-bottom: 1px solid #eee;
+}
+header > div {
+	overflow: hidden;
+}
+h1, nav {
+	display: table;
+	height: 120px;
+}
+h1 {
+	float: left;
+}
+h1 a {
+	display: block;
+	margin-top: 39px;
+}
+nav {
+	float: right;
+}
+nav ul {
+	display: table-cell;
+	vertical-align: middle;
+	overflow: hidden;
+}
+nav ul li {
+	float: left;
+	width: 100px;
+	font-size: 20px;
+	text-align: center;
+}
+#content {
+	margin-bottom: 120px;
+}
+#content h2 {
+	margin: 30px 0;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#content .article {
+	position: fixed;
+	top: 50%;
+	margin-top: -60px;
+	right: 50%;
+	margin-right: -520px;
+	background: #fff;
+}
+
+#content .article li {
+	width: 150px;
+	height: 45px;
+	line-height: 45px;
+	text-indent: 15px;
+	box-sizing: border-box;
+	border: 1px solid #aaa;
+	font-size: 15px;
+}
+#content .article li:first-child {
+	border-bottom: none;
+}
+#content .article li a {
+	color: #333;
+	font-weight: bold;
+}
+
+#content .box img {
+	max-width: 100%;
+}
+
+footer {
+	background: #333;
+}
+footer > div {
+	display: table;
+	height: 150px;
+	color: #aaa;
+}
+footer > div div {
+	display: table-cell;
+	vertical-align: middle;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" href="source/css/reset.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<style type="text/css">
+		body {min-width: 800px;}
+		#header {border-bottom: 1px solid #ccc; font-size: 15px;}
+		.container {position: relative; padding-top: 30px; width: 800px; margin: 0 auto;}
+		#header .container:after {content: ""; display: table; clear: both;}
+		#header h1 {float: left; font-weight: 600;}
+		#header h1, #gnb > li {height: 55px; line-height: 55px;}
+		#header form, #header h2 {position: absolute; top: 5px; right: 0; font-size: 12px;}
+		#header form {display: flex;}
+		#header form div {margin-left: 15px;}
+		#header form div:first-child {margin: 0;}
+		#header form label {padding-right: 5px;}
+		#header form input {width: 100px; height: 22px; text-indent: 5px; box-sizing: border-box;}
+		#header form button {width: 50px; height: 22px; font-size: 12px;}
+		#gnb {float: right; display: flex;}
+		#gnb li {width: 80px; text-align: center;}
+		#gnb ul {background: #fff; border: 1px solid #ddd; border-top: none; opacity: 0; transition: opacity .2s linear;}
+		#gnb ul li {height: 30px; line-height: 30px;}
+		#container {position: relative; display: table; padding: 0 100px; margin: 50px auto;}
+		#carousel {width: 320px; overflow: hidden;}
+		#carousel ul {width: 1920px;}
+		#carousel li {float: left;}
+		.btn {position: absolute; top: 50%; width: 60px; height: 60px; margin-top: -30px; font-size: 50px; border: none; background: none; color: #555;}
+		.btn:focus {outline: none;}
+		.prev {left: 0;}
+		.next {right: 0;}
+		#carousel img {width: 320px;}
+		#footer {background: #ccc; padding: 15px 0; font-size: 15px; text-align: center;}
+	</style>
+	<script type="text/javascript">
+		var xhr, form, id, pw;
+		function callback() {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				var xml = xhr.responseXML;
+				var result = xml.firstElementChild.children[0].children[0].childNodes[0].nodeValue;
+				var name = xml.firstElementChild.children[0].children[1].childNodes[0].nodeValue;
+				if (parseInt(result) > 0) {
+					form.innerHTML = "<h2>" + name + "님 환영합니다</h2>";
+				} else {
+					alert("id, pw 다시 확인하세요");
+				}
+			}
+		};
+		onload = function() {
+			form = document.querySelector("#header form");
+			form.onsubmit = function() {
+				id = form.querySelector("input[type=\"text\"]").value;
+				pw = form.querySelector("input[type=\"password\"]").value;
+				
+				xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = callback;
+				xhr.open("get", "result02.jsp?id="+id+"&pw="+pw);
+				xhr.send();
+				
+				return false;	// action 페이지로 넘어가지 않도록
+			};
+			
+		};
+	</script>
+</head>
+<body>
+	<div id="header">
+		<div class="container">
+			<h1>비트캠프</h1>
+			<ul id="gnb">
+				<li>
+					<a href="#">menu1</a>
+					<ul>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">menu2</a>
+					<ul>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">menu3</a>
+					<ul>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+						<li><a href="#">menu</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">menu4</a>
+					<ul>
+						<li><a href="#">menu</a></li>
+					</ul>
+				</li>
+			</ul>
+			<form action="result01.jsp">
+				<div>
+					<label for="id">ID</label>
+					<input type="text" name="id" id="id">
+				</div>
+				<div>
+					<label for="pw">PW</label>
+					<input type="password" name="pw" id="pw">
+				</div>
+				<div>
+					<button type="submit" >로그인</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="container">
+		<div id="carousel">
+			<ul>
+				<li><img src="source/images/vegetables3.png" alt=""></li>
+				<li><img src="source/images/vegetables6.png" alt=""></li>
+				<li><img src="source/images/vegetables5.png" alt=""></li>
+				<li><img src="source/images/vegetables2.png" alt=""></li>
+				<li><img src="source/images/vegetables4.png" alt=""></li>
+				<li><img src="source/images/vegetables7.png" alt=""></li>
+			</ul>
+			<button type="button" class="btn prev"><i class="xi-angle-left"></i></button>
+			<button type="button" class="btn next"><i class="xi-angle-right"></i></button>
+		</div>
+	</div>
+	<div id="footer">
+		<div class="container">
+			<p>비트캠프 서울시 서초구 강남대로 459 (서초동, 백암빌딩)</p>
+			<p>Copyright &copy; 비트캠프 All rights reserved.</p>
+		</div>
+	</div>
+</body>
+</html>

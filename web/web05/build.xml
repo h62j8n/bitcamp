@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="web05" default="dist" basedir=".">
+	<description>web05 project build file</description>
+	
+	<property name="tomcat.home" value="C:\Tomcat 7.0\webapps" />
+	<property name="src.dir" value="src" />
+	<property name="web.dir" value="WebContent" />
+	<property name="dist.dir" value="dist" />
+	<property name="build.dir" value="build" />
+	<property name="war.file" value="${dist.dir}/${ant.project.name}.war" />
+	
+	<!-- clean : 기존 build와 dist 폴더 삭제 -->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${build.dir}" />
+		<echo message="Cleaning complete!!! deleting: ${DSTAMP} - ${TSTAMP}" />
+	</target>
+	
+	<!-- prepare : build폴더 생성 및 WebContent내의 파일을 build폴더로 복사 -->
+	<target name="prepare" depends="clean">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/WEB-INF" />
+		<mkdir dir="${build.dir}/WEB-INF/classes" />
+		<copy todir="${build.dir}">
+			<fileset dir="${web.dir}" />
+		</copy>
+	</target>
+	
+	<!-- build : java파일 컴파일 후 classes파일 복사 -->
+	<target name="build" depends="prepare">
+		<javac 	srcdir="${src.dir}"
+				destdir="${build.dir}/WEB-INF/classes"
+				encoding="utf-8"
+				includeantruntime="false">
+		</javac>
+		<copy todir="${build.dir}/WEB-INF/classes">
+			<fileset dir="${src.dir}" excludes="**/*.java, **/*.properties" />
+		</copy>
+	</target>
+	
+	<!-- dist : build폴더를 .war파일로 압축, dist폴더로 이동 -->
+	<target name="dist" depends="build">
+		<mkdir dir="${dist.dir}" />
+		<jar destfile="${war.file}" basedir="${build.dir}" />
+	</target>
+	
+	<!-- apply : .war파일을 웹서버에 복사 -->
+	<target name="apply" depends="dist">
+		<delete dir="${tomcat.home}/${ant.project.name}.war" />
+		<delete dir="${tomcat.home}/${ant.project.name}" />
+		<copy todir="${tomcat.home}">
+			<fileset dir="${dist.dir}"/>
+		</copy>
+		<!-- build폴더와 웹서버의 webapps 동기화
+		<sync todir="${tomcat.home}/webapps/${ant.project.name}">
+			<fileset dir="${build.dir}"/>
+		</sync>
+		-->
+	</target>
+</project>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script type="text/javascript">
+		var xhr, target, btn;
+		window.onload = function() {
+			target = document.getElementById("target");
+			btn = document.getElementsByTagName("button")[0];
+			var callback = function() {
+				// Ajax 통신
+				xhr = new XMLHttpRequest();			// 자바스크립트 통신객체 (es5 ~)
+				xhr.onreadystatechange = function() {
+					// alert(msg);
+					// 경고창이 4번 뜨는 것을 통해 4번 통신한다는 것을 확인할 수 있다.
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						var msg = xhr.responseText;
+						target.innerHTML = msg;
+					}
+				};
+				xhr.open("get", "ex05.html");		// 통신 정보 (방식:get / 경로:ex05.html) 
+				xhr.send();
+			};
+			btn.addEventListener("click", callback);
+		}
+	</script>
+</head>
+<body>
+	<h1>비동기통신</h1>
+	<button>ex05</button>
+	<div id="target"></div>
+</body>
+</html>

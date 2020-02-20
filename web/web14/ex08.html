@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		a = 1000;
+		func01();				// 함수 실행
+		// console.log(a);
+
+		function func01() {
+			console.log(this);
+			// var a = 1111;
+			this.a = 1111;		// func01()을 수행할 경우 window.a = 1111
+								// b.key2()를 수행할 경우 해시맵 b의 key a, value 1111
+		}
+
+		var b = {"key1": "aaa", "key2": func01};
+		b.key2();				// 함수 실행
+		console.log(b);			// 이 때 key a가 두번째에 위치하는 것은 단순한 우연
+
+		(function() {
+			var a = 10;
+			console.log(a);
+		})();
+	</script>
+	<style type="text/css">
+		html {height: 100%}
+		body {width: 100%; height: 100%; display: table}
+		h1 {display: table-cell; vertical-align: middle; text-align: center; font-weight: 900}
+	</style>
+</head>
+<body>
+	<h1>javascript</h1>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		var btn1, btn2, div1, div2;
+		window.onload = function() {
+			btn1 = document.getElementById("btn1");
+			btn2 = document.getElementById("btn2");
+			div1 = document.getElementById("target1");
+			div2 = document.getElementById("target2");
+			btn1.onclick = function() {
+				console.log("push btn1");
+			};
+			btn2.onclick = function() {
+				console.log("push btn2");
+			}
+			btn2.onmousedown = function() {
+				console.log("press down btn2");
+			}
+			btn2.onmouseup = function() {
+				console.log("press up btn2");
+			}
+			btn1.ondblclick = function() {
+				console.log("double click btn1");
+			}
+			div1.onmouseover = function() {
+				console.log("mouseover div1");
+			}
+			div1.onmouseout = function() {
+				console.log("mouseout div1");
+			}
+			div1.onmouseenter = function() {
+				console.log("mouseenter div1");
+			}
+			div1.onmouseleave = function() {
+				console.log("mouseleave div1");
+			}
+		};
+	</script>
+	<style type="text/css">
+		.btn_box, .cont_box {display: flex; margin-top: 20px;}
+		.btn_box button {width: 100px; height: 30px; margin-left: 10px;}
+		.cont_box div {width: 100px; height: 50px; margin-left: 10px; background: aliceblue; border: 1px solid cadetblue; box-sizing: border-box;}
+		.btn_box button:first-child, .cont_box div:first-child {margin: 0;}
+	</style>
+
+</head>
+<body>
+	<h1>mouse event</h1>
+	<div class="btn_box">
+		<button id="btn1">button 1</button>
+		<button id="btn2">button 2</button>
+	</div>
+	<div class="cont_box">
+		<div id="target1"></div>
+		<div id="target2"></div>
+	</div>
+</body>
+</html>

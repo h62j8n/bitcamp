@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../source/css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+	<script type="text/javascript">
+		var btn1, btn2, target;
+		onload = function() {
+			btn1 = document.querySelector("h1+button");
+			btn2 = document.getElementById("btn2");
+			target = document.getElementById("target");
+			var back1 = function(){
+				console.log("click back1()");
+			};
+			btn1.addEventListener("click", back1);
+			btn1.addEventListener("click", function() {
+				console.log("click anonymous");
+			});
+			btn2.onclick = back1;
+			btn2.onclick = function() {
+				console.log("btn2 click");
+			};
+			target.addEventListener("mouseenter", function() {
+				console.log("mouse enter");
+			});
+			target.addEventListener("mouseleave", function() {
+				console.log("mouse leave");
+			});
+			target.addEventListener("mouseover", function() {
+				console.log("mouse over");
+			});
+			target.addEventListener("mouseout", function() {
+				console.log("mouse out");
+			});
+			target.addEventListener("mousedown", function() {
+				console.log("mouse down");
+			});
+			target.addEventListener("mouseup", function() {
+				console.log("mouse up");
+			});
+			target.addEventListener("dblclick", function() {
+				console.log("doubble click");
+			});
+		};
+	</script>
+	<style type="text/css">
+		#target {display: table; width: 200px; height: 200px; margin: 30px auto 0; border: 5px solid darkcyan; box-sizing: border-box;}
+		#target i {display: table-cell; vertical-align: middle; text-align: center; font-size: 80px; color: darkcyan; opacity: .5;}
+	</style>
+</head>
+<body>
+	<h1>DOM Level 3 Event</h1>
+	<button>button 1</button>
+	<button id="btn2">button 2</button>
+	<div id="target">
+		<i class="xi-mouse"></i>
+	</div>
+</body>
+</html>
