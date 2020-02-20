@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>sts03</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+  	<servlet-name>ex01</servlet-name>
+  	<servlet-class>com.bit.Ex01Controller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ex01</servlet-name>
+  	<url-pattern>/ex01</url-pattern>
+  </servlet-mapping>
+  
+  
+  <filter>
+  	<filter-name>bitFilter</filter-name>
+  	<filter-class>com.bit.util.Ex01Filter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>bitFilter</filter-name>
+  	<url-pattern>/ex01</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+  	<filter-name>two</filter-name>
+  	<filter-class>com.bit.util.Ex02Filter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>two</filter-name>
+  	<url-pattern>/ex01</url-pattern>
+  </filter-mapping>
+</web-app>
+
+
+
+
+
+
+
+
+
+
+
+
