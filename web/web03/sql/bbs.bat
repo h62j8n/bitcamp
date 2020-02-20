@@ -1,1 +1,0 @@
-sqlplus scott/tiger @bbs.sql
