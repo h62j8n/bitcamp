@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="module02" class="com.bit.sts04.module.Module02">
+		<property name="msg" value="class03"></property>
+	</bean>
+	<bean id="module01" class="com.bit.sts04.module.Module01Impl">
+		<property name="module" ref="module02"></property>
+	</bean>	
+	
+	<bean id="beforeDecoration" class="com.bit.sts04.step01.BeforeDecoration"></bean>
+	
+	<bean id="afterSuccess" class="com.bit.sts04.step01.AfterSuccessDecoration"></bean>
+	
+	<bean id="afterFail" class="com.bit.sts04.step01.AfterFailDecoration"></bean>
+	
+	<bean id="aroundDecoration" class="com.bit.sts04.step01.AroundDecoration"></bean>
+	
+	<bean id="custom" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="module01"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>aroundDecoration</value>
+			</list>
+		</property>
+	</bean>
+</beans>
