@@ -10,4 +10,7 @@
 	<insert id="insertOne" parameterType="bean">
 		insert into dept01 (dname, loc) values (#{dname}, #{loc})	
 	</insert>
+	<update id="updateOne">
+		UPDATE dept01 SET dname = #{dname}, loc = #{loc} WHERE deptno = #{deptno}
+	</update>
 </mapper>

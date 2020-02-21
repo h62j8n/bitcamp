@@ -89,12 +89,10 @@ public class DeptController {
 		}
 		
 		if (dao.updateOne(dname, loc, deptno) > 0) { // 결과값
-			
 			return "redirect:detail?idx=" + deptno;
 		}
 		
 		model.addAttribute("bean", dao.selectOne(deptno));
-		
-		return "redirect:edit?deptno = " + deptno;
+		return "redirect:edit?deptno=" + deptno;
 	}
 }

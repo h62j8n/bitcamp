@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.prj04.model.EmpDao">
+	<select id="selectAll" resultType="com.bit.prj04.model.entity.EmpVo">
+		SELECT * FROM emp01
+	</select>
+	<select id="selectOne" resultType="com.bit.prj04.model.entity.EmpVo" parameterType="int">
+		SELECT * FROM emp01 WHERE sabun = #{value}
+	</select>
+	<insert id="insertOne" parameterType="com.bit.prj04.model.entity.EmpVo">
+		INSERT INTO emp01 (name, nalja, pay, deptno) VALUES (#{name}, now(), #{pay}, 1)
+	</insert>
+	<update id="updateOne" parameterType="com.bit.prj04.model.entity.EmpVo">
+		UPDATE emp01 SET name = #{name}, pay = #{pay} WHERE sabun = #{sabun}
+	</update>
+	<delete id="deleteOne" parameterType="int">
+		DELETE FROM emp01 WHERE sabun = #{value}
+	</delete>
+</mapper>
