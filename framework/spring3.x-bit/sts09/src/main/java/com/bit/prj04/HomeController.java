@@ -31,7 +31,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		return "home";
 	}
-   
+	
 	@RequestMapping("/emp/list")
 	public String list(Model model) throws Exception {
 		EmpDao obj = sqlSession.getMapper(EmpDao.class);

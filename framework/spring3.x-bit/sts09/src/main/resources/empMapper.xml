@@ -3,7 +3,7 @@
 
 <mapper namespace="com.bit.prj04.model.EmpDao">
 	<select id="selectAll" resultType="com.bit.prj04.model.entity.EmpVo">
-		SELECT * FROM emp01
+		SELECT * FROM emp01 ORDER BY sabun DESC
 	</select>
 	<select id="selectOne" resultType="com.bit.prj04.model.entity.EmpVo" parameterType="int">
 		SELECT * FROM emp01 WHERE sabun = #{value}
