@@ -1,0 +1,207 @@
+package com.fin.festa.model;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.fin.festa.model.entity.CampReviewVo;
+import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupVo;
+import com.fin.festa.model.entity.MyBookMarkVo;
+import com.fin.festa.model.entity.MyGoodVo;
+import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ReportListVo;
+
+@Repository
+public class CampDaoImpl implements CampDao{
+
+	@Autowired
+	SqlSession sqlSession;
+
+	///////////////////////////////////////////////////////////////
+	////////////////////캠핑정보 화면출력//////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//신규캠핑장 목록 출력
+	@Override
+	public List<CampVo> newCampSelectAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	//전국캠핑장 목록 출력
+	@Override
+	public List<CampVo> allLocationCamp() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	//해당지역캠핑장 목록 출력
+	@Override
+	public List<CampVo> locationCamp(PageSearchVo search) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////
+	////////////////캠핑장상세 공식그룹 체크///////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//해당캠핑장에 공식그룹이 있는지 체크
+	@Override
+	public int ventureGroupCheck(CampVo camp) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//공식그룹이 있을시에 공식그룹정보 출력
+	@Override
+	public GroupVo campVentureGroup(CampVo camp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////
+	///////////////////캠핑장상세 화면출력/////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//캠핑장정보 출력
+	@Override
+	public CampVo campInfoSelectOne(CampVo camp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	//캠핑장 한줄평출력
+	@Override
+	public List<CampReviewVo> campReview(CampVo camp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	//캠핑장 한줄평 총갯수
+	@Override
+	public int campReviewCount(CampVo camp) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//해당캠핑장과 같은지역의 캠핑장목록 출력
+	@Override
+	public List<CampVo> sameLocationCamp(CampVo camp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////
+	/////////////////캠핑장한줄평 등록,삭제////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//캠핑장 한줄평등록
+	@Override
+	public void campReviewInsert(CampReviewVo campReview) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//캠핑장 한줄평 등록시 캠핑장평점 계산해서 업데이트
+	@Override
+	public int campAvgUpdate(CampReviewVo campReview) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//캠핑장 한줄평삭제
+	@Override
+	public int campReviewDelete(CampReviewVo campReview) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	///////////////////////////////////////////////////////////////
+	/////////////////캠핑장 좋아요등록,해제////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//캠핑장 좋아요등록
+	@Override
+	public void campLikeInsert(MyGoodVo good) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//캠핑장 좋아요해제
+	@Override
+	public int campLikeDelete(MyGoodVo good) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//캠핑장 좋아요등록시 캠핑장좋아요 갯수 +1
+	@Override
+	public int campLikeOnePlus(CampVo camp) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//캠핑장 좋아요해제시 캠핑장좋아요 갯수 -1
+	@Override
+	public int campLikeOneMinus(CampVo camp) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//내 좋아요목록 갱신
+	@Override
+	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////
+	////////////////////////캠핑장 신고등록////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//캠핑장 신고등록
+	@Override
+	public void campReport(ReportListVo report) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//캠핑장주인 신고당한횟수 +1
+	@Override
+	public int campReportCountUpdate(ReportListVo report) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	///////////////////////////////////////////////////////////////
+	///////////////////캠핑장 북마크등록,해제//////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	//캠핑장 북마크등록
+	@Override
+	public void campBookMarkInsert(MyBookMarkVo bookMark) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//캠핑장 북마크해제
+	@Override
+	public int campBookMarkDelete(MyBookMarkVo bookMark) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//내 북마크목록 갱신
+	@Override
+	public List<MyBookMarkVo> myboodRenewal(MyBookMarkVo bookMark) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+}
