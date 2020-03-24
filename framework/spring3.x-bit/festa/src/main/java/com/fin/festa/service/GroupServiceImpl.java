@@ -62,6 +62,18 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("feedcmmt", groupDao.groupFeedCmmtSelectAll(groupVo));
 	}
 
+	//공지사항댓글 더보기 비동기
+	@Override
+	public List<GroupNoticeCommentVo> groupNoticeDetailCmmt(Model model, GroupNoticeVo groupnotice) {
+		return groupDao.groupNoticeDetailCmmt(groupnotice);
+	}
+
+	//그룹피드댓글 더보기 비동기
+	@Override
+	public List<GroupCommentVo> groupDetailCmmt(Model model, GroupPostVo grouppost) {
+		return groupDao.groupDetailCmmt(grouppost);
+	}
+	
 	//그룹인원정보 출력
 	@Override
 	public void groupMemberList(HttpServletRequest req, GroupVo groupVo) {
@@ -74,12 +86,6 @@ public class GroupServiceImpl implements GroupService{
 	public void groupReport(Model model, ReportListVo reportListVo) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	//그룹피드댓글 더보기 비동기
-	@Override
-	public List<GroupCommentVo> groupDetailCmmt(Model model, GroupPostVo grouppost) {
-		return groupDao.groupDetailCmmt(grouppost);
 	}
 
 	//공지사항 등록
@@ -100,12 +106,6 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("ntcDetail", groupDao.groupNoticeSelectOne(groupNoticeVo));
 		req.setAttribute("ntcCmmt", groupDao.groupNoticeCmmtSelectAll(groupNoticeVo));
 	}
-	
-	//공지사항댓글 더보기 비동기
-	@Override
-	public List<GroupNoticeCommentVo> groupNoticeDetailCmmt(Model model, GroupNoticeVo groupnotice) {
-		return groupDao.groupNoticeDetailCmmt(groupnotice);
-	}
 
 	//공지사항 수정
 	@Override
@@ -123,9 +123,13 @@ public class GroupServiceImpl implements GroupService{
 
 	//공지사항 댓글등록
 	@Override
-	public void noticeCmmtInsertOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo) {
-		// TODO Auto-generated method stub
-		
+	public void noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo) {
+		groupDao.groupNoticeCmmtInsert(groupNoticeCommentVo);
+		GroupVo group=new GroupVo();
+		group.setGrnum(groupNoticeCommentVo.getGrnum());
+		group.setPronum(groupNoticeCommentVo.getPronum());
+		group.setGrnum(groupNoticeCommentVo.getGrnum());
+		req.setAttribute("detail", groupDao.groupSelectOne(group));
 	}
 
 	//공지사항 댓글삭제
@@ -150,6 +154,7 @@ public class GroupServiceImpl implements GroupService{
 		
 	}
 
+	
 	//그룹피드 수정
 	@Override
 	public void groupFeedUpdateOne(Model model, GroupPostVo groupPostVo) {
@@ -160,26 +165,19 @@ public class GroupServiceImpl implements GroupService{
 	//그룹피드 삭제
 	@Override
 	public void groupFeedDeleteOne(Model model, GroupPostVo groupPostVo) {
-		// TODO Auto-generated method stub
-		
+		groupDao.groupFeedDelete(groupPostVo);
 	}
 
 	//그룹피드 댓글등록
 	@Override
 	public void groupFeedCmmtInsertOne(HttpServletRequest req, GroupCommentVo groupCommentVo) {
 		groupDao.groupFeedCmmtInsert(groupCommentVo);
-		GroupVo group=new GroupVo();
-		group.setGrnum(groupCommentVo.getGrnum());
-		group.setPronum(groupCommentVo.getPronum());
-		group.setGrnum(groupCommentVo.getGrnum());
-		req.setAttribute("detail", groupDao.groupSelectOne(group));
 	}
 
 	//그룹피드 댓글삭제
 	@Override
 	public void groupFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo) {
-		// TODO Auto-generated method stub
-		
+		groupDao.groupFeedCmmtDelete(groupCommentVo);
 	}
 
 	//그룹피드 좋아요등록

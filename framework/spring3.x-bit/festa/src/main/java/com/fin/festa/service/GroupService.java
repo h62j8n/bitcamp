@@ -32,7 +32,7 @@ public interface GroupService {
 		
 		void noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo);
 		
-		void noticeCmmtInsertOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo);
+		void noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo);
 		
 		void noticeCmmtDeleteOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo);
 		

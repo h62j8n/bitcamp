@@ -8,7 +8,7 @@ import com.fin.festa.util.DateCalculate;
 public class GroupNoticeCommentVo {	//그룹 공지사항 댓글 
 
 	DateCalculate cal;
-	private int gncnum;				//공지사항 번호 (pk)
+	private int gncnum;				//공지사항 댓글 번호 (pk)
 	private String gncauthor;		//댓글 작성자 이름
 	private String gnccontent;		//댓글 내용
 	private String gncdate1;

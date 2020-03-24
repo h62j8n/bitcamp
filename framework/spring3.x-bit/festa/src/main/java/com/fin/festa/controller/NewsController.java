@@ -15,7 +15,7 @@ import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.ReportListVo;
-import com.fin.festa.service.NewsService;
+import com.fin.festa.service.FeedService;
 
 @Controller
 @RequestMapping("/news/")
@@ -26,12 +26,11 @@ public class NewsController {
 //////////////////////////////////////////////////////////////////////
 	
 	@Autowired
-	private NewsService newsService;
+	private FeedService feedService;
 	
 	//뉴스피드 조회
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String newsFeedSelectAll(Model model, MyFollowingVo myFollowingVo){
-		newsService.newsFeedSelectAll(model,myFollowingVo);
 		return "news/index";
 	}
 	

@@ -117,32 +117,20 @@ function thumbnail() {
 /* } #피드 */
 
 var layerCnt = 0;
+var popCloseBtn = '<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>';
+var popSpiner = '<p id="fstLoad"><i class="xi-spinner-5 xi-spin"></i></p>';
 /* #레이어 팝업 { */
 function btnPop(button) {
 	var layer;
-	var closeBtn = '<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>';
-	var spiner = '<p id="fstLoad"><i class="xi-spinner-5 xi-spin"></i></p>';
 	$(document).on('click', '.'+button, function(e) {
-		layerCnt++;
 		var url = $(this).attr('href');
 		if (url == undefined) {
 			// <button>태그 (내부 컨텐츠)
 			layer = $(this).data('layer');
-			layer = $('#'+layer);
-			layer.addClass('pop'+layerCnt);
-			layer.bPopup({
-				positionStyle: 'fixed',
-				closeClass: 'btn_close',
-				opacity: 0.6,
-				onOpen: function() {
-					$('#fstLoad').remove();
-					$(this).append(closeBtn);
-					layerCnt--;
-				},
-			}, function() {
-				$('#fstLoad').remove();
-			});
+			openPop(layer);
 		} else {
+			layerCnt++;
+			// url += '.html';
 			layer = '<div class="fstPop pop'+layerCnt+'"></div>';
 			// <a>태그 (외부 컨텐츠 로드)
 			e.preventDefault();
@@ -152,7 +140,7 @@ function btnPop(button) {
 				opacity: 0.6,
 				loadUrl: url,
 				onOpen: function() {
-					$(this).append(spiner);
+					$(this).append(popSpiner);
 				},
 				onClose: function() {
 					$(this).remove();
@@ -164,12 +152,31 @@ function btnPop(button) {
 		}
 	});
 }
+function openPop(layer) {
+	layerCnt++;
+	layer = $('#'+layer);
+	layer.addClass('pop'+layerCnt);
+	layer.bPopup({
+		positionStyle: 'fixed',
+		closeClass: 'btn_close',
+		opacity: 0.6,
+		onOpen: function() {
+			$('#fstLoad').remove();
+			$(this).append(popCloseBtn);
+		},
+		onClose: function() {
+			layerCnt--;
+		},
+	}, function() {
+		$('#fstLoad').remove();
+	});
+}
 // 라디오버튼 클릭 시
 function rdoPop() {
 	var url;
 	var layer = '<div class="fstPop pop'+layerCnt+'"></div>';
-	var spiner = '<p id="fstLoad"><i class="xi-spinner-5 xi-spin"></i></p>';
 	$('.rdo_pop').on('change', function() {
+		layerCnt++;
 		url = $(this).data('url') + '.html';
 		var checked = $(this).prop('checked');
 		var radio = $(this);
@@ -180,7 +187,7 @@ function rdoPop() {
 				opacity: 0.6,
 				loadUrl: url,
 				onOpen: function() {
-					$(this).append(spiner);
+					$(this).append(popSpiner);
 				},
 				onClose: function() {
 					$(this).remove();

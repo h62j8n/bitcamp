@@ -104,6 +104,7 @@
 		<result column="gncontent" property="gncontent"/>
 		<result column="gndate" property="gndate"/>
 		<result column="grnum6" property="grnum"/>
+		<result column="gntotal" property="gntotal"/>
 		<association property="profile" resultMap="profile4"/>
 	</resultMap>
 	
@@ -171,18 +172,18 @@
 	
 	<!-- 그룹공지사항 상세출력 -->
 	<select id="groupNoticeDetail" parameterType="GroupNoticeVo" resultMap="groupnotice">
-		select a.*,c.prophoto from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}
+		select d.*,(select count(*) from groupnoticecomment a where a.gnnum2=d.gnnum) as gntotal from (select a.*,c.prophoto,b.grname from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}) d
 	</select>
 	
 	<!-- 그룹공지사항 댓글출력 -->
 	<select id="groupNoticeCmmt" parameterType="GroupNoticeCommentVo" resultMap="groupnoticecmmt">
-		select a.*,b.prophoto from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum}
+		select a.*,b.prophoto from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum} order by gncdate desc
 	</select>
 	
 	<!-- 그룹공지사항 댓글 더보기 비동기 -->
 	<select id="groupNoticeDetailCmmt" parameterType="groupNoticeCommentVo" resultMap="groupnoticecmmt">
 		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupnoticecomment a 
-		inner join profile b on a.pronum15=b.pronum,(select @rownum:=0) r where gnnum2=#{gnnum}) c 
+		inner join profile b on a.pronum15=b.pronum,(select @rownum:=0) r where gnnum2=#{gnnum} order by gncdate desc) c 
 		where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
 	
@@ -194,13 +195,13 @@
 	
 	<!-- 그룹피드 댓글출력 -->
 	<select id="groupFeedCmmt" parameterType="GroupCommentVo" resultMap="groupcmmt">
-		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum}
+		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum} order by gcdate desc
 	</select>
 	
 	<!-- 그룹피드댓글 더보기 비동기 -->
 	<select id="groupDetailCmmt" parameterType="GroupPostVo" resultMap="groupcmmt">
 		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupcomment a inner join profile b
-		 on a.pronum4=b.pronum,(select @rownum:=0) r where gpnum1=#{gpnum}) c where
+		 on a.pronum4=b.pronum,(select @rownum:=0) r where gpnum1=#{gpnum} order by gcdate desc) c where
 		  prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
 	
@@ -259,7 +260,7 @@
 		
 	<!-- 그룹공지사항 댓글등록 -->
 	<insert id="groupNoticeCmmtInsert" parameterType="GroupNoticeCommentVo">
-		insert into (gnccontent,gncauthor,gncdate,gnnum2,pronum15,grnum8) groupnoticecomment (#{gnccontent},#{gncauthor},now(),#{gnnum},#{pronum},#{grnum})
+		insert into groupnoticecomment (gnccontent,gncauthor,gncdate,gnnum2,pronum15,grnum8) values (#{gnccontent},#{gncauthor},now(),#{gnnum},#{pronum},#{grnum})
 	</insert>
 	
 	<!-- 그룹공지사항 댓글삭제 -->

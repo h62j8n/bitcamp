@@ -45,22 +45,21 @@
 			<!-- 컨텐츠영역 시작 { -->
 			<section class="content_area">
 				<!-- #텍스트+썸네일 피드 시작 { -->
-				<c:forEach items="${feedList}" var="feedList">
 				<div class="feed_viewer">
 					<div class="tit box">
 						<dl class="feed_inform">
 							<dt>
 								<a href="">
 									<span class="pf_picture"><img src="http://placehold.it/55x55" alt="김덕수님의 프로필 썸네일"></span>
-									<span class="fd_name">${feedList.mpauthor}</span>
+									<span class="fd_name">김덕수</span>
 								</a>
 								<a href="">
 									<span class="fd_group">입돌아간다</span>
 								</a>
 							</dt>
 							<dd>
-								<span class="fd_date">${feedList.mpdate}</span>
-								<b class="fd_liked">${feedList.mpgood}</b>
+								<span class="fd_date">2020년 01월 01일 12시 59분</span>
+								<b class="fd_liked">550</b>
 							</dd>
 						</dl>
 						<ul class="feed_options">
@@ -74,11 +73,10 @@
 						<div class="scrBar">
 							<div class="feed_content">
 								<ul class="fd_hashtag">
-									<li><a href="">${feedList.httitle1}</a></li>
-									<li><a href="">${feedList.httitle2}</a></li>
-									<li><a href="">${feedList.httitle3}</a></li>
+									<li><a href="">동계캠핑</a></li>
+									<li><a href="">눈밭</a></li>
 								</ul>
-								<p class="fd_content">${feedList.mpcontent}</p>
+								<p class="fd_content">내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요.</p>
 							</div>
 							<ul class="comment_list">
 								<li>
@@ -138,7 +136,6 @@
 					<!--  } # 썸네일 영역 -->
 				</div>
 				<!-- } #텍스트+썸네일 피드 끝 -->
-				</c:forEach>
 			</section>
 			<!-- } 컨텐츠영역 끝 -->
 			<!-- 우측 사이드영역 시작 { -->

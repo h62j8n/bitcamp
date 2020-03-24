@@ -28,7 +28,8 @@ public class NewsDaoImpl implements NewsDao{
 	//내팔로우의 피드글출력
 	@Override
 	public List<MyPostVo> followFeedSelectAll(MyFollowingVo following) {
-		return sqlSession.selectList("news.followingFeed", following);
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	//내팔로우의 피드글댓글출력
@@ -41,7 +42,8 @@ public class NewsDaoImpl implements NewsDao{
 	//내가입그룹의 피드글출력
 	@Override
 	public List<GroupPostVo> joinGroupFeedSelectAll(ProfileVo profile) {
-		return sqlSession.selectList("news.joingroupFeed", profile);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	//내가입그룹의 피드글댓글출력

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <!-- #피드 수정하기 -->
 <div class="feed_maker">
-	<h3>피드 만들기</h3>
+	<h3>피드 수정하기</h3>
 	<form class="maker_form">
 		<!-- 그룹페이지일 경우 공지 {
 		<p class="mk_noti">

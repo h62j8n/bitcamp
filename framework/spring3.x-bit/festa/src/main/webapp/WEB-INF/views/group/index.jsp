@@ -22,7 +22,6 @@
 		
 		$("input:checkbox[name='ntc']").on('click', function(){
 			$(".mk_tags").hide();
-			
 			if("on" != $("input:checkbox[name='ntc']:checked").val()){
 				$(".mk_tags").show();
 			}
@@ -48,57 +47,91 @@
 		    }
 		});
 		
-		$(document).on('click', '.btn_send.cmmt', function() {
+		$('.btn_send.cmmt').on('click', function() {
 			var btn=$(this);
-			var feed=btn.parents('.feed_viewer');
+			var feed=btn.parents('.feed_viewer.ind');
 			var gccontent=feed.find('#groupCmmtAddCont').val();
 			var gcauthor=feed.find('#cmmtName').val();
 			var gpnum=feed.find('#cmmtGpnum').val();
 			var pronum=feed.find('#cmmtPronum').val();
 			var grnum=feed.find('#cmmtGrnum').val();
 			console.log(gccontent+'/'+gcauthor+'/'+gpnum+'/'+pronum+'/'+grnum)
+			
 			$.post('${root}group/cmmtadd', 'gccontent='+gccontent+'&gcauthor='+gcauthor+'&gpnum='+gpnum+'&pronum='+pronum+'&grnum='+grnum, function(data){
 				window.location.reload();
 			});
+			
+			var para = document.location.href.split("?");
 		});
 		
 		$(document).on('click', '.cmt_btn_more.dt', function() {
 			var btn = $(this);
 			var pageTag = $(this).find('span');
-			var myPage = pageTag.text();			myPage++;
+			var myPage = pageTag.text();
+			myPage++;
 			pageTag.text(myPage);
-			var feed = btn.parents('.feed_viewer');
-			var comments = btn.siblings('.comment_list');
+			var feed = btn.parents('.feed_viewer.ind');
+			var comments = btn.siblings('.comment_list.ind');
+			var del=$('#cmmtPronum').val();
 			var gpnum = feed.find('#cmmtGpnum').val();
+			var pronum=feed.find('#cmmtPronum').val();
+			var mpronum=feed.find('#masterPronum').val();
+			var fpronum=feed.find('#feedPronum').val();
 			$.get('${root}group/cmmt','gpnum='+gpnum+'&pageSearch.page4='+myPage,function(data){
 				$(data).each(function(index){
-					var time = new Date(data[index].gcdate);
-					var year = time.getFullYear();
-					var month;
-					if(time.getMonth()+1<10){
-						month = '0'+(time.getMonth()+1);
-					}else {
-						month = time.getMonth()+1;
-					}
-					var date = time.getDate();
 					if(index==3){
 						return false;
 					}else if(data.length<4){
 						btn.hide();
 					}
-					comments.append('<li>'+
-							'<a href="" class="pf_picture">'+
-								'<img src="${root }resources/images/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">'+
-							'</a><p class="cmt_content">'+
-								'<a href="" class="cmt_name">'+data[index].gcauthor+'</a>'+
-								data[index].gccontent+
-								'<span class="cmt_date">'+year+'-'+month+'-'+date+'</span>'+
-								'<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="'+data[index].gcnum+'"><em class="snd_only">삭제하기</em></button></p>'+
-						'</li>');
+					if(del == data[index].pronum || del == fpronum || pronum == mpronum){
+						comments.append('<li>'+
+								'<a href="" class="pf_picture">'+
+									'<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].gcauthor+'님의 프로필 썸네일">'+
+								'</a><p class="cmt_content">'+
+									'<a href="" class="cmt_name">'+data[index].gcauthor+'</a>&nbsp;&nbsp;'+data[index].gccontent+
+									'<span class="cmt_date">'+data[index].gcdate1+'</span>'+
+									'<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="'+data[index].gcnum+'"><em class="snd_only">삭제하기</em></button></p>'+
+							'</li>');
+					}else{
+						comments.append('<li>'+
+								'<a href="" class="pf_picture">'+
+									'<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].gcauthor+'님의 프로필 썸네일">'+
+								'</a><p class="cmt_content">'+
+									'<a href="" class="cmt_name">'+data[index].gcauthor+'</a>&nbsp;&nbsp;'+data[index].gccontent+
+									'<span class="cmt_date">'+data[index].gcdate1+'</span></li>');
+					}
 				});//each문 end
 			});//ajax통신 end		
 		});//댓글더보기 end
 		
+		$('.btn_delete.btn_pop').on('click', function() {
+			var cmmtdel = $(this).data('value');
+			$('#num').val(cmmtdel);
+		});
+		
+		$('#deletecmmt').on('click', function(){
+			var gcnum = $('#num').val();
+			$.post('${root}group/cmmtdel', 'gcnum='+gcnum, function(data){
+				$('.btn_close.comm_btn.cfm').on('click', function(){
+					location.reload();
+				});
+			}); 
+		});
+
+		$('.btn_delete.feed.btn_pop').on('click', function() {
+			var feeddel = $(this).data('value');
+			$('#fnum').val(feeddel);
+		});
+		
+		$('#deletefeed').on('click', function(){
+			var gpnum = $('#fnum').val();
+			$.post('${root}group/del', 'gpnum='+gpnum, function(data){
+				$('.btn_close.comm_btn.cfm').on('click', function(){
+					location.reload();
+				});
+			}); 
+		});
 	});
 </script>
 <title>FESTA</title>
@@ -146,9 +179,9 @@
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
 												<li><a
-													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
-															src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
+													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+														<span><img src="http://placehold.it/45x45"
+															alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
 												</a></li>
 											</c:forEach>
 										</ul>
@@ -204,9 +237,8 @@
 					<div class="info_box">
 						<dl>
 							<dt class="pf_tit">
-								<input type="hidden" id="cmmtGrnum" value="${detail.grnum }"/>
 								<a class="pf_name"
-									href="${root }group/?grnum=${detail.grnum} &pronum=${detail.pronum}">
+									href="${root }group/?grnum=${detail.grnum}&pronum=${detail.pronum}">
 									<b>${detail.grname }</b>
 								</a>
 								<c:if test="${detail.grventure eq 2 }">
@@ -248,7 +280,7 @@
 							<dd class="gp_list">
 								<span>그룹장 : ${detail.profile.proname}</span> <a
 									class="btn_pop btn_member"
-									href="${root }group/member/?grnum=${detail.grnum}">멤버 :
+									href="${root }group/member?grnum=${detail.grnum}">멤버 :
 									${detail.grtotal }명</a> <span>개설일 : ${detail.grdate }</span>
 								<c:if test="${login.pronum ne detail.pronum }">
 									<a class="btn_pop btn_out" href="${root }group/out">탈퇴</a>
@@ -277,7 +309,7 @@
 								<c:when test="${!empty ntc }">
 									<c:forEach items="${ntc}" var="ntc">
 										<li><a class="btn_pop"
-											href="${root }group/ntc_feed/?gnnum=${ntc.gnnum}&grnum=${detail.grnum}">
+											href="${root }group/ntc_feed?gnnum=${ntc.gnnum}&grnum=${detail.grnum}">
 												${ntc.gncontent } </a></li>
 									</c:forEach>
 								</c:when>
@@ -342,114 +374,115 @@
 					</div>
 					<!-- } #피드만들기 끝 -->
 					<c:forEach items="${feed }" var="feed">
-						<c:if test="${feed.gpphoto ne '' }">
-							<!-- #텍스트+썸네일 피드 시작 { -->
-							<div class="feed_viewer">
-								<div class="tit box">
-									<dl class="feed_inform">
-										<dt>
-											<a href="">
-												<input type="hidden" id="cmmtName" value="${login.proname}" />
-												<input type="hidden" id="cmmtGpnum" value="${feed.gpnum}" />
-												<input type="hidden" id="cmmtGrnum" value="${feed.grnum}" />
-												<input type="hidden" id="cmmtPronum" value="${feed.pronum}" />
-												<span class="pf_picture">
-													<img src="http://placehold.it/55x55" alt="${feed.gpauthor}님의 프로필 썸네일">
-												</span>
-												<span class="fd_name">${feed.gpauthor }</span>
-											</a> <a href=""> <span class="fd_group">${detail.grname }</span>
-											</a>
-										</dt>
-										<dd>
-											<span class="fd_date">${feed.gpdate }</span> <b
-												class="fd_liked">${feed.gpgood }</b>
-										</dd>
-									</dl>
-									<ul class="feed_options">
+						<!-- #텍스트 피드 시작 { -->
+						<div class="feed_viewer ind">
+							<div class="tit box">
+								<dl class="feed_inform">
+									<dt>
+										<a href="">
+											<input type="hidden" id="cmmtName" value="${login.proname}" />
+											<input type="hidden" id="cmmtPronum" value="${login.pronum}" />
+											<input type="hidden" id="cmmtGrnum" value="${detail.grnum }" />
+											<input type="hidden" id="masterPronum" value="${detail.pronum }" />
+											<input type="hidden" id="feedPronum" value="${feed.pronum }" />
+											<span class="pf_picture">
+											<img src="http://placehold.it/55x55" alt="${feed.gpauthor}님의 프로필 썸네일"></span>
+											<span class="fd_name">${feed.gpauthor}</span>
+										</a> 
+										<a href="">
+											<span class="fd_group">${detail.grname}</span>
+										</a>
+									</dt>
+									<dd>
+										<span class="fd_date">${feed.gpdate }</span> <b
+											class="fd_liked">${feed.gpgood }</b>
+									</dd>
+								</dl>
+								<ul class="feed_options">
+									<li><button class="btn_liked act">
+											<em class="snd_only">하트</em>
+										</button></li>
+									<c:if
+										test="${(login.pronum ne feed.pronum) and !(login.pronum eq detail.pronum)}">
+										<li><a href="${root }group/report"
+											class="btn_pop btn_report"> <em class="snd_only">신고하기</em>
+										</a></li>
+									</c:if>
+									<c:if test="${login.pronum eq feed.pronum}">
+										<li><a href="${root }group/maker"
+											class="btn_pop btn_edit"> <em class="snd_only">수정하기</em>
+										</a></li>
+									</c:if>
+									<c:if test="${(login.pronum eq feed.pronum ) or (detail.pronum eq login.pronum)}">
 										<li>
-											<button class="btn_liked act">
-												<em class="snd_only">하트</em>
+											<button class="btn_delete feed btn_pop" data-layer="deletefeed" data-value="${feed.gpnum }">
+												<em class="snd_only">삭제하기</em>
 											</button>
 										</li>
-										<c:if test="${(login.pronum ne feed.pronum) && !(login.pronum eq detail.pronum)}">
-											<li>
-												<a href="${root }group/report"
-													class="btn_pop btn_report"> <em class="snd_only">신고하기</em>
-												</a>
-											</li>
-										</c:if>
-										<c:if test="${login.pronum eq feed.pronum}">
-											<li>
-												<a href="${root }group/maker"
-													class="btn_pop btn_edit"> <em class="snd_only">수정하기</em>
-												</a>
-											</li>
-										</c:if>
-										<c:if test="${(login.pronum eq feed.pronum ) || (detail.pronum eq login.pronum)}">
-											<li>
-												<button class="btn_delete">
-													<em class="snd_only">삭제하기</em>
-												</button>
-											</li>
-										</c:if>
-									</ul>
-								</div>
-								<div class="text box">
-									<div class="scrBar">
-										<div class="feed_content">
-											<ul class="fd_hashtag">
-												<li><a href="">${feed.httitle1 }</a></li>
-												<li><a href="">${feed.httitle2 }</a></li>
-												<li><a href="">${feed.httitle3 }</a></li>
-											</ul>
-											<p class="fd_content">${feed.gpcontent }</p>
-										</div>
-										<ul class="comment_list">
-											<c:set var="i" value="0" />
-											<c:set var="doneLoop" value="false" />
-											<c:forEach items="${feedcmmt }" var="feedcmmt">
-												<c:if test="${detail.grnum eq feed.grnum eq feedcmmt.grnum }">
-													<c:if test="${not doneLoop }">
-														<li class="feedcmmt_viewer">
-															<!-- # 프로필 이미지 없음 { --> <a href="" class="pf_picture">
-																<img src="${root }resources/images/thumb/no_profile.png"
-																alt="${feedcmmt.gcauthor }님의 프로필 썸네일">
-														</a> <!-- } # 프로필 이미지 없음 -->
-															<p class="cmt_content">
-																<a href="" class="cmt_name">${feedcmmt.gcauthor }</a>${feedcmmt.gccontent }<span
-																	class="cmt_date">${feedcmmt.gcdate }</span>
-																<c:if test="${login.pronum eq feed.pronum || login.pronum eq feedcmmt.pronum}">
-																	<button class="btn_delete">
-																		<em class="snd_only">삭제하기</em>
-																	</button>
-																</c:if>
-															</p>
-														</li>
-														<c:set var="i" value="${i+1 }" />
-														<c:if test="${i eq 3 }">
-															<c:set var="doneLoop" value="true" />
-															<c:set var="i" value="0" />
-														</c:if>
+									</c:if>
+								</ul>
+							</div>
+							<div class="text box">
+								<div class="scrBar">
+									<div class="feed_content">
+										<ul class="fd_hashtag">
+											<li><a href="">${feed.httitle1 }</a></li>
+											<li><a href="">${feed.httitle2 }</a></li>
+											<li><a href="">${feed.httitle3 }</a></li>
+										</ul>
+										<p class="fd_content">${feed.gpcontent }</p>
+									</div>
+									<input type="hidden" id="cmmtGpnum" value="${feed.gpnum}" />
+									<ul class="comment_list ind">
+										<c:set var="i" value="0" />
+										<c:set var="doneLoop" value="false" />
+										<c:forEach items="${feedcmmt }" var="feedcmmt">
+											<c:if test="${(feed.gpnum eq feedcmmt.gpnum) and (detail.grnum eq feed.grnum)}">
+												<c:if test="${not doneLoop }">
+													<li class="">
+														<!-- # 프로필 이미지 없음 { -->
+														<a href="" class="pf_picture">
+															<img src="${root }resources/upload/thumb/no_profile.png" alt="${feedcmmt.gcauthor }님의 프로필 썸네일">
+														</a>
+														<!-- } # 프로필 이미지 없음 -->
+														<p class="cmt_content">
+														<input type="hidden" id="delCmmtNum" value="${feedcmmt.gcnum}" />
+														<a href="" class="cmt_name">${feedcmmt.gcauthor }</a>&nbsp;&nbsp;${feedcmmt.gccontent }
+														<span class="cmt_date">${feedcmmt.gcdate }</span>
+															<c:if test="${(login.pronum eq feed.pronum ) or (login.pronum eq feedcmmt.pronum) or (login.pronum eq detail.pronum)}">
+																<button class="btn_delete btn_pop" data-layer="delete" data-value="${feedcmmt.gcnum }">
+																	<em class="snd_only">삭제하기</em>
+																</button>
+															</c:if>
+														</p>
+													</li>
+													<c:set var="i" value="${i+1 }" />
+													<c:if test="${i eq 3 }">
+														<c:set var="doneLoop" value="true" />
 													</c:if>
 												</c:if>
-											</c:forEach>
-										</ul>
-										<c:if test="${feed.gptotal gt 3 }">
-											<button class="cmt_btn_more dt"><span class="snd_only">1</span>댓글 더 보기</button>
-										</c:if>
-									</div>
-									<form class="message_form">
-										<a class="pf_picture" href=""> <img
-											src="http://placehold.it/30x30" alt="나의 프로필 썸네일">
-										</a>
-										<p class="msg_input">
-											<textarea id="" name="" placeholder="메세지를 입력해주세요"></textarea>
-											<button type="submit" class="btn_send">
-												<em class="snd_only">전송</em>
-											</button>
-										</p>
-									</form>
+											</c:if>
+										</c:forEach>
+									</ul>
+									<c:if test="${feed.gptotal gt 3 }">
+										<button class="cmt_btn_more dt">
+											<span class="snd_only">1</span>댓글 더 보기
+										</button>
+									</c:if>
 								</div>
+								<form class="message_form">
+									<a class="pf_picture" href=""><img
+										src="http://placehold.it/30x30" alt="나의 프로필 썸네일"></a>
+									<p class="msg_input">
+										<textarea id="groupCmmtAddCont" name="groupCmmtAddCont"
+											placeholder="메세지를 입력해주세요"></textarea>
+										<button type="button" class="btn_send cmmt">
+											<em class="snd_only">전송</em>
+										</button>
+									</p>
+								</form>
+							</div>
+							<c:if test="${feed.gpphoto ne '' }">
 								<!-- # 썸네일 영역 { -->
 								<div class="img box">
 									<div class="thumb_slide">
@@ -468,115 +501,9 @@
 									</div>
 								</div>
 								<!--  } # 썸네일 영역 -->
-							</div>
-							<!-- } #텍스트+썸네일 피드 끝 -->
-						</c:if>
-
-						<c:if test="${feed.gpphoto eq '' }">
-							<!-- #텍스트 피드 시작 { -->
-							<div class="feed_viewer">
-								<div class="tit box">
-									<dl class="feed_inform">
-										<dt>
-											<a href="">
-											<input type="hidden" id="cmmtName" value="${login.proname}" />
-											<input type="hidden" id="cmmtPronum" value="${login.pronum}" />
-											<span class="pf_picture"><img src="http://placehold.it/55x55" alt="${feed.gpauthor}님의 프로필 썸네일"></span>
-											<span class="fd_name">${feed.gpauthor}</span>
-											</a> <a href=""> <span class="fd_group">${detail.grname}</span>
-											</a>
-										</dt>
-										<dd>
-											<span class="fd_date">${feed.gpdate }</span> <b
-												class="fd_liked">${feed.gpgood }</b>
-										</dd>
-									</dl>
-									<ul class="feed_options">
-										<li><button class="btn_liked act">
-												<em class="snd_only">하트</em>
-											</button></li>
-										<c:if test="${(login.pronum ne feed.pronum) and !(login.pronum eq detail.pronum)}">
-											<li>
-												<a href="${root }group/report"
-													class="btn_pop btn_report"> <em class="snd_only">신고하기</em>
-												</a>
-											</li>
-										</c:if>
-										<c:if test="${login.pronum eq feed.pronum}">
-											<li>
-												<a href="${root }group/maker"
-													class="btn_pop btn_edit"> <em class="snd_only">수정하기</em>
-												</a>
-											</li>
-										</c:if>
-										<c:if test="${(login.pronum eq feed.pronum ) or (detail.pronum eq login.pronum)}">
-											<li>
-												<button class="btn_delete">
-													<em class="snd_only">삭제하기</em>
-												</button>
-											</li>
-										</c:if>
-									</ul>
-								</div>
-								<div class="text box">
-									<div class="scrBar">
-										<div class="feed_content">
-											<ul class="fd_hashtag">
-												<li><a href="">${feed.httitle1 }</a></li>
-												<li><a href="">${feed.httitle2 }</a></li>
-												<li><a href="">${feed.httitle3 }</a></li>
-											</ul>
-											<p class="fd_content">${feed.gpcontent }</p>
-										</div>
-										<input type="hidden" id="cmmtGpnum" value="${feed.gpnum}" />
-										<ul class="comment_list">
-											<c:set var="i" value="0" />
-											<c:set var="doneLoop" value="false" />
-											<c:forEach items="${feedcmmt }" var="feedcmmt">
-												<c:if test="${(feed.gpnum eq feedcmmt.gpnum) and (detail.grnum eq feed.grnum)}">
-													<c:if test="${not doneLoop }">
-														<li class="">
-															<!-- # 프로필 이미지 없음 { -->
-															<a href="" class="pf_picture">
-																<img src="${root }resources/images/thumb/no_profile.png" alt="${feedcmmt.gcauthor }님의 프로필 썸네일">
-															</a>
-															<!-- } # 프로필 이미지 없음 -->
-															<p class="cmt_content">
-																<a href="" class="cmt_name">${feedcmmt.gcauthor }</a>&nbsp;&nbsp;${feedcmmt.gccontent }
-																<input type="hidden" id="cmmtGrnum" value="${feedcmmt.grnum}" />
-																<span class="cmt_date">${feedcmmt.gcdate }</span>
-																<c:if test="${(login.pronum eq feed.pronum ) or (login.pronum eq feedcmmt.pronum)}">
-																	<button class="btn_delete">
-																		<em class="snd_only">삭제하기</em>
-																	</button>
-																</c:if>
-															</p>
-														</li>
-													 	<c:set var="i" value="${i+1 }" />
-														<c:if test="${i eq 3 }">
-															<c:set var="doneLoop" value="true" />
-														</c:if>
-													</c:if>
-												</c:if>
-											</c:forEach>
-										</ul>
-										<c:if test="${feed.gptotal gt 3 }">
-											<button class="cmt_btn_more dt"><span class="snd_only">1</span>댓글 더 보기</button>
-										</c:if>
-									</div>
-									<form class="message_form">
-										<a class="pf_picture" href=""><img	src="http://placehold.it/30x30" alt="나의 프로필 썸네일"></a>
-										<p class="msg_input">
-											<textarea id="groupCmmtAddCont" name="groupCmmtAddCont" placeholder="메세지를 입력해주세요"></textarea>
-											<button type="button" class="btn_send cmmt">
-												<em class="snd_only">전송</em>
-											</button>
-										</p>
-									</form>
-								</div>
-							</div>
-							<!-- } #텍스트 피드 끝 -->
-						</c:if>
+							</c:if>
+						</div>
+						<!-- } #텍스트 피드 끝 -->
 					</c:forEach>
 				</section>
 				<!-- } 컨텐츠영역 끝 -->
@@ -652,10 +579,66 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="delete" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">댓글을 삭제하시겠습니까?</h3>
+			<input type="hidden" id="num" value="">
+			<div class="btn_box">
+				<ul class="comm_buttons">
+					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+					<li><button type="button" id="deletecmmt" class="btn_pop2 comm_btn sbm" data-layer="ok">확인</button></li>
+				</ul>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
+	</div>
+	
+	<div id="deletefeed" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">피드를 삭제하시겠습니까?</h3>
+			<input type="hidden" id="fnum" value="">
+			<div class="btn_box">
+				<ul class="comm_buttons">
+					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+					<li><button type="button" id="deletefeed" class="btn_pop2 comm_btn sbm" data-layer="ok">확인</button></li>
+				</ul>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
+	</div>
+	
+	<!-- #팝업 처리불가 {
+	<div id="" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">그룹을 삭제할 수 없습니다.</p>
+			<p class="pop_txt">아직 탈퇴하지 않은 그룹 멤버가 있습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
+	} #팝업 처리불가 -->
 
+	<!-- #팝업 처리완료 { -->
+	<div id="ok" class="fstPop">
+		<div class="confirm_wrap pop_wrap"> 
+			<p class="pop_tit">처리가 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" class="btn_close ok comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- } #팝업 처리완료 -->
 	<script type="text/javascript">
 		feedType('feed_viewer');
-		fileThumbnail();
+		btnPop('btn_pop2');
+		//fileThumbnail();
 	</script>
 </body>
 </html>

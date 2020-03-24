@@ -146,7 +146,12 @@ public class GroupController {
 	
 	//공지사항 댓글 등록 (팝업>팝업 내 기능)
 	@RequestMapping(value = "ntc_feed/cmmtadd", method = RequestMethod.POST)
-	public String noticeCmmtInsertOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo){
+	public String noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo){
+		groupService.noticeCmmtInsertOne(req, groupNoticeCommentVo);
+		GroupNoticeVo groupNoticeVo = new GroupNoticeVo();
+		groupNoticeVo.setGnnum(groupNoticeCommentVo.getGnnum());
+		groupNoticeVo.setGrnum(groupNoticeCommentVo.getGrnum());
+		groupService.noticeSelectOne(req, groupNoticeVo);
 		return "group/ntc_feed";
 	}
 	
@@ -185,10 +190,11 @@ public class GroupController {
 	public String groupFeedUpdateOne(Model model, GroupPostVo groupPostVo){
 		return "group/index";
 	}
-	
+
 	//그룹 피드 삭제 (팝업>내부팝업 기능)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
 	public String groupFeedDeleteOne(Model model, GroupPostVo groupPostVo){
+		groupService.groupFeedDeleteOne(model, groupPostVo);
 		return "group/index";
 	}
 	
@@ -202,6 +208,7 @@ public class GroupController {
 	//그룹 피드 댓글 삭제 (내부팝업 기능)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String groupFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo){
+		groupService.groupFeedCmmtDeleteOne(model, groupCommentVo);
 		return "group/index";
 	}
 	
