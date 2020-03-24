@@ -67,7 +67,7 @@
 	<!-- 화면출력 start -->
 	
 	<!-- 내 팔로잉유저 피드출력 최신순 -->
-	<select id="followingFeed" parameterType="ProfileVo" resultMap="mypost">
+	<select id="followingFeed" parameterType="MyFollowingVo" resultMap="mypost">
 		select a.*,c.proid,c.prophoto from mypost a inner join profile c on a.pronum12=c.pronum where pronum12 in (select pronum_sync from myfollowing where pronum11=#{pronum}) order by mpdate desc
 	</select>
 	
