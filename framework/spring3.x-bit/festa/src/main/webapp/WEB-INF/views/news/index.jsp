@@ -30,7 +30,7 @@
 				<ul id="gnb">
 					<li><a href="${root}camp/">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
-					<li><a href="${root}news/">뉴스피드</a></li>
+					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 					<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 				</ul>
 				<button type="button" id="btnTop"><em class="snd_only">맨 위로</em></button>
@@ -45,40 +45,46 @@
 			<!-- 컨텐츠영역 시작 { -->
 			<section class="content_area">
 				<!-- #텍스트+썸네일 피드 시작 { -->
+				<c:forEach items="${fwFeedList}" var="feedList">
 				<div class="feed_viewer">
 					<div class="tit box">
 						<dl class="feed_inform">
 							<dt>
 								<a href="">
-									<span class="pf_picture"><img src="http://placehold.it/55x55" alt="김덕수님의 프로필 썸네일"></span>
-									<span class="fd_name">김덕수</span>
-								</a>
-								<a href="">
-									<span class="fd_group">입돌아간다</span>
+									<span class="pf_picture"><img src="http://placehold.it/55x55" alt="${feedList.mpauthor}님의 프로필 썸네일"></span>
+									<span class="fd_name">${feedList.mpauthor}</span>
 								</a>
 							</dt>
 							<dd>
-								<span class="fd_date">2020년 01월 01일 12시 59분</span>
-								<b class="fd_liked">550</b>
+								<span class="fd_date">${feedList.mpdate}</span>
+								<b class="fd_liked">${feedList.mpgood}</b>
 							</dd>
 						</dl>
 						<ul class="feed_options">
 							<li><button class="btn_liked act"><em class="snd_only">하트</em></button></li>
-							<li><a href="${root}news/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
-							<li><a href="${root}news/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
-							<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
+							<c:choose>
+								<c:when test="${login.pronum eq feedList.pronum}">
+								<li><a href="${root}news/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+								<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
+								</c:when>
+								<c:otherwise>
+								<li><a href="${root}news/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+								</c:otherwise>
+							</c:choose>
 						</ul>
 					</div>
 					<div class="text box">
 						<div class="scrBar">
 							<div class="feed_content">
 								<ul class="fd_hashtag">
-									<li><a href="">동계캠핑</a></li>
-									<li><a href="">눈밭</a></li>
+									<li><a href="">${feedList.httitle1}</a></li>
+									<li><a href="">${feedList.httitle2}</a></li>
+									<li><a href="">${feedList.httitle3}</a></li>
 								</ul>
-								<p class="fd_content">내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요.</p>
+								<p class="fd_content">${feedList.mpcontent}</p>
 							</div>
 							<ul class="comment_list">
+								
 								<li>
 									<!-- # 프로필 이미지 없음 { -->
 									<a href="" class="pf_picture">
@@ -88,17 +94,6 @@
 									<p class="cmt_content">
 										<a href="" class="cmt_name">김진혁</a>
 										댓글을 입력해주세요.
-										<span class="cmt_date">2020년 01월 01일 12시 59분</span>
-										<button class="btn_delete"><em class="snd_only">삭제하기</em></button>
-									</p>
-								</li>
-								<li>
-									<a href="" class="pf_picture">
-										<img src="http://placehold.it/30x30" alt="고재현님의 프로필 썸네일">
-									</a>
-									<p class="cmt_content">
-										<a href="" class="cmt_name">고재현</a>
-										댓글을 입력해주세요. 댓글을 입력해주세요. 댓글을 입력해주세요. 댓글을 입력해주세요. 댓글을 입력해주세요.
 										<span class="cmt_date">2020년 01월 01일 12시 59분</span>
 										<button class="btn_delete"><em class="snd_only">삭제하기</em></button>
 									</p>
@@ -135,6 +130,96 @@
 					</div>
 					<!--  } # 썸네일 영역 -->
 				</div>
+				</c:forEach>
+				<c:forEach items="${gpFeedList}" var="feedList">
+				<div class="feed_viewer">
+					<div class="tit box">
+						<dl class="feed_inform">
+							<dt>
+								<a href="">
+									<span class="pf_picture"><img src="http://placehold.it/55x55" alt="${feedList.gpauthor}님의 프로필 썸네일"></span>
+									<span class="fd_name">${feedList.gpauthor}</span>
+								</a>
+								<a href="">
+									<span class="fd_group">${feedList.group.grname}</span>
+								</a>
+							</dt>
+							<dd>
+								<span class="fd_date">${feedList.gpdate}</span>
+								<b class="fd_liked">${feedList.gpgood}</b>
+							</dd>
+						</dl>
+						<ul class="feed_options">
+							<li><button class="btn_liked act"><em class="snd_only">하트</em></button></li>
+							<c:choose>
+								<c:when test="${login.pronum eq feedList.pronum or login.pronum eq feedList.group.pronum}">
+								<li><a href="${root}news/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+								<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
+								</c:when>
+								<c:otherwise>
+								<li><a href="${root}news/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+								</c:otherwise>
+							</c:choose>
+						</ul>
+					</div>
+					<div class="text box">
+						<div class="scrBar">
+							<div class="feed_content">
+								<ul class="fd_hashtag">
+									<li><a href="">${feedList.httitle1}</a></li>
+									<li><a href="">${feedList.httitle2}</a></li>
+									<li><a href="">${feedList.httitle3}</a></li>
+								</ul>
+								<p class="fd_content">${feedList.gpcontent}</p>
+							</div>
+							<ul class="comment_list">
+								<%-- <c:forEach items="${gpCmmtList}" var="cmmtList"></c:forEach> --%>
+								<li>
+									<!-- # 프로필 이미지 없음 { -->
+									<a href="" class="pf_picture">
+										<img src="${root}resources/images/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">
+									</a>
+									<!-- } # 프로필 이미지 없음 -->
+									<p class="cmt_content">
+										<a href="" class="cmt_name">김진혁</a>
+										댓글을 입력해주세요.
+										<span class="cmt_date">2020년 01월 01일 12시 59분</span>
+										<button class="btn_delete"><em class="snd_only">삭제하기</em></button>
+									</p>
+								</li>
+							</ul>
+							<button class="cmt_btn_more">3개의 댓글 더 보기</button>
+						</div>
+						<form class="message_form">
+							<a class="pf_picture" href="">
+								<img src="http://placehold.it/30x30" alt="나의 프로필 썸네일">
+							</a>
+							<p class="msg_input">
+								<textarea id="" name="" placeholder="메세지를 입력해주세요"></textarea>
+								<button type="submit" class="btn_send"><em class="snd_only">전송</em></button>
+							</p>
+						</form>
+					</div>
+					<!-- # 썸네일 영역 { -->
+					<div class="img box">
+						<div class="thumb_slide">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+							</div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<!--  } # 썸네일 영역 -->
+				</div>
+				</c:forEach>
 				<!-- } #텍스트+썸네일 피드 끝 -->
 			</section>
 			<!-- } 컨텐츠영역 끝 -->

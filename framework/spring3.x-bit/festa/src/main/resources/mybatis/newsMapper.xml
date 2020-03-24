@@ -34,6 +34,12 @@
 		<result column="httitle2" property="httitle2"/>
 		<result column="httitle3" property="httitle3"/>
 		<association property="profile" resultMap="profile"/>
+		<association property="group" resultMap="group"/>
+	</resultMap>
+	
+	<resultMap type="GroupVo" id="group">
+		<result column="grname" property="grname"/>
+		<result column="pronum1" property="pronum"/>
 	</resultMap>
 	
 	<!-- 개인피드댓글 조인 시에 참조되는 데이터 -->
@@ -67,23 +73,23 @@
 	<!-- 화면출력 start -->
 	
 	<!-- 내 팔로잉유저 피드출력 최신순 -->
-	<select id="followingFeed" parameterType="ProfileVo" resultMap="mypost">
-		select a.*,c.proid,c.prophoto from mypost a inner join profile c on a.pronum12=c.pronum where pronum12 in (select pronum_sync from myfollowing where pronum11=#{pronum}) order by mpdate desc
+	<select id="followingFeed" parameterType="MyFollowingVo" resultMap="mypost">
+		select * from ((select a.*,c.proid,c.prophoto from mypost a inner join profile c on a.pronum12=c.pronum where pronum12 in (select pronum_sync from myfollowing where pronum11=#{pronum})) union all (select a.*,c.proid,c.prophoto from mypost a inner join profile c on a.pronum12=c.pronum where pronum12=#{pronum})) d order by mpdate desc
 	</select>
 	
 	<!-- 내 팔로잉유저 피드댓글출력 -->
-	<select id="followingCmmt" parameterType="MyPostVo" resultMap="cmmt">
-		select a.*,b.prophoto from mycomment a inner join profile b on a.pronum13=b.pronum where pronum_sync=#{pronum}
+	<select id="followingCmmt" parameterType="MyFollowingVo" resultMap="cmmt">
+		select a.*,b.prophoto from mycomment a inner join profile b on a.pronum13=b.pronum where pronum_sync=#{pronum_sync}
 	</select>
 	
 	<!-- 내 가입그룹 피드출력 최신순 -->
-	<select id="joingroupFeed" parameterType="ProfileVo" resultMap="grouppost">
-		select a.*,c.proid,c.prophoto from grouppost a inner join profile c on a.pronum3=c.pronum where grnum1 in (select grnum3 from joingroup where pronum8=#{proid}) order by gpdate desc
+	<select id="joingroupFeed" parameterType="MyFollowingVo" resultMap="grouppost">
+		select a.*,c.proid,c.prophoto,b.pronum1,b.grname from grouppost a inner join group1 b on a.grnum1=b.grnum inner join profile c on a.pronum3=c.pronum where grnum1 in (select grnum3 from joingroup where pronum8=#{pronum}) order by gpdate desc
 	</select>
 	
 	<!-- 내 가입그룹 피드댓글출력 -->
-	<select id="joingroupCmmt" parameterType="GroupPostVo" resultMap="groupcmmt">
-		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum}
+	<select id="joingroupCmmt" parameterType="MyFollowingVo" resultMap="groupcmmt">
+		select a.*,c.prophoto from groupcomment a inner join joingroup b on a.grnum7=b.grnum3 inner join profile c on b.pronum8=c.pronum where pronum=#{pronum}
 	</select>
 	
 	<!-- 화면출력 end -->

@@ -26,8 +26,10 @@ public class NewsServiceImpl implements NewsService{
 	//뉴스피드 출력(그룹피드,개인피드 합쳐서)
 	@Override
 	public void newsFeedSelectAll(Model model, MyFollowingVo myFollowingVo) {
-		// TODO Auto-generated method stub
-		
+		model.addAttribute("fwFeedList", newsDao.followFeedSelectAll(myFollowingVo));
+		model.addAttribute("fwCmmtList", newsDao.followCommentSelectAll(myFollowingVo));
+		model.addAttribute("gpFeedList", newsDao.joinGroupFeedSelectAll(myFollowingVo));
+		model.addAttribute("gpCmmtList", newsDao.joinGroupCommentSelectAll(myFollowingVo));
 	}
 
 	//뉴스피드 댓글등록(그룹피드,개인피드 구별해서 등록)

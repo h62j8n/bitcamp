@@ -41,6 +41,7 @@ public class GroupPostVo {		//그룹 게시글
 	private ProfileVo profile;
 	private ReportListVo reportList;
 	private UpdateWaitVo updateWait;
+	private Timestamp date;
 	
 	@Override
 	public String toString() {
@@ -52,7 +53,7 @@ public class GroupPostVo {		//그룹 게시글
 				+ ", joinGroup=" + joinGroup + ", myAdmin=" + myAdmin + ", myBookMark=" + myBookMark + ", myComment="
 				+ myComment + ", myFollower=" + myFollower + ", myFollowing=" + myFollowing + ", myGood=" + myGood
 				+ ", myPost=" + myPost + ", myVenture=" + myVenture + ", pageSearch=" + pageSearch + ", profile="
-				+ profile + ", reportList=" + reportList + ", updateWait=" + updateWait + "]";
+				+ profile + ", reportList=" + reportList + ", updateWait=" + updateWait + ", date=" + date + "]";
 	}
 	
 	public GroupPostVo() {
@@ -65,7 +66,7 @@ public class GroupPostVo {		//그룹 게시글
 			GroupNoticeVo groupNotice, GroupVo group, JoinGroupVo joinGroup, MyAdminVo myAdmin, MyBookMarkVo myBookMark,
 			MyCommentVo myComment, MyFollowerVo myFollower, MyFollowingVo myFollowing, MyGoodVo myGood, MyPostVo myPost,
 			MyVentureVo myVenture, PageSearchVo pageSearch, ProfileVo profile, ReportListVo reportList,
-			UpdateWaitVo updateWait) {
+			UpdateWaitVo updateWait, Timestamp date) {
 		super();
 		this.gpnum = gpnum;
 		this.gpauthor = gpauthor;
@@ -98,6 +99,7 @@ public class GroupPostVo {		//그룹 게시글
 		this.profile = profile;
 		this.reportList = reportList;
 		this.updateWait = updateWait;
+		this.date = date;
 	}
 
 	public int getGpnum() {
@@ -354,4 +356,11 @@ public class GroupPostVo {		//그룹 게시글
 		return gpdate1;
 	}
 	
+	public Timestamp getDate() {
+		return date;
+	}
+
+	public void setDate(Timestamp date) {
+		this.date = date;
+	}
 }

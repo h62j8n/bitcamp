@@ -28,29 +28,25 @@ public class NewsDaoImpl implements NewsDao{
 	//내팔로우의 피드글출력
 	@Override
 	public List<MyPostVo> followFeedSelectAll(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("news.followingFeed", following);
 	}
 	
 	//내팔로우의 피드글댓글출력
 	@Override
-	public List<MyCommentVo> followCommentSelectAll(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<MyCommentVo> followCommentSelectAll(MyFollowingVo following) {
+		return sqlSession.selectList("news.followingCmmt", following);
 	}
 
 	//내가입그룹의 피드글출력
 	@Override
-	public List<GroupPostVo> joinGroupFeedSelectAll(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<GroupPostVo> joinGroupFeedSelectAll(MyFollowingVo following) {
+		return sqlSession.selectList("news.joingroupFeed", following);
 	}
 
 	//내가입그룹의 피드글댓글출력
 	@Override
-	public List<GroupCommentVo> joinGroupCommentSelectAll(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<GroupCommentVo> joinGroupCommentSelectAll(MyFollowingVo following) {
+		return sqlSession.selectList("news.joingroupCmmt", following);
 	}
 	
 	//////////////////////////////////////////////////////////////////////

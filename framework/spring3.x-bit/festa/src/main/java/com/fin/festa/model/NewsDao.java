@@ -15,11 +15,11 @@ public interface NewsDao {
 
 	List<MyPostVo> followFeedSelectAll(MyFollowingVo following);
 	
-	List<MyCommentVo> followCommentSelectAll(MyPostVo post);
+	List<MyCommentVo> followCommentSelectAll(MyFollowingVo following);
 	
-	List<GroupPostVo> joinGroupFeedSelectAll(ProfileVo profile);
+	List<GroupPostVo> joinGroupFeedSelectAll(MyFollowingVo following);
 	
-	List<GroupCommentVo> joinGroupCommentSelectAll(GroupPostVo grouppost);
+	List<GroupCommentVo> joinGroupCommentSelectAll(MyFollowingVo following);
 	
 	void myFeedCmmtInsertOne(MyCommentVo cmmt);
 	

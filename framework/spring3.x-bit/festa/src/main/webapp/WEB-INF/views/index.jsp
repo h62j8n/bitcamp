@@ -32,9 +32,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 						<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 						</c:if>
