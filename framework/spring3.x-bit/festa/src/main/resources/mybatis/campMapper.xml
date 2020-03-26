@@ -95,8 +95,8 @@
 	</select>
 	
 	<!-- 해당지역 캠핑장 목록 출력 -->
-	<select id="locationCamp" parameterType="PageSearchVo" resultMap="camp">
-		select a.* from camp a where canum!=1 and caaddrsel like concat('%',#{keyword},'%') order by cagood desc
+	<select id="locationCamp" parameterType="CampVo" resultMap="camp">
+		select a.* from camp a where canum!=1 and caaddrsel like concat('%',#{caaddrsel},'%') order by cagood desc
 	</select>
 	
 	<!-- 캠핑정보 화면출력 end -->

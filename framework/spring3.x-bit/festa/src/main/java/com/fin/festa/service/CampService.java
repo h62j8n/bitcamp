@@ -15,7 +15,7 @@ public interface CampService {
 
 		void campSelectAll(Model model);
 		
-		void campLocation(Model model, PageSearchVo pageSearchVo);
+		void campLocation(Model model, CampVo campVo);
 		
 		void campSelectOne(Model model, CampVo campVo);
 		

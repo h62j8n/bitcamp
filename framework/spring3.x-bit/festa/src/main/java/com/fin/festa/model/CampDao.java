@@ -16,7 +16,7 @@ public interface CampDao {
 	
 	List<CampVo> allLocationCamp();
 	
-	List<CampVo> locationCamp(PageSearchVo search);
+	List<CampVo> locationCamp(CampVo campVo);
 	
 	CampVo campInfoSelectOne(CampVo camp);
 	

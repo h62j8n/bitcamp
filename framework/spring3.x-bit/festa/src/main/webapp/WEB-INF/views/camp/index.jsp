@@ -14,6 +14,50 @@
 	<link rel="stylesheet" href="${root}resources/css/site.css">
 	<link rel="shortcut icon" href="${root}resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+	function firstList() {
+		
+	}
+	$(function(){
+		var camp = new Array();
+		var caname = new Array();
+		var cagood = new Array();
+		var caaddrsel = new Array();
+		var httitle = new Array();
+		
+		<c:forEach items="${allCampList}" var="allCamp" begin="6" end="9">
+		caname.push('${allCamp.caname}');
+		cagood.push('${allCamp.cagood}');
+		caaddrsel.push('${allCamp.caaddrsel}');
+		httitle.push('${allCamp.httitle1}');
+		httitle.push('${allCamp.httitle2}');
+		httitle.push('${allCamp.httitle3}');
+		</c:forEach>
+		camp.push(caname, cagood, caaddrsel, httitle);
+		
+		var tag = '<li>'
+		+ '<a class="cp_thumb" href="">';
+		+ '<img src="http://placehold.it/320x180" alt="${allCamp.caname}">';
+		+ '<b class="cp_liked">${allCamp.cagood}</b>'
+		+ '</a>'
+		+ '<a class="cp_text" href="">'
+		+ '<b class="cp_name">${allCamp.caname}</b>'
+		+ '<span>'
+		+ '<b class="cp_loc">${allCamp.caaddrsel}</b>'
+		+ '#${allCamp.httitle1} #${allCamp.httitle2} #${allCamp.httitle3}'
+		+ '</span>'
+		+ '</a>'
+		+ '</li>';
+		
+		$('.btn_view_more').on('click', function() {
+			var anchor = $(this).find('span');
+			var start = $(this).find('span').text();
+			console.log(start);
+			start = Number(start)+5;
+			anchor.text(start);
+		});
+	});
+	</script>
 </head>
 <body>
 <div id="wrap">
@@ -23,17 +67,79 @@
 				<h1>
 					<a href="${root}"><em class="snd_only">FESTA</em></a>
 				</h1>
-				<form class="search_box">
-					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-					<button type="submit"><img src="${root}resources/images/ico/btn_search.png" alt="검색"></button>
+				<form class="search_box" action="${root }search">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+					<button type="submit">
+						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
+					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root}camp/">캠핑정보</a></li>
+					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
-					<li><a href="${root}news/">뉴스피드</a></li>
+					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
+					<c:if test="${login eq null }">
 					<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
+					</c:if>
+					<c:if test="${login ne null }">
+					<li><a href="${root}user/">마이페이지</a></li>
+					</c:if>
 				</ul>
-				<button type="button" id="btnTop"><em class="snd_only">맨 위로</em></button>
+				<c:if test="${login ne null }">
+				<div id="userMenu" class="fstLyr">
+					<button class="btn_menu">
+						<em class="snd_only">나의 메뉴 더보기</em>
+					</button>
+					<dl class="menu_box" tabindex="0">
+						<dt>
+							<b>${login.proname }님 환영합니다.</b>
+						</dt>
+						<dd>
+							<span class="btn_mylist">나의 그룹</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${joinGroup }" var="joinGroup">
+									<li><a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
+												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd>
+							<span class="btn_mylist">나의 채팅</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${joinGroup }" var="joinGroup">
+									<li><a href=""> <span><img
+												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd>
+							<span class="btn_mylist">나의 캠핑장</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${bookMark }" var="bookMark">
+									<li><a href="${root }camp?canum=${bookMark.camp.canum}"> <span><img
+												src="http://placehold.it/45x45" alt="캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd class="btn_logout">
+							<form>
+								<a href="${root}member/logout" class="btn_pop">로그아웃</a>
+							</form>
+						</dd>
+					</dl>
+				</div>
+				</c:if>
+				<button type="button" id="btnTop">
+					<em class="snd_only">맨 위로</em>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -48,78 +154,20 @@
 				<div class="camp_slide">
 					<div>
 						<ul class="camp_list swiper-wrapper">
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="${root}camp/detail/">
-									<img src="http://placehold.it/320x180" alt="몽산포 패밀리데이 캠핑장 썸네일">
-								</a>
-								<a class="cp_text" href="${root}camp/detail/">
-									<b class="cp_name">몽산포 패밀리데이 캠핑장</b>
-									<span>
-										<b class="cp_loc">경기도</b>
-										#낭만캠핑 #바닷가 #가족여행
-									</span>
-								</a>
-							</li>
+							<c:forEach items="${newCampList}" var="newCamp">
 							<li class="swiper-slide">
 								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
+									<img src="http://placehold.it/320x180" alt="${newCamp.caname} 썸네일">
 								</a>
 								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
+									<b class="cp_name">${newCamp.caname}</b>
 									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
+										<b class="cp_loc">${newCamp.caaddrsel}</b>
+										#${newCamp.httitle1} #${newCamp.httitle2} #${newCamp.httitle3}
 									</span>
 								</a>
 							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
+							</c:forEach>
 						</ul>
 					</div>
 					<button type="button" class="swiper-prev"><em class="snd_only">이전</em></button>
@@ -131,107 +179,50 @@
 			<div class="container">
 				<h3 class="comm_tit">어떤 <span>캠</span><span>핑</span><span>장</span>을 찾고 있나요?</h3>
 				<ul class="tab_list">
-					<li><a href="" class="on">전체</a></li>
-					<li><a href="">서울</a></li>
-					<li><a href="">경기도</a></li>
-					<li><a href="">강원도</a></li>
-					<li><a href="">충청도</a></li>
-					<li><a href="">전라도</a></li>
-					<li><a href="">경상도</a></li>
-					<li><a href="">제주도</a></li>
-					<li><a href="">인천</a></li>
-					<li><a href="">세종</a></li>
-					<li><a href="">대구</a></li>
-					<li><a href="">울산</a></li>
-					<li><a href="">광주</a></li>
-					<li><a href="">대전</a></li>
+					<li><a href="?caaddrsel="<c:if test="${empty param.caaddrsel}"> class="on"</c:if>>전체</a></li>
+					<li><a href="?caaddrsel=서울"<c:if test="${param.caaddrsel eq '서울'}"> class="on"</c:if>>서울</a></li>
+					<li><a href="?caaddrsel=경기도"<c:if test="${param.caaddrsel eq '경기도'}"> class="on"</c:if>>경기도</a></li>
+					<li><a href="?caaddrsel=강원도"<c:if test="${param.caaddrsel eq '강원도'}"> class="on"</c:if>>강원도</a></li>
+					<li><a href="?caaddrsel=충청도"<c:if test="${param.caaddrsel eq '충청도'}"> class="on"</c:if>>충청도</a></li>
+					<li><a href="?caaddrsel=전라도"<c:if test="${param.caaddrsel eq '전라도'}"> class="on"</c:if>>전라도</a></li>
+					<li><a href="?caaddrsel=경상도"<c:if test="${param.caaddrsel eq '경상도'}"> class="on"</c:if>>경상도</a></li>
+					<li><a href="?caaddrsel=제주도"<c:if test="${param.caaddrsel eq '제주도'}"> class="on"</c:if>>제주도</a></li>
+					<li><a href="?caaddrsel=인천"<c:if test="${param.caaddrsel eq '인천'}"> class="on"</c:if>>인천</a></li>
+					<li><a href="?caaddrsel=세종"<c:if test="${param.caaddrsel eq '세종'}"> class="on"</c:if>>세종</a></li>
+					<li><a href="?caaddrsel=대구"<c:if test="${param.caaddrsel eq '대구'}"> class="on"</c:if>>대구</a></li>
+					<li><a href="?caaddrsel=울산"<c:if test="${param.caaddrsel eq '울산'}"> class="on"</c:if>>울산</a></li>
+					<li><a href="?caaddrsel=광주"<c:if test="${param.caaddrsel eq '광주'}"> class="on"</c:if>>광주</a></li>
+					<li><a href="?caaddrsel=대전"<c:if test="${param.caaddrsel eq '대전'}"> class="on"</c:if>>대전</a></li>
 				</ul>
 			</div>
 		</section>
 		<section class="result_area">
 			<div class="container">
-				<h3 class="comm_tit">페스타만의 <b>검증된 캠핑장</b></h3>
+				<h3 class="comm_tit">
+					<c:choose>
+						<c:when test="${empty param.caaddrsel}">페스타만의 </c:when>
+						<c:otherwise>${param.caaddrsel}의 </c:otherwise>
+					</c:choose>
+					<b>검증된 캠핑장</b>
+				</h3>
 				<ul class="camp_list">
+					<c:forEach items="${allCampList}" var="allCamp" begin="0" end="5">
 					<li>
 						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="몽산포 패밀리데이 캠핑장 썸네일">
-							<b class="cp_liked">99</b>
+							<img src="http://placehold.it/320x180" alt="${allCamp.caname}">
+							<b class="cp_liked">${allCamp.cagood}</b>
 						</a>
 						<a class="cp_text" href="">
-							<b class="cp_name">몽산포 패밀리데이 캠핑장</b>
+							<b class="cp_name">${allCamp.caname}</b>
 							<span>
-								<b class="cp_loc">경기도</b>
-								#낭만캠핑 #바닷가 #가족여행
+								<b class="cp_loc">${allCamp.caaddrsel}</b>
+								#${allCamp.httitle1} #${allCamp.httitle2} #${allCamp.httitle3}
 							</span>
 						</a>
 					</li>
-					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-							<b class="cp_liked">0</b>
-						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">캠핑장명</b>
-							<span>
-								<b class="cp_loc">지역</b>
-								#해시태그 #해시태그 #해시태그
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-							<b class="cp_liked">0</b>
-						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">캠핑장명</b>
-							<span>
-								<b class="cp_loc">지역</b>
-								#해시태그 #해시태그 #해시태그
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-							<b class="cp_liked">0</b>
-						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">캠핑장명</b>
-							<span>
-								<b class="cp_loc">지역</b>
-								#해시태그 #해시태그 #해시태그
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-							<b class="cp_liked">0</b>
-						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">캠핑장명</b>
-							<span>
-								<b class="cp_loc">지역</b>
-								#해시태그 #해시태그 #해시태그
-							</span>
-						</a>
-					</li>
-					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-							<b class="cp_liked">0</b>
-						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">캠핑장명</b>
-							<span>
-								<b class="cp_loc">지역</b>
-								#해시태그 #해시태그 #해시태그
-							</span>
-						</a>
-					</li>
+					</c:forEach>
 				</ul>
-				<button class="comm_btn btn_view_more">더 보기</button>
+				<button class="comm_btn btn_view_more"><span class="snd_only">6</span>	더 보기</button>
 			</div>
 		</section>
 		<!-- } 컨텐츠영역 끝 -->

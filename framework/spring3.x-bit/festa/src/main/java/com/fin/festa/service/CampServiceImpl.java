@@ -27,15 +27,14 @@ public class CampServiceImpl implements CampService{
 	//전국캠핑장 목록 출력
 	@Override
 	public void campSelectAll(Model model) {
-		// TODO Auto-generated method stub
-		
+		model.addAttribute("newCampList", campDao.newCampSelectAll());
+		model.addAttribute("allCampList", campDao.allLocationCamp());
 	}
 
 	//해당지역 캠핑장 목록 출력
 	@Override
-	public void campLocation(Model model, PageSearchVo pageSearchVo) {
-		// TODO Auto-generated method stub
-		
+	public void campLocation(Model model, CampVo campVo) {
+		model.addAttribute("allCampList", campDao.locationCamp(campVo));
 	}
 	
 	//해당 캠핑장이 공식그룹이 있는지 체크

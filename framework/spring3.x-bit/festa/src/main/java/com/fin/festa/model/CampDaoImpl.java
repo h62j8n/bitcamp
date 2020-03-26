@@ -27,22 +27,19 @@ public class CampDaoImpl implements CampDao{
 	//신규캠핑장 목록 출력
 	@Override
 	public List<CampVo> newCampSelectAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("camp.newCampSelectAll");
 	}
 
 	//전국캠핑장 목록 출력
 	@Override
 	public List<CampVo> allLocationCamp() {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("camp.allLocationCamp");
 	}
 
 	//해당지역캠핑장 목록 출력
 	@Override
-	public List<CampVo> locationCamp(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CampVo> locationCamp(CampVo campVo) {
+		return sqlSession.selectList("camp.locationCamp", campVo);
 	}
 
 	///////////////////////////////////////////////////////////////
