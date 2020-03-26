@@ -20,6 +20,7 @@ import com.fin.festa.model.entity.MyVentureVo;
 import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 
 public interface AdminService {
 	
@@ -73,11 +74,11 @@ public interface AdminService {
 		
 		void adminVentureRequestSelectAll(Model model, PageSearchVo pageSearchVo);
 		
-		void adminVentureRequestHello(Model model, MyVentureVo myVentureVo);
+		void adminVentureRequestHello(Model model, UpdateWaitVo updateWaitVo);
 		
-		void adminVentureRequestSorry(Model model, MyVentureVo myVentureVo);
+		void adminVentureRequestSorry(Model model, UpdateWaitVo updateWaitVo);
 		
-		void adminReportSelectAll(Model model, ReportListVo reportListVo);
+		void adminReportSelectAll(Model model, PageSearchVo pageSearchVo);
 		
 		void adminReportComplete(Model model, ReportListVo reportListVo);
 		
@@ -90,4 +91,6 @@ public interface AdminService {
 		List<GroupCommentVo> adminGroupDetailCmmt(Model model, GroupPostVo grouppost);
 		
 		List<GroupNoticeCommentVo> adminGroupNoticeCmmt(Model model, GroupNoticeVo groupnotice);
+		
+		public void stopUserCheck();
 }

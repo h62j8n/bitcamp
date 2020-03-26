@@ -215,6 +215,19 @@
 		<result column="canum" property="canum"/>
 	</resultMap>
 	
+	<resultMap type="UpdateWaitVo" id="update">
+		<result column="uwrn" property="uwrn"/>
+		<result column="pronum9" property="pronum"/>
+		<result column="mvnumber" property="mvnumber"/>
+		<result column="mvname" property="mvname"/>
+		<result column="mvaddr" property="mvaddr"/>
+		<result column="proname" property="proname"/>
+		<result column="uwdate" property="uwdate"/>
+		<result column="uwdate" property="uwdate"/>
+		<result column="mvphoto" property="mvphoto"/>
+		<result column="mvaddrsuv" property="mvaddrsuv"/>
+	</resultMap>
+	
 	<!-- 대시보드 화면출력 start -->
 	
 	<!-- 대시보드-전체사용자,그룹,사업자,캠핑장수 출력 -->
@@ -290,13 +303,13 @@
 	
 	<!-- 공지사항댓글출력 -->
 	<select id="groupNoticeCmmtInfo" parameterType="GroupNoticeVo" resultMap="groupnoticecmmt">
-		select a.*,b.prophoto from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum}
+		select a.*,b.prophoto from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum} order by gncnum desc
 	</select>
 	
 	<!-- 공지사항댓글 더보기 비동기 -->
 	<select id="adminGroupNoticeCmmt" parameterType="GroupNoticeVo" resultMap="groupnoticecmmt">
 		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupnoticecomment a 
-		inner join profile b on a.pronum15=b.pronum,(select @rownum:=0) r where gnnum2=#{gnnum}) c 
+		inner join profile b on a.pronum15=b.pronum,(select @rownum:=0) r where gnnum2=#{gnnum} order by gncdate desc) c 
 		where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
 	
@@ -313,7 +326,7 @@
 	<!-- 그룹피드댓글 더보기 비동기 -->
 	<select id="adminGroupDetailCmmt" parameterType="GroupPostVo" resultMap="groupcmmt">
 		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupcomment a inner join profile b
-		 on a.pronum4=b.pronum,(select @rownum:=0) r where gpnum1=#{gpnum}) c where
+		 on a.pronum4=b.pronum,(select @rownum:=0) r where gpnum1=#{gpnum} order by gcdate desc) c where
 		  prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
 	
@@ -324,7 +337,7 @@
 	
 	<!-- 그룹피드 댓글출력 -->
 	<select id="groupFeedCmmtInfoSelectAll" parameterType="GroupVo" resultMap="groupcmmt">
-		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum}
+		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum} order by gcdate desc
 	</select>
 	
 	<!-- 그룹피드댓글 삭제처리 -->
@@ -422,13 +435,13 @@
 	
 	<!-- 유저 피드댓글목록 출력 -->
 	<select id="userCmmt" parameterType="ProfileVo" resultMap="cmmt">
-		select a.*,b.prophoto from mycomment a inner join profile b on a.pronum13=b.pronum where pronum_sync=#{pronum}
+		select a.*,b.prophoto from mycomment a inner join profile b on a.pronum13=b.pronum where pronum_sync=#{pronum} order by mcdate desc
 	</select>
 	
 	<!-- 유저피드 댓글 더보기출력 -->
 	<select id="adminUserDetailCmmt" parameterType="MyPostVo" resultMap="cmmt">
 		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from mycomment
-		 a inner join profile b on a.pronum13=b.pronum,(select @rownum:=0) r where mpnum1=#{mpnum})
+		 a inner join profile b on a.pronum13=b.pronum,(select @rownum:=0) r where mpnum1=#{mpnum} order by mcdate desc)
 		  c where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
 	
@@ -490,7 +503,7 @@
 	
 	<!-- 해당캠핑장 한줄평출력 -->
 	<select id="campReviewInfo" parameterType="CampVo" resultMap="campreview">
-		select * from (select @rownum:=@rownum+1 as crrn,a.*,b.prophoto from campreview a inner join profile b on a.pronum5=b.pronum,(select @rownum:=0) r where canum1=#{canum}) c where crrn<![CDATA[ >= ]]>#{pageSearch.startnum} and crrn<![CDATA[ <= ]]>#{pageSearch.endnum}
+		select a.*,b.prophoto from campreview a inner join profile b on a.pronum5=b.pronum where canum1=2 order by crdate desc
 	</select>
 	
 	<!-- 해당캠핑장한줄평 삭제처리 -->
@@ -564,21 +577,31 @@
 	<!-- 사업자관리 end -->
 	<!-- 사업자등록관리 start -->
 	
+	<!-- 사업자등록신청정보 로우갯수(사업자번호) -->
+	<select id="adminVentureRequestCount_ventureNumber" parameterType="PageSearchVo" resultType="int">
+		select count(*) from updatewait where grnum4=1 and mvnumber like concat('%',#{keyword},'%')
+	</select>
+	
+	<!-- 사업자등록신청정보 로우갯수(캠핑장명) -->
+	<select id="adminVentureRequestCount_campName" parameterType="PageSearchVo" resultType="int">
+		select count(*) from updatewait where grnum4=1 and mvname like concat('%',#{keyword},'%')
+	</select>
+	
 	<!-- 사업자등록신청정보 출력(검색값-사업자번호) -->
-	<select id="adminVentureRequestSelectAll_mvnumber" parameterType="PageSearchVo" resultType="UpdateWaitVo">
-		select c.mvrn,c.pronum9,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.uwdate,c.mvphoto,c.mvaddrsuv from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn2,a.* from updatewait a,(select @rownum:=0) r where mvnumber like concat('%',#{keyword},'%') and grnum4=1 order by mvnumber asc) b,(select @rnum:=0) r2 order by mvrn2 desc) c where mvrn2<![CDATA[ >= ]]>#{startnum} and mvrn2<![CDATA[ <= ]]>#{endnum} order by mvrn desc
+	<select id="adminVentureRequestSelectAll_mvnumber" parameterType="PageSearchVo" resultMap="update">
+		select c.uwrn,c.pronum9,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.uwdate,c.mvphoto,c.mvaddrsuv from (select @rnum:=@rnum+1 as uwrn,b.* from (select @rownum:=@rownum+1 as mvrn2,a.* from updatewait a,(select @rownum:=0) r where mvnumber like concat('%',#{keyword},'%') and grnum4=1 order by mvnumber asc) b,(select @rnum:=0) r2 order by mvrn2 desc) c where mvrn2<![CDATA[ >= ]]>#{startnum} and mvrn2<![CDATA[ <= ]]>#{endnum} order by uwrn desc
 	</select>
 	
 	<!-- 사업자등록신청정보 출력(검색값-캠핑장이름) -->
-	<select id="adminVentureRequestSelectAll_caname" parameterType="PageSearchVo" resultType="UpdateWaitVo">
-		select c.mvrn,c.pronum9,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.uwdate,c.mvphoto,c.mvaddrsuv from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn2,a.* from updatewait a,(select @rownum:=0) r where mvname like concat('%',#{keyword},'%') and grnum4=1 order by mvname asc) b,(select @rnum:=0) r2 order by mvrn2 desc) c where mvrn2<![CDATA[ >= ]]>#{startnum} and mvrn2<![CDATA[ <= ]]>#{endnum} order by mvrn desc
+	<select id="adminVentureRequestSelectAll_caname" parameterType="PageSearchVo" resultMap="update">
+		select c.uwrn,c.pronum9,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.uwdate,c.mvphoto,c.mvaddrsuv from (select @rnum:=@rnum+1 as uwrn,b.* from (select @rownum:=@rownum+1 as mvrn2,a.* from updatewait a,(select @rownum:=0) r where mvname like concat('%',#{keyword},'%') and grnum4=1 order by mvname asc) b,(select @rnum:=0) r2 order by mvrn2 desc) c where mvrn2<![CDATA[ >= ]]>#{startnum} and mvrn2<![CDATA[ <= ]]>#{endnum} order by uwrn desc
 	</select>
 	
 	<!-- 사업자등록 승인처리 +@ -->
 	<insert id="ventureInsert" parameterType="UpdateWaitVo">
 		insert into myventure (mvnumber,mvaddr,pronum2,mvname,mvphoto,mvdate,mvaddrsuv,proname) values 
 		<foreach item="item" index="index" collection="updateList" separator=",">
-      	 (#{item.mvnumber},#{item.mvaddr},#{item.pronum2},#{item.mvname},#{item.mvphoto},now(),#{item.mvaddrsuv},#{item.proname})
+      	 (#{item.mvnumber},#{item.mvaddr},#{item.pronum},#{item.mvname},#{item.mvphoto},now(),#{item.mvaddrsuv},#{item.proname})
  		</foreach>
 	</insert>
 	
@@ -600,23 +623,30 @@
 	
 	<!-- 사업자등록처리 시 그룹존재하면 공식그룹으로 업데이트 -->
 	<update id="groupVentureUpdate" parameterType="GroupVo">
-		<foreach item="item" index="index" collection="groupList" separator=";">
-      		update group1 set grventure=2 where grnum=#{item.grnum}
+		update group1 set grventure=2 where grnum in
+		<foreach item="item" index="index" collection="groupList" open="(" separator="," close=")">
+      		#{item.grnum}
  		</foreach>
 	</update>
 	
 	<!-- 사업자등록관리 end -->
 	<!-- 신고관리 start -->
 	
+	<!-- 신고관리정보 로우갯수 -->
+	<select id="adminReportCount" parameterType="PageSearchVo" resultType="int">
+		select count(*) from reportlist a where rlstatus like concat('%',#{search},'%') and rlcategory like concat('%',#{category})
+	</select>
+	
 	<!-- 신고관리정보 출력 전체 -->
 	<select id="adminReportSelectAll" parameterType="PageSearchVo" resultType="ReportListVo">
-		select * from (select @rnum:=@rnum+1 as rlrn,b.* from (select @rownum:=@rownum+1 as rlrn2,a.* from reportlist a,(select @rownum:=0) r where rlstatus like concat('%',#{check},'%') and (reporterid like concat('%',#{keyword},'%') or targetid like concat('%',#{keyword},'%')) and rlcategory like concat('%',#{category}) order by rldate asc) b,(select @rnum:=0) r2 order by rlrn2 desc) c where rlrn2<![CDATA[ >= ]]>#{startnum} and rlrn2<![CDATA[ <= ]]>#{endnum} order by rlrn desc
+		select * from (select @rnum:=@rnum+1 as rlrn,b.* from (select @rownum:=@rownum+1 as rlrn2,a.* from reportlist a,(select @rownum:=0) r where rlstatus like concat('%',#{search},'%') and rlcategory like concat('%',#{category}) order by rldate asc) b,(select @rnum:=0) r2 order by rlrn2 desc) c where rlrn2<![CDATA[ >= ]]>#{startnum} and rlrn2<![CDATA[ <= ]]>#{endnum} order by rlrn desc
 	</select>
 	
 	<!-- 신고처리완료 업데이트 -->
 	<update id="adminReportUpdate" parameterType="ReportListVo">
-		<foreach item="item" index="index" collection="reportList" separator=";">
-      		update reportlist set rlstatus=2 where rlnum=#{item.rlnum}
+		update reportlist set rlstatus=2 where rlnum in
+		<foreach item="item" index="index" collection="reportList" open="(" separator="," close=")">
+      		#{item.rlnum}
  		</foreach>
 	</update>
 	

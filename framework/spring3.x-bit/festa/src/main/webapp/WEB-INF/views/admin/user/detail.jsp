@@ -48,6 +48,7 @@
 					console.log(text);
 					var mcnum = $('#num').val();
 					$.post('${root}admin/cmmt/del','mcnum='+mcnum,function(){
+						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
 						});
@@ -57,6 +58,7 @@
 					console.log(text);
 					var mpnum = $('#num').val();
 					$.post('${root}admin/user/detail/del','mpnum='+mpnum,function(){
+						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
 						});
@@ -76,15 +78,6 @@
 				var mpnum = feed.find('input[type=hidden]').val();
 				$.get('${root}admin/user/detail/cmmt','pronum=${userdetail.pronum}&mpnum='+mpnum+'&pageSearch.page4='+myPage,function(data){
 					$(data).each(function(index){
-						var time = new Date(data[index].mcdate);
-						var year = time.getFullYear();
-						var month;
-						if(time.getMonth()+1<10){
-							month = '0'+(time.getMonth()+1);
-						}else {
-							month = time.getMonth()+1;
-						}
-						var date = time.getDate();
 						if(index==3){
 							 return false;
 						}else if(data.length<4){
@@ -96,7 +89,7 @@
 								'</a><p class="cmt_content">'+
 									'<a href="" class="cmt_name">'+data[index].mcauthor+'</a>'+
 									data[index].mccontent+
-									'<span class="cmt_date">'+year+'-'+month+'-'+date+'</span>'+
+									'<span class="cmt_date">'+data[index].mcdate1+'</span>'+
 									'<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="'+data[index].mcnum+'"><em class="snd_only">삭제하기</em></button></p>'+
 							'</li>');
 					});//each문 end
@@ -133,6 +126,11 @@
 <body>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
 </c:if>
 <div id="wrap" class="adm">
 	<section class="banner_area">
@@ -181,91 +179,6 @@
 			<section class="content_area">
 				<!-- #텍스트+썸네일 피드 시작 { -->
 				<c:forEach items="${userfeed }" var="userfeed">
-				<c:choose>
-				<c:when test="${userfeed.mpphoto ne '' }">
-				<div class="feed_viewer">
-					<div class="tit box">
-						<dl class="feed_inform">
-							<dt>
-								<a href="${root }admin/user/detail?pronum=${userfeed.pronum}">
-									<input type="hidden" value="${userfeed.mpnum }">
-									<span class="pf_picture"><img src="http://placehold.it/55x55" alt="김덕수님의 프로필 썸네일"></span>
-									<span class="fd_name">${userfeed.mpauthor }</span>
-								</a>
-							</dt>
-							<dd>
-								<span class="fd_date">${userfeed.mpdate }</span>
-								<b class="fd_liked">${userfeed.mpgood }</b>
-							</dd>
-						</dl>
-						<ul class="feed_options">
-							<li><button class="btn_pop btn_delete btn_feed" data-layer="delete" data-value="${userfeed.mpnum }"><em class="snd_only">삭제하기</em></button></li>
-						</ul>
-					</div>
-					<div class="text box">
-						<div class="scrBar">
-							<div class="feed_content">
-								<ul class="fd_hashtag">
-									<li><a href="">${userfeed.httitle1 }</a></li>
-									<li><a href="">${userfeed.httitle2 }</a></li>
-									<li><a href="">${userfeed.httitle3 }</a></li>
-								</ul>
-								<p class="fd_content">${userfeed.mpcontent }</p>
-							</div>
-							<ul class="comment_list">
-								<c:set var="i" value="0"/>
-								<c:set var="doneLoop" value="false"/>
-								<c:forEach items="${usercmmt }" var="usercmmt">
-									<c:if test="${userfeed.mpnum eq usercmmt.mpnum}">
-										<c:if test="${not doneLoop }">
-										<li>
-											<!-- # 프로필 이미지 없음 { -->
-											<a href="${root }admin/user/detail?pronum=${groupcmmt.pronum}" class="pf_picture">
-												<img src="${root }resources/images/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">
-											</a>
-											<!-- } # 프로필 이미지 없음 -->
-											<p class="cmt_content">
-												<a href="${root }admin/user/detail?pronum=${usercmmt.pronum }" class="cmt_name">${usercmmt.mcauthor }</a>
-												${usercmmt.mccontent }
-												<span class="cmt_date">${usercmmt.mcdate }</span>
-												<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="${usercmmt.mcnum }"><em class="snd_only">삭제하기</em></button>
-											</p>
-										</li>
-											<c:set var="i" value="${i+1 }"/>
-											<c:if test="${i eq 3 }">
-												<c:set var="doneLoop" value="true"/>
-											</c:if>
-										</c:if>
-									</c:if>
-								</c:forEach>
-							</ul>
-							<c:if test="${userfeed.mptotal gt 3 }">
-								<button class="cmt_btn_more"><span class="snd_only">1</span>3개의 댓글 더 보기</button>
-							</c:if>
-						</div>
-					</div>
-					<!-- # 썸네일 영역 { -->
-					<div class="img box">
-						<div class="thumb_slide">
-							<div class="swiper-wrapper">
-								<div class="swiper-slide">
-									<img src="http://placehold.it/290x290" alt="">
-								</div>
-								<div class="swiper-slide">
-									<img src="http://placehold.it/290x290" alt="">
-								</div>
-								<div class="swiper-slide">
-									<img src="http://placehold.it/290x290" alt="">
-								</div>
-							</div>
-							<div class="swiper-pagination"></div>
-						</div>
-					</div>
-					<!--  } # 썸네일 영역 -->
-				</div>
-				<!-- } #텍스트+썸네일 피드 끝 -->
-				</c:when>
-				<c:otherwise>
 				<!-- #텍스트 피드 시작 { -->
 				<div class="feed_viewer">
 					<div class="tit box">
@@ -278,7 +191,7 @@
 								</a>
 							</dt>
 							<dd>
-								<span class="fd_date">${userfeed.mpdate }</span>
+								<span class="fd_date">${userfeed.mpdate1 }</span>
 								<b class="fd_liked">${userfeed.mpgood }</b>
 							</dd>
 						</dl>
@@ -305,13 +218,13 @@
 										<li>
 											<!-- # 프로필 이미지 없음 { -->
 											<a href="${root }admin/user/detail?pronum=${groupcmmt.pronum}" class="pf_picture">
-												<img src="${root }resources/images/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">
+												<img src="${root }resources/upload/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">
 											</a>
 											<!-- } # 프로필 이미지 없음 -->
 											<p class="cmt_content">
 												<a href="${root }admin/user/detail?pronum=${usercmmt.pronum}" class="cmt_name">${usercmmt.mcauthor }</a>
 												${usercmmt.mccontent }
-												<span class="cmt_date">${usercmmt.mcdate }</span>
+												<span class="cmt_date">${usercmmt.mcdate1 }</span>
 												<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="${usercmmt.mcnum }"><em class="snd_only">삭제하기</em></button>
 											</p>
 										</li>
@@ -330,8 +243,26 @@
 					</div>
 				</div>
 				<!-- } #텍스트 피드 끝 -->
-				</c:otherwise>
-				</c:choose>
+				<c:if test="${userfeed.mpphoto ne '' }">
+				<!-- # 썸네일 영역 { -->
+					<div class="img box">
+						<div class="thumb_slide">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+								<div class="swiper-slide">
+									<img src="http://placehold.it/290x290" alt="">
+								</div>
+							</div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<!--  } # 썸네일 영역 -->
+				</c:if>
 				</c:forEach>
 			</section>
 			<!-- } 컨텐츠영역 끝 -->
@@ -369,7 +300,7 @@
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" id="delete_btn" class="btn_pop comm_btn cfm" data-layer="success">삭제하기</button></li>
+				<li><button type="button" id="delete_btn" class="comm_btn cfm">삭제하기</button></li>
 			</ul>
 		</form>
 	</div>
@@ -388,7 +319,6 @@
 </div>
 <script type="text/javascript">
 	feedType('feed_viewer');
-	fileThumbnail();
 </script>
 </body>
 </html>

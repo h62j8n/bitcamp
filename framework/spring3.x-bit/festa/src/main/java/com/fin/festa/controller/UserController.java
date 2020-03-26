@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -42,9 +43,12 @@ public class UserController {
 	
 	//게시글 입력
 	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public String feedInsertOne(Model model, MyPostVo myPostVo) {
-		return "user/index";
+	public String feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo) {
+		userSerivce.feedInsertOne(req, files, myPostVo);
+		userSerivce.feedSelectOne(req);
+		return "redirect:/user/";
 	}
+
 
 	//게시글 수정 (팝업)
 	@RequestMapping(value = "maker", method = RequestMethod.GET)

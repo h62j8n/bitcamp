@@ -20,6 +20,11 @@
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
 </c:if>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
+</c:if>
 <div id="wrap">
 	<div id="header">
 		<div class="scrX">

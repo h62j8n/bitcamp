@@ -25,6 +25,7 @@ import com.fin.festa.model.entity.MyVentureVo;
 import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 import com.fin.festa.service.AdminService;
 
 @Controller
@@ -261,36 +262,47 @@ public class AdminController {
 	//사업자 신청 관리
 	@RequestMapping(value = "venture/req", method = RequestMethod.GET)
 	public String adminVentureRequestSelectAll(Model model, PageSearchVo pageSearchVo) {
+		adminService.adminVentureRequestSelectAll(model, pageSearchVo);
 		return "admin/venture/req";
 	}
 	
 	//사업자 신청 승인 (내부팝업 기능)
 	@RequestMapping(value = "venture/reqhi", method = RequestMethod.POST)
-	public String adminVentureRequestHello(Model model, MyVentureVo myVentureVo) {
+	public String adminVentureRequestHello(Model model, UpdateWaitVo updateWaitVo) {
+		
+		adminService.adminVentureRequestHello(model, updateWaitVo);
 		return "admin/venture/req";
 	}
 	
 	//사업자 신청 거절 (내부팝업 기능)
 	@RequestMapping(value = "venture/reqbye", method = RequestMethod.POST)
-	public String adminVentureRequestSorry(Model model, MyVentureVo myVentureVo) {
+	public String adminVentureRequestSorry(Model model, UpdateWaitVo updateWaitVo) {
+		
+		adminService.adminVentureRequestSorry(model, updateWaitVo);
 		return "admin/venture/req";
 	}
 	
 	//신고 조회
 	@RequestMapping(value = "report", method = RequestMethod.GET)
-	public String adminReportSelectAll(Model model, ReportListVo reportListVo) {
+	public String adminReportSelectAll(Model model, PageSearchVo pageSearchVo) {
+		
+		adminService.adminReportSelectAll(model, pageSearchVo);
 		return "admin/report/index";
 	}
 
 	//신고 처리 (내부팝업 기능)
 	@RequestMapping(value = "report/complate", method = RequestMethod.POST)
 	public String adminReportComplate(Model model, ReportListVo reportListVo) {
+		
+		adminService.adminReportComplete(model, reportListVo);
 		return "admin/report/index";
 	}
 
 	//신고 디테일 (내부팝업 기능)
 	@RequestMapping(value = "report/detail", method = RequestMethod.GET)
 	public String adminReportSelectOne(Model model, ReportListVo reportListVo) {
+		
+		adminService.adminReportSelectOne(model, reportListVo);
 		return "admin/report/detail";
 	}
 }

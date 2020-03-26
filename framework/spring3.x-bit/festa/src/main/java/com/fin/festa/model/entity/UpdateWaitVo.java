@@ -1,5 +1,6 @@
 package com.fin.festa.model.entity;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class UpdateWaitVo {						//가입 & 승인 대기 (사업자, 그룹)
 	private String mvaddr;						//사업자 주소
 	private String mvphoto;						//사업자등록증 사진
 	private String mvaddrsuv;					//사업자 주소 상세
-	private int mvnumber;						//사업자번호
+	private BigInteger mvnumber;				//사업자번호
 	private int grnum;							//그룹 번호
 	private int pronum;							//내 번호
 	private int uwrn;							//페이지 번호
@@ -57,7 +58,7 @@ public class UpdateWaitVo {						//가입 & 승인 대기 (사업자, 그룹)
 	}
 
 	public UpdateWaitVo(List<UpdateWaitVo> updateList, String grname, String grsayone, String proname, String mvaddr,
-			String mvphoto, String mvaddrsuv, int mvnumber, int grnum, int pronum, int uwrn, String mvname, Date uwdate,
+			String mvphoto, String mvaddrsuv, BigInteger mvnumber, int grnum, int pronum, int uwrn, String mvname, Date uwdate,
 			CampVo camp, CampReviewVo campReview, GroupCommentVo groupComment, GroupNoticeCommentVo groupNoticeComment,
 			GroupNoticeVo groupNotice, GroupPostVo groupPost, GroupVo group, JoinGroupVo joinGroup,
 			MyAdminVo myAdmin, MyBookMarkVo myBookMark, MyCommentVo myComment, MyFollowerVo myFollower,
@@ -154,11 +155,11 @@ public class UpdateWaitVo {						//가입 & 승인 대기 (사업자, 그룹)
 		this.mvaddrsuv = mvaddrsuv;
 	}
 
-	public int getMvnumber() {
+	public BigInteger getMvnumber() {
 		return mvnumber;
 	}
 
-	public void setMvnumber(int mvnumber) {
+	public void setMvnumber(BigInteger mvnumber) {
 		this.mvnumber = mvnumber;
 	}
 

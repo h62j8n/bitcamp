@@ -15,48 +15,31 @@
 	<link rel="shortcut icon" href="${root}resources/favicon.ico">
 	<title>FESTA</title>
 	<script type="text/javascript">
-	function firstList() {
-		
-	}
 	$(function(){
-		var camp = new Array();
-		var caname = new Array();
-		var cagood = new Array();
-		var caaddrsel = new Array();
-		var httitle = new Array();
-		
-		<c:forEach items="${allCampList}" var="allCamp" begin="6" end="9">
-		caname.push('${allCamp.caname}');
-		cagood.push('${allCamp.cagood}');
-		caaddrsel.push('${allCamp.caaddrsel}');
-		httitle.push('${allCamp.httitle1}');
-		httitle.push('${allCamp.httitle2}');
-		httitle.push('${allCamp.httitle3}');
-		</c:forEach>
-		camp.push(caname, cagood, caaddrsel, httitle);
-		
-		var tag = '<li>'
-		+ '<a class="cp_thumb" href="">';
-		+ '<img src="http://placehold.it/320x180" alt="${allCamp.caname}">';
-		+ '<b class="cp_liked">${allCamp.cagood}</b>'
-		+ '</a>'
-		+ '<a class="cp_text" href="">'
-		+ '<b class="cp_name">${allCamp.caname}</b>'
-		+ '<span>'
-		+ '<b class="cp_loc">${allCamp.caaddrsel}</b>'
-		+ '#${allCamp.httitle1} #${allCamp.httitle2} #${allCamp.httitle3}'
-		+ '</span>'
-		+ '</a>'
-		+ '</li>';
+		var container = $('.result_area .camp_list'),
+			li = container.find('li');
+		li.each(function(e) {
+			if (e > 5) {
+				$(this).hide();
+			}
+		});
 		
 		$('.btn_view_more').on('click', function() {
-			var anchor = $(this).find('span');
-			var start = $(this).find('span').text();
-			console.log(start);
-			start = Number(start)+5;
-			anchor.text(start);
+			var start = container.find('li:visible').length;
+			for (var i=0; i<6; i++) {
+				li.eq(start).show();
+				start++;
+			}
 		});
+		
+		var top = $('.result_area').offset().top - 100;
+		<c:if test="${!empty param.caaddrsel}">
+		resultTop(top);
+		</c:if>
 	});
+	function resultTop(y) {
+		$('html, body').animate({scrollTop: y}, 500);
+	}
 	</script>
 </head>
 <body>
@@ -206,7 +189,7 @@
 					<b>검증된 캠핑장</b>
 				</h3>
 				<ul class="camp_list">
-					<c:forEach items="${allCampList}" var="allCamp" begin="0" end="5">
+					<c:forEach items="${allCampList}" var="allCamp">
 					<li>
 						<a class="cp_thumb" href="">
 							<img src="http://placehold.it/320x180" alt="${allCamp.caname}">
@@ -222,7 +205,7 @@
 					</li>
 					</c:forEach>
 				</ul>
-				<button class="comm_btn btn_view_more"><span class="snd_only">6</span>	더 보기</button>
+				<button class="comm_btn btn_view_more">더 보기</button>
 			</div>
 		</section>
 		<!-- } 컨텐츠영역 끝 -->

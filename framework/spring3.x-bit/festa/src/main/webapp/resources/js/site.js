@@ -179,7 +179,7 @@ function rdoPop() {
 	var layer = '<div class="fstPop pop'+layerCnt+'"></div>';
 	$('.rdo_pop').on('change', function() {
 		layerCnt++;
-		url = $(this).data('url') + '.html';
+		url = $(this).data('url');	/* + '.html'*/
 		var checked = $(this).prop('checked');
 		var radio = $(this);
 		if (checked) {
@@ -865,7 +865,7 @@ function chart() {
 // 카카오 맵API
 function kakaoMap() {
 	var address = $('#mapAddress').text();
-	var imageSrc = '/images/ico/shp_marker.png',
+	var imageSrc = '/festa/resources/images/ico/shp_marker.png',
 		imageSize = new daum.maps.Size(27, 39),	// 39, 51
 		imageOption = {offset: new daum.maps.Point(12, 40)};
 	var kakaoMap = document.getElementById('map'),

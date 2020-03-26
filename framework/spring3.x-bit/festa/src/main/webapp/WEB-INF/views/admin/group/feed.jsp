@@ -76,15 +76,6 @@
 			console.log('공지사항번호',gnnum);
 			$.get('${root}admin/group/detail/notice/cmmt','gnnum=${noticedetail.gnnum}&pageSearch.page4='+myPage,function(data){
 				$(data).each(function(index){
-					var time = new Date(data[index].gncdate);
-					var year = time.getFullYear();
-					var month;
-					if(time.getMonth()+1<10){
-						month = '0'+(time.getMonth()+1);
-					}else {
-						month = time.getMonth()+1;
-					}
-					var date = time.getDate();
 					if(index==3){
 						 return false;
 					}else if(data.length<4){
@@ -96,8 +87,8 @@
 							'</a><p class="cmt_content">'+
 								'<a href="" class="cmt_name">'+data[index].gncauthor+'</a>'+
 								data[index].gnccontent+
-								'<span class="cmt_date">'+year+'-'+month+'-'+date+'</span>'+
-								'<button class="btn_pop btn_delete btn_cmmt" data-layer="delete2" data-value="'+data[index].gncnum+'"><em class="snd_only">삭제하기</em></button></p>'+
+								'<span class="cmt_date">'+data[index].gncdate1+'</span>'+
+								'<button class="btn_pop btn_delete btn_cmmt pp" data-layer="delete2" data-value="'+data[index].gncnum+'"><em class="snd_only">삭제하기</em></button></p>'+
 						'</li>');
 				});//each문 end
 			});//ajax통신 end
@@ -126,7 +117,7 @@
 					</a>
 				</dt>
 				<dd>
-					<span class="fd_date">${noticedetail.gndate }</span>
+					<span class="fd_date">${noticedetail.gndate1 }</span>
 				</dd>
 			</dl>
 			<ul class="feed_options">
@@ -152,7 +143,7 @@
 							<p class="cmt_content">
 								<a href="" class="cmt_name">${noticecmmt.gncauthor }</a>
 								${noticecmmt.gnccontent }
-								<span class="cmt_date">${noticecmmt.gncdate }</span>
+								<span class="cmt_date">${noticecmmt.gncdate1 }</span>
 								<button class="btn_pop btn_delete btn_cmmt pp" data-layer="delete2" data-value="${noticecmmt.gncnum }"><em class="snd_only">삭제하기</em></button></p>
 							</p>
 						</li>

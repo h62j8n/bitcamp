@@ -58,21 +58,19 @@
 			var stoplv;
 			var stopresult;
 			var pronum;
-			var textBox = $('#success .pop_tit');
-			var text;
 			
 			//정지하기 버튼눌렀을때 처리
 			$('#stopbtn').on('click',function(){
-				stoplv=$('input[type=radio]:checked').val();
-				stopresult=$('#stopresult').val();
-				pronum=$('#pronum').val();
-				if(stoplv==undefined){
-					text = '정지기간을 선택해주세요.';
-					textBox.text(text);
-				} else {
-					text = '처리가 완료되었습니다.';
+				if($('input[type=radio]:checked').val()==undefined){
+					openPop('choice');
+				}else if($('#stopresult').val()==''){
+					openPop('fail');
+				}else{
+					stoplv=$('input[type=radio]:checked').val();
+					stopresult=$('#stopresult').val();
+					pronum=$('#pronum').val();
 					$.post('${root}admin/user/stop','pronum='+pronum+'&stopresult='+stopresult+'&stoplv='+stoplv,function(){
-						textBox.text(text);
+						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
 						});
@@ -83,15 +81,18 @@
 			
 			//추방하기 버튼눌렀을때 처리
 			$('#kickbtn').on('click',function(){
-				stopresult=$('#kickresult').val();
-				pronum=$('#pronum1').val();
-				text = '처리가 완료되었습니다.';
-				$.post('${root}admin/user/kick','pronum='+pronum+'&stopresult='+stopresult,function(){
-					textBox.text(text);
-					$('.btn_close').click(function(){
-						location.reload();
+				if($('#kickresult').val()==''){
+					openPop('fail');
+				}else{
+					stopresult=$('#kickresult').val();
+					pronum=$('#pronum1').val();
+					$.post('${root}admin/user/kick','pronum='+pronum+'&stopresult='+stopresult,function(){
+						openPop('success');
+						$('.btn_close').click(function(){
+							location.reload();
+						});
 					});
-				});
+				}
 			});
 			
 		});
@@ -100,6 +101,11 @@
 <body>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
 </c:if>
 <div id="wrap">
 	<div id="header">
@@ -165,9 +171,9 @@
 							<tr>
 								<th class="w60" rowspan="2">No</th>
 								<th>이름</th>
-								<th class="w140">생년월일</th>
+								<th class="w120">생년월일</th>
 								<th class="w120">성별</th>
-								<th class="w80">정지 횟수</th>
+								<th class="w100">정지 횟수</th>
 								<th class="w100" rowspan="2">관리</th>
 							</tr>
 							<tr>
@@ -199,10 +205,10 @@
 												<li><button type="button" class="comm_btn btn_pop btn_stop" data-layer="stop" data-value="${userlist.pronum }">정지</button></li>
 											</c:when>
 											<c:otherwise>
-												<li><button type="button" class="comm_btn cfm">정지 중</button></li>
+												<li><button type="button" class="comm_btn sbm">정지 중</button></li>
 											</c:otherwise>
 										</c:choose>
-										<li><button type="button" class="comm_btn sbm btn_pop btn_kick" data-layer="kick" data-value="${userlist.pronum }">추방</button></li>
+										<li><button type="button" class="comm_btn btn_pop btn_kick" data-layer="kick" data-value="${userlist.pronum }">추방</button></li>
 									</ul>
 								</td>
 							</tr>
@@ -338,7 +344,7 @@
 				<p>회원 제재 시 신중히 확인 바랍니다.</p>
 				<ul class="comm_buttons">
 					<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-					<li><button id="stopbtn" type="button" class="btn_pop comm_btn cfm" data-layer="success">정지하기</button></li>
+					<li><button id="stopbtn" type="button" class="comm_btn cfm">정지하기</button></li>
 				</ul>
 			</div>
 		</form>
@@ -362,7 +368,7 @@
 				<p>회원 제재 시 신중히 확인 바랍니다.</p>
 				<ul class="comm_buttons">
 					<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-					<li><button type="button" id="kickbtn" class="btn_pop comm_btn cfm" data-layer="success">추방하기</button></li>
+					<li><button type="button" id="kickbtn" class="comm_btn cfm">추방하기</button></li>
 				</ul>
 			</div>
 		</form>
@@ -380,5 +386,25 @@
 	</div>
 </div>
 <!-- } #팝업 처리완료 -->
+<!-- #팝업 체크된값없음 { -->
+<div id="choice" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">정지기간을 선택해 주세요.</p>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 체크된값없음 -->
+<!-- #팝업 체크된값없음 { -->
+<div id="fail" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">사유를 입력 해주세요.</p>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 체크된값없음 -->
 </body>
 </html>

@@ -15,14 +15,121 @@
 	<link rel="stylesheet" href="${root }resources/css/site.css">
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			var parameter;
+			var rlnum;
+			var checking;
+			//처리버튼 클릭했을시
+			$(document).on('click', '.btn_status', function() {
+				if($('tbody input[type=checkbox]:checked').length==0){
+					openPop('fail');
+				}else{
+					openPop('status');
+				}
+				//체킹된 데이터잡아주는곳
+				$('tbody input[type=checkbox]:checked').each(function(index){
+					rlnum=$(this).parent().find('input[type=hidden]').val();
+					$(this).attr('name','reportList['+index+'].rlnum');
+					checking=$(this).attr('name');
+					if(index==0){
+						parameter=checking+"="+rlnum;
+					}else if(index>0){
+						parameter=parameter+"&"+checking+"="+rlnum
+					}
+				});
+			});
+			
+			//처리하기버튼 클릭시 데이터처리
+			$(document).on('click', '.report_status', function() {
+				$.post('${root}admin/report/complate',parameter,function(){
+					openPop('success');
+					$('.btn_close').click(function(){
+						location.reload();
+					});
+				});
+			});
+			
+			// 셀렉트박스 값이 바뀔때 해당 셀렉트박스 selected
+			var check='${paging.search}'
+			$('#search').change(function(){
+				var page='${paging.page}';
+				var search=$('#search').val();
+				var category='${paging.category}';
+				location.href='${root }admin/report?page='+page+'&category='+category+'&search='+search;
+			}); 
+			if(check==2){
+				$('#search>option').removeProp('selected');
+				$('#search>option').eq(2).prop('selected','selected');
+				var label = $('#search').siblings('.comm_sel_label');
+				var value = $('#search').val();
+				label.text(value);
+			}else if(check==1){
+				$('#search>option').removeProp('selected');
+				$('#search>option').eq(1).prop('selected','selected');
+				var label = $('#search').siblings('.comm_sel_label');
+				var value = $('#search').val();
+				label.text(value);
+			}else{
+				$('#search>option').removeProp('selected');
+				$('#search>option').eq(0).prop('selected','selected');
+				var label = $('#search').siblings('.comm_sel_label');
+				var value = $('#search').val();
+				label.text(value);
+			}
+			
+			//전체선택 체크박스 눌렀을때 처리완료 활성화or비활성화 처리
+			$('#allChecked').change(function(){
+				$('.btn_status').attr('disabled',false);
+				$('.btn_status').removeClass('sbm');
+				$('tbody input[type=checkbox]:checked').each(function(index){
+					if($('tbody input[type=checkbox]:checked').parent('.tb_chk').parent('tr').find('a').hasClass('cnc')){
+						$('.btn_status').attr('disabled',true);
+						$('.btn_status').addClass('sbm');
+					}else{
+						$('.btn_status').attr('disabled',false);
+						$('.btn_status').removeClass('sbm');
+					}
+				});
+			});
+			
+			//해당 체크박스 눌렀을때 처리완료 활성화or비활성화 처리
+			$('tbody input[type=checkbox]').change(function(){
+				$('.btn_status').attr('disabled',false);
+				$('.btn_status').removeClass('sbm');
+				$('tbody input[type=checkbox]:checked').each(function(index){
+					if($('tbody input[type=checkbox]:checked').parent('.tb_chk').parent('tr').find('a').hasClass('cnc')){
+						$('.btn_status').attr('disabled',true);
+						$('.btn_status').addClass('sbm');
+					}else{
+						$('.btn_status').attr('disabled',false);
+						$('.btn_status').removeClass('sbm');
+					}
+				});
+			});
+			
+			
+			
+		});
+		
+	</script>
 </head>
 <body>
+<c:if test="${sessionScope.login eq null}">
+	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
+</c:if>
 <div id="wrap">
 	<div id="header">
 		<div class="scrX">
 			<div class="container">
 				<h1>
-					<a href="${root }admin/"><em class="snd_only">FESTA</em></a>
+					<a href="${root }"><em class="snd_only">FESTA</em></a>
 				</h1>
 				<ul id="gnb">
 					<li><a href="${root }admin/"><b>관리자</b></a></li>
@@ -62,12 +169,37 @@
 			<section class="content_area">
 				<h2 class="set_tit">신고 관리</h2>
 				<div class="table_options">
+					<ul class="sub_nav">
+						<c:if test="${paging.category eq '' or paging.category eq '전체' }">
+							<li><a href="${root }admin/report?page=1" class="act">전체</a></li>
+							<li><a href="${root }admin/report?page=1&category=그룹">그룹</a></li>
+							<li><a href="${root }admin/report?page=1&category=캠핑장">캠핑장</a></li>
+							<li><a href="${root }admin/report?page=1&category=피드">피드</a></li>
+						</c:if>
+						<c:if test="${paging.category eq '그룹' }">
+							<li><a href="${root }admin/report?page=1">전체</a></li>
+							<li><a href="${root }admin/report?page=1&category=그룹" class="act">그룹</a></li>
+							<li><a href="${root }admin/report?page=1&category=캠핑장">캠핑장</a></li>
+							<li><a href="${root }admin/report?page=1&category=피드">피드</a></li>
+						</c:if>
+						<c:if test="${paging.category eq '캠핑장' }">
+							<li><a href="${root }admin/report?page=1">전체</a></li>
+							<li><a href="${root }admin/report?page=1&category=그룹">그룹</a></li>
+							<li><a href="${root }admin/report?page=1&category=캠핑장" class="act">캠핑장</a></li>
+							<li><a href="${root }admin/report?page=1&category=피드">피드</a></li>
+						</c:if>
+						<c:if test="${paging.category eq '피드' }">
+							<li><a href="${root }admin/report?page=1">전체</a></li>
+							<li><a href="${root }admin/report?page=1&category=그룹">그룹</a></li>
+							<li><a href="${root }admin/report?page=1&category=캠핑장">캠핑장</a></li>
+							<li><a href="${root }admin/report?page=1&category=피드" class="act">피드</a></li>
+						</c:if>
+					</ul>
 					<div class="sort_select">
-						<select class="comm_sel" id="" name="festa1">
-							<option value="">전체</option>
-							<option value="">그룹</option>
-							<option value="">캠핑장</option>
-							<option value="">피드</option>
+						<select class="comm_sel" id="search" name="search">
+							<option value="전체">전체</option>
+							<option value="접수">접수</option>
+							<option value="처리완료">처리완료</option>
 						</select>
 						<p class="comm_sel_label">전체</p>
 					</div>
@@ -78,8 +210,8 @@
 						<thead>
 							<tr>
 								<th class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl0">
-									<label for="festaTbl0"><em class="snd_only">전체선택</em></label>
+									<input type="checkbox" class="comm_chk" name="allChecked" id="allChecked">
+									<label for="allChecked"><em class="snd_only">전체선택</em></label>
 								</th>
 								<th class="w60">No</th>
 								<th class="w110">분류</th>
@@ -90,58 +222,100 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl0">
-									<label for="festaTbl0"><em class="snd_only">선택</em></label>
-								</td>
-								<td>5</td>
-								<td>캠핑장</td>
-								<td>고재현</td>
-								<td>김덕수</td>
-								<td>2020-01-01</td>								
-								<td>
-									<a class="comm_btn btn_pop cnc" href="${root }admin/report/detail">처리완료</a>
-								</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl0">
-									<label for="festaTbl0"><em class="snd_only">선택</em></label>
-								</td>
-								<td>2</td>
-								<td>캠핑장</td>
-								<td>고재현</td>
-								<td>김덕수</td>
-								<td>2020-01-01</td>								
-								<td>
-									<a class="comm_btn btn_pop" href="${root }admin/report/detail">접수</a>
-								</td>
-							</tr>
-							<!-- 빈 테이블 {
-							<tr>
-								<td colspan="7" class="fstEmpty">접수된 신고가 없습니다.</td>
-							</tr>
-							} 빈 테이블 -->
+						<c:set var="i" value="10"/>
+						<c:choose>
+							<c:when test="${paging.totalCount ne 0 }">
+								<c:forEach items="${reportlist }" var="reportlist">
+									<tr>
+										<td class="tb_chk">
+											<input type="hidden" value="${reportlist.rlnum }">
+											<input type="checkbox" class="comm_chk" name="" id="festaTbl${i }">
+											<label for="festaTbl${i }"><em class="snd_only">선택</em></label>
+										</td>
+										<td>${reportlist.rlrn }</td>
+										<c:choose>
+											<c:when test="${reportlist.rlcategory eq '내피드' or reportlist.rlcategory eq '그룹피드' or reportlist.rlcategory eq '공지피드' }">
+												<td>피드</td>
+											</c:when>
+											<c:otherwise>
+												<td>${reportlist.rlcategory }</td>
+											</c:otherwise>
+										</c:choose>
+										<td>${reportlist.rlreporter }</td>
+										<td>${reportlist.rltarget }</td>
+										<td>${reportlist.rldate }</td>		
+										<c:if test="${reportlist.rlstatus eq 2 }">
+											<td>
+												<a class="comm_btn btn_pop cnc" href="${root }admin/report/detail?rlnum=${reportlist.rlnum}">처리 완료</a>
+											</td>
+										</c:if>				
+										<c:if test="${reportlist.rlstatus eq 1 }">
+											<td>
+												<a class="comm_btn btn_pop" href="${root }admin/report/detail?rlnum=${reportlist.rlnum}">접수</a>
+											</td>
+										</c:if>		
+									</tr>
+									<c:set var="i" value="${i-1 }"/>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td colspan="7" class="fstEmpty">접수된 신고가 없습니다.</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
 						</tbody>
 					</table>
 					<div class="table_options">
 						<ul class="comm_buttons_s">
-							<li><button type="button" class="comm_btn btn_pop" data-layer="req">처리 완료</button></li>
+							<li><button type="button" class="comm_btn btn_status">처리 완료</button></li>
 						</ul>
 					</div>
 				</form>
 				<div class="fstPage">
 					<ul>
-						<li><a class="pg_start off" href=""><em class="snd_only">맨 앞으로</em></a></li>
-						<li><a class="pg_prev off" href=""><em class="snd_only">이전 페이지</em></a></li>
-						<li><b>1</b></li>
-						<li><a href="">2</a></li>
-						<li><a href="">3</a></li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a class="pg_next" href=""><em class="snd_only">다음 페이지</em></a></li>
-						<li><a class="pg_end" href=""><em class="snd_only">맨 끝으로</em></a></li>
+						<c:if test="${paging.totalCount ne 0 }">
+						<c:choose>
+							<c:when test="${paging.page eq 1 }">
+								<li><a class="pg_start off"><em class="snd_only">맨 앞으로</em></a></li>
+								<li><a class="pg_prev off"><em class="snd_only">이전 페이지</em></a></li>
+							</c:when>
+							<c:otherwise>
+								<c:if test="${paging.beginPage eq 1 }">
+									<li><a class="pg_start" href="${root }admin/report?page=${paging.beginPage}&category=${paging.category}&search=${paging.search}"><em class="snd_only">맨 앞으로</em></a></li>
+								</c:if>
+								<c:if test="${paging.beginPage ne 1 }">
+									<li><a class="pg_start" href="${root }admin/report?page=${paging.beginPage-1}&category=${paging.category}&search=${paging.search}"><em class="snd_only">맨 앞으로</em></a></li>
+								</c:if>
+								<li><a class="pg_prev" href="${root }admin/report?page=${paging.page-1}&category=${paging.category}&search=${paging.search}"><em class="snd_only">이전 페이지</em></a></li>
+							</c:otherwise>
+						</c:choose>
+						<c:forEach begin="${paging.beginPage }" varStatus="status"  end="${paging.endPage }">
+							<c:choose>
+								<c:when test="${paging.page == status.index}">
+								<li><b>${status.index }</b></li>
+								</c:when>
+								<c:otherwise>
+								<li><a href="${root }admin/report?page=${status.index}&category=${paging.category}&search=${paging.search}">${status.index }</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:choose>
+							<c:when test="${paging.next eq true }">
+								<li><a class="pg_next" href="${root }admin/report?page=${paging.page+1}&category=${paging.category}&search=${paging.search}"><em class="snd_only">다음 페이지</em></a></li>
+								<c:if test="${paging.totalPage eq paging.endPage }">
+									<li><a class="pg_end" href="${root }admin/report?page=${paging.endPage}&category=${paging.category}&search=${paging.search}"><em class="snd_only">맨 끝으로</em></a></li>
+								</c:if>
+								<c:if test="${paging.totalPage ne paging.endPage }">
+									<li><a class="pg_end" href="${root }admin/report?page=${paging.endPage+1}&category=${paging.category}&search=${paging.search}"><em class="snd_only">맨 끝으로</em></a></li>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<li><a class="pg_next off"><em class="snd_only">다음 페이지</em></a></li>
+								<li><a class="pg_end off"><em class="snd_only">맨 끝으로</em></a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
 					</ul>
 				</div>
 			</section>
@@ -172,13 +346,13 @@
 	</div>
 </div>
 <!-- #팝업 삭제하기 { -->
-<div id="req" class="fstPop">
+<div id="status" class="fstPop">
 	<div class="del_wrap pop_wrap">
 		<h4 class="pop_tit">선택하신 신고를 처리하시겠습니까?</h4>
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" class="btn_pop comm_btn cfm" data-layer="success">처리하기</button></li>
+				<li><button type="button" class="comm_btn cfm report_status">처리하기</button></li>
 			</ul>
 		</form>
 	</div>
@@ -195,5 +369,15 @@
 	</div>
 </div>
 <!-- } #팝업 처리완료 -->
+<!-- #팝업 체크된값없음 { -->
+<div id="fail" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">아무것도 선택되지 않았습니다.</p>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 체크된값없음 -->
 </body>
 </html>

@@ -274,10 +274,5 @@
 		</form>
 	</div>
 </div>
-<!-- } #팝업 그룹 가입신청 -->
-<script type="text/javascript">
-	feedType('feed_viewer');
-	fileThumbnail();
-</script>
 </body>
 </html>

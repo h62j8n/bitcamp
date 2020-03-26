@@ -477,74 +477,94 @@ public class AdminDaoImpl implements AdminDao{
 	//////////////////////////////////////////////////////////////
 	//////////////////////사업자등록관리//////////////////////////
 	//////////////////////////////////////////////////////////////
-	
+
+	//사업자등록신청정보 로우갯수(캠핑장명)
+	@Override
+	public int adminVentureRequestCount_campName(PageSearchVo pageSearchVo) {
+		
+		return sqlSession.selectOne("admin.adminVentureRequestCount_campName", pageSearchVo);
+	}
+
+	//사업자등록신청정보 로우갯수(사업자번호)
+	@Override
+	public int adminVentureRequestCount_ventureNumber(PageSearchVo pageSearchVo) {
+		
+		return sqlSession.selectOne("admin.adminVentureRequestCount_ventureNumber", pageSearchVo);
+	}
+
 	//사업자등록신청정보 출력(검색값-사업자번호)
 	@Override
 	public List<UpdateWaitVo> adminVentureRequestSelectAll_mvnumber(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectList("admin.adminVentureRequestSelectAll_mvnumber", search);
 	}
 
 	//사업자등록신청정보 출력(검색값-캠핑장이름)
 	@Override
 	public List<UpdateWaitVo> adminVentureRequestSelectAll_caname(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectList("admin.adminVentureRequestSelectAll_caname", search);
 	}
 
 	//사업자등록승인 처리 +@
 	@Override
 	public void ventureInsert(UpdateWaitVo wait) {
-		// TODO Auto-generated method stub
 		
+		sqlSession.insert("admin.ventureInsert", wait);
 	}
 
 	//승인대기테이블 정보삭제 or 사업자등록 거절처리 +@ (둘다 쓰임)
 	@Override
 	public int updateDelete(UpdateWaitVo wait) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("admin.updateDelete", wait);
 	}
 
 	//사업자등록처리 시 그룹있는 유저의 그룹정보리턴
 	@Override
 	public List<GroupVo> groupCheck(UpdateWaitVo wait) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectList("admin.groupCheck", wait);
 	}
 
 	//사업자등록처리 시 그룹존재하면 공식그룹으로 업데이트
 	@Override
 	public int groupVentureUpdate(GroupVo group) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("admin.groupVentureUpdate", group);
 	}
 
 	//////////////////////////////////////////////////////////////
 	/////////////////////////신고관리/////////////////////////////
 	//////////////////////////////////////////////////////////////
-	
+
+	//신고관리정보 로우갯수
+	@Override
+	public int adminReportCount(PageSearchVo search) {
+		
+		return sqlSession.selectOne("admin.adminReportCount", search);
+	}
+
 	//신고관리정보 출력 
 	@Override
 	public List<ReportListVo> adminReportSelectAll(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectList("admin.adminReportSelectAll", search);
 	}
 
 	//신고 처리완료업데이트
 	@Override
 	public int adminReportUpdate(ReportListVo report) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("admin.adminReportUpdate", report);
 	}
 
 	//신고상세페이지출력
 	@Override
 	public ReportListVo adminReportSelectOne(ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectOne("admin.adminReportSelectOne", reportListVo);
 	}
-
 
 
 }

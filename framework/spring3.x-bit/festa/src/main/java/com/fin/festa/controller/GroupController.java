@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.GroupDao;
 import com.fin.festa.model.MemberDaoImpl;
@@ -33,6 +35,7 @@ import com.fin.festa.model.entity.UpdateWaitVo;
 import com.fin.festa.service.AdminService;
 import com.fin.festa.service.GroupService;
 import com.fin.festa.service.GroupServiceImpl;
+import com.mysql.jdbc.interceptors.SessionAssociationInterceptor;
 
 @Controller
 @RequestMapping("/group/")
@@ -141,6 +144,7 @@ public class GroupController {
 	//공지사항 삭제 (팝업>내부팝업 기능)
 	@RequestMapping(value = "ntc_feed/del", method = RequestMethod.POST)
 	public String noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo){
+		groupService.noticeDeleteOne(model, groupNoticeVo);
 		return "group/index";
 	}
 	
@@ -148,16 +152,13 @@ public class GroupController {
 	@RequestMapping(value = "ntc_feed/cmmtadd", method = RequestMethod.POST)
 	public String noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo){
 		groupService.noticeCmmtInsertOne(req, groupNoticeCommentVo);
-		GroupNoticeVo groupNoticeVo = new GroupNoticeVo();
-		groupNoticeVo.setGnnum(groupNoticeCommentVo.getGnnum());
-		groupNoticeVo.setGrnum(groupNoticeCommentVo.getGrnum());
-		groupService.noticeSelectOne(req, groupNoticeVo);
 		return "group/ntc_feed";
 	}
 	
 	//공지사항 댓글 삭제 (팝업>내부팝업 기능)
 	@RequestMapping(value = "ntc_feed/cmmtdel", method = RequestMethod.POST)
-	public String noticeCmmtDeleteOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo){
+	public String noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo){
+		groupService.noticeCmmtDeleteOne(req, groupNoticeCommentVo);
 		return "group/ntc_feed";
 	}
 	
@@ -172,11 +173,24 @@ public class GroupController {
 	public String noticeReport(Model model, ReportListVo reportListVo){
 		return "group/ntc_feed";
 	}
+
+	//공지사항 입력
+	@RequestMapping(value = "noticeadd", method = RequestMethod.POST)
+	public String noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo, GroupVo groupVo){
+		groupService.noticeInsertOne(req, files, groupNoticeVo);
+		groupVo.setGrnum(groupNoticeVo.getGrnum());
+		groupService.groupSelectOne(req, groupVo);
+		return "redirect:/group/?grnum="+groupVo.getGrnum()+"&pronum="+groupVo.getPronum();
+	}
 	
 	//그룹 피드 입력
-	@RequestMapping(value = "add", method = RequestMethod.GET)
-	public String groupFeedInsertOne(Model model, GroupPostVo groupPostVo, GroupNoticeVo groupNoticeVo){
-		return "group/index";
+	@RequestMapping(value = "add", method = RequestMethod.POST)
+	public String groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo){
+		groupService.groupFeedInsertOne(req, files, groupPostVo);
+		GroupVo group=new GroupVo();
+		group.setGrnum(groupPostVo.getGrnum());
+		groupService.groupSelectOne(req, group);
+		return "redirect:/group/?grnum="+group.getGrnum()+"&pronum="+groupPostVo.getPronum();
 	}
 	
 	//그룹 피드 수정 (팝업)
@@ -280,14 +294,17 @@ public class GroupController {
 	
 	//그룹 관리
 	@RequestMapping(value = "profile", method = RequestMethod.GET)
-	public String groupAdminSelectOne(Model model, GroupVo groupVo){
+	public String groupAdminSelectOne(HttpServletRequest req, GroupVo groupVo){
+		groupService.groupSelectOne(req, groupVo);
 		return "group/profile";
 	}
 	
 	//그룹 수정
 	@RequestMapping(value = "profile/edit", method = RequestMethod.POST)
-	public String groupAdminUpdateOne(Model model, GroupVo groupVo){
-		return "group/profile";
+	public String groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo){
+		groupService.groupAdminUpdateOne(req, groupVo);
+		groupService.groupSelectOne(req, groupVo);
+		return "redirect:/group/profile?grnum="+groupVo.getGrnum();
 	}
 	
 	//그룹원 관리
@@ -337,9 +354,15 @@ public class GroupController {
 	public String groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo){
 		return "group/req";
 	}
+
+	//그룹 삭제 (팝업)
+	@RequestMapping(value = "profile/del", method = RequestMethod.GET)
+	public String groupDeleteOne(){
+		return "user/index";
+	}
 	
-	//그룹 삭제 (내부팝업 기능)
-	@RequestMapping(value = "group/del", method = RequestMethod.POST)
+	//그룹 삭제 (팝업>팝업 내 기능)
+	@RequestMapping(value = "profile/del", method = RequestMethod.POST)
 	public String groupDeleteOne(Model model, GroupVo groupVo){
 		return "user/index";
 	}

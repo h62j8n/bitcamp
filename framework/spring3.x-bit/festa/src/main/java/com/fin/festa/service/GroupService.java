@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupNoticeCommentVo;
@@ -24,7 +25,7 @@ public interface GroupService {
 
 		void groupReport(Model model, ReportListVo reportListVo);
 
-		void noticeInsertOne(Model model, GroupNoticeVo groupNoticeVo);
+		void noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo);
 		
 		void noticeSelectOne(HttpServletRequest req, GroupNoticeVo groupNoticeVo);
 		
@@ -34,11 +35,11 @@ public interface GroupService {
 		
 		void noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo);
 		
-		void noticeCmmtDeleteOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo);
+		void noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo);
 		
 		void noticeReport(Model model, ReportListVo reportListVo);
 		
-		void groupFeedInsertOne(HttpServletRequest req, GroupPostVo groupPostVo);
+		void groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo);
 
 		void groupFeedUpdateOne(Model model, GroupPostVo groupPostVo);
 		
@@ -56,27 +57,27 @@ public interface GroupService {
 
 		void groupChat(Model model);
 		
-		void  groupAdminSelectOne(Model model, GroupVo groupVo);
+		void groupAdminSelectOne(Model model, GroupVo groupVo);
 		
-		void  groupAdminUpdateOne(Model model, GroupVo groupVo);
+		void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo);
 		
-		void  groupUserAdminSelectAll(Model model, GroupVo groupVo);
+		void groupUserAdminSelectAll(Model model, GroupVo groupVo);
 		
-		void  groupUserKick(Model model, JoinGroupVo joinGroupVo);
+		void groupUserKick(Model model, JoinGroupVo joinGroupVo);
 		
-		void  groupUserAllKick(Model model, GroupVo groupVo);
+		void groupUserAllKick(Model model, GroupVo groupVo);
 		
-		void  groupRequestSelectAll(Model model, GroupVo groupVo);
+		void groupRequestSelectAll(Model model, GroupVo groupVo);
 		
-		void  groupRequestHello(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestHello(Model model, UpdateWaitVo updateWaitVo);
 		
-		void  groupRequestEverybodyHello(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestEverybodyHello(Model model, UpdateWaitVo updateWaitVo);
 		
-		void  groupRequestSorry(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestSorry(Model model, UpdateWaitVo updateWaitVo);
 		
-		void  groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo);
 
-		void  groupDeleteOne(Model model, GroupVo groupVo);
+		void groupDeleteOne(Model model, GroupVo groupVo);
 		
 		void groupOut(Model model, JoinGroupVo joinGroup);
 		

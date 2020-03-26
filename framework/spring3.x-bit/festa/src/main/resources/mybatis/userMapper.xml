@@ -115,7 +115,7 @@
    <select id="myFeedSelectAll" parameterType="ProfileVo" resultMap="mypost">
       select d.*,(select count(*) from mycomment where mpnum1=d.mpnum) as mptotal from 
       (select a.*,c.prophoto from mypost a inner join profile c
-       on a.pronum12=c.pronum where pronum12='1' order by mpdate desc) d
+       on a.pronum12=c.pronum where pronum12=#{pronum} order by mpdate desc) d
    </select>
    
    <!-- 내피드 댓글리스트 출력 -->

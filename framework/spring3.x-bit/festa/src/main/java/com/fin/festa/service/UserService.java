@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -25,7 +26,7 @@ public interface UserService {
 	
 		void feedSelectOne(HttpServletRequest req);
 		
-		void feedInsertOne(Model model, MyPostVo myPostVo);
+		void feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo);
 
 		void feedUpdateOne(Model model, MyPostVo myPostVo);
 

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/" var="root"></c:url>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,6 +24,11 @@
 			var check;
 			//삭제버튼 클릭했을시
 			$(document).on('click', '.btn_del', function() {
+				if($('tbody input[type=checkbox]:checked').length==0){
+					openPop('fail');
+				}else{
+					openPop('delete');
+				}
 				//체킹된 데이터잡아주는곳
 				$('tbody input[type=checkbox]:checked').each(function(index){
 					grnum=$(this).parent().find('input[type=hidden]').val();
@@ -39,6 +45,7 @@
 			//삭제하기버튼 클릭시 데이터삭제
 			$(document).on('click', '.group_delete', function() {
 				$.post('${root}admin/group/del',parameter,function(){
+					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();
 					});
@@ -52,6 +59,11 @@
 <body>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
 </c:if>
 <div id="wrap">
 	<div id="header">
@@ -153,7 +165,7 @@
 					</table>
 					<div class="table_options">
 						<ul class="comm_buttons_s">
-							<li><button type="button" class="comm_btn btn_pop btn_del" data-layer="delete">삭제</button></li>
+							<li><button type="button" class="comm_btn btn_pop btn_del">삭제</button></li>
 						</ul>
 					</div>
 				</form>
@@ -237,7 +249,7 @@
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" class="btn_pop comm_btn cfm group_delete" data-layer="success">삭제하기</button></li>
+				<li><button type="button" class="comm_btn cfm group_delete">삭제하기</button></li>
 			</ul>
 		</form>
 	</div>
@@ -254,5 +266,15 @@
 	</div>
 </div>
 <!-- } #팝업 처리완료 -->
+<!-- #팝업 체크된값없음 { -->
+<div id="fail" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">아무것도 선택되지 않았습니다.</p>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 체크된값없음 -->
 </body>
 </html>

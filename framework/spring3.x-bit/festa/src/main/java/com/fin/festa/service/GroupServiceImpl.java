@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.GroupDaoImpl;
 import com.fin.festa.model.entity.GroupCommentVo;
@@ -17,10 +19,13 @@ import com.fin.festa.model.entity.GroupNoticeVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.JoinGroupVo;
+import com.fin.festa.model.entity.MyBookMarkVo;
 import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
+import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.model.entity.UpdateWaitVo;
+import com.fin.festa.util.UploadPhoto;
 
 @Service
 public class GroupServiceImpl implements GroupService{
@@ -90,9 +95,11 @@ public class GroupServiceImpl implements GroupService{
 
 	//공지사항 등록
 	@Override
-	public void noticeInsertOne(Model model, GroupNoticeVo groupNoticeVo) {
-		// TODO Auto-generated method stub
-		
+	public void noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo) {
+		UploadPhoto up = new UploadPhoto();
+		String gnPhoto=up.upload(files, req, groupNoticeVo);
+		groupNoticeVo.setGnphoto(gnPhoto);
+		groupDao.groupNoticeInsert(groupNoticeVo);
 	}
 
 	//공지사항 상세정보출력
@@ -106,52 +113,45 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("ntcDetail", groupDao.groupNoticeSelectOne(groupNoticeVo));
 		req.setAttribute("ntcCmmt", groupDao.groupNoticeCmmtSelectAll(groupNoticeVo));
 	}
+	
 
 	//공지사항 수정
 	@Override
 	public void noticeUpdateOne(Model model, GroupNoticeVo groupNoticeVo) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	//공지사항 삭제
 	@Override
 	public void noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo) {
-		// TODO Auto-generated method stub
-		
+		groupDao.groupNoticeDelete(groupNoticeVo);
 	}
 
 	//공지사항 댓글등록
 	@Override
 	public void noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo) {
 		groupDao.groupNoticeCmmtInsert(groupNoticeCommentVo);
-		GroupVo group=new GroupVo();
-		group.setGrnum(groupNoticeCommentVo.getGrnum());
-		group.setPronum(groupNoticeCommentVo.getPronum());
-		group.setGrnum(groupNoticeCommentVo.getGrnum());
-		req.setAttribute("detail", groupDao.groupSelectOne(group));
 	}
 
 	//공지사항 댓글삭제
 	@Override
-	public void noticeCmmtDeleteOne(Model model, GroupNoticeCommentVo groupNoticeCommentVo) {
-		// TODO Auto-generated method stub
-		
+	public void noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo) {
+		groupDao.groupNoticeCmmtDelete(groupNoticeCommentVo);
 	}
 
 	//공지사항 신고등록
 	//해당유저 신고횟수 +1
 	@Override
 	public void noticeReport(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	//그룹피드 등록
 	@Override
-	public void groupFeedInsertOne(HttpServletRequest req, GroupPostVo groupPostVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo) {
+		UploadPhoto up = new UploadPhoto();
+		String mpPhoto=up.upload(files, req, groupPostVo);
+		groupPostVo.setGpphoto(mpPhoto);
+		groupDao.groupFeedInsert(groupPostVo);
 	}
 
 	
@@ -212,6 +212,8 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	//그룹관리정보출력
+
+	
 	//그룹총원출력
 	@Override
 	public void groupAdminSelectOne(Model model, GroupVo groupVo) {
@@ -221,9 +223,8 @@ public class GroupServiceImpl implements GroupService{
 
 	//그룹관리 수정
 	@Override
-	public void groupAdminUpdateOne(Model model, GroupVo groupVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo) {
+		groupDao.groupInfoUpdate(groupVo);
 	}
 
 	//가입된 유저정보 출력

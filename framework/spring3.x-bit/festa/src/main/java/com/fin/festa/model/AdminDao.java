@@ -90,6 +90,8 @@ public interface AdminDao {
 	
 	List<ReportListVo> adminReportSelectAll(PageSearchVo search);
 	
+	int adminReportCount(PageSearchVo search);
+	
 	int adminReportUpdate(ReportListVo report);
 	
 	GroupVo groupInfo(GroupVo group);
@@ -157,6 +159,10 @@ public interface AdminDao {
 	int adminVentureCount_campName(PageSearchVo pageSearchVo);
 	
 	int adminVentureCount_ventureNumber(PageSearchVo pageSearchVo);
+	
+	int adminVentureRequestCount_campName(PageSearchVo pageSearchVo);
+	
+	int adminVentureRequestCount_ventureNumber(PageSearchVo pageSearchVo);
 	
 	List<ProfileVo> stopUserList();
 	

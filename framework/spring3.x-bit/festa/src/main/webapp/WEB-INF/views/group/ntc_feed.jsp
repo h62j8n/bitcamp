@@ -3,15 +3,43 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <jsp:useBean id="now" class="java.util.Date" />
-
+<c:url value="/upload" var="upload"></c:url>
 <c:url value="/" var="root" />
 <!doctype html>
 <!-- #팝업 피드 -->
 <!-- #텍스트+썸네일 피드 시작 { -->
 <script type="text/javascript">
 	$(document).ready(function(){
-		
-		$('.ntccmmt').on('click', function() {
+
+		//댓글입력 엔터
+		$("#ntcaddmsg").keydown(function(key) {
+            if (key.keyCode == 13) {
+				if (!event.shiftKey){
+            		$.ajax({
+        		        type: 'post',
+        		        url: '${root}group/ntc_feed/cmmtadd',
+        		        data: {
+        		        	"gnccontent": $('#ntcaddmsg').val(),
+        		        	"gncauthor": $('#ntcaddName').val(),
+        		        	"gnnum": $('#ntcaddGn').val(),
+        		        	"pronum": $('#ntcaddPro').val(),
+        		        	"grnum": $('#ntcaddGr').val(),
+        		        },
+        		        success : function(data) {
+        	    			$.ajax({   
+        	    			      url: "${root}group/ntc_feed?gnnum=${ntcDetail.gnnum}&grnum=${ntcDetail.grnum}",   
+        	    			      cache: false   
+        	    			}).done(function(html) {   
+        	    			      $("#feed_viewerntc").replaceWith(html);   
+        	    			});  
+        		        }
+        		    });
+            	}
+            }
+        });
+
+		//댓글입력 버튼
+		$('.btn_send.ntccmmt').on('click', function() {
 			$.ajax({
 		        type: 'post',
 		        url: '${root}group/ntc_feed/cmmtadd',
@@ -23,16 +51,76 @@
 		        	"grnum": $('#ntcaddGr').val(),
 		        },
 		        success : function(data) {
-	    			$.ajax({   
+	    			$.ajax({
 	    			      url: "${root}group/ntc_feed?gnnum=${ntcDetail.gnnum}&grnum=${ntcDetail.grnum}",   
 	    			      cache: false   
-	    			}).done(function(html) {   
+	    			}).done(function(html) {
 	    			      $("#feed_viewerntc").replaceWith(html);   
 	    			});  
 		        }
 		    });
 		});
 
+		//댓글삭제 버튼 클릭
+		$(document).on('click', '.btn_delete.btn_pop.ntccmmtdel', function() {
+			var gncnum = $(this).data('value');
+			$('#ntccmtnum').val(gncnum);
+		});
+		
+		//댓글삭제 버튼 클릭>확인시
+		$('#delcmmt').on('click', function(){
+			//ajax로 댓글삭제 전송
+			$.ajax({
+		        type: 'post',
+		        url: '${root}group/ntc_feed/cmmtdel',
+		        data: {
+		        	"gncnum": $('#ntccmtnum').val()
+		        },
+		        //성공시 데이터 받음
+		        success : function(data) {
+	    			$.ajax({   
+	    			    url: "${root}group/ntc_feed?gnnum=${ntcDetail.gnnum}&grnum=${ntcDetail.grnum}",   
+	    			    cache: false
+	    			}).done(function(html) {
+	    				//현재 div에 받은 데이터 html 덮어씌우기
+	    				openPop("ntcok");
+    					$("#feed_viewerntc").replaceWith(html);   
+	    			});
+		        }
+		    });
+		});
+		
+		//공지삭제 버튼 클릭
+		$('#deletentcfeed').on('click', function(){
+			var gnnum = $(this).data('value');
+			$('#ntcfenum').val(gnnum);
+		});
+		
+		//공지삭제 버튼 클릭>확인시
+		$('#delfeed').on('click', function(){
+			
+			$.ajax({
+				type: 'post',
+				url: '${root}group/ntc_feed/del',
+				data: {
+					"gnnum": $('#ntcfenum').val()
+				},
+				success: function(data){
+					$.ajax({
+						url:"${root}group/?grnum=${detail.grnum}&pronum=${login.pronum}"
+					}).done(function(html){
+						openPop("ntcokk");
+					});
+				}
+			});
+		});
+		
+		$('#delend2').on('click', function(){
+			window.location.reload();
+		});
+
+		
+		//댓글 더보기
 		$(document).on('click', '.cmt_btn_more.ndt', function() {
 			var btn = $(this);
 			var pageTag = $(this).find('span');
@@ -58,7 +146,7 @@
 								'</a><p class="cmt_content">'+
 									'<a href="" class="cmt_name">'+data[index].gncauthor+'</a>&nbsp;&nbsp;'+data[index].gnccontent+
 									'<span class="cmt_date">'+data[index].gncdate1+'</span>'+
-									'<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="'+data[index].gncnum+'"><em class="snd_only">삭제하기</em></button></p>'+
+									'<button class="btn_pop btn_delete btn_cmmt ntccmmtdel" data-layer="delete" data-value="'+data[index].gncnum+'"><em class="snd_only">삭제하기</em></button></p>'+
 							'</li>');
 					} else{
 						comments.append('<li>'+
@@ -73,15 +161,6 @@
 			});//ajax통신 end
 		});//댓글더보기 end
 		
-		$('.btn_delete.btn_pop.ntc').on('click', function() {
-			var ntcdel = $(this).data('value');
-			$('#ntcnum').val(ntcdel);
-		});
-		
-		$('.btn_delete.btn_pop.ntccmmt').on('click', function() {
-			var cmmtdel = $(this).data('value');
-			$('#ntcfnum').val(cmmtdel);
-		});
 		
 	});
 </script>
@@ -97,7 +176,7 @@
 					<input type="hidden" id="ntcaddPro" value="${login.pronum}" />
 					<input type="hidden" id="ntcaddGr" value="${ntcDetail.grnum}">
 					<input type="hidden" id="ntcaddGn" value="${ntcDetail.gnnum}">
-					<span class="pf_picture"><img src="http://placehold.it/55x55" alt="김덕수님의 프로필 썸네일"></span>
+					<span class="pf_picture"><img src="http://placehold.it/55x55" alt="${ntcDetail.gnauthor}님의 프로필 썸네일"></span>
 					<span class="fd_name">[그룹장] ${ntcDetail.gnauthor}</span>
 				</a>
 				<a href="">
@@ -114,7 +193,7 @@
 			</c:if>
 			<c:if test="${login.pronum eq detail.pronum}">
 				<li><a href="${root }group/ntc_maker" class="btn_pop2 btn_edit"><em class="snd_only">수정하기</em></a></li>		
-				<li><button class="btn_delete btn_pop ntc" data-layer="deletentcfeed" data-value="${ntcDetail.gnnum }"><em class="snd_only">삭제하기</em></button></li>
+				<li><button class="btn_delete btn_pop ntc" id="deletentcfeed" data-layer="deletentcfe" data-value="${ntcDetail.gnnum }"><em class="snd_only">삭제하기</em></button></li>
 			</c:if>
 		</ul>
 	</div>
@@ -142,7 +221,7 @@
 									<a href="" class="cmt_name">${ntcCmmt.gncauthor }</a>&nbsp;&nbsp;${ntcCmmt.gnccontent }
 									<span class="cmt_date">${ntcCmmt.gncdate }</span>
 									<c:if test="${(login.pronum eq ntcCmmt.pronum) or (login.pronum eq detail.pronum)}">
-										<button class="btn_delete btn_pop ntccmmt" data-layer="deletentc" data-value="${ntcCmmt.gncnum }"><em class="snd_only">삭제하기</em></button>
+										<button class="btn_delete btn_pop ntccmmtdel" data-layer="deletentc" data-value="${ntcCmmt.gncnum }"><em class="snd_only">삭제하기</em></button>
 									</c:if>
 								</p>
 							</li>
@@ -168,37 +247,36 @@
 			</p>
 		</form>
 	</div>
-	<!-- # 썸네일 영역 { -->
-	<!-- <div class="img box">
-		<div class="thumb_slide">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<img src="http://placehold.it/290x290" alt="">
-				</div>
-				<div class="swiper-slide">
-					<img src="http://placehold.it/290x290" alt="">
-				</div>
-				<div class="swiper-slide">
-					<img src="http://placehold.it/290x290" alt="">
+		<c:if test="${ntcDetail.gnphoto ne '' }">
+			<!-- # 썸네일 영역 { -->
+			<div class="img box">
+				<div class="thumb_slide">
+					<div class="swiper-wrapper">
+						<c:set var="gnphoto" value="${ntcDetail.gnphoto }" />
+						<c:forTokens items="${gnphoto }" delims="," var="items">
+							<div class="swiper-slide">
+								<img src="${upload }/${items }" alt="">
+							</div>
+						</c:forTokens>
+					</div>
+					<div class="swiper-pagination"></div>
 				</div>
 			</div>
-			<div class="swiper-pagination"></div>
-		</div>
-	</div> -->
+		</c:if>
 	<!--  } # 썸네일 영역 -->
 </div>
 <!-- } #텍스트+썸네일 피드 끝 -->
 
-<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>
+<button type="button" id="ntcclosed" class="btn_close"><em class="snd_only">창 닫기</em></button>
 
 	<div id="deletentc" class="fstPop">
 		<div class="out_wrap pop_wrap">
 			<h3 class="pop_tit">댓글을 삭제하시겠습니까?</h3>
-			<input type="hidden" id="ntcnum" value="">
+			<input type="hidden" id="ntccmtnum" value="">
 			<div class="btn_box">
 				<ul class="comm_buttons">
-					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-					<li><button type="button" id="deletecmmt" class="btn_pop2 comm_btn sbm ntccmmt" data-layer="ok">확인</button></li>
+					<li><button type="button" id="clocmmt" class="btn_close comm_btn cnc cmmt">취소</button></li>
+					<li><button type="button" id="delcmmt" class="btn_close comm_btn cfm">확인</button></li>	<!--  data-layer="ntcok" -->
 				</ul>
 			</div>
 		</div>
@@ -207,20 +285,40 @@
 		</button>
 	</div>
 	
-	<div id="deletentcfeed" class="fstPop">
+	<div id="deletentcfe" class="fstPop">
 		<div class="out_wrap pop_wrap">
 			<h3 class="pop_tit">피드를 삭제하시겠습니까?</h3>
-			<input type="hidden" id="ntcfnum" value="">
+			<input type="hidden" id="ntcfenum" value="">
 			<div class="btn_box">
 				<ul class="comm_buttons">
-					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-					<li><button type="button" id="deletefeed" class="btn_pop2 comm_btn sbm ntc" data-layer="ok">확인</button></li>
+					<li><button type="button" id="clofeed" class="btn_close comm_btn cnc feed">취소</button></li>
+					<li><button type="button" id="delfeed" class="btn_close comm_btn cfm ntc">확인</button></li>
 				</ul>
 			</div>
 		</div>
 		<button type="button" class="btn_close">
 			<em class="snd_only">창 닫기</em>
 		</button>
+	</div>
+	
+		<!-- #팝업 처리완료 { -->
+	<div id="ntcok" class="fstPop">
+		<div class="confirm_wrap pop_wrap"> 
+			<p class="pop_tit">처리가 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="delend" class="btn_close ok comm_btn cfm ntc">확인</button></li>
+			</ul>
+		</div>
+	</div>
+	
+		<!-- #팝업 처리완료 { -->
+	<div id="ntcokk" class="fstPop">
+		<div class="confirm_wrap pop_wrap"> 
+			<p class="pop_tit">처리가 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="delend2" class="btn_close ok comm_btn cfm ntc">확인</button></li>
+			</ul>
+		</div>
 	</div>
 	
 <script type="text/javascript">
@@ -228,4 +326,5 @@
 	feedType('feed_viewer');
 	btnToggle('btn_liked');
 	btnPop('btn_pop2');
+	thumbnail();
 </script>

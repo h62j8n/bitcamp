@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.UserDaoImpl;
 import com.fin.festa.model.entity.CampVo;
@@ -25,6 +26,7 @@ import com.fin.festa.model.entity.MyVentureVo;
 import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.model.entity.UpdateWaitVo;
+import com.fin.festa.util.UploadPhoto;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -76,12 +78,16 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	// 내피드 등록
+	//내피드 등록
 	@Override
-	public void feedInsertOne(Model model, MyPostVo myPostVo) {
-		// TODO Auto-generated method stub
-
+	public void feedInsertOne(HttpServletRequest req,MultipartFile[] files, MyPostVo myPostVo) {
+		UploadPhoto up = new UploadPhoto();
+		String mpphoto = up.upload(files, req, myPostVo);
+		
+		myPostVo.setMpphoto(mpphoto);
+		userDao.myFeedInsertOne(myPostVo);
 	}
+
 
 	// 내피드 수정
 	@Override

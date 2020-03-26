@@ -128,15 +128,13 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹공지사항 등록
 	@Override
 	public void groupNoticeInsert(GroupNoticeVo notice) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("group.groupNoticeInsert", notice);
 	}
 
 	//그룹피드 등록
 	@Override
 	public void groupFeedInsert(GroupPostVo post) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("group.groupFeedInsert", post);
 	}
 
 	//그룹 피드댓글 등록
@@ -145,16 +143,27 @@ public class GroupDaoImpl implements GroupDao{
 		sqlSession.insert("group.groupFeedCmmtInsert", cmmt);
 	}
 
+	//그룹 피드댓글 삭제
+	@Override
+	public int groupFeedCmmtDelete(GroupCommentVo cmmt) {
+		return sqlSession.delete("group.groupFeedCmmtDelete", cmmt);
+	}
+	
 	//그룹공지사항 댓글등록
 	@Override
 	public void groupNoticeCmmtInsert(GroupNoticeCommentVo groupnoticecmmt) {
 		sqlSession.insert("group.groupNoticeCmmtInsert", groupnoticecmmt);
 	}
 
+	//그룹공지사항 댓글삭제
+	@Override
+	public void groupNoticeCmmtDelete(GroupNoticeCommentVo groupnoticecmmt) {
+		sqlSession.delete("group.groupNoticeCmmtDelete", groupnoticecmmt);
+	}
+	
 	//그룹피드 수정
 	@Override
 	public int groupFeedUpdate(GroupPostVo post) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -168,28 +177,15 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹 피드 삭제
 	@Override
 	public int groupFeedDelete(GroupPostVo post) {
-		// TODO Auto-generated method stub
 		return sqlSession.delete("group.groupFeedDelete", post);
 	}
 
-	//그룹 피드댓글 삭제
-	@Override
-	public int groupFeedCmmtDelete(GroupCommentVo cmmt) {
-		return sqlSession.delete("group.groupFeedCmmtDelete", cmmt);
-	}
 
 	//그룹 공지사항 삭제
 	@Override
 	public int groupNoticeDelete(GroupNoticeVo notice) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	//그룹공지사항 댓글삭제
-	@Override
-	public void groupNoticeCmmtDelete(GroupNoticeCommentVo groupnoticecmmt) {
-		// TODO Auto-generated method stub
-		
+		return sqlSession.delete("group.groupNoticeDelete", notice);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -309,8 +305,7 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹정보 수정
 	@Override
 	public int groupInfoUpdate(GroupVo group) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("group.groupInfoUpdate", group);
 	}
 
 	////////////////////////////////////////////////////////////////

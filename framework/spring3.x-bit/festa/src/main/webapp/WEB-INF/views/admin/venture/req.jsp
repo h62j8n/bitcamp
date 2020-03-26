@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/" var="root"></c:url>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -15,10 +16,113 @@
 	<link rel="stylesheet" href="${root }resources/css/site.css">
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			// 셀렉트박스 값이 바뀔때 해당 셀렉트박스 selected
+			var check='${paging.category}';
+			if(check=='캠핑장명'){
+				$('#category>option').removeProp('selected');
+				$('#category>option').eq(0).prop('selected','selected');
+				var label = $('#category').siblings('.comm_sel_label');
+				var value = $('#category').val();
+				label.text(value);
+			}else{
+				$('#category>option').removeProp('selected');
+				$('#category>option').eq(1).prop('selected','selected');
+				var label = $('#category').siblings('.comm_sel_label');
+				var value = $('#category').val();
+				label.text(value);
+			} 
+			
+			var parameter;
+			var mvnum;
+			var pronum;
+			var mvname;
+			var proname;
+			var mvphoto;
+			var mvaddrsuv;
+			var checking;
+			//거절버튼 클릭했을시
+			$(document).on('click', '.sorry', function() {
+				if($('tbody input[type=checkbox]:checked').length==0){
+					openPop('fail');
+				}else{
+					openPop('sorry');
+				}
+				//체킹된 데이터잡아주는곳
+				$('tbody input[type=checkbox]:checked').each(function(index){
+					mvnumber=$(this).parent().find('input[type=hidden]').eq(0).val();
+					pronum=$(this).parent().find('input[type=hidden]').eq(1).val();
+					$(this).attr('name','updateList['+index+']');
+					checking=$(this).attr('name');
+					if(index==0){
+						parameter=checking+".mvnumber="+mvnumber+"&"+checking+".pronum="+pronum;
+					}else if(index>0){
+						parameter=parameter+"&"+checking+".mvnumber="+mvnumber+"&"+checking+".pronum="+pronum;
+					}
+				});
+				console.log(parameter);
+			});
+
+			//거절하기버튼 클릭시 데이터삭제
+			$(document).on('click', '.venture_sorry', function() {
+				$.post('${root}admin/venture/reqbye',parameter,function(){
+					openPop('success');
+					$('.btn_close').click(function(){
+						location.reload();
+					});
+				});
+			});
+			
+			//승인버튼 클릭했을시
+			$(document).on('click', '.hello', function(){
+				if($('tbody input[type=checkbox]:checked').length==0){
+					openPop('fail');
+				}else{
+					openPop('hello');
+				}
+				//체킹된 데이터잡아주는곳
+				$('tbody input[type=checkbox]:checked').each(function(index){
+					mvnumber=$(this).parent().find('input[type=hidden]').eq(0).val();
+					pronum=$(this).parent().find('input[type=hidden]').eq(1).val();
+					mvname=$(this).parent().find('input[type=hidden]').eq(2).val();
+					mvaddr=$(this).parent().find('input[type=hidden]').eq(3).val();
+					proname=$(this).parent().find('input[type=hidden]').eq(4).val();
+					mvphoto=$(this).parent().find('input[type=hidden]').eq(5).val();
+					mvaddrsuv=$(this).parent().find('input[type=hidden]').eq(6).val();
+					$(this).attr('name','updateList['+index+']');
+					checking=$(this).attr('name');
+					if(index==0){
+						parameter=checking+".mvnumber="+mvnumber+"&"+checking+".pronum="+pronum+"&"+checking+".mvname="+mvname+"&"+checking+".mvaddr="+mvaddr+"&"+checking+".proname="+proname+"&"+checking+".mvphoto="+mvphoto+"&"+checking+".mvaddrsuv="+mvaddrsuv;
+					}else if(index>0){
+						parameter=parameter+"&"+checking+".mvnumber="+mvnumber+"&"+checking+".pronum="+pronum+"&"+checking+".mvname="+mvname+"&"+checking+".mvaddr="+mvaddr+"&"+checking+".proname="+proname+"&"+checking+".mvphoto="+mvphoto+"&"+checking+".mvaddrsuv="+mvaddrsuv;
+					}
+				});
+				console.log(parameter);
+			});
+			
+			//승인하기버튼 클릭시 데이터처리
+			$(document).on('click', '.venture_hello', function() {
+				$.post('${root}admin/venture/reqhi',parameter,function(){
+					openPop('success');
+					$('.btn_close').click(function(){
+						location.reload();
+					});
+				});
+			});
+			
+		});
+	</script>
 </head>
 <body>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
 </c:if>
 <div id="wrap">
 	<div id="header">
@@ -70,6 +174,17 @@
 			<!-- 컨텐츠영역 시작 { -->
 			<section class="content_area">
 				<h2 class="set_tit">사업자계정 신청 조회</h2>
+				<div class="table_options">
+					<form class="search_form">
+						<select class="comm_sel" id="category" name="category">
+							<option value="캠핑장명">캠핑장명</option>
+							<option value="사업자등록번호">사업자등록번호</option>
+						</select>
+						<p class="comm_sel_label">캠핑장명</p>
+						<input type="text" id="keyword" name="keyword" value="${paging.keyword }" placeholder="검색어를 입력해주세요">
+						<button type="submit"><i class="xi-search"></i></button>
+					</form>
+				</div>
 				<form class="set_form">
 					<table class="adm vt_table one">
 						<caption class="snd_only">사업자계정 신청 목록</caption>
@@ -87,181 +202,94 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl10">
-									<label for="festaTbl10"><em class="snd_only">선택</em></label>
-								</td>
-								<td>10</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="/admin/camp/detail.html" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl9">
-									<label for="festaTbl9"><em class="snd_only">선택</em></label>
-								</td>
-								<td>9</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl8">
-									<label for="festaTbl8"><em class="snd_only">선택</em></label>
-								</td>
-								<td>8</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl7">
-									<label for="festaTbl7"><em class="snd_only">선택</em></label>
-								</td>
-								<td>7</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl6">
-									<label for="festaTbl6"><em class="snd_only">선택</em></label>
-								</td>
-								<td>6</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl5">
-									<label for="festaTbl5"><em class="snd_only">선택</em></label>
-								</td>
-								<td>5</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl4">
-									<label for="festaTbl4"><em class="snd_only">선택</em></label>
-								</td>
-								<td>4</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl3">
-									<label for="festaTbl3"><em class="snd_only">선택</em></label>
-								</td>
-								<td>3</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl2">
-									<label for="festaTbl2"><em class="snd_only">선택</em></label>
-								</td>
-								<td>2</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<tr>
-								<td class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="" id="festaTbl1">
-									<label for="festaTbl1"><em class="snd_only">선택</em></label>
-								</td>
-								<td>1</td>
-								<td><button type="button" class="btn_pop">123-45-67890</button></td>
-								<td>
-									<p>
-										<a href="" target="_blank">입돌아간다</a>
-									</p>
-								</td>
-								<td>고재현</td>
-								<td>2020-01-01</td>
-							</tr>
-							<!-- 빈 테이블 {
-							<tr>
-								<td colspan="6" class="fstEmpty">등록된 캠핑장이 없습니다.</td>
-							</tr>
-							} 빈 테이블 -->
+						<c:set var="i" value="10"/>
+						<c:choose>
+							<c:when test="${paging.totalCount ne 0 }">
+								<c:forEach items="${ventureRequest }" var="ventureRequest">
+									<tr>
+										<td class="tb_chk">
+											<input type="hidden" value="${ventureRequest.mvnumber }">
+											<input type="hidden" value="${ventureRequest.pronum }">
+											<input type="hidden" value="${ventureRequest.mvname }">
+											<input type="hidden" value="${ventureRequest.mvaddr }">
+											<input type="hidden" value="${ventureRequest.proname }">
+											<input type="hidden" value="${ventureRequest.mvphoto }">
+											<input type="hidden" value="${ventureRequest.mvaddrsuv }">
+											<input type="checkbox" class="comm_chk" name="" id="festaTbl${i }">
+											<label for="festaTbl${i }"><em class="snd_only">선택</em></label>
+										</td>
+										<td>${ventureRequest.uwrn }</td>
+										<td><button type="button" class="btn_pop" data-layer="ventureImage">${ventureRequest.mvnumber }</button></td>
+										<td>
+											<p>
+												${ventureRequest.mvname }
+											</p>
+										</td>
+										<td>${ventureRequest.proname }</td>
+										<td>${ventureRequest.uwdate }</td>
+									</tr>
+									<c:set var="i" value="${i-1 }"/>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td colspan="6" class="fstEmpty">검색한 결과가 없습니다.</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
 						</tbody>
 					</table>
 					<div class="table_options">
 						<ul class="comm_buttons_s">
-							<li><button type="button" class="comm_btn btn_pop cnc" data-layer="hello">승인</button></li>
-							<li><button type="button" class="comm_btn btn_pop" data-layer="sorry">거절</button></li>
+							<li><button type="button" class="comm_btn btn_pop cnc hello">승인</button></li>
+							<li><button type="button" class="comm_btn btn_pop sorry">거절</button></li>
 						</ul>
 					</div>
 				</form>
 				<div class="fstPage">
 					<ul>
-						<li><a class="pg_start off" href=""><em class="snd_only">맨 앞으로</em></a></li>
-						<li><a class="pg_prev off" href=""><em class="snd_only">이전 페이지</em></a></li>
-						<li><b>1</b></li>
-						<li><a href="">2</a></li>
-						<li><a href="">3</a></li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a class="pg_next" href=""><em class="snd_only">다음 페이지</em></a></li>
-						<li><a class="pg_end" href=""><em class="snd_only">맨 끝으로</em></a></li>
+						<c:if test="${paging.totalCount ne 0 }">
+						<c:choose>
+							<c:when test="${paging.page eq 1 }">
+								<li><a class="pg_start off"><em class="snd_only">맨 앞으로</em></a></li>
+								<li><a class="pg_prev off"><em class="snd_only">이전 페이지</em></a></li>
+							</c:when>
+							<c:otherwise>
+								<c:if test="${paging.beginPage eq 1 }">
+									<li><a class="pg_start" href="${root }admin/venture/req?page=${paging.beginPage}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">맨 앞으로</em></a></li>
+								</c:if>
+								<c:if test="${paging.beginPage ne 1 }">
+									<li><a class="pg_start" href="${root }admin/venture/req?page=${paging.beginPage-1}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">맨 앞으로</em></a></li>
+								</c:if>
+								<li><a class="pg_prev" href="${root }admin/venture/req?page=${paging.page-1}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">이전 페이지</em></a></li>
+							</c:otherwise>
+						</c:choose>
+						<c:forEach begin="${paging.beginPage }" varStatus="status"  end="${paging.endPage }">
+							<c:choose>
+								<c:when test="${paging.page == status.index}">
+								<li><b>${status.index }</b></li>
+								</c:when>
+								<c:otherwise>
+								<li><a href="${root }admin/venture/req?page=${status.index}&keyword=${paging.keyword}&category=${paging.category}">${status.index }</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:choose>
+							<c:when test="${paging.next eq true }">
+								<li><a class="pg_next" href="${root }admin/venture/req?page=${paging.page+1}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">다음 페이지</em></a></li>
+								<c:if test="${paging.totalPage eq paging.endPage }">
+									<li><a class="pg_end" href="${root }admin/venture/req?page=${paging.endPage}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">맨 끝으로</em></a></li>
+								</c:if>
+								<c:if test="${paging.totalPage ne paging.endPage }">
+									<li><a class="pg_end" href="${root }admin/venture/req?page=${paging.endPage+1}&keyword=${paging.keyword}&category=${paging.category}"><em class="snd_only">맨 끝으로</em></a></li>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<li><a class="pg_next off"><em class="snd_only">다음 페이지</em></a></li>
+								<li><a class="pg_end off"><em class="snd_only">맨 끝으로</em></a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
 					</ul>
 				</div>
 			</section>
@@ -298,7 +326,7 @@
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" class="btn_pop comm_btn cfm" data-layer="success">승인하기</button></li>
+				<li><button type="button" class="comm_btn cfm venture_hello">승인하기</button></li>
 			</ul>
 		</form>
 	</div>
@@ -312,7 +340,7 @@
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" class="btn_pop comm_btn cfm" data-layer="success">거절하기</button></li>
+				<li><button type="button" class="comm_btn cfm venture_sorry">거절하기</button></li>
 			</ul>
 		</form>
 	</div>
@@ -329,5 +357,25 @@
 	</div>
 </div>
 <!-- } #팝업 처리완료 -->
+<!-- #팝업 체크된값없음 { -->
+<div id="fail" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">아무것도 선택되지 않았습니다.</p>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 체크된값없음 -->
+<!-- #사업자등록증 { -->
+<div id="ventureImage" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<p class="pop_tit">사업자등록증 사진</p><br/>
+		<img src="http://placehold.it/400x450">
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
 </body>
 </html>

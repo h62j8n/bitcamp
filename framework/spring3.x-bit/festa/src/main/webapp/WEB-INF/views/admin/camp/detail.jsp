@@ -29,27 +29,154 @@
 			$(document).on('click', '#delete_btn', function() {
 				var crnum = $('#crnum').val();
 				$.post('${root}admin/camp/detail/revdel','crnum='+crnum,function(){
+					openPop('success');
 					$('.btn_close.ok').click(function(){
 						location.reload();
 					});
 				});
 			});
 			
-			//스크롤내려감
-//			var url=window.location.href;
-//			url=url.substr(54,58);
-//			if(url != ''){
-//				//$(document).scrollTop($(document).height()-1300);
-//				$( 'html, body' ).animate( { scrollTop : 1800 }, 100 );
-//				return false;
-//			};
+			//첫화면 로딩시 백에서 가져온 페이징값저장
+			var totalCount1='${paging.totalCount}';
+			//첫화면시 페이징기능 호출,페이지뷰,로우뷰 출력
+			paging(page,totalCount1);
+			pageView(pageText);
+			rowView();
+			
+			//페이지버튼 눌렀을때 이벤트
+			$(document).on('click','.fstPage a',function(e){
+				pageText=$(this).text();
+				//다음버튼 눌렀을경우
+				if(pageText=='다음 페이지'){
+					if(page==totalPage){
+						return false;						
+					}else{
+						page+=1;
+					}
+				//이전버튼 눌렀을경우
+				}else if(pageText=='이전 페이지'){
+					if(page==1){
+						return false;						
+					}else{
+						page-=1;
+					}
+				//맨끝버튼 눌렀을경우
+				}else if(pageText=='맨 끝으로'){
+					if(totalPage==endPage){
+						page=endPage;
+					}else if(totalPage!=endPage){
+						page=endPage+1;
+					}
+				//맨앞버튼 눌렀을경우
+				}else if(pageText=='맨 앞으로'){
+					if(beginPage==1){
+						page=beginPage;
+					}else if(beginPage!=1){
+						page=beginPage-1;
+					}
+				//그외 숫자버튼 눌렀을경우
+				}else{
+					page=Number(pageText);
+				}
+				paging(page,totalCount1);
+				pageView(pageText);
+				rowView();
+				e.preventDefault();
+			});
 			
 		});
+		
+		//페이징에 필요한 필드선언
+		var pageText=1;
+		var page=1;
+		var displayRow2=5;	
+		var beginPage;		
+		var endPage;		
+		var prev;				
+		var next;	
+		var totalPage;
+		var startnum;		
+		var endnum;			
+		var displayPage=5;
+		var totalCount;
+		
+		//페이징함수 
+		function paging(page,totalCount1){
+			totalCount=totalCount1;		
+			startnum=(page-1)*5+1;
+			endnum=page*5;
+			
+			totalPage=Math.floor(totalCount/displayRow2);
+			
+			if(totalCount%displayRow2!=0){
+				totalPage+=1;
+			}
+			
+			endPage = Math.floor((page+(displayPage-1))/displayPage)*displayPage;
+			beginPage = endPage - (displayPage-1);
+			
+			if(totalPage<endPage&&totalPage==page){
+				endPage=totalPage;
+				next=false;
+			}else if(totalPage<endPage&&totalPage>page) {
+				endPage=totalPage;
+				next=true;
+			}else if(totalPage==endPage&&totalPage==page){
+				next=false;
+			}else {
+				next=true;
+			}
+			if(beginPage==1){
+				prev=false;
+			}else{
+				prev=true;
+			}
+		}
+		
+		//페이지뷰 함수
+		function pageView(pageText){
+			if(totalCount!=0){
+				if(page==1){
+					$('.fstPage ul').html('<li><a class="pg_start off"><em class="snd_only">맨 앞으로</em></a></li>'+
+					'<li><a class="pg_prev off"><em class="snd_only">이전 페이지</em></a></li>');
+				}else{
+					$('.fstPage ul').html('<li><a class="pg_start" href=""><em class="snd_only">맨 앞으로</em></a></li>'+
+					'<li><a class="pg_prev" href=""><em class="snd_only">이전 페이지</em></a></li>');
+				}
+				for(var i=beginPage; i<=endPage; i++){
+					if(i==page){
+						$('.fstPage ul').append('<li><b>'+i+'</b></li>');
+					}else{
+						$('.fstPage ul').append('<li><a href="">'+i+'</a></li>');
+					}
+				}
+				if(next==true){
+					$('.fstPage ul').append('<li><a class="pg_next" href=""><em class="snd_only">다음 페이지</em></a></li>'+
+					'<li><a class="pg_end" href=""><em class="snd_only">맨 끝으로</em></a></li>');
+				}else{
+					$('.fstPage ul').append('<li><a class="pg_next off"><em class="snd_only">다음 페이지</em></a></li>'+
+					'<li><a class="pg_end off"><em class="snd_only">맨 끝으로</em></a></li>');
+				}
+			}
+		}
+
+		//로우뷰 함수
+		function rowView(){
+			$('.rate_list li').hide();
+			for(var i=startnum; i<=endnum; i++){
+				$('.rate_list li').eq(i-1).show();
+			}
+		}
 	</script>
 </head>
 <body>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne numm }">
+	<c:if test="${sessionScope.login.proid ne 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
 </c:if>
 <div id="wrap" class="adm">
 	<section class="banner_area">
@@ -145,7 +272,6 @@
 		</section>
 		<section class="rate_area">
 			<div class="container">
-				<div id="focus" ></div>
 				<h4 class="sub_tit">
 					<p>한줄평 <span>${reviewcount }개</span></p>
 					<p>평점 <span>${campdetail.caavg }점</span></p>
@@ -157,7 +283,7 @@
 							<li>
 								<!-- # 프로필 이미지 없음 { -->
 								<a class="pf_picture" href="">
-									<img src="${root }resources/images/thumb/no_profile.png" alt="김덕수님의 프로필 썸네일">
+									<img src="${root }resources/upload/thumb/no_profile.png" alt="김덕수님의 프로필 썸네일">
 								</a>
 								<!-- } # 프로필 이미지 없음 -->
 								<p class="rt_option">
@@ -198,48 +324,7 @@
 				</ul>
 				<div class="fstPage">
 					<ul>
-						<c:if test="${paging.totalCount ne 0 }">
-						<c:choose>
-							<c:when test="${paging.page2 eq 1 }">
-								<li><a class="pg_start off" id="page"><em class="snd_only">맨 앞으로</em></a></li>
-								<li><a class="pg_prev off" id="page"><em class="snd_only">이전 페이지</em></a></li>
-							</c:when>
-							<c:otherwise>
-								<c:if test="${paging.beginPage eq 1 }">
-									<li><a class="pg_start" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.beginPage}#focus"><em class="snd_only">맨 앞으로</em></a></li>
-								</c:if>
-								<c:if test="${paging.beginPage ne 1 }">
-									<li><a class="pg_start" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.beginPage-1}#focus"><em class="snd_only">맨 앞으로</em></a></li>
-								</c:if>
-								<li><a class="pg_prev" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.page2-1}#focus"><em class="snd_only">이전 페이지</em></a></li>
-							</c:otherwise>
-						</c:choose>
-						<c:forEach begin="${paging.beginPage }" varStatus="status"  end="${paging.endPage }">
-							<c:choose>
-								<c:when test="${paging.page2 == status.index}">
-									<li><b>${status.index }</b></li>
-								</c:when>
-								<c:otherwise>
-									<li><a id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${status.index}#focus">${status.index }</a></li>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-						<c:choose>
-							<c:when test="${paging.next eq true }">
-								<li><a class="pg_next" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.page2+1}#focus"><em class="snd_only">다음 페이지</em></a></li>
-								<c:if test="${paging.totalPage eq paging.endPage }">
-									<li><a class="pg_end" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.endPage}#focus"><em class="snd_only">맨 끝으로</em></a></li>
-								</c:if>
-								<c:if test="${paging.totalPage ne paging.endPage }">
-									<li><a class="pg_end" id="page" href="${root }admin/camp/detail?canum=${campdetail.canum }&pageSearch.page2=${paging.endPage+1}#focus"><em class="snd_only">맨 끝으로</em></a></li>
-								</c:if>
-							</c:when>
-							<c:otherwise>
-								<li><a class="pg_next off" id="page"><em class="snd_only">다음 페이지</em></a></li>
-								<li><a class="pg_end off" id="page"><em class="snd_only">맨 끝으로</em></a></li>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
+					
 					</ul>
 				</div>
 			</div>
@@ -277,7 +362,7 @@
 		<form>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" id="delete_btn" class="btn_pop comm_btn cfm" data-layer="success">삭제하기</button></li>
+				<li><button type="button" id="delete_btn" class="comm_btn cfm">삭제하기</button></li>
 			</ul>
 		</form>
 	</div>

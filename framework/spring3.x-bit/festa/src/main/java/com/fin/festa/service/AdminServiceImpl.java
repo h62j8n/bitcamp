@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.fin.festa.model.AdminDaoImpl;
@@ -25,6 +26,7 @@ import com.fin.festa.model.entity.MyVentureVo;
 import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 import com.fin.festa.util.AgeCalculate;
 import com.fin.festa.util.DateCalculate;
 import com.fin.festa.util.StopUser;
@@ -368,6 +370,7 @@ public class AdminServiceImpl implements AdminService{
 	//사업자삭제처리 +@
 	//사업자 삭제처리시 공식그룹있는사람 리턴 -> 리스트값 리턴받은것을 GroupVo에 groupList에다가 대입
 	//공식그룹 존재시 일반그룹으로 업데이트
+	@Transactional
 	@Override
 	public void adminVentureDeleteOne(Model model, MyVentureVo myVentureVo) {
 
@@ -377,10 +380,13 @@ public class AdminServiceImpl implements AdminService{
 		group.setGroupList(adminDao.ventureGroupCheck(myVentureVo));
 		
 		//해당 공식그룹들 일반그룹으로 업데이트
-		adminDao.ventureGroupDelete(group);
+		if(!group.getGroupList().isEmpty()) {
+			adminDao.ventureGroupDelete(group);
+		}
 		
 		//해당 사업자들 삭제
 		adminDao.ventureDelete(myVentureVo);
+		
 	}
 	
 	//사업자등록증 이미지출력
@@ -393,53 +399,117 @@ public class AdminServiceImpl implements AdminService{
 	//사업자등록정보출력(검색값 사업자번호,캠핑장이름 조건처리)
 	@Override
 	public void adminVentureRequestSelectAll(Model model, PageSearchVo pageSearchVo) {
-		// TODO Auto-generated method stub
+
+		//첫화면불러올때 페이지넘버가 0이니까 1로 맞춰줌
+		if(pageSearchVo.getPage()==0) {
+			pageSearchVo.setPage(1);
+		}
 		
+		//첫화면불러올떄나 검색안할때 null이 들어가므로 mysql은 null하고 ""하고 값이 다르기때문에 ""로 맞춰줌
+		if(pageSearchVo.getKeyword()==null) {
+			pageSearchVo.setKeyword("");
+		}
+		
+		//첫화면불러올떄나 검색안할때 카테고리값 기본 캠핑장명으로
+		if(pageSearchVo.getCategory()==null||pageSearchVo.getCategory().equals("")) {
+			pageSearchVo.setCategory("캠핑장명");
+		}
+		
+		String category=pageSearchVo.getCategory();
+
+		//카테고리에따라 출력리스트,페이지 토탈카운트값 출력
+		if(category.equals("캠핑장명")) {
+			pageSearchVo.setTotalCount(adminDao.adminVentureRequestCount_campName(pageSearchVo));
+			model.addAttribute("ventureRequest", adminDao.adminVentureRequestSelectAll_caname(pageSearchVo));
+		}else if(category.equals("사업자등록번호")) {
+			pageSearchVo.setTotalCount(adminDao.adminVentureRequestCount_ventureNumber(pageSearchVo));
+			model.addAttribute("ventureRequest", adminDao.adminVentureRequestSelectAll_mvnumber(pageSearchVo));
+		}
+		model.addAttribute("paging", pageSearchVo);
 	}
 
 	//사업자등록승인처리 +@
 	//승인대기테이블 삭제처리
 	//승인 시에 그룹있는유저 그룹정보리턴 -> 리스트값 리턴받은것을 GroupVo에 groupList에다가 대입
 	//그룹 존재 시에 공식그룹전환
+	@Transactional
 	@Override
-	public void adminVentureRequestHello(Model model, MyVentureVo myVentureVo) {
-		// TODO Auto-generated method stub
+	public void adminVentureRequestHello(Model model, UpdateWaitVo updateWaitVo) {
 		
+		//승인된 사람중에 그룹이 존재하면 그룹값 뽑고 공식그룹으로 업데이트
+		GroupVo group=new GroupVo();
+		group.setGroupList(adminDao.groupCheck(updateWaitVo));
+		if(!group.getGroupList().isEmpty()) {
+			adminDao.groupVentureUpdate(group);
+		}
+		
+		//사업자등록 승인처리
+		adminDao.ventureInsert(updateWaitVo);
+		
+		//승인된사람 승인대기테이블 삭제
+		adminDao.updateDelete(updateWaitVo);
 	}
 
 	//사업자등록거절처리 +@
 	@Override
-	public void adminVentureRequestSorry(Model model, MyVentureVo myVentureVo) {
-		// TODO Auto-generated method stub
+	public void adminVentureRequestSorry(Model model, UpdateWaitVo updateWaitVo) {
 		
+		adminDao.updateDelete(updateWaitVo);
 	}
 
 	//신고관리정보출력
 	@Override
-	public void adminReportSelectAll(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
+	public void adminReportSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
+
+		//첫화면불러올때 페이지넘버가 0이니까 1로 맞춰줌
+		if(pageSearchVo==null||pageSearchVo.getPage()==0) {
+			pageSearchVo.setPage(1);
+		}
+		
+		//첫화면불러올떄나 검색안할때 카테고리값 기본 캠핑장명으로
+		if(pageSearchVo==null||pageSearchVo.getCategory()==null) {
+			pageSearchVo.setCategory("");
+		}
+		
+		//첫화면불러올때나 검색안할때 셀렉트박스값 ""로 설정하고
+		//셀렉트박스에서 전체/처리완료/접수 일떄 값설정
+		if(pageSearchVo==null||pageSearchVo.getSearch()==null||pageSearchVo.getSearch().equals("전체")) {
+			pageSearchVo.setSearch("");
+		}else if(pageSearchVo.getSearch().equals("접수")) {
+			pageSearchVo.setSearch("1");
+		}else if(pageSearchVo.getSearch().equals("처리완료")) {
+			pageSearchVo.setSearch("2");
+		}
+		
+		pageSearchVo.setTotalCount(adminDao.adminReportCount(pageSearchVo));
+		
+		model.addAttribute("reportlist", adminDao.adminReportSelectAll(pageSearchVo));
+		model.addAttribute("paging", pageSearchVo);
+		
+		System.out.println(adminDao.adminReportSelectAll(pageSearchVo));
+		System.out.println(pageSearchVo);
 	}
 	
 	//신고처리완료로 업데이트 +@
 	@Override
 	public void adminReportComplete(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
 		
+		adminDao.adminReportUpdate(reportListVo);
 	}
 
 	//신고상세페이지출력
 	@Override
 	public void adminReportSelectOne(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
 		
+		model.addAttribute("reportdetail", adminDao.adminReportSelectOne(reportListVo));
 	}
 
 	long i;		//서버킬때 한번 동작하므로 그거 막는용
 	
 	//정지유저 날짜카운트 -1처리 (서버 킨시간 기준으로 24시간마다 카운팅)
 	@Scheduled(fixedDelay = 60000*60*24)
-	private void stopUserCheck() {
+	public void stopUserCheck() {
 		
 		if(i>1) {
 			List<ProfileVo> stopUser = adminDao.stopUserList();

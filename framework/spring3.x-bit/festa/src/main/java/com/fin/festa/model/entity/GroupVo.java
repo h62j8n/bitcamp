@@ -9,7 +9,7 @@ public class GroupVo {					//그룹
 	private int grnum;					//그룹 번호 (pk)
 	private String grname;				//그룹 이름
 	private String grintro;				//그룹 소개
-	private String grphoto;				//그룹 사진
+	private String grphoto;				//그룹 사진s
 	private String graddr;				//그룹 주소
 	private String httitle1;			//그룹해시태그1
 	private String httitle2;			//그룹해시태그2

@@ -39,7 +39,6 @@ public class MyPostVo {			//내 피드 게시글
 	private ProfileVo profile;
 	private ReportListVo reportList;
 	private UpdateWaitVo updateWait;
-	private Timestamp date;
 	
 	@Override
 	public String toString() {
@@ -51,7 +50,7 @@ public class MyPostVo {			//내 피드 게시글
 				+ groupPost + ", group=" + group + ", joinGroup=" + joinGroup + ", myAdmin=" + myAdmin + ", myBookMark="
 				+ myBookMark + ", myComment=" + myComment + ", myFollower=" + myFollower + ", myFollowing="
 				+ myFollowing + ", myGood=" + myGood + ", myVenture=" + myVenture + ", pageSearch=" + pageSearch
-				+ ", profile=" + profile + ", reportList=" + reportList + ", updateWait=" + updateWait + ", date=" + date + "]";
+				+ ", profile=" + profile + ", reportList=" + reportList + ", updateWait=" + updateWait + "]";
 	}
 	
 	public MyPostVo() {
@@ -64,7 +63,7 @@ public class MyPostVo {			//내 피드 게시글
 			GroupPostVo groupPost, GroupVo group, JoinGroupVo joinGroup, MyAdminVo myAdmin, MyBookMarkVo myBookMark,
 			MyCommentVo myComment, MyFollowerVo myFollower, MyFollowingVo myFollowing, MyGoodVo myGood,
 			MyVentureVo myVenture, PageSearchVo pageSearch, ProfileVo profile, ReportListVo reportList,
-			UpdateWaitVo updateWait, Timestamp date) {
+			UpdateWaitVo updateWait) {
 		super();
 		this.mpnum = mpnum;
 		this.mpauthor = mpauthor;
@@ -96,7 +95,6 @@ public class MyPostVo {			//내 피드 게시글
 		this.profile = profile;
 		this.reportList = reportList;
 		this.updateWait = updateWait;
-		this.date = date;
 	}
 
 	public int getMpnum() {
@@ -344,12 +342,6 @@ public class MyPostVo {			//내 피드 게시글
 	public String getMpdate1() {
 		return mpdate1;
 	}
-
-	public Timestamp getDate() {
-		return date;
-	}
-
-	public void setDate(Timestamp date) {
-		this.date = date;
-	}
+	
+	
 }

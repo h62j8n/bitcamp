@@ -167,7 +167,7 @@
 	
 	<!-- 그룹공지사항 출력 -->
 	<select id="groupNotice" parameterType="GroupVo" resultType="GroupNoticeVo">
-		select * from (select @rownum:=@rownum+1 as grrn,a.* from groupnotice a,(select @rownum:=0) r where grnum6=#{grnum}) b where grrn<![CDATA[ >= ]]>1 and grrn<![CDATA[ <= ]]>5
+		select * from (select @rownum:=@rownum+1 as grrn,a.* from groupnotice a,(select @rownum:=0) r where grnum6=#{grnum} order by gndate desc) b where grrn<![CDATA[ >= ]]>1 and grrn<![CDATA[ <= ]]>5
 	</select>
 	
 	<!-- 그룹공지사항 상세출력 -->
