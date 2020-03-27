@@ -48,16 +48,14 @@ public class CampDaoImpl implements CampDao{
 	
 	//해당캠핑장에 공식그룹이 있는지 체크
 	@Override
-	public int ventureGroupCheck(CampVo camp) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int ventureGroupCheck(CampVo campVo) {
+		return sqlSession.selectOne("camp.ventureGroupCheck", campVo);
 	}
 
 	//공식그룹이 있을시에 공식그룹정보 출력
 	@Override
-	public GroupVo campVentureGroup(CampVo camp) {
-		// TODO Auto-generated method stub
-		return null;
+	public GroupVo campVentureGroup(CampVo campVo) {
+		return sqlSession.selectOne("camp.campVentureGroup", campVo);
 	}
 
 	///////////////////////////////////////////////////////////////
@@ -66,9 +64,8 @@ public class CampDaoImpl implements CampDao{
 	
 	//캠핑장정보 출력
 	@Override
-	public CampVo campInfoSelectOne(CampVo camp) {
-		// TODO Auto-generated method stub
-		return null;
+	public CampVo campInfoSelectOne(CampVo campVo) {
+		return sqlSession.selectOne("camp.campInfoSelectOne", campVo);
 	}
 	
 	//캠핑장 한줄평출력
@@ -83,13 +80,6 @@ public class CampDaoImpl implements CampDao{
 	public int campReviewCount(CampVo camp) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	//해당캠핑장과 같은지역의 캠핑장목록 출력
-	@Override
-	public List<CampVo> sameLocationCamp(CampVo camp) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	///////////////////////////////////////////////////////////////

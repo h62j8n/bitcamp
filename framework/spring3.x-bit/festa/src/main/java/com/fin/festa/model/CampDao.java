@@ -18,11 +18,11 @@ public interface CampDao {
 	
 	List<CampVo> locationCamp(CampVo campVo);
 	
-	CampVo campInfoSelectOne(CampVo camp);
+	CampVo campInfoSelectOne(CampVo campVo);
 	
-	int ventureGroupCheck(CampVo camp);
+	int ventureGroupCheck(CampVo campVo);
 	
-	GroupVo campVentureGroup(CampVo camp);
+	GroupVo campVentureGroup(CampVo campVo);
 	
 	List<CampReviewVo> campReview(CampVo camp);
 	
@@ -33,8 +33,6 @@ public interface CampDao {
 	int campAvgUpdate(CampReviewVo campReview);
 	
 	int campReviewDelete(CampReviewVo campReview);
-	
-	List<CampVo> sameLocationCamp(CampVo camp);
 	
 	void campLikeInsert(MyGoodVo good);
 	

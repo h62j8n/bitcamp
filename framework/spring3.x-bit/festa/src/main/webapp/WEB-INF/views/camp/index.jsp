@@ -17,15 +17,29 @@
 	<script type="text/javascript">
 	$(function(){
 		var container = $('.result_area .camp_list'),
-			li = container.find('li');
+		li = container.find('li'),
+		btn = $('.btn_view_more');
 		li.each(function(e) {
 			if (e > 5) {
 				$(this).hide();
 			}
 		});
+		if (li.length < 1) {
+			var empty = '<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>';
+			container.append(empty);
+			btn.hide();
+		}
+		var hideOut = container.find('li:hidden').length;
+		if (hideOut < 6) {
+			btn.hide();
+		}
 		
-		$('.btn_view_more').on('click', function() {
+		btn.on('click', function() {
 			var start = container.find('li:visible').length;
+			var end = container.find('li:hidden').length - 6;
+			if (end < 1) {
+				btn.hide();
+			}
 			for (var i=0; i<6; i++) {
 				li.eq(start).show();
 				start++;
@@ -34,12 +48,9 @@
 		
 		var top = $('.result_area').offset().top - 100;
 		<c:if test="${!empty param.caaddrsel}">
-		resultTop(top);
+		$('html, body').animate({scrollTop: top}, 0);
 		</c:if>
 	});
-	function resultTop(y) {
-		$('html, body').animate({scrollTop: y}, 500);
-	}
 	</script>
 </head>
 <body>
@@ -139,14 +150,16 @@
 						<ul class="camp_list swiper-wrapper">
 							<c:forEach items="${newCampList}" var="newCamp">
 							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="${newCamp.caname} 썸네일">
+								<a class="cp_thumb" href="${root}camp/detail?canum=${newCamp.canum}&caaddrsel=${newCamp.caaddrsel}">
+									<img src="http://placehold.it/320x180" alt="${newCamp.caname}">
 								</a>
-								<a class="cp_text" href="">
+								<a class="cp_text" href="${root}camp/detail?canum=${newCamp.canum}&caaddrsel=${newCamp.caaddrsel}">
 									<b class="cp_name">${newCamp.caname}</b>
 									<span>
 										<b class="cp_loc">${newCamp.caaddrsel}</b>
-										#${newCamp.httitle1} #${newCamp.httitle2} #${newCamp.httitle3}
+										<c:if test="${!empty newCamp.httitle1}">#${newCamp.httitle1}</c:if>
+										<c:if test="${!empty newCamp.httitle2}">#${newCamp.httitle2}</c:if>
+										<c:if test="${!empty newCamp.httitle3}">#${newCamp.httitle3}</c:if>
 									</span>
 								</a>
 							</li>
@@ -189,17 +202,19 @@
 					<b>검증된 캠핑장</b>
 				</h3>
 				<ul class="camp_list">
-					<c:forEach items="${allCampList}" var="allCamp">
+					<c:forEach items="${campList}" var="camp">
 					<li>
-						<a class="cp_thumb" href="">
-							<img src="http://placehold.it/320x180" alt="${allCamp.caname}">
-							<b class="cp_liked">${allCamp.cagood}</b>
+						<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+							<img src="http://placehold.it/320x180" alt="${camp.caname}">
+							<b class="cp_liked">${camp.cagood}</b>
 						</a>
-						<a class="cp_text" href="">
-							<b class="cp_name">${allCamp.caname}</b>
+						<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+							<b class="cp_name">${camp.caname}</b>
 							<span>
-								<b class="cp_loc">${allCamp.caaddrsel}</b>
-								#${allCamp.httitle1} #${allCamp.httitle2} #${allCamp.httitle3}
+								<b class="cp_loc">${camp.caaddrsel}</b>
+								<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
+								<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
+								<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
 							</span>
 						</a>
 					</li>

@@ -104,12 +104,12 @@
 
 	<!-- 캠핑장 공식그룹 체크 -->
 	<select id="ventureGroupCheck" parameterType="CampVo" resultType="int">
-		select b.grventure from myventure a inner join group1 b on a.pronum2=b.pronum1 inner join camp c on a.mvnum=c.mvnum1 where c.mvnum1=#{mvnum}
+		select count(*) from myventure a inner join group1 b on a.pronum2=b.pronum1 inner join camp c on a.mvnum=c.mvnum1 where grventure=2 and canum=#{canum}
 	</select>
 	
 	<!-- 캠핑장 공식그룹 존재시 그룹정보담기 -->
 	<select id="campVentureGroup" parameterType="CampVo" resultType="GroupVo">
-		select b.* from myventure a inner join group1 b on a.pronum2=b.pronum1 inner join camp c on a.mvnum=c.mvnum1 where c.mvnum1=#{mvnum}
+		select b.* from myventure a inner join group1 b on a.pronum2=b.pronum1 inner join camp c on a.mvnum=c.mvnum1 where c.canum=#{canum}
 	</select>
 	
 	<!-- 캠핑장상세 공식그룹 체크 end -->
@@ -128,11 +128,6 @@
 	<!-- 한줄평 총 갯수출력 -->
 	<select id="campReviewCount" parameterType="CampVo" resultType="int">
 		select count(*) from campreview where canum1=#{canum}
-	</select>
-		
-	<!-- 해당캠핑장과 같은 지역의 캠핑장목록 출력 -->
-	<select id="sameLocationCamp" parameterType="CampVo" resultMap="camp">
-		select a.* from camp a where canum!=1 and caaddr like concat('%',#{caaddr},'%') order by cagood desc
 	</select>
 	
 	<!-- 캠핑장상세 화면출력 end -->

@@ -11,9 +11,7 @@ import com.fin.festa.model.entity.CampReviewVo;
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.MyBookMarkVo;
 import com.fin.festa.model.entity.MyGoodVo;
-import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
-import com.fin.festa.util.CampAvg;
 
 @Service
 public class CampServiceImpl implements CampService{
@@ -28,13 +26,13 @@ public class CampServiceImpl implements CampService{
 	@Override
 	public void campSelectAll(Model model) {
 		model.addAttribute("newCampList", campDao.newCampSelectAll());
-		model.addAttribute("allCampList", campDao.allLocationCamp());
+		model.addAttribute("campList", campDao.allLocationCamp());
 	}
 
 	//해당지역 캠핑장 목록 출력
 	@Override
 	public void campLocation(Model model, CampVo campVo) {
-		model.addAttribute("allCampList", campDao.locationCamp(campVo));
+		model.addAttribute("campList", campDao.locationCamp(campVo));
 	}
 	
 	//해당 캠핑장이 공식그룹이 있는지 체크
@@ -45,8 +43,14 @@ public class CampServiceImpl implements CampService{
 	//해당캠핑장과 같은지역의 캠핑장 목록 출력
 	@Override
 	public void campSelectOne(Model model, CampVo campVo) {
-		// TODO Auto-generated method stub
+		int ventureGroupCheck = campDao.ventureGroupCheck(campVo);
+		if (ventureGroupCheck > 0) {
+			model.addAttribute("ventureGroup", campDao.campVentureGroup(campVo));
+		}
 		
+		model.addAttribute("camp", campDao.campInfoSelectOne(campVo));
+		
+		campLocation(model, campVo);
 	}
 
 	//캠핑장 좋아요등록

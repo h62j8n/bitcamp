@@ -23,17 +23,79 @@
 				<h1>
 					<a href="${root}"><em class="snd_only">FESTA</em></a>
 				</h1>
-				<form class="search_box">
-					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-					<button type="submit"><img src="${root}resources/images/ico/btn_search.png" alt="검색"></button>
+				<form class="search_box" action="${root }search">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+					<button type="submit">
+						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
+					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root}camp/">캠핑정보</a></li>
+					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
-					<li><a href="${root}news/">뉴스피드</a></li>
+					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
+					<c:if test="${login eq null }">
 					<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
+					</c:if>
+					<c:if test="${login ne null }">
+					<li><a href="${root}user/">마이페이지</a></li>
+					</c:if>
 				</ul>
-				<button type="button" id="btnTop"><em class="snd_only">맨 위로</em></button>
+				<c:if test="${login ne null }">
+				<div id="userMenu" class="fstLyr">
+					<button class="btn_menu">
+						<em class="snd_only">나의 메뉴 더보기</em>
+					</button>
+					<dl class="menu_box" tabindex="0">
+						<dt>
+							<b>${login.proname }님 환영합니다.</b>
+						</dt>
+						<dd>
+							<span class="btn_mylist">나의 그룹</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${joinGroup }" var="joinGroup">
+									<li><a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
+												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd>
+							<span class="btn_mylist">나의 채팅</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${joinGroup }" var="joinGroup">
+									<li><a href=""> <span><img
+												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd>
+							<span class="btn_mylist">나의 캠핑장</span>
+							<div class="my_list">
+								<ul>
+								<c:forEach items="${bookMark }" var="bookMark">
+									<li><a href="${root }camp?canum=${bookMark.camp.canum}"> <span><img
+												src="http://placehold.it/45x45" alt="캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
+									</a></li>
+								</c:forEach>
+								</ul>
+							</div>
+						</dd>
+						<dd class="btn_logout">
+							<form>
+								<a href="${root}member/logout" class="btn_pop">로그아웃</a>
+							</form>
+						</dd>
+					</dl>
+				</div>
+				</c:if>
+				<button type="button" id="btnTop">
+					<em class="snd_only">맨 위로</em>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -46,16 +108,16 @@
 			<div class="container">
 				<div class="tit box">
 					<div>
-						<h3><span>경기도</span> 몽산포 패밀리데이 캠핑장</h3>
-						<p class="cp_subtit">바다에서 즐기는 낭만캠핑, 바닷가 캠핑장!</p>
+						<h3><span>${camp.caaddrsel}</span> ${camp.caname}</h3>
+						<p class="cp_subtit">${camp.caintroone}</p>
 						<ul class="cp_hashtag">
-							<li><a href="">낭만캠핑</a></li>
-							<li><a href="">바닷가</a></li>
-							<li><a href="">가족여행</a></li>
+							<c:if test="${!empty camp.httitle1}"><li><a href="">${camp.httitle1}</a></li></c:if>
+							<c:if test="${!empty camp.httitle2}"><li><a href="">${camp.httitle2}</a></li></c:if>
+							<c:if test="${!empty camp.httitle3}"><li><a href="">${camp.httitle3}</a></li></c:if>
 						</ul>
 						<ul class="cp_options">
 							<li>
-								<b class="cp_liked">99</b>
+								<b class="cp_liked">${camp.cagood}</b>
 								<button class="btn_liked"><em class="snd_only">하트</em></button>
 								<!-- 하트 누른 경우 {
 								<button class="btn_liked act"><em class="snd_only">하트</em></button>
@@ -63,11 +125,11 @@
 							</li>
 							<li><button class="btn_bookmark"><em class="snd_only">저장하기</em></button></li>
 							<li><a href="${root}/detail/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
-							<li><a class="btn_back" href="${root}camp//"><em class="snd_only">목록으로</em></a></li>
+							<li><a class="btn_back" href="${root}camp/?caaddrsel="><em class="snd_only">목록으로</em></a></li>
 						</ul>
 						<ul class="cp_date">
-							<li>정보 등록일 2020년 20월 20일</li>
-							<li>최근 수정일 2020년 20월 20일</li>
+							<li>정보 등록일 ${camp.cadate}</li>
+							<li>최근 수정일 ${camp.cadateup}</li>
 						</ul>
 					</div>
 				</div>
@@ -89,22 +151,22 @@
 					</div>
 					<div class="text_box">
 						<h4 class="sub_tit">캠핑장 소개</h4>
-						<p class="btn_go"><a href="">그룹 바로가기</a></p>
+						<p class="btn_go"><a href="${root}group/?grnum=${ventureGroup.grnum}&pronum=${login.pronum}">그룹 바로가기</a></p>
 						<div class="scrBar">
-							<p>캠핑장 소개글을 입력해주세요.</p>
+							<p>${camp.caintro}</p>
 						</div>
 					</div>
 				</div>
 				<div class="info box">
 					<h4 class="sub_tit">캠핑장 시설 안내</h4>
 					<ol class="info_list">
-						<li>캠핑장 이용은 오후 11시까지 입니다. (야간시간 이후 고성방가 금지)</li>
-						<li>세면장, 샤워실 준비되어 있습니다. (온수 콸콸)</li>
-						<li>바베큐 그릴 대여 가능합니다. (추가비용)</li>
-						<li>단독화장실에는 샴푸/린스가 준비되어 있습니다.</li>
-						<li>담요는 준비되어 있습니다.</li>
-						<li>청소보증금 (3만원) 있습니다.</li>
-						<li>이용 당일 오전에 청소보증금 안내 및 이용간 안내사항을 전달드리며 청소보증금 환불은 퇴실한 당일 중으로 환급을 위해 안내문자를 드립니다.</li>
+						<c:if test="${!empty camp.caguide1}"><li>${camp.caguide1}</li></c:if>
+						<c:if test="${!empty camp.caguide2}"><li>${camp.caguide2}</li></c:if>
+						<c:if test="${!empty camp.caguide3}"><li>${camp.caguide3}</li></c:if>
+						<c:if test="${!empty camp.caguide4}"><li>${camp.caguide4}</li></c:if>
+						<c:if test="${!empty camp.caguide5}"><li>${camp.caguide5}</li></c:if>
+						<c:if test="${!empty camp.caguide6}"><li>${camp.caguide6}</li></c:if>
+						<c:if test="${!empty camp.caguide7}"><li>${camp.caguide7}</li></c:if>
 						<!-- # 시설 안내 없음 {
 						<li class="fstEmpty">등록된 시설 안내 사항이 없습니다</li>
 						} # 시설 안내 없음 -->
@@ -115,15 +177,15 @@
 		<section class="location_area">
 			<div class="container">
 				<h4 class="sub_tit">오시는 길</h4>
-				<p id="mapAddress">충남 태안군 남면 몽산포길 67-9</p>
+				<p id="mapAddress">${camp.caaddr}</p>
 				<div id="map"></div>
 			</div>
-		</section>
+		</section><%-- ${camp.} --%>
 		<section class="rate_area">
 			<div class="container">
 				<h4 class="sub_tit">
-					<p>한줄평 <span>99개</span></p>
-					<p>평점 <span>1.5점</span></p>
+					<p>한줄평 <span>개</span></p>
+					<p>평점 <span>${camp.caavg}</span></p>
 				</h4>
 				<ul class="rate_list">
 					<li>
@@ -249,88 +311,26 @@
 		</section>
 		<section class="others_area">
 			<div class="container">
-				<h3 class="comm_tit">경기도의 <b>또 다른 캠핑장</b></h3>
-				<div class="camp_slide">
+				<h3 class="comm_tit">${camp.caaddrsel}의 <b>또 다른 캠핑장</b></h3>
+				<div class="camp_slide"> 	
 					<div>
 						<ul class="camp_list swiper-wrapper">
+							<c:forEach items="${campList}" var="camp">
 							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="몽산포 패밀리데이 캠핑장 썸네일">
-									<b class="cp_liked">99</b>
+								<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+									<img src="http://placehold.it/320x180" alt="${camp.caname}">
 								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">몽산포 패밀리데이 캠핑장</b>
+								<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+									<b class="cp_name">${camp.caname}</b>
 									<span>
-										<b class="cp_loc">경기도</b>
-										#바다뷰 #경치좋은 #감성캠핑
+										<b class="cp_loc">${camp.caaddrsel}</b>
+										<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
+										<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
+										<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
 									</span>
 								</a>
 							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-									<b class="cp_liked">99</b>
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-									<b class="cp_liked">99</b>
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-									<b class="cp_liked">99</b>
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-									<b class="cp_liked">99</b>
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="">
-									<img src="http://placehold.it/320x180" alt="캠핑장 썸네일">
-									<b class="cp_liked">99</b>
-								</a>
-								<a class="cp_text" href="">
-									<b class="cp_name">캠핑장명</b>
-									<span>
-										<b class="cp_loc">지역</b>
-										#해시태그 #해시태그 #해시태그
-									</span>
-								</a>
-							</li>
+							</c:forEach>
 						</ul>
 					</div>
 					<button type="button" class="swiper-prev"><em class="snd_only">이전</em></button>

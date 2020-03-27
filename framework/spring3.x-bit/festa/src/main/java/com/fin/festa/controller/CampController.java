@@ -40,6 +40,7 @@ public class CampController {
 	//캠핑장 상세페이지
 	@RequestMapping(value = "detail", method = RequestMethod.GET)
 	public String campSelectOne(Model model, CampVo campVo) {
+		campService.campSelectOne(model, campVo);
 		return "camp/detail/index";
 	}
 	
