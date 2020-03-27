@@ -212,11 +212,10 @@ public class UserController {
 	//그룹 생성 완료
 	@RequestMapping(value = "group", method = RequestMethod.POST)
 	public String groupInsertOne(HttpServletRequest req, GroupVo groupVo) {
-		System.out.println("전");
-		userSerivce.groupInsertOne(req, groupVo);
-		return "group/index";
+		groupVo = userSerivce.groupInsertOne(req, groupVo);
+		return "redirect:../group/?grnum=" + groupVo.getGrnum() + "&pronum=" + groupVo.getPronum();
 	}
-	
+	   
 	//사업자 계정 신청
 	@RequestMapping(value = "venture/add", method = RequestMethod.GET)
 	public String ventureInsertOne(Model model) {

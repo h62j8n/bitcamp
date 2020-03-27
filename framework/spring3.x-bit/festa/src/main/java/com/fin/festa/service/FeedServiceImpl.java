@@ -13,6 +13,7 @@ import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.util.DateCalculate;
 
 @Service
 public class FeedServiceImpl implements FeedService{
@@ -25,7 +26,10 @@ public class FeedServiceImpl implements FeedService{
 	//인기피드 출력(그룹피드,개인피드 합쳐서)
 	@Override
 	public void hotFeedSelectAll(Model model) {
-		// TODO Auto-generated method stub
+
+		DateCalculate cal=new DateCalculate();
+		
+		model.addAttribute("feedList", cal.VoDateReturn(feedDao.hotGroupFeedSelectAll(), feedDao.hotMyFeedSelectAll()));
 		
 	}
 

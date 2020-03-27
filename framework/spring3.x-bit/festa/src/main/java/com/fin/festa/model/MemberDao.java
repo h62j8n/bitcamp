@@ -19,6 +19,8 @@ public interface MemberDao {
 	void inactiveUpdate(ProfileVo profile);
 	
 	MyAdminVo stopAndKickMember(ProfileVo profile);
+
+	List<JoinGroupVo> myJoinGroupSelectAll(int pronum);
 	
 	List<JoinGroupVo> myJoinGroupSelectAll(ProfileVo profile);
 	

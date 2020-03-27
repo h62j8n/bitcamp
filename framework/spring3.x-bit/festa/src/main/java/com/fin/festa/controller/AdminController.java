@@ -42,7 +42,6 @@ public class AdminController {
 	//메인 대시보드
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String adminDashBoard(Model model) {
-		
 		adminService.adminDashBoard(model);
 		return "admin/index";
 	}
@@ -50,7 +49,6 @@ public class AdminController {
 	//그룹 관리
 	@RequestMapping(value = "group", method = RequestMethod.GET)
 	public String adminGroupSelectAll(Model model, PageSearchVo pageSearchVo) {
-		
 		adminService.adminGroupSelectAll(model, pageSearchVo);
 		return "admin/group/index";
 	}

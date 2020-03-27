@@ -87,6 +87,23 @@
       <result column="proidnum" property="proidnum"/>
       <result column="prodate" property="prodate"/>
    </resultMap>
+      
+   <!-- 그룹 -->
+   <resultMap type="GroupVo" id="group">
+      <result column="grnum" property="grnum"/>
+      <result column="pronum1" property="pronum"/>
+      <result column="grname" property="grname"/>
+      <result column="grphoto" property="grphoto"/>
+      <result column="grtotal" property="grtotal"/>
+      <result column="grintro" property="grintro"/>
+      <result column="graddr" property="graddr"/>
+      <result column="grdate" property="grdate"/>
+      <result column="grtotal" property="grtotal"/>
+      <result column="grventure" property="grventure"/>
+      <result column="httitle1" property="httitle1"/>
+      <result column="httitle2" property="httitle2"/>
+      <result column="httitle3" property="httitle3"/>
+   </resultMap>
    
    <!-- 추가 사항 -->
 
@@ -106,22 +123,24 @@
       select * from myadmin where pronum7=#{pronum}
    </select>
 
-   <!-- 내피드접속시 내정보 출력 -->
-   <select id="myInfo" parameterType="ProfileVo" resultType="ProfileVo">
-      select * from profile where pronum=#{pronum}
-   </select>
+	<!-- 내피드접속시 내정보 출력 -->
+	<select id="myInfo" parameterType="ProfileVo" resultType="ProfileVo">
+	   select * from profile where pronum=#{pronum}
+	</select>
    
-   <!-- 내피드 리스트출력 등록순 정렬-->
-   <select id="myFeedSelectAll" parameterType="ProfileVo" resultMap="mypost">
-      select d.*,(select count(*) from mycomment where mpnum1=d.mpnum) as mptotal from 
-      (select a.*,c.prophoto from mypost a inner join profile c
-       on a.pronum12=c.pronum where pronum12=#{pronum} order by mpdate desc) d
-   </select>
+	<!-- 내피드 리스트출력 등록순 정렬-->
+	<select id="myFeedSelectAll" parameterType="ProfileVo" resultMap="mypost">
+	   select d.*,(select count(*) from mycomment where mpnum1=d.mpnum) as mptotal from 
+	   (select a.*,c.prophoto from mypost a inner join profile c
+	    on a.pronum12=c.pronum where pronum12=#{pronum} order by mpdate desc) d
+	</select>
    
-   <!-- 내피드 댓글리스트 출력 -->
-      <select id="myFeedCmmtSelectAll" parameterType="ProfileVo" resultMap="cmmt">
-      select a.*,b.prophoto from mycomment a inner join profile b on a.pronum13=b.pronum where pronum_sync=#{pronum}
-   </select>
+	<!-- 내피드 댓글리스트 출력 -->
+	<select id="myFeedCmmtSelectAll" parameterType="ProfileVo" resultMap="cmmt">
+		select a.*,b.prophoto from mycomment a inner join profile b on
+		a.pronum13=b.pronum where pronum=#{pronum} order by mcdate desc
+	</select>
+
    
    <!-- 내피드 갯수출력 -->
    <select id="myFeedCount" parameterType="ProfileVo" resultType="int">
@@ -334,19 +353,26 @@
    </select>
    
    <!-- 계정비활성화,탈퇴처리 end -->
-   <!-- 그룹등록처리 start -->
-   
    <!-- 그룹 등록 처리(비공식) -->
    <insert id="myGroupInsert" parameterType="GroupVo">
-      insert into group1 (pronum1,grname,grphoto,grtotal,grintro,graddr,grdate,grventure,httitle1,httitle2,httitle3) values (#{pronum},#{grname},#{grphoto},0,#{grintro},#{graddr},now(),1,#{httitle1},#{httitle2},#{httitle3})
+      insert into group1 (pronum1,grname,grphoto,grtotal,grintro,graddr,grdate,grventure,httitle1,httitle2,httitle3) values (#{pronum},#{grname},#{grphoto},1,#{grintro},#{graddr},now(),1,#{httitle1},#{httitle2},#{httitle3})
+   </insert>
+   
+   <select id="myGroup" parameterType="ProfileVo" resultMap="group">
+   		select * from group1 where pronum1=#{pronum}
+   </select>
+   
+   <insert id="myGroupJoin" parameterType="GroupVo">
+   		insert into joingroup (pronum8,grnum3,grname,jgdate) values (#{pronum},#{grnum},#{grname},now());
    </insert>
    
    <!-- 그룹 등록 처리(공식) -->
    <insert id="myVentureGroupInsert" parameterType="GroupVo">
-      insert into group1 (pronum1,grname,grphoto,grtotal,grintro,graddr,grdate,grventure,httitle1,httitle2,httitle3) values (#{pronum},#{grname},#{grphoto},0,#{grintro},#{graddr},now(),2,#{httitle1},#{httitle2},#{httitle3})
+      insert into group1 (pronum1,grname,grphoto,grtotal,grintro,graddr,grdate,grventure,httitle1,httitle2,httitle3) values (#{pronum},#{grname},#{grphoto},1,#{grintro},#{graddr},now(),2,#{httitle1},#{httitle2},#{httitle3})
    </insert>
    
    <!-- 그룹등록처리 end -->
+
    <!-- 사업자관리 start -->
    
    <!-- 사업자 등록신청 -->

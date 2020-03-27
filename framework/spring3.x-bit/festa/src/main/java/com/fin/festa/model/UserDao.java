@@ -116,5 +116,9 @@ public interface UserDao {
 	int userReportCountUpdate(ReportListVo report);
 	
 	int socialMemberCheck(ProfileVo profile);
+
+	GroupVo groupmyGroup(ProfileVo profile);
+
+	void myGroupJoin(GroupVo group);
 	
 }

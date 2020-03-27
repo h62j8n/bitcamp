@@ -21,193 +21,139 @@
 <link rel="shortcut icon" href="${root }resources/favicon.ico">
 <title>FESTA</title>
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
-						$('.feed_viewer').each(function(index) {
-							if (index > 1) {
-								$('.feed_viewer').eq(index).hide();
-							}
-						});
+	$(document).ready(function() {
+		$('.feed_viewer').each(function(index) {
+			if (index > 1) {
+				$('.feed_viewer').eq(index).hide();
+			}
+		});
 
-						$(window)
-								.scroll(
-										function() {
-											var scrolltop = parseInt($(window)
-													.scrollTop());
-											if (scrolltop >= $(document)
-													.height()
-													- $(window).height() - 1) {
-												var scrollTag = $('#footer')
-														.siblings('span');
-												var scroll = scrollTag.text();
-												scroll++;
-												scrollTag.text(scroll);
-												console.log(scroll);
-												var curfeedcnt = $('.feed_viewer').length;
-												$('.feed_viewer')
-														.eq(scroll * 2).show();
-												$('.feed_viewer').eq(
-														scroll * 2 + 1).show();
-											}
-										});
-
-						$('.btn_send.cmmt')
-								.on(
-										'click',
-										function() {
-											var btn = $(this);
-											var feed = btn
-													.parents('.feed_viewer.ind');
-											var mccontent = feed.find(
-													'#mccontent').val();
-											var mcauthor = feed.find(
-													'#mcauthor').val();
-											var mpnum = feed.find('#mpnum')
-													.val();
-											var pronum = feed.find('#pronum')
-													.val();
-											$.post('${root}user/cmmtadd',
-													'mccontent=' + mccontent
-															+ '&mcauthor='
-															+ mcauthor
-															+ '&mpnum=' + mpnum
-															+ '&pronum='
-															+ pronum, function(
-															data) {
-														window.location
-																.reload();
-													});
-
-											var para = document.location.href
-													.split("?");
-										});
-
-						$(document)
-								.on(
-										'click',
-										'.cmt_btn_more.dt',
-										function() {
-											var btn = $(this);
-											var pageTag = $(this).find('span');
-											var myPage = pageTag.text();
-											myPage++;
-											pageTag.text(myPage);
-											var feed = btn
-													.parents('.feed_viewer.ind');
-											var comments = btn
-													.siblings('.comment_list.ind');
-											var del = $('#pronum').val();
-											var mccontent = feed.find(
-													'#mccontent').val();
-											var mcauthor = feed.find(
-													'#mcauthor').val();
-											var mpnum = feed.find('#mpnum')
-													.val();
-											var pronum = feed.find('#pronum')
-													.val();
-											$
-													.get(
-															'${root}user/cmmt',
-															'mpnum='
-																	+ mpnum
-																	+ '&pageSearch.page4='
-																	+ myPage,
-															function(data) {
-																$(data)
-																		.each(
-																				function(
-																						index) {
-																					if (index == 3) {
-																						return false;
-																					} else if (data.length < 4) {
-																						btn
-																								.hide();
-																					}
-																					if (del == data[index].pronum
-																							|| del == fpronum
-																							|| pronum == mpronum) {
-																						comments
-																								.append('<li>'
-																										+ '<a href="" class="pf_picture">'
-																										+ '<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].mcauthor+'님의 프로필 썸네일">'
-																										+ '</a><p class="cmt_content">'
-																										+ '<a href="" class="cmt_name">'
-																										+ data[index].mcauthor
-																										+ '</a>&nbsp;&nbsp;'
-																										+ data[index].mccontent
-																										+ '<span class="cmt_date">'
-																										+ data[index].mcdate1
-																										+ '</span>'
-																										+ '<button class="btn_pop btn_delete btn_cmmt" data-layer="delete" data-value="'+data[index].mcnum+'"><em class="snd_only">삭제하기</em></button></p>'
-																										+ '</li>');
-																					} else {
-																						comments
-																								.append('<li>'
-																										+ '<a href="" class="pf_picture">'
-																										+ '<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].mcauthor+'님의 프로필 썸네일">'
-																										+ '</a><p class="cmt_content">'
-																										+ '<a href="" class="cmt_name">'
-																										+ data[index].mcauthor
-																										+ '</a>&nbsp;&nbsp;'
-																										+ data[index].mccontent
-																										+ '<span class="cmt_date">'
-																										+ data[index].mcdate1
-																										+ '</span></li>');
-																					}
-																				});//each문 end
-															});//ajax통신 end		
-										});//댓글더보기 end
-
-						$('.btn_delete.btn_pop').on('click', function() {
-							var cmmtdel = $(this).data('value');
-							console.log(cmmtdel);
-							$('#num').val(cmmtdel);
-						});
-
-						$('#deletecmmt').on(
-								'click',
-								function() {
-									var mcnum = $('#num').val();
-									$.post('${root}user/cmmtdel', 'mcnum='
-											+ mcnum, function(data) {
-										$('.btn_close.comm_btn.cfm').on(
-												'click', function() {
-													location.reload();
-												});
-									});
-								});
-
-						$('.btn_delete.feed.btn_pop').on('click', function() {
-							var feeddel = $(this).data('value');
-							$('#fnum').val(feeddel);
-						});
-
-						$('#deletefeed')
-								.on(
-										'click',
-										function() {
-											var gpnum = $('#fnum').val();
-											$
-													.post(
-															'${root}user/del',
-															'mpnum=' + mpnum,
-															function(data) {
-																$(
-																		'.btn_close.comm_btn.cfm')
-																		.on(
-																				'click',
-																				function() {
-																					location
-																							.reload();
-																				});
-															});
-										});
-					});
+		$(window).scroll(function() {
+			var scrolltop = parseInt($(window).scrollTop());
+			if (scrolltop >= $(document).height()- $(window).height() - 1) {
+				var scrollTag = $('#footer').siblings('span');
+				var scroll = scrollTag.text();
+				scroll++;
+				scrollTag.text(scroll);
+				console.log(scroll);
+				var curfeedcnt = $('.feed_viewer').length;
+				$('.feed_viewer').eq(scroll * 2).show();
+				$('.feed_viewer').eq(scroll * 2 + 1).show();
+				}
+		});
+			//댓글 입력하기
+			$('.btn_send.cmmt').on('click',function() {
+				btn = $(this);
+				var feed = btn.parents('.feed_viewer.ind');
+				var mccontent = feed.find('#mccontent').val();
+				var mcauthor = feed.find('#mcauthor').val();
+				var mpnum = feed.find('#mpnum').val();
+				var pronum = feed.find('#pronum').val();
+				$.post('${root}user/cmmtadd','mccontent=' + mccontent+ '&mcauthor='+ mcauthor+ '&mpnum=' + mpnum+ '&pronum='+ pronum, function(data) {
+					window.location.reload();
+				});
+			});
+			
+			//댓글더보기
+			$(document).on('click','.cmt_btn_more.dt',function() {
+				var btn = $(this);
+				var pageTag = $(this).find('span');
+				var myPage = pageTag.text();
+				myPage++;
+				pageTag.text(myPage);
+				var feed = btn.parents('.feed_viewer.ind');
+				var comments = btn.siblings('.comment_list.ind');
+				var del = $('#pronum').val();
+				var mccontent = feed.find('#mccontent').val();
+				var mcauthor = feed.find('#mcauthor').val();
+				var mpnum = feed.find('#mpnum').val();
+				var pronum = feed.find('#pronum').val();
+				var fpronum = feed.find('#feedPronum').val();
+				$.get('${root}user/cmmt','mpnum='+ mpnum+ '&pageSearch.page4='+ myPage,function(data) {
+				$(data).each(function(index) {
+				if (index == 3) {
+					return false;
+				} else if (data.length < 4) {
+					btn.hide();
+				}
+				if (del == data[index].pronum|| del == fpronum|| pronum == mpronum) {
+					comments.append('<li>'
+						+ '<a href="" class="pf_picture">'
+						+ '<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].mcauthor+'님의 프로필 썸네일">'
+						+ '</a><p class="cmt_content">'
+						+ '<a href="" class="cmt_name">'
+						+ data[index].mcauthor
+						+ '</a>&nbsp;&nbsp;'
+						+ data[index].mccontent
+						+ '<span class="cmt_date">'
+						+ data[index].mcdate1
+						+ '</span>'
+						+ '<button class="btn_pop btn_delete btn_cmmt" id="mycmmtdelete" data-layer="deletecmmt" data-value="'+data[index].mcnum+'"><em class="snd_only">삭제하기</em></button></p>'
+						+ '</li>');
+				} else {
+					comments.append('<li>'
+						+ '<a href="" class="pf_picture">'
+						+ '<img src="${root }resources/upload/thumb/no_profile.png" alt="'+data[index].mcauthor+'님의 프로필 썸네일">'
+						+ '</a><p class="cmt_content">'
+						+ '<a href="" class="cmt_name">'
+						+ data[index].mcauthor
+						+ '</a>&nbsp;&nbsp;'
+						+ data[index].mccontent
+						+ '<span class="cmt_date">'
+						+ data[index].mcdate1
+						+ '</span></li>');
+				}
+			});//each문 end
+		});//ajax통신 end		
+	});//댓글더보기 end
+						
+	//댓글 삭제 클릭
+	 $(document).on('click','#mycmmtdelete', function() {
+		var cmmtdel = $(this).data('value');
+		console.log(cmmtdel);
+		$('#num').val(cmmtdel);
+	}); 
+		
+	//댓글삭제 클릭>확인
+	$('#deletecmmt').on('click',function() {
+		var mcnum = $('#num').val();
+		$.post('${root}user/cmmtdel', 'mcnum='+ mcnum, function(data) {
+			$('.btn_close.comm_btn.cfm').on('click', function() {
+				location.reload();
+			});
+		});
+	});
+	//고정되는거 $(아이디) 유동적인거 $(document)
+	
+	//피드 수정
+	$(document).on('click','#feedmaker',function(){
+		var mpnum = $('#makerMpnum').val();
+		console.log(mpnum);
+		$.post('${root}user/maker','mpnum='+mpnum,function(data){
+			return false;
+		});
+	});
+	
+	//피드 삭제
+	$(document).on('click','#delmyfeed', function() {
+		var feeddel = $(this).data('value');
+		$('#fnum').val(feeddel);
+	});
+	
+	//피드삭제>확인
+	$('#deletefeed').on('click',function() {
+		var gpnum = $('#fnum').val();
+		$.post('${root}user/del','mpnum=' + mpnum,function(data) {
+			$('.btn_close.comm_btn.cfm').on('click',function() {
+				location.reload();
+			});
+		});
+	});
+});
+	
 </script>
 </head>
 <body>
-
 	<div id="wrap">
 		<div id="header">
 			<div class="scrX">
@@ -436,7 +382,9 @@
 											value="${myFeedSelectAll.mpnum }" /> <input type="hidden"
 											id="pronum" name="pronum" value="${profile.pronum }" /> <input
 											type="hidden" id="pronum_sync" name="pronum_sync"
-											value="${myFeedSelectAll.pronum}" /> <span
+											value="${myFeedSelectAll.pronum}" /> 
+											<input type="hidden" id="feedPronum" value="${myFeedSelectAll.pronum }"/>
+											<span
 											class="pf_picture"><img
 												src="http://placehold.it/55x55"
 												alt="${profile.proname }님의 프로필 썸네일"></span> <span
@@ -455,11 +403,17 @@
 											class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
 									</c:if>
 									<c:if test="${profile.pronum eq myFeedSelectAll.pronum }">
-										<li><a href="${root }user/maker" class="btn_pop btn_edit"><em
-												class="snd_only">수정하기</em></a></li>
-										<li><button class="btn_delete">
+										<li>
+											<input type="hidden" name="makerMpnum" value="${myFeedSelectAll.mpnum }"/>
+											<a href="" class="btn_pop btn_edit" id="feedmaker">
+											<em class="snd_only">수정하기</em>
+											</a>
+										</li>
+										<li>
+											<button class="btn_delete feed btn_pop" id="delmyfeed" data-layer="deletemyfeed" data-value="${myFeedSelectAll.mpnum }">
 												<em class="snd_only">삭제하기</em>
-											</button></li>
+											</button>
+										</li>
 									</c:if>
 								</ul>
 							</div>
@@ -488,32 +442,32 @@
 										</ul>
 										<p class="fd_content">${myFeedSelectAll.mpcontent }</p>
 									</div>
+									<input type="hidden" id="cmmtMpnum" value="${myFeedSelectAll.mpnum }"/>
 									<ul class="comment_list ind">
 										<c:set var="i" value="0" />
 										<c:set var="doneLoop" value="false" />
 										<c:forEach items="${myFeedCmmtSelectAll }"
-											var="myFeedCmmtSelectAll">
+											var="feedcmmt">
 											<c:if
-												test="${myFeedSelectAll.mpnum eq myFeedCmmtSelectAll.mpnum }">
+												test="${myFeedSelectAll.mpnum eq feedcmmt.mpnum }">
 												<c:if test="${not doneLoop }">
-													<li>
-														<!-- # 프로필 이미지 없음 { --> <a href="" class="pf_picture">
-															<img src="${root }resources/images/thumb/no_profile.png"
-															alt="${myFeedCmmtSelectAll.mcauthor }님의 프로필 썸네일">
-													</a> <!-- } # 프로필 이미지 없음 -->
+													<li class="">
+														<!-- # 프로필 이미지 없음 { -->
+														<a href="" class="pf_picture">
+															<img src="${root }resources/upload/thumb/no_profile.png" alt="${feedcmmt.mcauthor }님의 프로필 썸네일">
+														</a>
+														<!-- } # 프로필 이미지 없음 -->
 														<p class="cmt_content">
-															<input type="hidden" id="delCmmtNum"
-																value="${myFeedCmmtSelectAll.mcnum }" /> <a href=""
-																class="cmt_name">${myFeedCmmtSelectAll.mcauthor }</a>
-															${myFeedCmmtSelectAll.mccontent } <span class="cmt_date">${myFeedCmmtSelectAll.mcdate }</span>
-															<c:if test="${profile.pronum eq myFeedSelectAll.pronum }">
-																<button class="btn_delete btn_pop" data-layer="delete"
-																	data-value="${myFeedCmmtSelectAll.mcnum }">
+														<input type="hidden" id="delCmmtNum" value="${feedcmmt.mcnum}" />
+														<a href="" class="cmt_name">${feedcmmt.mcauthor }</a>&nbsp;&nbsp;${feedcmmt.mccontent }
+														<span class="cmt_date">${feedcmmt.mcdate1 }</span>
+															<c:if test="${(profile.pronum eq myFeedSelectAll.pronum ) or (profile.pronum eq feedcmmt.pronum)}">
+																<button class="btn_delete btn_pop" id="mycmmtdelete" data-layer="deletecmmt" data-value="${feedcmmt.mcnum }">
 																	<em class="snd_only">삭제하기</em>
 																</button>
 															</c:if>
 														</p>
-													</li>
+													</li>													
 													<c:set var="i" value="${i+1 }" />
 													<c:if test="${i eq 3 }">
 														<c:set var="doneLoop" value="true" />
@@ -640,7 +594,7 @@
 		</div>
 
 	</div>
-	<div id="delete" class="fstPop">
+	<div id="deletecmmt" class="fstPop">
 		<div class="out_wrap pop_wrap">
 			<h3 class="pop_tit">댓글을 삭제하시겠습니까?</h3>
 			<input type="hidden" id="num" value="">

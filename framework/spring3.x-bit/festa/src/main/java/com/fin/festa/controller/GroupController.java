@@ -89,12 +89,14 @@ public class GroupController {
 	//그룹원 리스트 팔로우 (팝업>팝업 내 기능)
 	@RequestMapping(value = "follow", method = RequestMethod.POST)
 	public String followInsertOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
+		groupService.followInsertOne(req, myFollowingVo);
 		return "group/member";
 	}
-	
+
 	//그룹원 리스트 팔로우 취소 (팝업>팝업 내 기능)
 	@RequestMapping(value = "unfollow", method = RequestMethod.POST)
 	public String followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
+		groupService.followDeleteOne(req, myFollowingVo);
 		return "group/member";
 	}
 	
@@ -309,7 +311,9 @@ public class GroupController {
 	
 	//그룹원 관리
 	@RequestMapping(value = "user", method = RequestMethod.GET)
-	public String groupUserAdminSelectAll(Model model, GroupVo groupVo){
+	public String groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo , PageSearchVo pageSearchVo){
+		groupService.groupSelectOne(req, groupVo);
+		groupService.groupUserAdminSelectAll(req, groupVo, pageSearchVo);
 		return "group/user";
 	}
 	
@@ -327,7 +331,9 @@ public class GroupController {
 	
 	//그룹 신청 목록
 	@RequestMapping(value = "req", method = RequestMethod.GET)
-	public String groupRequestSelectAll(Model model, GroupVo groupVo){
+	public String groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo){
+		groupService.groupSelectOne(req, groupVo);
+		groupService.groupRequestSelectAll(req, groupVo, pageSearchVo);
 		return "group/req";
 	}
 	
@@ -354,16 +360,11 @@ public class GroupController {
 	public String groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo){
 		return "group/req";
 	}
-
-	//그룹 삭제 (팝업)
-	@RequestMapping(value = "profile/del", method = RequestMethod.GET)
-	public String groupDeleteOne(){
-		return "user/index";
-	}
 	
-	//그룹 삭제 (팝업>팝업 내 기능)
+	//그룹 삭제 (내부팝업 기능)
 	@RequestMapping(value = "profile/del", method = RequestMethod.POST)
-	public String groupDeleteOne(Model model, GroupVo groupVo){
+	public String groupDeleteOne(HttpServletRequest req, GroupVo groupVo){
+		groupService.groupDeleteOne(req, groupVo);
 		return "user/index";
 	}
 }

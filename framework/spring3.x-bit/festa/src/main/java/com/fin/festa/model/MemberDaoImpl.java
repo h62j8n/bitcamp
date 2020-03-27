@@ -45,6 +45,13 @@ public class MemberDaoImpl implements MemberDao{
 		return sqlSession.selectOne("member.stopAndKick",profile) ;
 	}
 	
+	
+	//그룹해체시 세션갱신
+	@Override
+	public List<JoinGroupVo> myJoinGroupSelectAll(int pronum) {
+		return sqlSession.selectList("member.myJoinGroupList", pronum);
+	}
+	
 	//로그인과 동시작업(로그인완료 되면)  해당회원의 가입그룹목록출력
 	@Override
 	public List<JoinGroupVo> myJoinGroupSelectAll(ProfileVo profile) {
@@ -141,6 +148,7 @@ public class MemberDaoImpl implements MemberDao{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 
 

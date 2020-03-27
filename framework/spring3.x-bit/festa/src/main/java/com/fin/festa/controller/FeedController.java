@@ -31,6 +31,8 @@ public class FeedController {
 	//인기피드 조회
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String hotFeedSelectAll(Model model) {
+		
+		feedService.hotFeedSelectAll(model);
 		return "hot/index";
 	}
 

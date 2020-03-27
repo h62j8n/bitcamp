@@ -2,10 +2,14 @@ package com.fin.festa.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
-import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.FeedVo;
 
 //날짜관련 계산
 public class DateCalculate {
@@ -35,6 +39,23 @@ public class DateCalculate {
 	public DateCalculate() {
 		
 	}
+	
+	public List<FeedVo> VoDateReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
+		
+		List<FeedVo> list= new ArrayList<>();
+		for(int i=0; i<groupFeedList.size(); i++) {
+			list.add(groupFeedList.get(i));
+		}
+		
+		for(int i=0; i<feedList.size(); i++) {
+			list.add(feedList.get(i));
+		}
+		
+		Collections.sort(list);
+		
+		return list;
+	}
+	
 	
 	//날짜 포맷팅
 	public String dateFormat(Timestamp date) {

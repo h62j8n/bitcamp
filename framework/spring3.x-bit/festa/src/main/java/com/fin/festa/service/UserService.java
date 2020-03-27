@@ -62,7 +62,7 @@ public interface UserService {
 		
 		void myAdminGoodbye(Model model, ProfileVo profileVo);
 
-		void groupInsertOne(HttpServletRequest req, GroupVo groupVo);
+		GroupVo groupInsertOne(HttpServletRequest req, GroupVo groupVo);
 		
 		void ventureInsertOne(HttpServletRequest req, UpdateWaitVo updateWaitVo);
 

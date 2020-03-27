@@ -266,37 +266,33 @@ public class GroupDaoImpl implements GroupDao{
 	//내팔로잉 등록
 	@Override
 	public void myFollowingInsertOne(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("group.myFollowingInsert", following);
 	}
 
-	//상대팔로워 등록
+	// 상대팔로워 등록
 	@Override
 	public void yourFollowerInsertOne(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("group.yourFollowerInsert", following);
 	}
 
-	//내팔로잉 해제
+	// 내팔로잉 해제
 	@Override
 	public int myFollowingDeleteOne(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("group.myFollowingDelete", following);
 	}
 
-	//상대팔로워 해제
+	// 상대팔로워 해제
 	@Override
 	public int yourFollowerDeleteOne(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("group.yourFollowerDelete", following);
 	}
 
-	//내 팔로잉목록 갱신
+	// 내 팔로잉목록 갱신
 	@Override
 	public List<MyFollowingVo> myFollowingRenewal(MyFollowingVo following) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("group.myFollowingRenewal", following);
 	}
+
 
 	////////////////////////////////////////////////////////////////
 	///////////////////////////그룹관리/////////////////////////////
@@ -316,22 +312,20 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹에 가입된유저정보 출력
 	@Override
 	public List<ProfileVo> groupUserSelectAll(GroupVo group) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("group.groupUserSelectAll", group);
 	}
 
 	//그룹에 가입된유저정보 검색값만 출력
 	@Override
 	public List<ProfileVo> groupUserSearch(GroupVo group) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("group.groupUserSearch", group);
 	}
 
 	//가입유저조회 테이블 로우갯수 뽑기
 	@Override
 	public int groupUserTotalCount(GroupVo group) {
 		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.selectOne("group.groupUserTotalCount", group);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -368,15 +362,14 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹 가입신청한 유저 출력
 	@Override
 	public List<UpdateWaitVo> groupRequestSelectAll(GroupVo group) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("group.groupRequestSelectAll", group);
 	}
 
 	//가입신청조회 테이블 로우갯수 뽑기
 	@Override
 	public int groupRequestTotalCount(GroupVo group) {
 		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.selectOne("group.groupRequestTotalCount", group);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -412,8 +405,7 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹 삭제
 	@Override
 	public int groupDelete(GroupVo group) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("group.groupDelete", group);
 	}
 
 }

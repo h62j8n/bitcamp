@@ -61,13 +61,13 @@ public interface GroupService {
 		
 		void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo);
 		
-		void groupUserAdminSelectAll(Model model, GroupVo groupVo);
+		void groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo);
 		
 		void groupUserKick(Model model, JoinGroupVo joinGroupVo);
 		
 		void groupUserAllKick(Model model, GroupVo groupVo);
 		
-		void groupRequestSelectAll(Model model, GroupVo groupVo);
+		void groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo);
 		
 		void groupRequestHello(Model model, UpdateWaitVo updateWaitVo);
 		
@@ -77,7 +77,7 @@ public interface GroupService {
 		
 		void groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo);
 
-		void groupDeleteOne(Model model, GroupVo groupVo);
+		void groupDeleteOne(HttpServletRequest req, GroupVo groupVo);
 		
 		void groupOut(Model model, JoinGroupVo joinGroup);
 		

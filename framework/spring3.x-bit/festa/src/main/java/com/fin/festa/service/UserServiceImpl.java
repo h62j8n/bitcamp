@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.UserDaoImpl;
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.GroupVo;
+import com.fin.festa.model.entity.JoinGroupVo;
 import com.fin.festa.model.entity.LoginVo;
 import com.fin.festa.model.entity.MyAdminVo;
 import com.fin.festa.model.entity.MyCommentVo;
@@ -35,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserDaoImpl userDao;
+	
+	@Autowired
+	MemberDaoImpl memberDao;
 
 	//추가사항
 	//유저 댓글 더보기 비동기
@@ -262,14 +267,26 @@ public class UserServiceImpl implements UserService {
 
 	// 사업자 유무 체크(공식그룹,비공식그룹 분류)
 	// 그룹 등록
+	// 그룹 등록
 	@Override
-	public void groupInsertOne(HttpServletRequest req, GroupVo groupVo) {;
-		userDao.groupInsert(groupVo);
-		
+	public GroupVo groupInsertOne(HttpServletRequest req, GroupVo groupVo) {;
 		HttpSession session = req.getSession();
+		ProfileVo profile = (ProfileVo) session.getAttribute("profile");
+		
+		userDao.groupInsert(groupVo);
+		groupVo = userDao.groupmyGroup(profile);
+		userDao.myGroupJoin(groupVo);
+
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profile);
+
+		session.setAttribute("joinGroup", joinGroup);
 		session.setAttribute("group", groupVo);
 		session.setAttribute("groupCheck", 1);
+		req.setAttribute("detail", groupVo);
+		
+		return groupVo;
 	}
+
 
 	// 사업자등록 신청
 	@Override

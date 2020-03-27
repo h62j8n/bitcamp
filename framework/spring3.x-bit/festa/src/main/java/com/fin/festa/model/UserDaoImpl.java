@@ -320,6 +320,19 @@ public class UserDaoImpl implements UserDao{
 	public void groupVentureInsert(GroupVo group) {
 		sqlSession.insert("user.myVentureGroupInsert",group);
 	}
+	
+	//그룹번호
+	@Override
+	public GroupVo groupmyGroup(ProfileVo profile) {
+		return sqlSession.selectOne("myGroup",profile);
+	}
+	
+	//그룹장 가입처리
+	@Override
+	public void myGroupJoin(GroupVo group) {
+		sqlSession.insert("myGroupJoin", group);
+	}
+
 
 	////////////////////////////////////////////////////////////
 	///////////////////////사업자관리///////////////////////////

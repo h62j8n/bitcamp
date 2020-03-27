@@ -351,7 +351,7 @@
 				<section class="content_area">
 					<!-- #공지사항 시작 {  -->
 					<div class="feed_notice">
-						<h3>공지사항</h3>
+						<h3>공지사항 [최근 5개]</h3>
 						<ul>
 							<c:choose>
 								<c:when test="${!empty ntc }">

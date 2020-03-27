@@ -79,8 +79,10 @@
 	</resultMap>
 	<!-- 내팔로잉목록 조인 시에 참조되는 데이터 --> 
 	<resultMap type="MyFollowingVo" id="following">
-		<result column="mfgnum" property="mfgnum"/>
-		<association property="profile" resultMap="profile2"/>
+		<result column="mfgnum" property="mfgnum" />
+		<result column="mfgname" property="mfgname" />
+		<result column="pronum11" property="pronum" />
+		<result column="pronum_sync" property="pronum_sync" />
 	</resultMap>
 	<resultMap type="ProfileVo" id="profile2">
 		<result column="pronum" property="pronum"/>
@@ -329,25 +331,25 @@
 	<insert id="myFollowingInsert" parameterType="MyFollowingVo">
 		insert into myfollowing (pronum11,mfgname,pronum_sync) values (#{pronum},#{mfgname},#{pronum_sync})
 	</insert>
-	
+   
 	<!-- 상대 팔로워 등록 -->
-	<insert id="yourFollowerInsert" parameterType="MyFollowerVo">
-		insert into myfollower (pronum10,mfrname,pronum_sync) values (#{pronum},#{mfrname},#{pronum_sync})
+	<insert id="yourFollowerInsert" parameterType="MyFollowingVo">
+	   insert into myfollower (pronum10,mfrname,pronum_sync) values (#{pronum},#{myFollower.mfrname},#{pronum_sync})
 	</insert>
-	
+   
 	<!-- 내 팔로잉 해제 -->
 	<delete id="myFollowingDelete" parameterType="MyFollowingVo">
-		delete from myfollowing where mfgnum=#{mfgnum}
+	   delete from myfollowing where pronum11=#{pronum} and pronum_sync=#{pronum_sync}
 	</delete>
-	
+   
 	<!-- 상대 팔로워 해제 -->
-	<delete id="yourFollowerDelete" parameterType="MyFollowerVo">
-		delete from myfollower where mfrnum=#{mfrnum}
+	<delete id="yourFollowerDelete" parameterType="MyFollowingVo">
+	   delete from myfollower where pronum10=#{pronum} and pronum_sync=#{pronum_sync}
 	</delete>
-	
+   
 	<!-- 내 팔로잉목록 갱신 -->
 	<select id="myFollowingRenewal" parameterType="MyFollowingVo" resultMap="following">
-		select a.mfgnum,b.* from myfollowing a inner join profile b on a.pronum_sync=b.pronum where pronum11=#{pronum}
+	   select * from myfollowing where pronum11=#{pronum}
 	</select>
 	
 	<!-- 팔로잉,팔로워등록,해제 end -->
@@ -363,19 +365,28 @@
 	
 	<!-- 그룹에 가입된 유저 출력 -->
 	<select id="groupUserSelectAll" parameterType="GroupVo" resultMap="profile">
-		select * from (select @rownum:=@rownum+1 as prorn,c.* from (select a.jgnum,a.jgdate,b.* from joingroup a inner join profile b on a.pronum8=b.pronum 
-		where grnum3=#{grnum} order by proname asc) c,(SELECT @ROWNUM:=0) R) d where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}
+		select * from (select * from (select @rnum:=@rnum+1 as prorn,c.* from
+		(select @rownum:=@rownum+1 as prorn1,a.jgnum,a.jgdate,b.* from
+		joingroup a inner join profile b on a.pronum8=b.pronum,(SELECT
+		@ROWNUM:=0) R
+		where grnum3=#{grnum} order by proname asc) c,(select @rnum:=0) r2 order by
+		prorn1 desc) d order by prorn desc) e where prorn1<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn1<![CDATA[ <= ]]>#{pageSearch.endnum}
 	</select>
 	
 	<!-- 그룹에 가입된 유저 검색으로출력 -->
 	<select id="groupUserSearch" parameterType="GroupVo" resultMap="profile">
-		select * from (select @rownum:=@rownum+1 as prorn,c.* from (select a.jgnum,a.jgdate,b.* from joingroup a inner join profile b on a.pronum8=b.pronum 
-		where proname like concat('%',#{pageSearch.keyword},'%') and grnum3=#{grnum} order by proname asc) c,(SELECT @ROWNUM:=0) R) d where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}
+		select * from (select * from (select @rnum:=@rnum+1 as prorn,c.* from
+		(select @rownum:=@rownum+1 as prorn1,a.jgnum,a.jgdate,b.* from
+		joingroup a inner join profile b on a.pronum8=b.pronum,(SELECT
+		@ROWNUM:=0) R
+		where proname like concat('%',#{pageSearch.keyword},'%') and grnum3=#{grnum}
+		order by proname asc) c,(select @rnum:=0) r2 order by prorn1 desc) d
+		order by prorn desc) e where prorn1<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn1<![CDATA[ <= ]]>#{pageSearch.endnum}
 	</select>
 	
 	<!-- 가입유저조회 로우갯수 -->
 	<select id="groupUserTotalCount" parameterType="GroupVo" resultType="int">
-		select count(*) from joingroup where grnum3=#{grnum}
+		select count(*) from joingroup a inner join profile b on a.pronum8 = b.pronum where grnum3=#{grnum} and proname like concat ('%', #{pageSearch.keyword},'%')
 	</select>
 	
 	<!-- 그룹유저 추방 -->
@@ -401,8 +412,8 @@
 	
 	<!-- 그룹가입신청 유저목록 -->
 	<select id="groupRequestSelectAll" parameterType="GroupVo" resultMap="update">
-		select * from (select @rownum:=@rownum+1 as uwrn,i.* from (select a.*,b.grsayone from profile a inner join updatewait b on a.pronum=b.pronum9
-		 where grnum4=#{grnum} order by proname asc) i,(SELECT @ROWNUM:=0) R) j where uwrn<![CDATA[ >= ]]>#{pageSearch.startnum} and uwrn<![CDATA[ <= ]]>#{pageSearch.endnum};
+		select * from (select * from (select @rnum:=@rnum+1 as uwrn,i.* from (select @rownum:=@rownum+1 as uwrn1,a.*,b.grsayone from profile a inner join updatewait b on a.pronum=b.pronum9,(SELECT @ROWNUM:=0) R
+		 where grnum4=#{grnum} order by proname asc) i,(select @rnum:=0) r2 order by uwrn1 desc) j order by uwrn desc) z where uwrn1<![CDATA[ >= ]]>#{pageSearch.startnum} and uwrn1<![CDATA[ <= ]]>#{pageSearch.endnum};
 	</select>
 	
 	<!-- 가입신청 승인 -->

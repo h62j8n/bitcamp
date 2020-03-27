@@ -98,7 +98,6 @@
 		
 		//공지삭제 버튼 클릭>확인시
 		$('#delfeed').on('click', function(){
-			
 			$.ajax({
 				type: 'post',
 				url: '${root}group/ntc_feed/del',

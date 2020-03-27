@@ -6,12 +6,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
-import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 
 @Repository
@@ -26,9 +26,9 @@ public class FeedDaoImpl implements FeedDao{
 	
 	//인기그룹피드 출력
 	@Override
-	public List<GroupPostVo> hotGroupFeedSelectAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FeedVo> hotGroupFeedSelectAll() {
+		
+		return sqlSession.selectList("feed.hotGroupFeedList");
 	}
 
 	//인기그룹피드 댓글출력
@@ -40,9 +40,9 @@ public class FeedDaoImpl implements FeedDao{
 	
 	//인기개인피드 출력
 	@Override
-	public List<MyPostVo> hotMyFeedSelectAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FeedVo> hotMyFeedSelectAll() {
+		
+		return sqlSession.selectList("feed.hotMyFeedList");
 	}
 	
 	//인기개인피드 댓글출력

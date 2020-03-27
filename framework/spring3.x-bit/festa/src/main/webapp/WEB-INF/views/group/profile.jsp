@@ -46,8 +46,56 @@
 					window.location.href=link;				
 				});
 			});
-			
 		}); 
+	 	
+	 	$('#festa8').on('click', function(){
+	 		var grnum=$('#postgrnum').val();
+	 		$('#grnum').val(grnum);
+	 		var grtotal=$('#postgrtotal').val();
+	 		$('#grtotal').val(grtotal);
+	 		var pronum=$('#postpronum').val();
+	 		$('#pronum').val(pronum);
+	 		var pronum2=$('#pronum').val();
+	 		console.log(pronum2);
+	 		
+	 		//그룹삭제 키값검사
+		 	$('#keymsg').on('propertychange change keyup paste input', function(){
+		 		var keymsg=$('#keymsg').val();
+		 		var sucmsg='여행하는 과정에서 행복을 느낀다'
+		 		var grtotal=$('#grtotal')
+		 		if(keymsg == sucmsg){
+		 			$('#delcheck').removeAttr("disabled");
+		 			$('#delcheck').removeClass('cnc');
+		 			$('#delcheck').addClass('cfm');
+
+		 			var grnum=$('#grnum').val();
+		 			var grtotal=$('#grtotal').val();
+		 			var pronum=$('#pronum').val();
+		 			
+	 				console.log(grtotal);
+	 				
+		 			$('#delcheck').on('click', function(){
+		 				//그룹인원 1인 넘을경우 실패
+		 				if(grtotal > 1){
+	 						openPop("groupfail");
+	 		 				$('#keymsg').val('');
+		 				} else{
+			 				$.post('${root}/group/profile/del', 'grnum='+grnum+'&pronum='+pronum, function(data){
+		 						openPop("deleteok");
+		 						$('#deletesuccess').on('click', function(){
+		 							window.location.href='http://localhost:8080/festa/user/';
+		 						});
+			 				})	 					
+		 				}
+		 			});
+		 		}else{
+		 			$('#delcheck').attr("disabled", "disabled");
+		 			$('#delcheck').removeClass('cfm');
+		 			$('#delcheck').addClass('cnc');
+		 		}
+		 	});
+	 	});
+	 	
 	 	
 	});
 	
@@ -219,14 +267,17 @@
 				<section class="side_area">
 					<ul class="lnb_list">
 						<li><a href="${root }group/profile?grnum=${detail.grnum}" class="act">그룹 관리</a></li>
-						<li><a href="${root }group/user">그룹원 관리</a></li>
-						<li><a href="${root }group/req">가입신청 조회</a></li>
+						<li><a href="${root }group/user?grnum=${detail.grnum}">그룹원 관리</a></li>
+						<li><a href="${root }group/req?grnum=${detail.grnum}">가입신청 조회</a></li>
 					</ul>
 				</section>
 				<!-- } 좌측 사이드메뉴 시작 -->
 				<!-- 컨텐츠영역 시작 { -->
 				<section class="content_area">
 					<h2 class="set_tit">그룹 관리</h2>
+					<input type="hidden" id="postgrnum" value="${detail.grnum }" />
+					<input type="hidden" id="postgrtotal" value="${detail.grtotal }" />
+					<input type="hidden" id="postpronum" value="${login.pronum }" />
 					<form action="${root }group/profile/edit" method="post" class="set_form">
 						<ul class="input_list">
 							<li class="set_file1 box">
@@ -301,9 +352,8 @@
 							<li class="set_chk box">
 								<p>그룹 설정</p>
 								<div>
-									<input type="checkbox" class="comm_rdo rdo_pop btn_pop" id="festa8"
-										name="festa8" data-layer="del"> <label
-										for="festa8">그룹 삭제</label>
+									<input type="checkbox" class="comm_rdo rdo_pop btn_pop" id="festa8" name="festa8" data-layer="del">
+									<label for="festa8">그룹 삭제</label>
 									<p class="txt_explan">
 										그룹 삭제 시 프로필 및 공유한 피드가 모두 삭제되며, 복구가 불가능합니다.<br>
 									</p>
@@ -361,13 +411,16 @@
 			<p class="out_words">여행하는 과정에서 행복을 느낀다</p>
 			<form class="comm_form">
 				<div class="ip_box">
-					<input type="text" id="" name="" required="required">
+					<input type="text" id="keymsg" name="" required="required">
 					<p class="f_message"></p>
 				</div>
 				<div class="btn_box">
+					<input type="hidden" id="grnum" value="" />
+					<input type="hidden" id="grtotal" value="" />
+					<input type="hidden" id="pronum" value="" />
 					<ul class="comm_buttons">
 						<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-						<li><button type="button" class="btn_pop2 comm_btn sbm">확인</button></li>
+						<li><button type="button" id="delcheck" class="btn_close comm_btn cnc" disabled="disabled">확인</button></li>
 					</ul>
 				</div>
 			</form>
@@ -376,8 +429,7 @@
 	</div>
 	
 	
-	<!-- #팝업 처리불가 {
-	<div id="" class="fstPop">
+	<div id="groupfail" class="fstPop">
 		<div class="confirm_wrap pop_wrap">
 			<p class="pop_tit">그룹을 삭제할 수 없습니다.</p>
 			<p class="pop_txt">아직 탈퇴하지 않은 그룹 멤버가 있습니다.</p>
@@ -386,8 +438,16 @@
 			</ul>
 		</div>
 	</div>
-	} #팝업 처리불가 -->
 	
+	<!-- #삭제 처리완료 { -->
+	<div id="deleteok" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">그룹 삭제가 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="deletesuccess" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
 	
 	<div id="edit" class="fstPop">
 		<div class="out_wrap pop_wrap">

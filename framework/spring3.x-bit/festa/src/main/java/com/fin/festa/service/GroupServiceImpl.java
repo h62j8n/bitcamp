@@ -9,10 +9,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.GroupDaoImpl;
+import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupNoticeCommentVo;
 import com.fin.festa.model.entity.GroupNoticeVo;
@@ -23,6 +25,8 @@ import com.fin.festa.model.entity.MyBookMarkVo;
 import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.model.entity.UpdateWaitVo;
 import com.fin.festa.util.UploadPhoto;
@@ -31,10 +35,12 @@ import com.fin.festa.util.UploadPhoto;
 public class GroupServiceImpl implements GroupService{
 
 	//등록,수정,삭제가 최소2개이상 들어가는 메소드는 꼭 트랜잭션 적용할것!!
-	
+
 	@Autowired
 	GroupDaoImpl groupDao;
 	
+	@Autowired
+	MemberDaoImpl memberDao;
 
 	//가입된 그룹인지 체크
 	@Override
@@ -232,9 +238,24 @@ public class GroupServiceImpl implements GroupService{
 	//검색으로 값이 넘어올경우 검색조건 유저정보 출력(keyword!=null)
 	//페이지기능을 위한 가입유저조회 테이블 로우갯수 뽑기
 	@Override
-	public void groupUserAdminSelectAll(Model model, GroupVo groupVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo) {
+		//첫화면불러올때 페이지넘버가 0이니까 1로 맞춰줌
+		if(pageSearchVo.getPage()==0) {
+			pageSearchVo.setPage(1);
+		}		
+		//첫화면불러올때나 검색안할때 null이 들어가므로 mysql은 null하고 ""하고 값이 다르기때문에 ""로 맞춰줌
+		if(pageSearchVo.getKeyword()==null) {
+			pageSearchVo.setKeyword("");
+			groupVo.setPageSearch(pageSearchVo);		
+			groupVo.getPageSearch().setTotalCount(groupDao.groupUserTotalCount(groupVo));
+			req.setAttribute("userdetail", groupDao.groupUserSelectAll(groupVo));
+			req.setAttribute("pageSearch", groupVo.getPageSearch());
+		} else {
+			groupVo.setPageSearch(pageSearchVo);		
+			groupVo.getPageSearch().setTotalCount(groupDao.groupUserTotalCount(groupVo));
+			req.setAttribute("userdetail", groupDao.groupUserSearch(groupVo));
+			req.setAttribute("pageSearch", groupVo.getPageSearch());
+		}
 	}
 
 	//가입된 유저 강퇴
@@ -257,9 +278,15 @@ public class GroupServiceImpl implements GroupService{
 	//페이지 한페이지에 5개 로우
 	//페이지기능을 위한 가입신청조회 테이블 로우갯수 뽑기
 	@Override
-	public void groupRequestSelectAll(Model model, GroupVo groupVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo) {
+		//첫화면불러올때 페이지넘버가 0이니까 1로 맞춰줌
+		if(pageSearchVo.getPage2()==0) {
+			pageSearchVo.setPage2(1);
+		}
+		groupVo.setPageSearch(pageSearchVo);
+		groupVo.getPageSearch().setTotalCount2(groupDao.groupRequestTotalCount(groupVo));
+		req.setAttribute("request", groupDao.groupRequestSelectAll(groupVo));
+		req.setAttribute("pageSearch", groupVo.getPageSearch());
 	}
 
 	//가입신청 유저등록
@@ -296,9 +323,15 @@ public class GroupServiceImpl implements GroupService{
 
 	//그룹 삭제
 	@Override
-	public void groupDeleteOne(Model model, GroupVo groupVo) {
-		// TODO Auto-generated method stub
+	public void groupDeleteOne(HttpServletRequest req, GroupVo groupVo) {
+		groupDao.groupDelete(groupVo);
 		
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
+		
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//가입된그룹 탈퇴
@@ -308,22 +341,34 @@ public class GroupServiceImpl implements GroupService{
 		
 	}
 
-	//회원 팔로잉등록
-	//상대 팔로워등록
-	//내 팔로잉목록 갱신
+	// 회원 팔로잉등록
+	// 상대 팔로워등록
+	// 내 팔로잉목록 갱신
+	@Transactional
 	@Override
 	public void followInsertOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-		// TODO Auto-generated method stub
-		
+
+		System.out.println("파라미터 : " + myFollowing);
+		groupDao.myFollowingInsertOne(myFollowing);
+		groupDao.yourFollowerInsertOne(myFollowing);
+		HttpSession session = req.getSession();
+		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
+		System.out.println("등록 : " + req.getSession().getAttribute("followlist"));
 	}
 
-	//회원 팔로잉해제
-	//상대 팔로워해제
-	//내 팔로잉목록 갱신
+	// 회원 팔로잉해제
+	// 상대 팔로워해제
+	// 내 팔로잉목록 갱신
+	@Transactional
 	@Override
 	public void followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-		// TODO Auto-generated method stub
-		
+
+		System.out.println("파라미터 : " + myFollowing);
+		groupDao.myFollowingDeleteOne(myFollowing);
+		groupDao.yourFollowerDeleteOne(myFollowing);
+		HttpSession session = req.getSession();
+		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
+		System.out.println("해제 : " + req.getSession().getAttribute("followlist"));
 	}
 
 
