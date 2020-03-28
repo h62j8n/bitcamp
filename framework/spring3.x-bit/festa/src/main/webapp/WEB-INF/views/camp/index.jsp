@@ -16,6 +16,8 @@
 	<title>FESTA</title>
 	<script type="text/javascript">
 	$(function(){
+		paramTop();
+		
 		var container = $('.result_area .camp_list'),
 		li = container.find('li'),
 		btn = $('.btn_view_more');
@@ -24,11 +26,6 @@
 				$(this).hide();
 			}
 		});
-		if (li.length < 1) {
-			var empty = '<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>';
-			container.append(empty);
-			btn.hide();
-		}
 		var hideOut = container.find('li:hidden').length;
 		if (hideOut < 6) {
 			btn.hide();
@@ -45,12 +42,14 @@
 				start++;
 			}
 		});
-		
-		var top = $('.result_area').offset().top - 100;
-		<c:if test="${!empty param.caaddrsel}">
-		$('html, body').animate({scrollTop: top}, 0);
-		</c:if>
 	});
+	function paramTop() {
+		var param = '${param.caaddrsel}';
+		var top = $('.result_area').offset().top - 100;
+		if (param != '') {
+			$('html, body').animate({scrollTop: top}, 0);	
+		}
+	}
 	</script>
 </head>
 <body>
@@ -202,23 +201,30 @@
 					<b>검증된 캠핑장</b>
 				</h3>
 				<ul class="camp_list">
-					<c:forEach items="${campList}" var="camp">
-					<li>
-						<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-							<img src="http://placehold.it/320x180" alt="${camp.caname}">
-							<b class="cp_liked">${camp.cagood}</b>
-						</a>
-						<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-							<b class="cp_name">${camp.caname}</b>
-							<span>
-								<b class="cp_loc">${camp.caaddrsel}</b>
-								<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
-								<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
-								<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
-							</span>
-						</a>
-					</li>
-					</c:forEach>
+					<c:choose>
+						<c:when test="${!empty campList}">
+							<c:forEach items="${campList}" var="camp">
+							<li>
+								<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+									<img src="http://placehold.it/320x180" alt="${camp.caname}">
+									<b class="cp_liked">${camp.cagood}</b>
+								</a>
+								<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+									<b class="cp_name">${camp.caname}</b>
+									<span>
+										<b class="cp_loc">${camp.caaddrsel}</b>
+										<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
+										<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
+										<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
+									</span>
+								</a>
+							</li>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>
+						</c:otherwise>
+					</c:choose>
 				</ul>
 				<button class="comm_btn btn_view_more">더 보기</button>
 			</div>
