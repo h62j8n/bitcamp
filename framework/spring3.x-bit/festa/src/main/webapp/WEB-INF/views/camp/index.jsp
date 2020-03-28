@@ -1,6 +1,8 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -147,22 +149,33 @@
 				<div class="camp_slide">
 					<div>
 						<ul class="camp_list swiper-wrapper">
-							<c:forEach items="${newCampList}" var="newCamp">
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="${root}camp/detail?canum=${newCamp.canum}&caaddrsel=${newCamp.caaddrsel}">
-									<img src="http://placehold.it/320x180" alt="${newCamp.caname}">
-								</a>
-								<a class="cp_text" href="${root}camp/detail?canum=${newCamp.canum}&caaddrsel=${newCamp.caaddrsel}">
-									<b class="cp_name">${newCamp.caname}</b>
-									<span>
-										<b class="cp_loc">${newCamp.caaddrsel}</b>
-										<c:if test="${!empty newCamp.httitle1}">#${newCamp.httitle1}</c:if>
-										<c:if test="${!empty newCamp.httitle2}">#${newCamp.httitle2}</c:if>
-										<c:if test="${!empty newCamp.httitle3}">#${newCamp.httitle3}</c:if>
-									</span>
-								</a>
-							</li>
-							</c:forEach>
+						<c:choose>
+							<c:when test="${!empty newCampList}">
+								<c:forEach items="${newCampList}" var="camp">
+								<li class="swiper-slide">
+									<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+									<c:set var="image" value="${fn:substringBefore(camp.caphoto,',')}"></c:set>
+									<c:choose>
+										<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${camp.caname}"></c:when>
+										<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
+									</c:choose>
+									</a>
+									<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+										<b class="cp_name">${camp.caname}</b>
+										<span>
+											<b class="cp_loc">${camp.caaddrsel}</b>
+											<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
+											<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
+											<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
+										</span>
+									</a>
+								</li>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>
+							</c:otherwise>
+						</c:choose>
 						</ul>
 					</div>
 					<button type="button" class="swiper-prev"><em class="snd_only">이전</em></button>
@@ -201,30 +214,34 @@
 					<b>검증된 캠핑장</b>
 				</h3>
 				<ul class="camp_list">
-					<c:choose>
-						<c:when test="${!empty campList}">
-							<c:forEach items="${campList}" var="camp">
-							<li>
-								<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-									<img src="http://placehold.it/320x180" alt="${camp.caname}">
-									<b class="cp_liked">${camp.cagood}</b>
-								</a>
-								<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-									<b class="cp_name">${camp.caname}</b>
-									<span>
-										<b class="cp_loc">${camp.caaddrsel}</b>
-										<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
-										<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
-										<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
-									</span>
-								</a>
-							</li>
-							</c:forEach>
-						</c:when>
-						<c:otherwise>
-							<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+					<c:when test="${!empty campList}">
+						<c:forEach items="${campList}" var="camp">
+						<li>
+							<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">							
+							<c:set var="image" value="${fn:substringBefore(camp.caphoto,',')}"></c:set>
+							<c:choose>
+								<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${camp.caname}"></c:when>
+								<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
+							</c:choose>
+								<b class="cp_liked">${camp.cagood}</b>
+							</a>
+							<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
+								<b class="cp_name">${camp.caname}</b>
+								<span>
+									<b class="cp_loc">${camp.caaddrsel}</b>
+									<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
+									<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
+									<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
+								</span>
+							</a>
+						</li>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<li class="fstEmpty">등록된 캠핑장이 없습니다.</li>
+					</c:otherwise>
+				</c:choose>
 				</ul>
 				<button class="comm_btn btn_view_more">더 보기</button>
 			</div>
