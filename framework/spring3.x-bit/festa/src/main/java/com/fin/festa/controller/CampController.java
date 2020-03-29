@@ -7,13 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fin.festa.model.entity.CampReviewVo;
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.MyBookMarkVo;
 import com.fin.festa.model.entity.MyGoodVo;
-import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.service.CampService;
 
@@ -32,6 +30,10 @@ public class CampController {
 	//캠핑장 지역별 리스트
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String campSelectAll(Model model, CampVo campVo) {
+		String caaddrsel = campVo.getCaaddrsel();
+		if (caaddrsel == null) {		// 첫 페이지 초기화
+			campVo.setCaaddrsel("");
+		}
 		campService.campSelectAll(model);
 		campService.campLocation(model, campVo);
 		return "camp/index";
@@ -41,6 +43,7 @@ public class CampController {
 	@RequestMapping(value = "detail", method = RequestMethod.GET)
 	public String campSelectOne(Model model, CampVo campVo) {
 		campService.campSelectOne(model, campVo);
+		campService.campLocation(model, campVo);
 		return "camp/detail/index";
 	}
 	
@@ -70,13 +73,15 @@ public class CampController {
 	
 	//캠핑장 한줄평 입력
 	@RequestMapping(value = "detail/revadd", method = RequestMethod.POST)
-	public String reviewInsertOne(Model model, CampReviewVo campReviewVo) {
+	public String reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo) {
+		campService.reviewInsertOne(req, campReviewVo);
 		return "camp/detail/index";
 	}
 	
 	//캠핑장 한줄평 삭제 (내부팝업 기능)
 	@RequestMapping(value = "detail/revdel", method = RequestMethod.POST)
 	public String reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
+		campService.reviewDeleteOne(model, campReviewVo);
 		return "camp/detail/index";
 	}
 

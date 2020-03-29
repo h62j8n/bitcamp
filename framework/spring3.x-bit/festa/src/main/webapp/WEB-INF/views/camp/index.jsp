@@ -49,12 +49,17 @@
 		var param = '${param.caaddrsel}';
 		var top = $('.result_area').offset().top - 100;
 		if (param != '') {
-			$('html, body').animate({scrollTop: top}, 0);	
+			$('html, body').animate({scrollTop: top}, 0);
 		}
 	}
 	</script>
 </head>
 <body>
+<c:if test="${sessionScope.login ne null }">
+   <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+      <c:redirect url="/empty"/>
+   </c:if>
+</c:if>
 <div id="wrap">
 	<div id="header">
 		<div class="scrX">
@@ -69,7 +74,7 @@
 					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+					<li><a href="${root}camp/">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
 					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 					<c:if test="${login eq null }">

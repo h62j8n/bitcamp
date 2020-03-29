@@ -1,6 +1,9 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,8 +17,79 @@
 	<link rel="stylesheet" href="${root}resources/css/site.css">
 	<link rel="shortcut icon" href="${root}resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+	$(function() {
+		var goBtn = $('.btn_go a');
+		var login = '${login.pronum ne null}';
+		
+		goBtn.on('click', function(e) {
+			if (login == 'false') {
+				openLayer(e, '${root}member/login');
+			}
+		});
+
+		var rvForm = $('.rate_form');
+		rvForm.on('submit', function(e) {
+			e.preventDefault();
+			rvUpdate();
+		});
+		
+		var alertText = $('#layer').find('.pop_tit');
+		var buttons = $('#layer .comm_buttons');
+		var deleteBtn = $('#layer').find('#deleteBtn');
+		var confirmBtn = buttons.find('#confirmBtn');
+		var otherBtns = buttons.find('button').not('#confirmBtn');
+		var deleteVal;
+		var container = '.rateList';
+		$(document).on('click', '.btn_delete', function() {
+			console.log(otherBtns);
+			deleteVal = $(this).data('value');
+			alertText.text('한줄평을 삭제하시겠습니까?');
+			confirmBtn.hide();
+			otherBtns.show();
+			openPop('layer', none, refresh);
+		});
+		
+		deleteBtn.on('click', function() {
+			$.ajax({
+				type: 'POST',
+				url: '${root}/camp/detail/revdel?crnum='+deleteVal,
+				data: deleteVal,
+				success: function() {
+					alertText.text('삭제가 완료되었습니다.');
+					otherBtns.hide();
+					confirmBtn.show();
+					
+				},
+				error: function() {
+					alertText.text('올바른 방법으로 다시 시도해주세요.');
+					otherBtns.hide();
+					confirmBtn.show(buttons);
+				}
+			});
+		});
+	});
+	function rvUpdate() {
+		var rvParam = {
+			'crauthor': $('[name=crauthor]').val(),
+			'crcontent': $('[name=crcontent]').val(),
+			'crgood': $('[name=crgood]:checked').val(),
+			'canum': $('[name=canum]').val(),
+			'camp.caavg': $('[name=caavg]').val(),
+			'pronum': $('[name=pronum]').val(),
+		};
+		$.post('${root}camp/detail/revadd', rvParam)
+			.done(refresh
+		);
+	}
+	</script>
 </head>
 <body>
+<c:if test="${sessionScope.login ne null }">
+   <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+      <c:redirect url="/empty"/>
+   </c:if>
+</c:if>
 <div id="wrap">
 	<div id="header">
 		<div class="scrX">
@@ -30,7 +104,7 @@
 					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+					<li><a href="${root}camp/">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
 					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 					<c:if test="${login eq null }">
@@ -137,21 +211,24 @@
 					<h4 class="snd_only">캠핑장 사진</h4>
 					<div class="thumb_slide">
 						<div class="swiper-wrapper">
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
+						<c:choose>
+							<c:when test="${!empty camp.caphoto}">
+								<c:forTokens items="${camp.caphoto}" var="images" delims=",">
+									<div class="swiper-slide"><img src="${upload}/${images}" alt="${camp.caname}"></div>
+								</c:forTokens>
+							</c:when>
+							<c:otherwise>
+								<div class="swiper-slide"><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></div>
+							</c:otherwise>
+						</c:choose>
 						</div>
 						<div class="swiper-pagination"></div>
 					</div>
 					<div class="text_box">
 						<h4 class="sub_tit">캠핑장 소개</h4>
-						<p class="btn_go"><a href="${root}group/?grnum=${ventureGroup.grnum}&pronum=${login.pronum}">그룹 바로가기</a></p>
+						<c:if test="${!empty ventureGroup}">
+							<p class="btn_go"><a href="${root}group/?grnum=${ventureGroup.grnum}&pronum=${login.pronum}">그룹 바로가기</a></p>
+						</c:if>
 						<div class="scrBar">
 							<p>${camp.caintro}</p>
 						</div>
@@ -177,136 +254,91 @@
 		<section class="location_area">
 			<div class="container">
 				<h4 class="sub_tit">오시는 길</h4>
-				<p id="mapAddress">${camp.caaddr}</p>
+				<p id="mapAddress">${camp.caaddr}&nbsp;${camp.caaddrsuv}</p>
 				<div id="map"></div>
 			</div>
-		</section><%-- ${camp.} --%>
+		</section>
 		<section class="rate_area">
 			<div class="container">
 				<h4 class="sub_tit">
-					<p>한줄평 <span>개</span></p>
+					<p>
+						한줄평 <c:if test="${campReviewCount ne null}"><span><fmt:formatNumber value='${campReviewCount}' pattern='000' />개</span></c:if>
+					</p>
 					<p>평점 <span>${camp.caavg}</span></p>
 				</h4>
-				<ul class="rate_list">
-					<li>
-						<!-- # 프로필 이미지 없음 { -->
-						<a class="pf_picture" href="">
-							<img src="${root}resources/images/thumb/no_profile.png" alt="김덕수님의 프로필 썸네일">
-						</a>
-						<!-- } # 프로필 이미지 없음 -->
-						<!-- 관리자-삭제버튼 {
-						<p class="rt_option">
-							<button type="button" class="btn_delete"><em class="snd_only">삭제하기</em></button>
-						</p>
-						} 관리자-삭제버튼 -->
-						<p class="rt_user">
-							<a class="rt_name" href="">
-								<b>김덕수</b>
+				<ul id="rateList" class="rate_list">
+				<c:choose>
+					<c:when test="${campReviewCount ne null}">
+						<c:forEach items="${campReviewList}" var="review">
+						<li>
+							<a class="pf_picture" href="">
+							<c:choose>
+								<c:when test="${!empty review.profile.prophoto}"><img src="${upload}/${review.profile.prophoto}" alt="${review.crauthor}"></c:when>
+								<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
+							</c:choose>
 							</a>
-							<span class="rt_star"><img src="${root}resources/images/ico/shp_star5.png" alt="별 5개"></span>
-						</p>
-						<p class="rt_cont">한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요. 한줄평을 작성해주세요.</p>
-						<p class="rt_date">2020년 01월 01일 11:59:59</p>
-					</li>
-					<li>
-						<a class="pf_picture" href="">
-							<img src="http://placehold.it/80x80" alt="작성자님의 프로필 썸네일">
-						</a>
-						<p class="rt_user">
-							<a class="rt_name" href="">
-								<b>작성자명</b>
-							</a>
-							<span class="rt_star"><img src="${root}resources/images/ico/shp_star4.png" alt="별 4개"></span>
-						</p>
-						<p class="rt_cont">한줄평을 작성해주세요.</p>
-						<p class="rt_date">2020년 01월 01일 11:59:59</p>
-					</li>
-					<li>
-						<a class="pf_picture" href="">
-							<img src="http://placehold.it/80x80" alt="작성자님의 프로필 썸네일">
-						</a>
-						<p class="rt_user">
-							<a class="rt_name" href="">
-								<b>작성자명</b>
-							</a>
-							<span class="rt_star"><img src="${root}resources/images/ico/shp_star3.png" alt="별 3개"></span>
-						</p>
-						<p class="rt_cont">한줄평을 작성해주세요.</p>
-						<p class="rt_date">2020년 01월 01일 11:59:59</p>
-					</li>
-					<li>
-						<a class="pf_picture" href="">
-							<img src="http://placehold.it/80x80" alt="작성자님의 프로필 썸네일">
-						</a>
-						<p class="rt_user">
-							<a class="rt_name" href="">
-								<b>작성자명</b>
-							</a>
-							<span class="rt_star"><img src="${root}resources/images/ico/shp_star2.png" alt="별 2개"></span>
-						</p>
-						<p class="rt_cont">한줄평을 작성해주세요.</p>
-						<p class="rt_date">2020년 01월 01일 11:59:59</p>
-					</li>
-					<li>
-						<a class="pf_picture" href="">
-							<img src="http://placehold.it/80x80" alt="작성자님의 프로필 썸네일">
-						</a>
-						<p class="rt_user">
-							<a class="rt_name" href="">
-								<b>작성자명</b>
-							</a>
-							<span class="rt_star"><img src="${root}resources/images/ico/shp_star1.png" alt="별 1개"></span>
-						</p>
-						<p class="rt_cont">한줄평을 작성해주세요.</p>
-						<p class="rt_date">2020년 01월 01일 11:59:59</p>
-					</li>
-					<!-- # 한줄평 없음 {
-					<li class="fstEmpty"><i class="xi-error-o"></i>등록된 한줄평이 없습니다</li>
-					} -->
+							<p class="rt_user">
+								<a class="rt_name" href="">
+									<b>${review.crauthor}</b>
+								</a>
+								<c:if test="${review.crgood eq 1.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star1.png" alt="별 1개"></span></c:if>
+								<c:if test="${review.crgood eq 2.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star2.png" alt="별 2개"></span></c:if>
+								<c:if test="${review.crgood eq 3.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star3.png" alt="별 3개"></span></c:if>
+								<c:if test="${review.crgood eq 4.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star4.png" alt="별 4개"></span></c:if>
+								<c:if test="${review.crgood eq 5.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star5.png" alt="별 5개"></span></c:if>
+							</p>
+							<p class="rt_cont">${review.crcontent}</p>
+							<p class="rt_date">${review.crdate}</p>
+							<c:if test="${login.pronum eq review.pronum}">
+							<p class="rt_option">
+								<button type="button" class="btn_delete" data-value="${review.crnum}"><em class="snd_only">삭제하기</em></button>
+							</p>
+							</c:if>
+						</li>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<li class="fstEmpty"><i class="xi-error-o"></i>등록된 한줄평이 없습니다</li>
+					</c:otherwise>
+				</c:choose>
 				</ul>
-				<div class="fstPage">
-					<ul>
-						<li><a class="pg_start off" href=""><em class="snd_only">맨 앞으로</em></a></li>
-						<li><a class="pg_prev off" href=""><em class="snd_only">이전 페이지</em></a></li>
-						<li><b>1</b></li>
-						<li><a href="">2</a></li>
-						<li><a href="">3</a></li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a class="pg_next" href=""><em class="snd_only">다음 페이지</em></a></li>
-						<li><a class="pg_end" href=""><em class="snd_only">맨 끝으로</em></a></li>
-					</ul>
-				</div>
+				<div class="fstPage"><ul></ul></div>
+				<c:if test="${login.pronum ne null}">
 				<h4 class="snd_only">한줄평 작성</h4>
-				<form class="rate_form">
+				<form class="rate_form" action="${root}camp/detail/revadd" method="POST">
+					<input type="hidden" name="pronum" value="${profile.pronum}">
+					<input type="hidden" name="canum" value="${camp.canum}">
+					<input type="hidden" name="caavg" value="${camp.caavg}">
+					<input type="hidden" name="crauthor" value="${profile.proname}">
 					<div>
-						<p class="rt_name">김덕수</p>
+						<p class="rt_name">${profile.proname}</p>
 						<ul class="rt_rates">
 							<li>
-								<input type="radio" id="rtRate1" name="rtRate" value="1">
+								<input type="radio" id="rtRate1" name="crgood" value="1.0">
 								<label for="rtRate1"><em class="snd_only">별 1개</em></label>
 							<li>
-								<input type="radio" id="rtRate2" name="rtRate" value="2">
+								<input type="radio" id="rtRate2" name="crgood" value="2.0">
 								<label for="rtRate2"><em class="snd_only">별 2개</em></label>
 							</li>
 							<li>
-								<input type="radio" id="rtRate3" name="rtRate" value="3">
+								<input type="radio" id="rtRate3" name="crgood" value="3.0">
 								<label for="rtRate3"><em class="snd_only">별 3개</em></label>
 							</li>
 							<li>
-								<input type="radio" id="rtRate4" name="rtRate" value="4">
+								<input type="radio" id="rtRate4" name="crgood" value="4.0">
 								<label for="rtRate4"><em class="snd_only">별 4개</em></label>
 							</li>
 							<li>
-								<input type="radio" id="rtRate5" name="rtRate" value="5" checked="checked">
+								<input type="radio" id="rtRate5" name="crgood" value="5.0" checked="checked">
 								<label for="rtRate5"><em class="snd_only">별 5개</em></label>
 							</li>
 						</ul>
-						<textarea class="rt_input" name="rt_input" placeholder="주제와 무관한 댓글, 허위 사실은 삭제될 수 있습니다."></textarea>
+						<textarea class="rt_input" name="crcontent" placeholder="주제와 무관한 댓글, 허위 사실은 삭제될 수 있습니다." required="required"></textarea>
 					</div>
 					<button type="submit" class="rt_btn_send">등록</button>
 					<p class="rt_caution"><span>캠핑장에 관련된 내용이 아니거나 허위사실 기재 시 운영원칙에 따라 삭제될 수 있습니다.</span></p>
 				</form>
+				</c:if>
 			</div>
 		</section>
 		<section class="others_area">
@@ -318,7 +350,12 @@
 							<c:forEach items="${campList}" var="camp">
 							<li class="swiper-slide">
 								<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-									<img src="http://placehold.it/320x180" alt="${camp.caname}">
+								<c:set var="image" value="${fn:substringBefore(camp.caphoto,',')}"></c:set>
+								<c:choose>
+									<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${camp.caname}"></c:when>
+									<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
+								</c:choose>
+									<b class="cp_liked">${camp.cagood}</b>
 								</a>
 								<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
 									<b class="cp_name">${camp.caname}</b>
@@ -363,6 +400,18 @@
 		</div>
 	</div>
 </div>
+<!-- #팝업 { -->
+<div id="layer" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<h4 class="pop_tit"></h4>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
+			<li><button type="button" id="deleteBtn" class="comm_btn cfm">삭제하기</button></li>
+			<li><button type="button" id="confirmBtn" class="btn_close comm_btn cfm">확인</button></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c1b67c433937cf5e372c63766fb1ccca&libraries=services"></script>
 <script type="text/javascript">
 	campDetail();

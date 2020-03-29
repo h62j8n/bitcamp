@@ -11,7 +11,9 @@ import com.fin.festa.model.entity.CampReviewVo;
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.MyBookMarkVo;
 import com.fin.festa.model.entity.MyGoodVo;
+import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.util.CampAvg;
 
 @Service
 public class CampServiceImpl implements CampService{
@@ -29,7 +31,7 @@ public class CampServiceImpl implements CampService{
 		model.addAttribute("campList", campDao.allLocationCamp());
 	}
 
-	//해당지역 캠핑장 목록 출력
+	//특정지역 캠핑장 목록 출력
 	@Override
 	public void campLocation(Model model, CampVo campVo) {
 		model.addAttribute("campList", campDao.locationCamp(campVo));
@@ -38,19 +40,27 @@ public class CampServiceImpl implements CampService{
 	//해당 캠핑장이 공식그룹이 있는지 체크
 	//공식그룹이 있으면 공식그룹 데이터값 저장(모델에 담아두기)
 	//해당 캠핑장 정보 출력
-	//한줄평 출력
 	//한줄평 갯수 출력
+	//한줄평 출력
 	//해당캠핑장과 같은지역의 캠핑장 목록 출력
 	@Override
 	public void campSelectOne(Model model, CampVo campVo) {
-		int ventureGroupCheck = campDao.ventureGroupCheck(campVo);
-		if (ventureGroupCheck > 0) {
-			model.addAttribute("ventureGroup", campDao.campVentureGroup(campVo));
+		model.addAttribute("ventureGroup", campDao.campVentureGroup(campVo));	// 공식그룹 데이터값 저장(모델에 담아두기)
+		
+		model.addAttribute("camp", campDao.campInfoSelectOne(campVo));			// 해당 캠핑장 정보 출력
+		
+		int campReviewCount = campDao.campReviewCount(campVo);
+		if (campReviewCount > 0) {
+			model.addAttribute("campReviewCount", campReviewCount);				// 한줄평 갯수 출력
+			if(campVo.getPageSearch() == null) {								// 한줄평 페이지 초기화 (첫 페이지)
+				PageSearchVo pageSearch = new PageSearchVo();
+				pageSearch.setPage2(1);
+				campVo.setPageSearch(pageSearch);
+			}
+			campVo.getPageSearch().setTotalCount2(campReviewCount);				// 한줄평 페이지 총 로우갯수
+			model.addAttribute("campReviewList", campDao.campReview(campVo));	// 한줄평 출력
 		}
 		
-		model.addAttribute("camp", campDao.campInfoSelectOne(campVo));
-		
-		campLocation(model, campVo);
 	}
 
 	//캠핑장 좋아요등록
@@ -90,16 +100,21 @@ public class CampServiceImpl implements CampService{
 	//한줄평 등록
 	//한줄평 등록시 캠핑장 평점업데이트
 	@Override
-	public void reviewInsertOne(Model model, CampReviewVo campReviewVo) {
-		// TODO Auto-generated method stub
+	public void reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo) {
+		campDao.campReviewInsert(campReviewVo);
+		System.out.println(campReviewVo.toString());
+//		System.out.println(campReviewVo.getCrgood());
+		CampAvg avg = new CampAvg();
+		avg.avgCalculate(campReviewVo);
+//		System.out.println(avg.avgCalculate(campReviewVo));
+		campDao.campAvgUpdate(campReviewVo);
 		
 	}
 
 	//한줄평 삭제
 	@Override
 	public void reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
-		// TODO Auto-generated method stub
-		
+		campDao.campReviewDelete(campReviewVo);
 	}
 
 	//해당 캠핑장 신고

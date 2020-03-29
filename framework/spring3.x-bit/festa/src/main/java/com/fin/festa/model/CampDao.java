@@ -24,15 +24,15 @@ public interface CampDao {
 	
 	GroupVo campVentureGroup(CampVo campVo);
 	
-	List<CampReviewVo> campReview(CampVo camp);
+	List<CampReviewVo> campReview(CampVo campVo);
 	
-	int campReviewCount(CampVo camp);
+	int campReviewCount(CampVo campVo);
 	
-	void campReviewInsert(CampReviewVo campReview);
+	void campReviewInsert(CampReviewVo campReviewVo);
 	
-	int campAvgUpdate(CampReviewVo campReview);
+	int campAvgUpdate(CampReviewVo campReviewVo);
 	
-	int campReviewDelete(CampReviewVo campReview);
+	int campReviewDelete(CampReviewVo campReviewVo);
 	
 	void campLikeInsert(MyGoodVo good);
 	

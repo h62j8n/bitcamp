@@ -68,18 +68,16 @@ public class CampDaoImpl implements CampDao{
 		return sqlSession.selectOne("camp.campInfoSelectOne", campVo);
 	}
 	
-	//캠핑장 한줄평출력
-	@Override
-	public List<CampReviewVo> campReview(CampVo camp) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	//캠핑장 한줄평 총갯수
 	@Override
-	public int campReviewCount(CampVo camp) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campReviewCount(CampVo campVo) {
+		return sqlSession.selectOne("camp.campReviewCount", campVo);
+	}
+	
+	//캠핑장 한줄평출력
+	@Override
+	public List<CampReviewVo> campReview(CampVo campVo) {
+		return sqlSession.selectList("camp.campReview", campVo);
 	}
 
 	///////////////////////////////////////////////////////////////
@@ -88,22 +86,20 @@ public class CampDaoImpl implements CampDao{
 	
 	//캠핑장 한줄평등록
 	@Override
-	public void campReviewInsert(CampReviewVo campReview) {
-		// TODO Auto-generated method stub
-		
+	public void campReviewInsert(CampReviewVo campReviewVo) {
+		sqlSession.insert("campReviewInsert", campReviewVo);
 	}
 
 	//캠핑장 한줄평 등록시 캠핑장평점 계산해서 업데이트
 	@Override
-	public int campAvgUpdate(CampReviewVo campReview) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campAvgUpdate(CampReviewVo campReviewVo) {
+		return sqlSession.update("camp.campAvgUpdate", campReviewVo);
 	}
 
 	//캠핑장 한줄평삭제
 	@Override
-	public int campReviewDelete(CampReviewVo campReview) {
-		// TODO Auto-generated method stub
+	public int campReviewDelete(CampReviewVo campReviewVo) {
+		sqlSession.delete("camp.campReviewDelete", campReviewVo);
 		return 0;
 	}
 

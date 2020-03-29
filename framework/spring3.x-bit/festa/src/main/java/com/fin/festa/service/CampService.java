@@ -27,7 +27,7 @@ public interface CampService {
 		
 		void bookDeleteOne(HttpServletRequest req, MyBookMarkVo myBookMarkVo);
 		
-		void reviewInsertOne(Model model, CampReviewVo campReviewVo);
+		void reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo);
 		
 		void reviewDeleteOne(Model model, CampReviewVo campReviewVo);
 		
