@@ -2,6 +2,11 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty" />
+	</c:if>
+</c:if>
 <c:url value="/upload" var="upload"></c:url>
 <c:url value="/" var="root" />
 <!DOCTYPE html>
@@ -149,8 +154,8 @@
 		$('#deletecmmt').on('click', function(){
 			var gcnum = $('#num').val();
 			$.post('${root}group/cmmtdel', 'gcnum='+gcnum, function(data){
-				openPop("cmmtok");
-				$('#delcmsuccess').on('click', function(){
+				openPop("ok");
+				$('#success').on('click', function(){
 					window.location.reload();
 				});
 			}); 
@@ -166,17 +171,63 @@
 		$('#deletefeed').on('click', function(){
 			var gpnum = $('#fnum').val();
 			$.post('${root}group/del', 'gpnum='+gpnum, function(data){
-				openPop("feedok");
-				$('#delsuccess').on('click', function(){
+				openPop("ok");
+				$('#success').on('click', function(){
 					window.location.reload();					
 				});
 			}); 
 		});
+		
+		//탈퇴하기 클릭
+		$('#groupbyebtn').on('click', function(){
+	 		var grnum=$('#postgrnum').val();
+	 		$('#grnum').val(grnum);
+	 		var pronum=$('#postpronum').val();
+	 		$('#pronum').val(pronum);
+	 		var grtotal=$('#postgrtotal').val();
+	 		$('#grtotal').val(grtotal);
+	 		var pronum2=$('#pronum').val();
+	 		console.log(pronum2);
+	 		
+	 		//그룹삭제 키값검사
+		 	$('#keymsg').on('propertychange change keyup paste input', function(){
+		 		var keymsg=$('#keymsg').val();
+		 		var sucmsg='여행하는 과정에서 행복을 느낀다'
+		 		if(keymsg == sucmsg){
+		 			$('#outgroup').removeAttr("disabled");
+		 			$('#outgroup').removeClass('cnc');
+		 			$('#outgroup').addClass('cfm');
+
+		 			var grnum=$('#grnum').val();
+		 			var pronum=$('#pronum').val();
+		 			var grtotal=$('#grtotal').val();
+		 			
+	 				$('#outgroup').on('click', function(){
+		 				$.post('${root}/group/out', 'grnum='+grnum+'&pronum='+pronum+'&jointot=1'+'&grtotal='+grtotal, function(data){
+								openPop("ok");
+								$('#success').on('click', function(){
+									window.location.href='http://localhost:8080/festa/user/';
+								});
+		 				});
+	 				})
+		 		}else{
+		 			$('#outgroup').attr("disabled", "disabled");
+		 			$('#outgroup').removeClass('cfm');
+		 			$('#outgroup').addClass('cnc');
+		 		}
+		 	});
+		});
+		
+		
 	});
 </script>
 <title>FESTA</title>
 </head>
 <body>
+	<input type="hidden" id="grnum" value="${detail.grnum }">
+	<input type="hidden" id="pronum" value="${detail.profile.pronum }">
+	<input type="hidden" id="proname" value="${detail.profile.proname }">
+	<input type="hidden" id="proid" value="${detail.profile.proid }">
 	<div id="wrap">
 		<div id="header">
 			<div class="scrX">
@@ -191,9 +242,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<%
 								out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -331,7 +382,7 @@
 									href="${root }group/member?grnum=${detail.grnum}">멤버 :
 									${detail.grtotal }명</a> <span>개설일 : ${detail.grdate }</span>
 								<c:if test="${login.pronum ne detail.pronum }">
-									<a class="btn_pop btn_out" href="${root }group/out">탈퇴</a>
+									<a class="btn_pop btn_out" id="groupbyebtn" data-layer="groupbye" style="cursor: pointer">탈퇴</a>
 								</c:if>
 							</dd>
 							<dd class="pf_picture">
@@ -346,6 +397,9 @@
 				</div>
 			</section>
 			<!-- } 프로필영역 끝 -->
+			<input type="hidden" id="postgrnum" value="${detail.grnum }" />
+			<input type="hidden" id="postpronum" value="${login.pronum }" />
+			<input type="hidden" id="postgrtotal" value="${detail.grtotal }" />
 			<div class="container">
 				<!-- 컨텐츠영역 시작 { -->
 				<section class="content_area">
@@ -358,7 +412,7 @@
 									<c:forEach items="${ntc}" var="ntc">
 										<li><a class="btn_pop"
 											href="${root }group/ntc_feed?gnnum=${ntc.gnnum}&grnum=${detail.grnum}">
-												<b>${ntc.gndate }</b>&nbsp;&nbsp;|&nbsp;&nbsp;${ntc.gncontent } </a></li>
+												<b>${ntc.gndate1 }</b>&nbsp;&nbsp;|&nbsp;&nbsp;${ntc.gncontent } </a></li>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
@@ -486,7 +540,7 @@
 										</a>
 									</dt>
 									<dd>
-										<span class="fd_date">${feed.gpdate }</span> <b
+										<span class="fd_date">${feed.gpdate1 }</span> <b
 											class="fd_liked">${feed.gpgood }</b>
 									</dd>
 								</dl>
@@ -496,7 +550,7 @@
 										</button></li>
 									<c:if
 										test="${(login.pronum ne feed.pronum) and !(login.pronum eq detail.pronum)}">
-										<li><a href="${root }group/report"
+										<li><a href="${root }group/report?gpnum=${feed.gpnum}&profile.pronum=${feed.profile.pronum}&profile.proid=${feed.profile.proid}&profile.proname=${feed.profile.proname}"
 											class="btn_pop btn_report"> <em class="snd_only">신고하기</em>
 										</a></li>
 									</c:if>
@@ -571,7 +625,7 @@
 														<p class="cmt_content">
 														<input type="hidden" id="delCmmtNum" value="${feedcmmt.gcnum}" />
 														<a href="" class="cmt_name">${feedcmmt.gcauthor }</a>&nbsp;&nbsp;${feedcmmt.gccontent }
-														<span class="cmt_date">${feedcmmt.gcdate }</span>
+														<span class="cmt_date">${feedcmmt.gcdate1 }</span>
 															<c:if test="${(login.pronum eq feed.pronum ) or (login.pronum eq feedcmmt.pronum) or (login.pronum eq detail.pronum)}">
 																<button class="btn_delete btn_pop" id="groupcmmtdelete" data-layer="deletegrcmmt" data-value="${feedcmmt.gcnum }">
 																	<em class="snd_only">삭제하기</em>
@@ -635,21 +689,30 @@
 							<em class="snd_only">추천그룹 목록</em>나홀로 캠핑이 심심하신가요?
 						</h3>
 						<ul>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="입돌아간다 그룹 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">입돌아간다</b> <span
-									class="rc_intro">안녕하세요 ㅇㅇㅇ입니다. 안녕하세요</span>
-							</a></li>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="그룹 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">그룹</b> <span
-									class="rc_intro">그룹 소개글을 작성해주세요.</span>
-							</a></li>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="그룹 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">그룹</b> <span
-									class="rc_intro">그룹 소개글을 작성해주세요.</span>
-							</a></li>
+							<c:forEach items="${grouplist }" begin="0" end="2" var="grouplist">
+								<c:if test="${login ne null }">
+									<li><a class="rc_thumb"
+										href="${root }group/?grnum=${grouplist.grnum}&pronum=${login.pronum}">
+											<img src="${upload }/${grouplist.grphoto}"
+											alt="${grouplist.grname } 그룹 썸네일">
+									</a> <a class="rc_text"
+										href="${root }group/?grnum=${grouplist.grnum}&pronum=${login.pronum}">
+											<b class="rc_name">${grouplist.grname }</b> <span
+											class="rc_intro">${grouplist.grintro }</span>
+									</a></li>
+								</c:if>
+								<c:if test="${login eq null }">
+									<li><a class="rc_thumb"
+										href="${root }group/?grnum=${grouplist.grnum}"> <img
+											src="${upload }/${grouplist.grphoto}"
+											alt="${grouplist.grname } 그룹 썸네일">
+									</a> <a class="rc_text"
+										href="${root }group/?grnum=${grouplist.grnum}"> <b
+											class="rc_name">${grouplist.grname }</b> <span
+											class="rc_intro">${grouplist.grintro }</span>
+									</a></li>
+								</c:if>
+							</c:forEach>
 						</ul>
 					</div>
 					<div class="rcmm_list">
@@ -657,21 +720,18 @@
 							<em class="snd_only">추천캠핑장 목록</em>이 캠핑장에도 가보셨나요?
 						</h3>
 						<ul>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="바다애캠핑장 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">바다애캠핑장</b> <span
-									class="rc_hashtag">경기도</span>
-							</a></li>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="캠핑장 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">캠핑장</b> <span
-									class="rc_hashtag">경기도</span>
-							</a></li>
-							<li><a class="rc_thumb" href=""> <img
-									src="http://placehold.it/55x55" alt="캠핑장 썸네일">
-							</a> <a class="rc_text" href=""> <b class="rc_name">캠핑장</b> <span
-									class="rc_hashtag">경기도</span>
-							</a></li>
+							<c:forEach items="${camplist }" begin="0" end="2" var="camplist">
+								<c:set var="image"
+									value="${fn:substringBefore(camplist.caphoto,',') }" />
+								<li><a class="rc_thumb"
+									href="${root }camp/detail?canum=${camplist.canum}"> <img
+										src="${upload }/${image}" alt="${camplist.caname } 썸네일">
+								</a> <a class="rc_text"
+									href="${root }camp/detail?canum=${camplist.canum}"> <b
+										class="rc_name">${camplist.caname }</b> <span
+										class="rc_hashtag">${camplist.caaddrsel }</span>
+								</a></li>
+							</c:forEach>
 						</ul>
 					</div>
 				</section>
@@ -733,34 +793,44 @@
 		</button>
 	</div>
 	
-	<!-- #팝업 처리불가 {
-	<div id="" class="fstPop">
-		<div class="confirm_wrap pop_wrap">
-			<p class="pop_tit">그룹을 삭제할 수 없습니다.</p>
-			<p class="pop_txt">아직 탈퇴하지 않은 그룹 멤버가 있습니다.</p>
-			<ul class="comm_buttons">
-				<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
-			</ul>
+	<div id="groupbye" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">그룹을 탈퇴하시겠습니까?</h3>
+			<div class="info_box">
+				<ul>
+					<li>탈퇴 후에도 그룹에 작성한 나의 피드는 삭제되지 않습니다.</li>
+					<li>확인 버튼을 누르시면 그룹 탈퇴가 완료됩니다.</li>
+				</ul>
+			</div>
+			<p>[다음 문구를 똑같이 입력해주세요.]</p>
+			<p class="out_words">여행하는 과정에서 행복을 느낀다</p>
+			<form class="comm_form">
+				<div class="ip_box">
+					<input type="text" id="keymsg" name="" required="required">
+					<input type="hidden" id="grnum" value="" />
+					<input type="hidden" id="pronum" value="" />
+					<input type="hidden" id="grtotal" value="" />
+					<p class="f_message"></p>
+				</div>
+				<div class="btn_box">
+					<ul class="comm_buttons">
+						<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+						<li><button type="button" id="outgroup" class="btn_close comm_btn cnc" disabled="disabled">확인</button></li>
+					</ul>
+				</div>
+			</form>
 		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
 	</div>
-	} #팝업 처리불가 -->
 
 	<!-- #팝업 처리완료 { -->
-	<div id="cmmtok" class="fstPop">
+	<div id="ok" class="fstPop">
 		<div class="confirm_wrap pop_wrap"> 
 			<p class="pop_tit">처리가 완료되었습니다.</p>
 			<ul class="comm_buttons">
-				<li><button type="button" id="delcmsuccess" class="btn_close ok comm_btn cfm">확인</button></li>
-			</ul>
-		</div>
-	</div>
-
-	<!-- #팝업 처리완료 { -->
-	<div id="feedok" class="fstPop">
-		<div class="confirm_wrap pop_wrap"> 
-			<p class="pop_tit">처리가 완료되었습니다.</p>
-			<ul class="comm_buttons">
-				<li><button type="button" id="delsuccess" class="btn_close ok comm_btn cfm">확인</button></li>
+				<li><button type="button" id="success" class="btn_close ok comm_btn cfm">확인</button></li>
 			</ul>
 		</div>
 	</div>

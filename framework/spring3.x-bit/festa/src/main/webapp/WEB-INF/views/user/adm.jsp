@@ -94,12 +94,20 @@
 </script>
 </head>
 <body>
+<c:if test="${sessionScope.login eq null}">
+   <c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne null }">
+   <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+      <c:redirect url="/empty"/>
+   </c:if>
+</c:if>
 	<div id="wrap">
 		<div id="header">
 			<div class="scrX">
 				<div class="container">
 					<h1>
-						<a href="/"><em class="snd_only">FESTA</em></a>
+						<a href="${root }"><em class="snd_only">FESTA</em></a>
 					</h1>
 					<form class="search_box">
 						<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
@@ -108,9 +116,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<li><a href="${root}member/login" id="btn_pop" class="btn_pop">로그인</a></li>
 						</c:if>

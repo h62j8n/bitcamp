@@ -107,7 +107,7 @@
 		<result column="gndate" property="gndate"/>
 		<result column="grnum6" property="grnum"/>
 		<result column="gntotal" property="gntotal"/>
-		<association property="profile" resultMap="profile4"/>
+		<association property="profile" resultMap="profile3"/>
 	</resultMap>
 	
 	<!-- 그룹공지 댓글 조인시에 참조되는 데이터 -->
@@ -174,7 +174,7 @@
 	
 	<!-- 그룹공지사항 상세출력 -->
 	<select id="groupNoticeDetail" parameterType="GroupNoticeVo" resultMap="groupnotice">
-		select d.*,(select count(*) from groupnoticecomment a where a.gnnum2=d.gnnum) as gntotal from (select a.*,c.prophoto,b.grname from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}) d
+		select d.*,(select count(*) from groupnoticecomment a where a.gnnum2=d.gnnum) as gntotal from (select a.*,c.prophoto,c.proname,c.proid,c.pronum,b.grname from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}) d
 	</select>
 	
 	<!-- 그룹공지사항 댓글출력 -->
@@ -192,7 +192,7 @@
 	
 	<!-- 그룹피드 출력 -->
 	<select id="groupFeed" parameterType="GroupPostVo" resultMap="grouppost">
-		select d.*,(select count(*) from groupcomment where gpnum1=d.gpnum) as gptotal from (select a.*,c.prophoto from grouppost a inner join profile c on a.pronum3=c.pronum where grnum1=#{grnum} order by gpdate desc) d
+		select d.*,(select count(*) from groupcomment where gpnum1=d.gpnum) as gptotal from (select a.*,c.prophoto,c.proid,c.proname,c.pronum from grouppost a inner join profile c on a.pronum3=c.pronum where grnum1=#{grnum} order by gpdate desc) d
 	</select>
 	
 	<!-- 그룹피드 댓글출력 -->
@@ -293,7 +293,7 @@
 	
 	<!-- 신고당한유저 신고당한횟수 +1 -->
 	<update id="groupReportCountUpdate" parameterType="ReportListVo">
-		update myadmin set reporttotal=reporttotal+1 where pronum=#{pronum_sync}
+		update myadmin set reporttotal=reporttotal+1 where pronum7=#{pronum_sync}
 	</update>
 	
 	<!-- 그룹,피드,공지 신고등록 end -->
@@ -399,7 +399,7 @@
 	
 	<!-- 그룹유저 추방시 총원감소 -@ -->
 	<update id="groupTotalMinus" parameterType="GroupVo">
-		update group1 set grtotal=grtotal-#{jointot} where grnum=#{grnum}
+		update group1 set grtotal=#{grtotal}-#{jointot} where grnum=#{grnum}
 	</update>
 	
 	<!-- 그룹유저 전부추방 그룹장 제외 -->
@@ -426,7 +426,7 @@
 	
 	<!-- 가입신청 승인시 그룹원 총원증가 +@ -->
 	<update id="groupTotalPlus" parameterType="GroupVo">
-		update group1 set grtotal=grtotal+#{jointot} where grnum=#{grnum}
+		update group1 set grtotal=#{grtotal}+#{jointot} where grnum=#{grnum}
 	</update>
 	
 	<!-- 가입신청 거절(업데이트 테이블 데이터삭제) -->

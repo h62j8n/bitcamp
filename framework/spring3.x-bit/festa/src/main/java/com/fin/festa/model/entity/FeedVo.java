@@ -1,12 +1,14 @@
 package com.fin.festa.model.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fin.festa.util.DateCalculate;
 
 public class FeedVo implements Comparable<FeedVo>{
 	
 	DateCalculate cal;
+	private List<FeedVo> feedList;
 	private int gpnum;			//게시글 번호
 	private String gpauthor;	//게시글 작성자 이름
 	private String gpphoto;		//게시글 내용 사진
@@ -14,7 +16,6 @@ public class FeedVo implements Comparable<FeedVo>{
 	private String httitle1;	//게시글 해시태그1
 	private String httitle2;	//게시글 해시태그2
 	private String httitle3;	//게시글 해시태그3
-	private int gpgood;			//게시글 좋아요 수
 	private int grnum;			//게시글 그룹 번호
 	private int pronum;			//게시글 작성자 번호
 	private int gptotal;		//게시글의 댓글수
@@ -25,7 +26,7 @@ public class FeedVo implements Comparable<FeedVo>{
 	private String mpcontent;	//게시글 내용
 	private Timestamp date;	
 	private String date1;
-	private int mpgood;			//내 게시글 좋아요
+	private int good;			//내 게시글 좋아요
 	private int mptotal;		//내게시글의 댓글수
 	
 	private CampVo camp;
@@ -49,11 +50,11 @@ public class FeedVo implements Comparable<FeedVo>{
 	
 	@Override
 	public String toString() {
-		return "FeedVo [cal=" + cal + ", gpnum=" + gpnum + ", gpauthor=" + gpauthor + ", gpphoto=" + gpphoto
+		return "FeedVo [feedList="+ feedList +", cal=" + cal + ", gpnum=" + gpnum + ", gpauthor=" + gpauthor + ", gpphoto=" + gpphoto
 				+ ", gpcontent=" + gpcontent + ", httitle1=" + httitle1 + ", httitle2=" + httitle2 + ", httitle3="
-				+ httitle3 + ", gpgood=" + gpgood + ", grnum=" + grnum + ", pronum=" + pronum + ", gptotal=" + gptotal
+				+ httitle3 + ", grnum=" + grnum + ", pronum=" + pronum + ", gptotal=" + gptotal
 				+ ", mpnum=" + mpnum + ", mpauthor=" + mpauthor + ", mpphoto=" + mpphoto + ", mpcontent=" + mpcontent
-				+ ", date=" + date + ", date1=" + date1 + ", mpgood=" + mpgood + ", mptotal=" + mptotal + ", camp="
+				+ ", date=" + date + ", date1=" + date1 + ", good=" + good + ", mptotal=" + mptotal + ", camp="
 				+ camp + ", campReview=" + campReview + ", groupComment=" + groupComment + ", groupNoticeComment="
 				+ groupNoticeComment + ", groupNotice=" + groupNotice + ", group=" + group + ", joinGroup=" + joinGroup
 				+ ", myAdmin=" + myAdmin + ", myBookMark=" + myBookMark + ", myComment=" + myComment + ", myFollower="
@@ -66,15 +67,16 @@ public class FeedVo implements Comparable<FeedVo>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public FeedVo(DateCalculate cal, int gpnum, String gpauthor, String gpphoto, String gpcontent, String httitle1,
-			String httitle2, String httitle3, int gpgood, int grnum, int pronum, int gptotal, int mpnum,
-			String mpauthor, String mpphoto, String mpcontent, Timestamp date, String date1, int mpgood, int mptotal,
+	public FeedVo(List<FeedVo> feedList, DateCalculate cal, int gpnum, String gpauthor, String gpphoto, String gpcontent, String httitle1,
+			String httitle2, String httitle3, int grnum, int pronum, int gptotal, int mpnum,
+			String mpauthor, String mpphoto, String mpcontent, Timestamp date, String date1, int good, int mptotal,
 			CampVo camp, CampReviewVo campReview, GroupCommentVo groupComment, GroupNoticeCommentVo groupNoticeComment,
 			GroupNoticeVo groupNotice, GroupVo group, JoinGroupVo joinGroup, MyAdminVo myAdmin, MyBookMarkVo myBookMark,
 			MyCommentVo myComment, MyFollowerVo myFollower, MyFollowingVo myFollowing, MyGoodVo myGood,
 			MyVentureVo myVenture, PageSearchVo pageSearch, ProfileVo profile, ReportListVo reportList,
 			UpdateWaitVo updateWait) {
 		super();
+		this.feedList = feedList;
 		this.cal = cal;
 		this.gpnum = gpnum;
 		this.gpauthor = gpauthor;
@@ -83,7 +85,6 @@ public class FeedVo implements Comparable<FeedVo>{
 		this.httitle1 = httitle1;
 		this.httitle2 = httitle2;
 		this.httitle3 = httitle3;
-		this.gpgood = gpgood;
 		this.grnum = grnum;
 		this.pronum = pronum;
 		this.gptotal = gptotal;
@@ -93,7 +94,7 @@ public class FeedVo implements Comparable<FeedVo>{
 		this.mpcontent = mpcontent;
 		this.date = date;
 		this.date1 = date1;
-		this.mpgood = mpgood;
+		this.good = good;
 		this.mptotal = mptotal;
 		this.camp = camp;
 		this.campReview = campReview;
@@ -179,14 +180,6 @@ public class FeedVo implements Comparable<FeedVo>{
 		this.httitle3 = httitle3;
 	}
 
-	public int getGpgood() {
-		return gpgood;
-	}
-
-	public void setGpgood(int gpgood) {
-		this.gpgood = gpgood;
-	}
-
 	public int getGrnum() {
 		return grnum;
 	}
@@ -261,12 +254,12 @@ public class FeedVo implements Comparable<FeedVo>{
 		this.date1 = date1;
 	}
 
-	public int getMpgood() {
-		return mpgood;
+	public int getGood() {
+		return good;
 	}
 
-	public void setMpgood(int mpgood) {
-		this.mpgood = mpgood;
+	public void setGood(int good) {
+		this.good = good;
 	}
 
 	public int getMptotal() {
@@ -421,10 +414,20 @@ public class FeedVo implements Comparable<FeedVo>{
 		this.updateWait = updateWait;
 	}
 
+	
+	public List<FeedVo> getFeedList() {
+		return feedList;
+	}
+
+	public void setFeedList(List<FeedVo> feedList) {
+		this.feedList = feedList;
+	}
+
 	@Override
 	public int compareTo(FeedVo o) {
-		
-		return o.date.compareTo(this.date);
+		Integer tmp = new Integer(o.good);
+		o.date.compareTo(this.date);
+		return tmp.compareTo(this.good);
 	}
 	
 	

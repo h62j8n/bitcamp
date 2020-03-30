@@ -42,23 +42,38 @@ public class GroupServiceImpl implements GroupService{
 	@Autowired
 	MemberDaoImpl memberDao;
 
+	int check;
+	
 	//가입된 그룹인지 체크
 	@Override
 	public int joinGroup(HttpServletRequest req, UpdateWaitVo updateWaitVo) {
 		int result=groupDao.joinGroupCheck(updateWaitVo);
 		int result2=groupDao.updateGroupCheck(updateWaitVo);
-		int check=0;
 		if(result == 0 && result2 ==0) {				//가입된 그룹이 아님
+			check=0;
 			return check;
 		} else if (result == 0 && result2 == 1){		//승인 대기중
 			check=1;
 			return check;
 		} else {										//그룹원
 			check=2;
+			ProfileVo profileVo=new ProfileVo();
+			profileVo.setPronum(updateWaitVo.getPronum());
+			HttpSession session = req.getSession();
+			List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+			session.setAttribute("joinGroup", joinGroup);
+			
 			return check;
 		}
+		
 	}
 
+	//그룹 가입
+	@Override
+	public void groupAdmission(Model model, UpdateWaitVo updateWaitVo) {
+		groupDao.joinGroupRequest(updateWaitVo);
+	}
+	
 	//공식그룹인지 체크
 	//그룹정보출력
 	//그룹피드출력
@@ -72,7 +87,7 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("ntc", groupDao.groupNoticeSelectAll(groupVo));
 		req.setAttribute("feedcmmt", groupDao.groupFeedCmmtSelectAll(groupVo));
 	}
-
+	
 	//공지사항댓글 더보기 비동기
 	@Override
 	public List<GroupNoticeCommentVo> groupNoticeDetailCmmt(Model model, GroupNoticeVo groupnotice) {
@@ -93,10 +108,30 @@ public class GroupServiceImpl implements GroupService{
 	
 	//그룹 신고등록
 	//신고당한유저 신고당한횟수 +1
+	@Transactional
 	@Override
-	public void groupReport(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
+	public void groupReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
+
+		UploadPhoto up = new UploadPhoto();
+		String rlphoto = up.upload(files, req, reportListVo);
+		reportListVo.setRlphoto(rlphoto);
 		
+		//기타버튼눌렀다가 다른거체크하고 넘어온경우 다른거체크값으로 대체
+		String rlreport = reportListVo.getRlreport();
+		String[] report = rlreport.split("\\,");
+		if(report.length>1) {
+			if(report[0].equals("기타")) {
+				rlreport = report[1];
+			}else {
+				rlreport = report[0];
+			}
+		}else {
+			rlreport=rlreport.substring(0, rlreport.length()-1);
+		}
+		reportListVo.setRlreport(rlreport);
+		
+		groupDao.groupReportInsert(reportListVo);
+		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
 	//공지사항 등록
@@ -145,10 +180,32 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupNoticeCmmtDelete(groupNoticeCommentVo);
 	}
 
+
 	//공지사항 신고등록
 	//해당유저 신고횟수 +1
 	@Override
-	public void noticeReport(Model model, ReportListVo reportListVo) {
+	public void noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
+		
+		UploadPhoto up = new UploadPhoto();
+		String rlphoto = up.upload(files, req, reportListVo);
+		reportListVo.setRlphoto(rlphoto);
+		
+		//기타버튼눌렀다가 다른거체크하고 넘어온경우 다른거체크값으로 대체
+		String rlreport = reportListVo.getRlreport();
+		String[] report = rlreport.split("\\,");
+		if(report.length>1) {
+			if(report[0].equals("기타")) {
+				rlreport = report[1];
+			}else {
+				rlreport = report[0];
+			}
+		}else {
+			rlreport=rlreport.substring(0, rlreport.length()-1);
+		}
+		reportListVo.setRlreport(rlreport);
+		
+		groupDao.groupNoticeReportInsert(reportListVo);
+		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
 	//그룹피드 등록
@@ -205,9 +262,28 @@ public class GroupServiceImpl implements GroupService{
 	//그룹피드 신고등록
 	//신고당한유저 신고당한횟수 +1
 	@Override
-	public void groupFeedReport(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
+	public void groupFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
+
+		UploadPhoto up = new UploadPhoto();
+		String rlphoto = up.upload(files, req, reportListVo);
+		reportListVo.setRlphoto(rlphoto);
 		
+		//기타버튼눌렀다가 다른거체크하고 넘어온경우 다른거체크값으로 대체
+		String rlreport = reportListVo.getRlreport();
+		String[] report = rlreport.split("\\,");
+		if(report.length>1) {
+			if(report[0].equals("기타")) {
+				rlreport = report[1];
+			}else {
+				rlreport = report[0];
+			}
+		}else {
+			rlreport=rlreport.substring(0, rlreport.length()-1);
+		}
+		reportListVo.setRlreport(rlreport);
+		
+		groupDao.groupFeedReportInsert(reportListVo);
+		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
 	//채팅 아직 미구현..
@@ -260,18 +336,32 @@ public class GroupServiceImpl implements GroupService{
 
 	//가입된 유저 강퇴
 	//그룹 가입총원 -@
+	@Transactional
 	@Override
-	public void groupUserKick(Model model, JoinGroupVo joinGroupVo) {
-		// TODO Auto-generated method stub
+	public void groupUserKick(HttpServletRequest req, GroupVo groupVo, JoinGroupVo joinGroupVo) {
+		groupDao.groupUserKick(joinGroupVo);
+		groupDao.groupTotalMinus(groupVo);
 		
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//가입된 유저 전부강퇴 (그룹장 제외)
 	//그룹 가입총원 -@
+	@Transactional
 	@Override
-	public void groupUserAllKick(Model model, GroupVo groupVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupUserAllKick(HttpServletRequest req, GroupVo groupVo) {
+		groupDao.groupUserAllKick(groupVo);
+		groupDao.groupTotalMinus(groupVo);
+
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//가입신청 유저정보 출력
@@ -292,33 +382,33 @@ public class GroupServiceImpl implements GroupService{
 	//가입신청 유저등록
 	//그룹 가입총원 +@
 	//업데이트테이블 데이터삭제(가입신청 거절 메소드 사용)
+	@Transactional
 	@Override
-	public void groupRequestHello(Model model, UpdateWaitVo updateWaitVo) {
-		// TODO Auto-generated method stub
+	public void groupRequestHello(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo) {
 		
-	}
-
-	//가입신청 유저 모두등록(가입신청 승인 메소드 사용)
-	//그룹 가입총원 +@
-	//업데이트테이블 데이터삭제(가입신청 거절 메소드 사용)
-	@Override
-	public void groupRequestEverybodyHello(Model model, UpdateWaitVo updateWaitVo) {
-		// TODO Auto-generated method stub
+		groupDao.groupRequestHello(updateWaitVo);
+		groupDao.groupTotalPlus(groupVo);
+		groupDao.groupRequestSorry(updateWaitVo);
 		
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
+		
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//가입신청 거절
 	@Override
-	public void groupRequestSorry(Model model, UpdateWaitVo updateWaitVo) {
-		// TODO Auto-generated method stub
+	public void groupRequestSorry(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo) {
+		groupDao.groupRequestSorry(updateWaitVo);
 		
-	}
-
-	//가입신청 모두거절(가입신청 거절 메소드 사용)
-	@Override
-	public void groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo) {
-		// TODO Auto-generated method stub
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
 		
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//그룹 삭제
@@ -335,10 +425,20 @@ public class GroupServiceImpl implements GroupService{
 	}
 
 	//가입된그룹 탈퇴
+	//그룹 가입총원 -@
+	@Transactional
 	@Override
-	public void groupOut(Model model, JoinGroupVo joinGroup) {
-		// TODO Auto-generated method stub
+	public void groupOut(HttpServletRequest req, JoinGroupVo joinGroup, GroupVo groupVo) {
+
+		groupDao.groupOut(joinGroup);
+		groupDao.groupTotalMinus(groupVo);
 		
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(joinGroup.getPronum());
+		
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup1 = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup1);
 	}
 
 	// 회원 팔로잉등록
@@ -347,7 +447,6 @@ public class GroupServiceImpl implements GroupService{
 	@Transactional
 	@Override
 	public void followInsertOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-
 		System.out.println("파라미터 : " + myFollowing);
 		groupDao.myFollowingInsertOne(myFollowing);
 		groupDao.yourFollowerInsertOne(myFollowing);
@@ -362,7 +461,6 @@ public class GroupServiceImpl implements GroupService{
 	@Transactional
 	@Override
 	public void followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-
 		System.out.println("파라미터 : " + myFollowing);
 		groupDao.myFollowingDeleteOne(myFollowing);
 		groupDao.yourFollowerDeleteOne(myFollowing);
@@ -370,6 +468,8 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
 		System.out.println("해제 : " + req.getSession().getAttribute("followlist"));
 	}
+
+
 
 
 

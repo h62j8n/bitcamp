@@ -23,7 +23,9 @@ public interface GroupService {
 
 		void groupSelectOne(HttpServletRequest req, GroupVo groupVo);
 
-		void groupReport(Model model, ReportListVo reportListVo);
+		void groupAdmission(Model model, UpdateWaitVo updateWaitVo);
+		
+		void groupReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 
 		void noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo);
 		
@@ -37,7 +39,7 @@ public interface GroupService {
 		
 		void noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo);
 		
-		void noticeReport(Model model, ReportListVo reportListVo);
+		void noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 		
 		void groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo);
 
@@ -53,7 +55,7 @@ public interface GroupService {
 		
 		void FeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo);
 		
-		void groupFeedReport(Model model, ReportListVo reportListVo);
+		void groupFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 
 		void groupChat(Model model);
 		
@@ -63,23 +65,19 @@ public interface GroupService {
 		
 		void groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo);
 		
-		void groupUserKick(Model model, JoinGroupVo joinGroupVo);
+		void groupUserKick(HttpServletRequest req, GroupVo groupVo, JoinGroupVo joinGroupVo);
 		
-		void groupUserAllKick(Model model, GroupVo groupVo);
+		void groupUserAllKick(HttpServletRequest req, GroupVo groupVo);
 		
 		void groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo);
 		
-		void groupRequestHello(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestHello(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo);
 		
-		void groupRequestEverybodyHello(Model model, UpdateWaitVo updateWaitVo);
-		
-		void groupRequestSorry(Model model, UpdateWaitVo updateWaitVo);
-		
-		void groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo);
+		void groupRequestSorry(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo);
 
 		void groupDeleteOne(HttpServletRequest req, GroupVo groupVo);
 		
-		void groupOut(Model model, JoinGroupVo joinGroup);
+		void groupOut(HttpServletRequest req, JoinGroupVo joinGroup, GroupVo groupVo);
 		
 		void followInsertOne(HttpServletRequest req, MyFollowingVo myFollowing);
 		

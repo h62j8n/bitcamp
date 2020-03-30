@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
@@ -18,7 +20,11 @@
 		<dl class="txt_box">
 			<dt>신고 사유</dt>
 			<dd class="rpv_txt">${reportdetail.rlreport }</dd>
-			<dd class="rpv_img scrBar"><img src="http://placehold.it/620x300" alt=""></dd>
+			<dd class="rpv_img scrBar">
+				<c:set var="rlphoto" value="${reportdetail.rlphoto }" />
+				<c:forTokens items="${rlphoto }" delims="," var="item">
+					<img src="${upload }/${item }" alt="">
+				</c:forTokens></dd>
 		</dl>
 	</form>
 </div>

@@ -2,6 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/" var="root" />
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty" />
+	</c:if>
+</c:if>
 <!DOCTYPE html>
 <head>
 	<meta charset="UTF-8">
@@ -15,16 +20,105 @@
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
 	<script type="text/javascript">
+	
 		$(document).ready(function(){
-			/* $('#searchkeyword').on('click', function(){
-				var keyword=$('#keyword').val().trim();
-				var grnum=$('#grnum').val();
-				if(keyword != ''){
-					$.get('${root}group/user', 'grnum='+grnum+'&keyword='+keyword, function(data){
+
+			var name;
+			var jgnum;
+			var jgparam;
+			
+			$('#userkick').on('click', function(){
+				if($('.comm_chk:checked').length==0){
+					openPop('fail');
+				}else{
+					openPop('kick');
+					$('tbody .comm_chk:checked').each(function(index){
+						jgnum=$(this).parent().find('#postjgnum').val();
+						console.log(jgnum);
+						$(this).attr('name', 'joinGroupList['+index+'].jgnum');
+						name=$(this).attr('name');
+						if(index==0){
+							jgparam=name+"="+jgnum;
+						}else if(index>0){
+							jgparam=jgparam+"&"+name+"="+jgnum
+						}
+					});
+					
+					var jot = jgparam.split("&");
+					var jointot=jot.length;
+
+					var grnum = $('#postgrnum').val();
+					var grtotal = $('#postdeluser').val();
+					$('#grnum').val(grnum);
+					$('#jointot').val(jointot);
+					$('#grtotal').val(grtotal);
+					
+					$('#jgnum').val(jgparam);
+					var jgnum = $('#jgnum').val();
+					
+					console.log(jgparam);
+					
+					//삭제하기버튼 클릭시 데이터삭제
+					$('#bye').on('click', function() {
 						
+						var grnum=$('#grnum').val();
+						var grtotal=$('#grtotal').val();
+						var jointot=$('#jointot').val();
+						
+						$.post('${root}group/user/kick', jgnum+'&grtotal='+grtotal+'&grnum='+grnum+'&jointot='+jointot,function(){
+							openPop('ok');
+							$('#success').click(function(){
+								location.reload();
+							});
+						});
 					});
 				}
-			}); */
+			});
+			
+			
+			//전체추방
+			$('#userallkick').on('click', function(){
+				
+				var grnum = $('#postgrnum').val();
+				$('#grnum').val(grnum);
+				var pronum = $('#postpronum').val();
+				$('#pronum').val(pronum);
+				var grtotal = $('#postdeluser').val();
+				$('#jointot').val(grtotal-1);
+				$('#grtotal').val(grtotal);
+				console.log(jointot);
+				
+				//전체추방 키값검사
+			 	$('#keymsg').on('propertychange change keyup paste input', function(){
+			 		var keymsg=$('#keymsg').val();
+			 		var sucmsg='웃어라, 함께 웃을 것이다. 울어라, 혼자 울 것이다.'
+			 		if(keymsg == sucmsg){
+			 			$('#outgroup').removeAttr("disabled");
+			 			$('#outgroup').removeClass('cnc');
+			 			$('#outgroup').addClass('cfm');
+	
+			 			var grnum=$('#grnum').val();
+			 			var pronum=$('#pronum').val();
+			 			var jointot=$('#jointot').val();
+			 			var grtotal=$('#grtotal').val();
+			 			
+		 				$('#outgroup').on('click', function(){
+			 				$.post('${root}/group/user/allkick', 'grnum='+grnum+'&pronum='+pronum+'&jointot='+jointot+'&grtotal='+grtotal, function(data){
+									openPop("ok");
+									$('#success').on('click', function(){
+										location.reload();
+										//window.location.href='http://localhost:8080/festa/group/user?grnum='+grnum;
+									});
+			 				});
+		 				})
+			 		}else{
+			 			$('#outgroup').attr("disabled", "disabled");
+			 			$('#outgroup').removeClass('cfm');
+			 			$('#outgroup').addClass('cnc');
+			 		}
+			 	});
+				
+			})
 		});
 	
 	</script>
@@ -44,9 +138,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<%
 								out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -118,6 +212,10 @@
 						<em class="snd_only">맨 위로</em>
 					</button>
 				</div>
+			<input type="hidden" id="postgrnum" value="${detail.grnum }" />
+			<input type="hidden" id="postpronum" value="${login.pronum }" />
+			<input type="hidden" id="postjointot" value="${detail.jointot }" />
+			<input type="hidden" id="postdeluser" value="${detail.grtotal }" />
 			</div>
 		</div>
 		<!-- #그룹 관리 -->
@@ -216,10 +314,12 @@
 						<caption class="snd_only">그룹원 목록</caption>
 						<thead>
 							<tr>
-								<th class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="allChecked" id="festaTbl0">
-									<label for="festaTbl0"><em class="snd_only">전체선택</em></label>
-								</th>
+								<c:if test="${detail.grtotal ne 1 }" >
+									<th class="tb_chk">
+										<input type="checkbox" class="comm_chk" name="allChecked" id="allChecked">
+										<label for="allChecked"><em class="snd_only">전체선택</em></label>
+									</th>
+								</c:if>
 								<th class="w60">No</th>
 								<th>이름 (ID)</th>
 								<th class="w120">생년월일</th>
@@ -233,12 +333,18 @@
 								<c:when test="${pageSearch.totalCount ne 0 }">
 									<c:set var="i" value="10"/>
 									<c:forEach items="${userdetail }" var="userdetail">
+									<c:if test="${login.pronum ne userdetail.pronum }" >
 										<tr>
 											<td class="tb_chk">
-												<input type="checkbox" class="comm_chk" name="" id="festaTbl10">
-												<label for="festaTbl10"><em class="snd_only">선택</em></label>
+												<input type="hidden" name="" id="postjgnum" value="${userdetail.joinGroup.jgnum }">
+												<c:if test="${login.pronum ne userdetail.pronum }">
+													<input type="checkbox" class="comm_chk" name="" id="festaTbl${i}">
+												</c:if>
+												<label for="festaTbl${i}"><em class="snd_only">선택</em></label>
 											</td>
-											<td>${userdetail.prorn }</td>
+											<td>
+												${userdetail.prorn }
+											</td>
 											<td>
 												<p>
 													<a href="" target="_blank">
@@ -252,6 +358,7 @@
 											<td>${userdetail.prodate }</td>
 										</tr>
 									<c:set var="i" value="${i-1 }"/>
+									</c:if>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
@@ -266,8 +373,8 @@
 						</tbody>
 					</table>
 					<ul class="table_options comm_buttons_s">
-						<li><button type="button" class="comm_btn cnc">추방</button></li>
-						<li><button type="button" class="comm_btn">전체 추방</button></li>
+						<li><button type="button" id="userkick" class="comm_btn btn_pop cnc" >추방</button></li>
+						<li><button type="button" id="userallkick" class="comm_btn btn_pop" data-layer="allkick" >전체 추방</button></li>
 					</ul>
 				</form>
 				<div class="fstPage">
@@ -347,7 +454,10 @@
 	<div id="kick" class="fstPop">
 		<div class="out_wrap pop_wrap">
 			<h3 class="pop_tit">선택한 회원(들)을 추방하시겠습니까?</h3>
+			<input type="hidden" id="grnum" value="">
 			<input type="hidden" id="jgnum" value="">
+			<input type="hidden" id="jointot" value="">
+			<input type="hidden" id="grtotal" value="">
 			<div class="btn_box">
 				<ul class="comm_buttons">
 					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
@@ -363,14 +473,30 @@
 	<div id="allkick" class="fstPop">
 		<div class="out_wrap pop_wrap">
 			<h3 class="pop_tit">전체 회원을 추방하시겠습니까?</h3>
-			<input type="hidden" id="grnum" value="">
-			<input type="hidden" id="pronum" value="">
-			<div class="btn_box">
-				<ul class="comm_buttons">
-					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-					<li><button type="button" id="allbye" class="btn_close comm_btn cfm">확인</button></li>
+			<div class="info_box">
+				<ul>
+					<li>회원 추방 후에는 취소가 불가능합니다.</li>
+					<li>확인 버튼을 누르시면 나를 제외한 모든 회원이 추방됩니다.</li>
 				</ul>
 			</div>
+			<p>[다음 문구를 똑같이 입력해주세요.]</p>
+			<p class="out_words">웃어라, 함께 웃을 것이다. 울어라, 혼자 울 것이다.</p>
+			<form class="comm_form">
+				<div class="ip_box">
+					<input type="text" id="keymsg" name="" required="required">
+					<input type="hidden" id="grnum" value="">
+					<input type="hidden" id="pronum" value="">
+					<input type="hidden" id="jointot" value="">
+					<input type="hidden" id="grtotal" value="">
+					<p class="f_message"></p>
+				</div>
+				<div class="btn_box">
+					<ul class="comm_buttons">
+						<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+						<li><button type="button" id="outgroup" class="btn_close comm_btn cnc" disabled="disabled">확인</button></li>
+					</ul>
+				</div>
+			</form>
 		</div>
 		<button type="button" class="btn_close">
 			<em class="snd_only">창 닫기</em>
@@ -382,10 +508,19 @@
 		<div class="confirm_wrap pop_wrap">
 			<p class="pop_tit">처리가 완료되었습니다.</p>
 			<ul class="comm_buttons">
-				<li><button type="button" id="editsuccess" class="btn_close comm_btn cfm">확인</button></li>
+				<li><button type="button" id="success" class="btn_close comm_btn cfm">확인</button></li>
 			</ul>
 		</div>
 	</div>
 
+	<!-- #팝업 체크된값없음 { -->
+	<div id="fail" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">아무것도 선택되지 않았습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>

@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty" />
+	</c:if>
+</c:if>
 <c:url value="/" var="root"></c:url>
 <!DOCTYPE html>
 <head>
@@ -116,9 +121,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<%
 								out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -427,7 +432,6 @@
 		</div>
 		<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>
 	</div>
-	
 	
 	<div id="groupfail" class="fstPop">
 		<div class="confirm_wrap pop_wrap">

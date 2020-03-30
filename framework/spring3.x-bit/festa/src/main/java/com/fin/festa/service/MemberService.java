@@ -17,7 +17,9 @@ public interface MemberService {
 		
 		void  idCheck(Model model, LoginVo loginVo);
 		 
-		void  findId(Model model, LoginVo loginVo);
+		ProfileVo  findId(Model model, LoginVo loginVo);
 		
-		void  findPw(Model model, LoginVo loginVo);
+		ProfileVo  findPw(Model model, LoginVo loginVo);
+
+		String updatePw(Model model, ProfileVo profile);
 }

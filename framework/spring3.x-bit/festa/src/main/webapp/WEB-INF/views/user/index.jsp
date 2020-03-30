@@ -154,6 +154,14 @@
 </script>
 </head>
 <body>
+<c:if test="${sessionScope.login eq null}">
+   <c:redirect url="/empty"/>
+</c:if>
+<c:if test="${sessionScope.login ne null }">
+   <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+      <c:redirect url="/empty"/>
+   </c:if>
+</c:if>
 	<div id="wrap">
 		<div id="header">
 			<div class="scrX">
@@ -168,9 +176,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<%
 								out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -448,6 +456,7 @@
 										<c:set var="doneLoop" value="false" />
 										<c:forEach items="${myFeedCmmtSelectAll }"
 											var="feedcmmt">
+											${myFeedSelectAll.mpnum } + ${feedcmmt.mpnum } ,
 											<c:if
 												test="${myFeedSelectAll.mpnum eq feedcmmt.mpnum }">
 												<c:if test="${not doneLoop }">
@@ -658,3 +667,5 @@
 	</script>
 </body>
 </html>
+
+

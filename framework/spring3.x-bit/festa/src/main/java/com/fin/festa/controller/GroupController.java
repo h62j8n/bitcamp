@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fin.festa.model.GroupDao;
-import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupNoticeCommentVo;
 import com.fin.festa.model.entity.GroupNoticeVo;
@@ -29,13 +27,9 @@ import com.fin.festa.model.entity.JoinGroupVo;
 import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.PageSearchVo;
-import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.model.entity.UpdateWaitVo;
-import com.fin.festa.service.AdminService;
 import com.fin.festa.service.GroupService;
-import com.fin.festa.service.GroupServiceImpl;
-import com.mysql.jdbc.interceptors.SessionAssociationInterceptor;
 
 @Controller
 @RequestMapping("/group/")
@@ -48,23 +42,51 @@ public class GroupController {
 	@Autowired
 	private GroupService groupService;
 	
+	int result=0;
+	
 	//그룹 피드 (가입신청, 가입대기, 그룹원 3가지)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String groupSelectOne(HttpServletRequest req, UpdateWaitVo updateWaitVo){
 		
-		int result=groupService.joinGroup(req, updateWaitVo);
+		result=groupService.joinGroup(req, updateWaitVo);
+		System.out.println(result);
 		GroupVo group=new GroupVo();
 		group.setGrnum(updateWaitVo.getGrnum());
 		groupService.groupSelectOne(req, group);
 		if(result == 0) {
-			return "group/readme";
+			return "redirect:/group/readme?grnum="+group.getGrnum()+"&pronum="+updateWaitVo.getPronum();
 		} else if (result == 1){
-			return "group/standby";
+			return "redirect:/group/standby?grnum="+group.getGrnum()+"&pronum="+updateWaitVo.getPronum();
 		} else if (result == 2) {
 			return "group/index";
 		}
-		
 		return "group/index";
+	}
+
+	//그룹 가입 안내
+	@RequestMapping(value = "readme", method = RequestMethod.GET)
+	public String readme(HttpServletRequest req) {
+		GroupVo groupVo=new GroupVo();
+		groupVo.setGrnum(Integer.parseInt(req.getParameter("grnum")));
+		groupService.groupSelectOne(req, groupVo);
+		return "group/readme";
+	}
+	
+	//그룹 가입 신청 대기
+	@RequestMapping(value = "standby", method = RequestMethod.GET)
+	public String standby(HttpServletRequest req) {
+		GroupVo groupVo=new GroupVo();
+		groupVo.setGrnum(Integer.parseInt(req.getParameter("grnum")));
+		groupService.groupSelectOne(req, groupVo);
+		/*
+		 * UpdateWaitVo updateWaitVo=new UpdateWaitVo();
+		 * updateWaitVo.setGrnum(Integer.parseInt(req.getParameter("grnum")));
+		 * updateWaitVo.setPronum(Integer.parseInt(req.getParameter("pronum")));
+		 * result=groupService.joinGroup(req, updateWaitVo);
+		 * groupService.groupSelectOne(req, groupVo);
+		 */
+		
+		return "group/standby";
 	}
 	
 	//그룹 가입 신청 (팝업)
@@ -76,7 +98,9 @@ public class GroupController {
 	//그룹 가입 신청 완료 (팝업>팝업 내 기능)
 	@RequestMapping(value = "join", method = RequestMethod.POST)
 	public String joinGroup(Model model, UpdateWaitVo updateWaitVo) {
-		return "group/index";
+		groupService.groupAdmission(model, updateWaitVo);
+		result=1;
+		return "redirect:/group/standby?grnum="+updateWaitVo.getGrnum();
 	}
 	
 	//그룹원 목록 (팝업)
@@ -103,24 +127,21 @@ public class GroupController {
 	//그룹 신고 (팝업)
 	@RequestMapping(value = "gp_report", method = RequestMethod.GET)
 	public String groupReport(){
-		return "group/gp_report";
+		return "group/report";
 	}
-	
+		
 	//그룹 신고 (팝업>팝업 내 기능)
 	@RequestMapping(value = "gr_report", method = RequestMethod.POST)
-	public String groupReport(Model model, ReportListVo reportListVo){
+	public String groupReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
+		groupService.groupReport(req, reportListVo, files);
 		return "group/index";
 	}
-
-	//그룹 탈퇴 (팝업)
-	@RequestMapping(value = "out", method = RequestMethod.GET)
-	public String groupOut(){
-		return "group/out";
-	}
 	
-	//그룹 탈퇴 (팝업>팝업 내 기능)
+	//그룹 탈퇴 (내부팝업 기능)
 	@RequestMapping(value = "out", method = RequestMethod.POST)
-	public String groupOut(Model model, JoinGroupVo joinGroupVo){
+	public String groupOut(HttpServletRequest req, JoinGroupVo joinGroupVo, GroupVo groupVo){
+		groupService.groupOut(req, joinGroupVo, groupVo);
+		result=0;
 		return "group/index";
 	}
 	
@@ -166,13 +187,15 @@ public class GroupController {
 	
 	//공지사항 신고 (팝업>팝업)
 	@RequestMapping(value = "ntc_report", method = RequestMethod.GET)
-	public String noticeReport(){
+	public String noticeReport(Model model, GroupNoticeVo groupNoticeVo){
+		model.addAttribute("groupNotice", groupNoticeVo);
 		return "group/ntc_report";
 	}
 	
 	//공지사항 신고 (팝업>팝업>팝업 내 기능)
 	@RequestMapping(value = "ntc_report", method = RequestMethod.POST)
-	public String noticeReport(Model model, ReportListVo reportListVo){
+	public String noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
+		groupService.noticeReport(req, reportListVo, files);
 		return "group/ntc_feed";
 	}
 
@@ -254,13 +277,15 @@ public class GroupController {
 	
 	//그룹 피드 신고 (팝업)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
-	public String groupFeedReport(){
+	public String groupFeedReport(Model model, GroupPostVo groupPostVo){
+		model.addAttribute("groupFeed", groupPostVo);
 		return "group/gp_report";
 	}
 
 	//그룹 피드 신고 (팝업>팝업 내 기능)
 	@RequestMapping(value = "report", method = RequestMethod.POST)
-	public String groupFeedReport(Model model, ReportListVo reportListVo){
+	public String groupFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
+		groupService.groupFeedReport(req, reportListVo, files);
 		return "group/gp_report";
 	}
 
@@ -275,7 +300,7 @@ public class GroupController {
 	public String doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-		String chatName = request.getParameter("chatName");
+		String	 chatName = request.getParameter("chatName");
 		String chatContent = request.getParameter("chatContent");
 		if(chatContent.equals("")) {
 			chatContent=null;
@@ -319,13 +344,15 @@ public class GroupController {
 	
 	//그룹원 추방 (내부팝업 기능)
 	@RequestMapping(value = "user/kick", method = RequestMethod.POST)
-	public String groupUserKick(Model model, JoinGroupVo joinGroupVo){
+	public String groupUserKick(HttpServletRequest req, JoinGroupVo joinGroupVo, GroupVo groupVo){
+		groupService.groupUserKick(req, groupVo, joinGroupVo);
 		return "group/user";
 	}
 	
 	//그룹원 전체 추방 (내부팝업 기능)
 	@RequestMapping(value = "user/allkick", method = RequestMethod.POST)
-	public String groupUserAllKick(Model model, GroupVo groupVo){
+	public String groupUserAllKick(HttpServletRequest req, GroupVo groupVo){
+		groupService.groupUserAllKick(req, groupVo);
 		return "group/user";
 	}
 	
@@ -339,25 +366,15 @@ public class GroupController {
 	
 	//그룹 신청 승인 (내부팝업 기능)
 	@RequestMapping(value = "req/hello", method = RequestMethod.POST)
-	public String groupRequestHello(Model model, UpdateWaitVo updateWaitVo){
-		return "group/req";
-	}
-	
-	//그룹 신청 전체 승인 (내부팝업 기능)
-	@RequestMapping(value = "req/allhello", method = RequestMethod.POST)
-	public String groupRequestEverybodyHello(Model model, UpdateWaitVo updateWaitVo){
+	public String groupRequestHello(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo){
+		groupService.groupRequestHello(req, updateWaitVo, groupVo);
 		return "group/req";
 	}
 	
 	//그룹 신청 거절 (내부팝업 기능)
 	@RequestMapping(value = "req/sorry", method = RequestMethod.POST)
-	public String groupRequestSorry(Model model, UpdateWaitVo updateWaitVo){
-		return "group/req";
-	}
-	
-	//그룹 신청 전체 거절 (내부팝업 기능)
-	@RequestMapping(value = "req/allsorry", method = RequestMethod.POST)
-	public String groupRequestVeryverySorry(Model model, UpdateWaitVo updateWaitVo){
+	public String groupRequestSorry(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo){
+		groupService.groupRequestSorry(req, updateWaitVo, groupVo);
 		return "group/req";
 	}
 	

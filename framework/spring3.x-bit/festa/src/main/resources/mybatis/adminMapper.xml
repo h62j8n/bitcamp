@@ -151,6 +151,8 @@
 	</resultMap>
 	<resultMap type="ProfileVo" id="profile4">
 		<result column="prophoto" property="prophoto"/>
+		<result column="pronum" property="pronum"/>
+		<result column="proname" property="proname"/>
 	</resultMap>
 	
 	<!-- 캠핑관리정보 조인 시에 참조되는 데이터 -->
@@ -209,6 +211,7 @@
 		<result column="proname" property="proname"/>
 		<result column="mvdate" property="mvdate"/>
 		<result column="pronum2" property="pronum"/>
+		<result column="mvphoto" property="mvphoto"/>
 		<association property="camp" resultMap="camp1"/>
 	</resultMap>
 	<resultMap type="CampVo" id="camp1">
@@ -293,7 +296,7 @@
 	
 	<!-- 공지사항상세페이지 출력 -->
 	<select id="groupNoticeDetail" parameterType="GroupNoticeVo" resultMap="groupnotice1">
-		select d.*,(select count(*) from groupnoticecomment a where a.gnnum2=d.gnnum) as gntotal from (select a.*,c.prophoto,b.grname from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}) d
+		select d.*,(select count(*) from groupnoticecomment a where a.gnnum2=d.gnnum) as gntotal from (select a.*,c.pronum,c.prophoto,b.grname from groupnotice a inner join group1 b on a.grnum6=b.grnum inner join profile c on b.pronum1=c.pronum where gnnum=#{gnnum}) d
 	</select>
 	
 	<!-- 공지사항 삭제처리 -->
@@ -303,12 +306,12 @@
 	
 	<!-- 공지사항댓글출력 -->
 	<select id="groupNoticeCmmtInfo" parameterType="GroupNoticeVo" resultMap="groupnoticecmmt">
-		select a.*,b.prophoto from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum} order by gncnum desc
+		select a.*,b.prophoto,b.proname from groupnoticecomment a inner join profile b on a.pronum15=b.pronum where gnnum2=#{gnnum} order by gncnum desc
 	</select>
 	
 	<!-- 공지사항댓글 더보기 비동기 -->
 	<select id="adminGroupNoticeCmmt" parameterType="GroupNoticeVo" resultMap="groupnoticecmmt">
-		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupnoticecomment a 
+		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto,b.proname from groupnoticecomment a 
 		inner join profile b on a.pronum15=b.pronum,(select @rownum:=0) r where gnnum2=#{gnnum} order by gncdate desc) c 
 		where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
@@ -325,7 +328,7 @@
 	
 	<!-- 그룹피드댓글 더보기 비동기 -->
 	<select id="adminGroupDetailCmmt" parameterType="GroupPostVo" resultMap="groupcmmt">
-		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from groupcomment a inner join profile b
+		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto,b.proname from groupcomment a inner join profile b
 		 on a.pronum4=b.pronum,(select @rownum:=0) r where gpnum1=#{gpnum} order by gcdate desc) c where
 		  prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
@@ -337,7 +340,7 @@
 	
 	<!-- 그룹피드 댓글출력 -->
 	<select id="groupFeedCmmtInfoSelectAll" parameterType="GroupVo" resultMap="groupcmmt">
-		select a.*,b.prophoto from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum} order by gcdate desc
+		select a.*,b.prophoto,b.proname from groupcomment a inner join profile b on a.pronum4=b.pronum where grnum7=#{grnum} order by gcdate desc
 	</select>
 	
 	<!-- 그룹피드댓글 삭제처리 -->
@@ -429,7 +432,7 @@
 	<!-- 유저 피드목록 출력 -->
 	<select id="userFeed" parameterType="ProfileVo" resultMap="post">
 		select d.*,(select count(*) from mycomment where mpnum1=d.mpnum) as mptotal from 
-		(select a.*,c.prophoto from mypost a inner join profile c
+		(select a.*,c.prophoto,c.proname from mypost a inner join profile c
 		 on a.pronum12=c.pronum where pronum12=#{pronum} order by mpdate desc) d
 	</select>
 	
@@ -440,7 +443,7 @@
 	
 	<!-- 유저피드 댓글 더보기출력 -->
 	<select id="adminUserDetailCmmt" parameterType="MyPostVo" resultMap="cmmt">
-		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto from mycomment
+		select * from (select @rownum:=@rownum+1 as prorn,a.*,b.prophoto,b.proname from mycomment
 		 a inner join profile b on a.pronum13=b.pronum,(select @rownum:=0) r where mpnum1=#{mpnum} order by mcdate desc)
 		  c where prorn<![CDATA[ >= ]]>#{pageSearch.startnum} and prorn<![CDATA[ <= ]]>#{pageSearch.endnum}+1
 	</select>
@@ -503,7 +506,7 @@
 	
 	<!-- 해당캠핑장 한줄평출력 -->
 	<select id="campReviewInfo" parameterType="CampVo" resultMap="campreview">
-		select a.*,b.prophoto from campreview a inner join profile b on a.pronum5=b.pronum where canum1=2 order by crdate desc
+		select a.*,b.prophoto from campreview a inner join profile b on a.pronum5=b.pronum where canum1=#{canum} order by crdate desc
 	</select>
 	
 	<!-- 해당캠핑장한줄평 삭제처리 -->
@@ -536,12 +539,12 @@
 	
 	<!-- 사업자관리정보 출력(검색값-사업자번호) -->
 	<select id="adminVentureSelectAll_mvnumber" parameterType="PageSearchVo" resultMap="myventure">
-		select c.mvrn,c.mvnum,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.mvdate,c.canum,c.pronum2 from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn1,a.*,d.canum from myventure a left join camp d on a.mvnum=d.mvnum1,(select @rownum:=0) r where mvnum!=1 and mvnumber like concat('%',#{keyword},'%') order by mvnumber asc) b,(select @rnum:=0) r2 order by mvrn1 desc) c where mvrn1<![CDATA[ >= ]]>#{startnum} and mvrn1<![CDATA[ <= ]]>#{endnum} order by mvrn desc
+		select c.mvrn,c.mvnum,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.mvdate,c.canum,c.pronum2,c.mvphoto from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn1,a.*,d.canum from myventure a left join camp d on a.mvnum=d.mvnum1,(select @rownum:=0) r where mvnum!=1 and mvnumber like concat('%',#{keyword},'%') order by mvnumber asc) b,(select @rnum:=0) r2 order by mvrn1 desc) c where mvrn1<![CDATA[ >= ]]>#{startnum} and mvrn1<![CDATA[ <= ]]>#{endnum} order by mvrn desc
 	</select>
 	
 	<!-- 사업자관리정보 출력(검색값-캠핑장이름) -->
 	<select id="adminVentureSelectAll_caname" parameterType="PageSearchVo" resultMap="myventure">
-		select c.mvrn,c.mvnum,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.mvdate,c.canum,c.pronum2 from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn1,a.*,d.canum from myventure a left join camp d on a.mvnum=d.mvnum1,(select @rownum:=0) r where mvnum!=1 and mvname like concat('%',#{keyword},'%') order by mvname asc) b,(select @rnum:=0) r2 order by mvrn1 desc) c where mvrn1<![CDATA[ >= ]]>#{startnum} and mvrn1<![CDATA[ <= ]]>#{endnum} order by mvrn desc
+		select c.mvrn,c.mvnum,c.mvnumber,c.mvname,c.mvaddr,c.proname,c.mvdate,c.canum,c.pronum2,c.mvphoto from (select @rnum:=@rnum+1 as mvrn,b.* from (select @rownum:=@rownum+1 as mvrn1,a.*,d.canum from myventure a left join camp d on a.mvnum=d.mvnum1,(select @rownum:=0) r where mvnum!=1 and mvname like concat('%',#{keyword},'%') order by mvname asc) b,(select @rnum:=0) r2 order by mvrn1 desc) c where mvrn1<![CDATA[ >= ]]>#{startnum} and mvrn1<![CDATA[ <= ]]>#{endnum} order by mvrn desc
 	</select>
 	
 	<!-- 사업자 삭제처리 +@ -->
@@ -639,7 +642,7 @@
 	
 	<!-- 신고관리정보 출력 전체 -->
 	<select id="adminReportSelectAll" parameterType="PageSearchVo" resultType="ReportListVo">
-		select * from (select @rnum:=@rnum+1 as rlrn,b.* from (select @rownum:=@rownum+1 as rlrn2,a.* from reportlist a,(select @rownum:=0) r where rlstatus like concat('%',#{search},'%') and rlcategory like concat('%',#{category}) order by rldate asc) b,(select @rnum:=0) r2 order by rlrn2 desc) c where rlrn2<![CDATA[ >= ]]>#{startnum} and rlrn2<![CDATA[ <= ]]>#{endnum} order by rlrn desc
+		select * from (select @rnum:=@rnum+1 as rlrn,b.* from (select @rownum:=@rownum+1 as rlrn2,a.* from reportlist a,(select @rownum:=0) r where rlstatus like concat('%',#{search},'%') and rlcategory like concat('%',#{category}) order by rldate desc) b,(select @rnum:=0) r2 order by rlrn2 desc) c where rlrn2<![CDATA[ >= ]]>#{startnum} and rlrn2<![CDATA[ <= ]]>#{endnum} order by rlrn desc
 	</select>
 	
 	<!-- 신고처리완료 업데이트 -->

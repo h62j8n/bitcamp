@@ -183,12 +183,12 @@
 				</a>
 			</dt>
 			<dd>
-				<span class="fd_date">${ntcDetail.gndate }</span>
+				<span class="fd_date">${ntcDetail.gndate1 }</span>
 			</dd>
 		</dl>
 		<ul class="feed_options">
 			<c:if test="${login.pronum ne detail.pronum }">
-				<li><a href="${root }group/ntc_report" class="btn_pop2 btn_report"><em class="snd_only">신고하기</em></a></li>
+				<li><a href="${root }group/ntc_report?gnnum=${ntcDetail.gnnum}&profile.pronum=${detail.profile.pronum}&profile.proname=${detail.profile.proname}&profile.proid=${detail.profile.proid}" class="btn_pop2 btn_report"><em class="snd_only">신고하기</em></a></li>
 			</c:if>
 			<c:if test="${login.pronum eq detail.pronum}">
 				<li><a href="${root }group/ntc_maker" class="btn_pop2 btn_edit"><em class="snd_only">수정하기</em></a></li>		
@@ -218,7 +218,7 @@
 								<!-- } # 프로필 이미지 없음 -->
 								<p class="cmt_content">
 									<a href="" class="cmt_name">${ntcCmmt.gncauthor }</a>&nbsp;&nbsp;${ntcCmmt.gnccontent }
-									<span class="cmt_date">${ntcCmmt.gncdate }</span>
+									<span class="cmt_date">${ntcCmmt.gncdate1 }</span>
 									<c:if test="${(login.pronum eq ntcCmmt.pronum) or (login.pronum eq detail.pronum)}">
 										<button class="btn_delete btn_pop ntccmmtdel" data-layer="deletentc" data-value="${ntcCmmt.gncnum }"><em class="snd_only">삭제하기</em></button>
 									</c:if>

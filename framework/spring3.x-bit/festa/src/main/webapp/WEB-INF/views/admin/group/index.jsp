@@ -135,22 +135,22 @@
 						<c:choose>
 							<c:when test="${paging.totalCount ne 0 }">
 							<c:set var="i" value="10"/>
-								<c:forEach items="${grouplist }" var="grouplist">
+								<c:forEach items="${groupList }" var="groupList">
 									<tr>
 										<td class="tb_chk">
-											<input type="hidden" name="grnum" value="${grouplist.grnum }">
+											<input type="hidden" name="grnum" value="${groupList.grnum }">
 											<input type="checkbox" class="comm_chk" name="" id="festaTbl${i }">
 											<label for="festaTbl${i }"><em class="snd_only">선택</em></label>
 										</td>
-										<td>${grouplist.grrn }</td>
+										<td>${groupList.grrn }</td>
 										<td>
 											<p>
-												<a href="${root }admin/group/detail?grnum=${grouplist.grnum }" target="_blank">${grouplist.grname }</a>
+												<a href="${root }admin/group/detail?grnum=${groupList.grnum }" target="_blank">${groupList.grname }</a>
 											</p>
 										</td>
-										<td>${grouplist.profile.proname }</td>
-										<td>${grouplist.grtotal }</td>
-										<td>${grouplist.grdate }</td>
+										<td>${groupList.profile.proname }</td>
+										<td>${groupList.grtotal }</td>
+										<td>${groupList.grdate }</td>
 									</tr>
 									<c:set var="i" value="${i-1 }"/>
 								</c:forEach>

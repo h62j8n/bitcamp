@@ -133,22 +133,22 @@
 						<c:choose>
 							<c:when test="${paging.totalCount ne 0 }">
 							<c:set var="i" value="10"/>
-								<c:forEach items="${camplist }" var="camplist">
+								<c:forEach items="${campList }" var="campList">
 									<tr>
 										<td class="tb_chk">
-											<input type="hidden" name="canum" value="${camplist.canum }">
+											<input type="hidden" name="canum" value="${campList.canum }">
 											<input type="checkbox" class="comm_chk" name="" id="festaTbl${i }">
 											<label for="festaTbl${i }"><em class="snd_only">선택</em></label>
 										</td>
-										<td>${camplist.carn }</td>
+										<td>${campList.carn }</td>
 										<td>
 											<p>
-												<a href="${root }admin/camp/detail?canum=${camplist.canum}" target="_blank">${camplist.caname }</a>
+												<a href="${root }admin/camp/detail?canum=${campList.canum}" target="_blank">${campList.caname }</a>
 											</p>
 										</td>
-										<td>${camplist.caaddrsel }</td>
-										<td>${camplist.myVenture.proname }</td>
-										<td>${camplist.cadate }</td>
+										<td>${campList.caaddrsel }</td>
+										<td>${campList.myVenture.proname }</td>
+										<td>${campList.cadate }</td>
 									</tr>
 									<c:set var="i" value="${i-1 }"/>
 								</c:forEach>

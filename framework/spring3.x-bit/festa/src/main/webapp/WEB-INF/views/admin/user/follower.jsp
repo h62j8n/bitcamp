@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <!-- #팔로워/팔로우 팝업 -->
 <c:if test="${sessionScope.login eq null}">
@@ -16,7 +18,7 @@
 				<li>
 					<a href="${root }admin/user/detail?pronum=${myfollower.profile.pronum}">
 						<span class="pf_picture">
-							<img src="http://placehold.it/50x50" alt="김덕수님의 프로필 썸네일">
+							<img src="${upload }/${myfollower.profile.prophoto}" alt="${myfollower.profile.proname }님의 프로필 썸네일">
 						</span>
 						<b class="fw_name">${myfollower.profile.proname }</b>
 						<span class="fw_intro">${myfollower.profile.prointro }</span>

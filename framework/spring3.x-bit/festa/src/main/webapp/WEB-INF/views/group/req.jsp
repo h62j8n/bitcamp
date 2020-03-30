@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty" />
+	</c:if>
+</c:if>
 <c:url value="/" var="root" />
 <!DOCTYPE html>
 <head>
@@ -14,6 +19,135 @@
 	<link rel="stylesheet" href="${root }resources/css/site.css">
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+		
+		$(document).ready(function(){
+			
+			var name;
+			var pronum;
+			var proparam;
+
+			var name2;
+			var grnum;
+			var numparam;
+			
+			var name3;
+			var grname;
+			var nameparam;
+			
+			$('#join').on('click', function(){
+				if($('.comm_chk:checked').length==0){
+					openPop('fail');
+				} else{
+					openPop('hello');
+					$('tbody .comm_chk:checked').each(function(index){
+						pronum=$(this).parent().find('#parampronum').val();
+						console.log(pronum);
+						$(this).attr('name', 'updateList['+index+'].pronum');
+						name=$(this).attr('name');
+						if(index==0){
+							proparam=name+"="+pronum;
+						}else if(index>0){
+							proparam=proparam+"&"+name+"="+pronum
+						}
+						
+						grnum=$(this).parent().find('#paramgrnum').val();
+						console.log(grnum);
+						$(this).attr('name', 'updateList['+index+'].grnum');
+						name2=$(this).attr('name');
+						if(index==0){
+							numparam=name2+"="+grnum;
+						}else if(index>0){
+							numparam=numparam+"&"+name2+"="+grnum
+						}
+						
+						grname=$(this).parent().find('#paramgrname').val();
+						console.log(grname);
+						$(this).attr('name', 'updateList['+index+'].grname');
+						name3=$(this).attr('name');
+						if(index==0){
+							nameparam=name3+"="+grname;
+						}else if(index>0){
+							nameparam=nameparam+"&"+name3+"="+grname
+						}
+					});
+					
+					var jot = proparam.split("&");
+					var jointot=jot.length;
+					
+					var grtotal=$('#postgrtotal').val();
+					$('#grtotal').val(grtotal);
+
+					var grnum=$('#postgrnum').val();
+					$('#grnum').val(grnum);
+
+					var pronum=$('#postpronum').val();
+					$('#pronum').val(pronum);
+					
+					$('#hi').on('click', function(){
+						var grtotal=$('#grtotal').val();
+						var grnum=$('#grnum').val();
+						var pronum=$('#pronum').val();
+						
+						$.post('${root}group/req/hello', proparam+'&'+numparam+'&'+nameparam+
+								'&grtotal='+grtotal+'&jointot='+jointot+'&grnum='+grnum+'&pronum='+pronum, function(){
+							openPop('ok');
+							$('#success').on('click', function(){
+								location.reload();
+							});														
+						});
+					});
+				}
+			});
+			
+			$('#nojoin').on('click', function(){
+				if($('.comm_chk:checked').length==0){
+					openPop('fail');
+				} else{
+					openPop('bye');
+					$('tbody .comm_chk:checked').each(function(index){
+						pronum=$(this).parent().find('#parampronum').val();
+						console.log(pronum);
+						$(this).attr('name', 'updateList['+index+'].pronum');
+						name=$(this).attr('name');
+						if(index==0){
+							proparam=name+"="+pronum;
+						}else if(index>0){
+							proparam=proparam+"&"+name+"="+pronum
+						}
+						
+						grnum=$(this).parent().find('#paramgrnum').val();
+						console.log(grnum);
+						$(this).attr('name', 'updateList['+index+'].grnum');
+						name2=$(this).attr('name');
+						if(index==0){
+							numparam=name2+"="+grnum;
+						}else if(index>0){
+							numparam=numparam+"&"+name2+"="+grnum
+						}
+					});
+					
+					var pronum=$('#postpronum').val();
+					$('#pronum').val(pronum);
+					
+					$('#sorry').on('click', function(){
+
+						var pronum=$('#pronum').val();
+						
+						$.post('${root}group/req/sorry', proparam+'&'+numparam+'&pronum='+pronum, function(){
+							openPop('ok');
+							$('#success').on('click', function(){
+								location.reload();
+							});
+						});
+					});
+					
+				}
+			});
+			
+		});
+	
+	</script>
 </head>
 <body>
 	<div id="wrap">
@@ -30,9 +164,9 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp">캠핑정보</a></li>
-						<li><a href="${root}hot">인기피드</a></li>
-						<li><a href="${root}news">뉴스피드</a></li>
+						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
 							<%
 								out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -106,6 +240,9 @@
 				</div>
 			</div>
 		</div>
+		<input type="hidden" id="postgrtotal" value="${detail.grtotal }">
+		<input type="hidden" id="postgrnum" value="${detail.grnum }">
+		<input type="hidden" id="postpronum" value="${login.pronum }">
 		<!-- #그룹 관리 -->
 		<!-- 서브페이지 시작 { -->
 		<div id="container" class="setting_wrap">
@@ -201,10 +338,15 @@
 								<th class="w120">관심지역</th>
 							</tr>
 							<tr>
-								<th class="tb_chk">
-									<input type="checkbox" class="comm_chk" name="allChecked" id="festaTbl0">
-									<label for="festaTbl0"><em class="snd_only">전체선택</em></label>
-								</th>
+								<c:if test="${pageSearch.totalCount ne 0 }" >
+									<th class="tb_chk">
+										<input type="checkbox" class="comm_chk" name="allChecked" id="festaTbl0">
+										<label for="festaTbl0"><em class="snd_only">전체선택</em></label>
+									</th>
+								</c:if>
+								<c:if test="${pageSearch.totalCount eq 0 }" >
+									<th></th>
+								</c:if>
 								<th class="tb_content" colspan="4">가입 동기</th>
 							</tr>
 						</thead>
@@ -228,8 +370,11 @@
 										</tr>
 										<tr>
 											<td class="tb_chk">
-												<input type="checkbox" class="comm_chk" name="" id="festaTbl5">
-												<label for="festaTbl5"><em class="snd_only">선택</em></label>
+												<input type="hidden" name="" id="parampronum" value="${request.profile.pronum }">
+												<input type="hidden" name="" id="paramgrnum" value="${detail.grnum}">
+												<input type="hidden" name="" id="paramgrname" value="${detail.grname }">
+												<input type="checkbox" class="comm_chk" name="" id="festaTbl${i}">
+												<label for="festaTbl${i}"><em class="snd_only">선택</em></label>
 											</td>
 											<td class="tb_content" colspan="4">
 												${request.profile.prointro }
@@ -249,12 +394,8 @@
 				</form>
 				<div class="table_options">
 					<ul class="comm_buttons_s">
-						<li><button type="submit" class="comm_btn cnc">승인</button></li>
-						<li><button type="submit" class="comm_btn">거절</button></li>
-					</ul>
-					<ul class="comm_buttons_s">
-						<li><button type="submit" class="comm_btn cnc">전체 승인</button></li>
-						<li><button type="submit" class="comm_btn">전체 거절</button></li>
+						<li><button type="submit" id="join" class="comm_btn cnc">승인</button></li>
+						<li><button type="submit" id="nojoin" class="comm_btn">거절</button></li>
 					</ul>
 				</div>
 				<div class="fstPage">
@@ -331,5 +472,58 @@
 	</div>
 </div>
 
+	<div id="hello" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">선택한 회원(들)의 신청을 승인하시겠습니까?</h3>
+			<input type="hidden" id="grtotal" value="">
+			<input type="hidden" id="grnum" value="">
+			<div class="btn_box">
+				<ul class="comm_buttons">
+					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+					<li><button type="button" id="hi" class="btn_close comm_btn cfm">확인</button></li>
+				</ul>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
+	</div>
+	
+	<div id="bye" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">선택한 회원(들)의 신청을 거절하시겠습니까?</h3>
+			<input type="hidden" id="grnum" value="">
+			<input type="hidden" id="pronum" value="">
+			<div class="btn_box">
+				<ul class="comm_buttons">
+					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+					<li><button type="button" id="sorry" class="btn_close comm_btn cfm">확인</button></li>
+				</ul>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
+	</div>
+		
+	<!-- #팝업 처리완료 { -->
+	<div id="ok" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">처리가 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="success" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- #팝업 체크된값없음 { -->
+	<div id="fail" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">아무것도 선택되지 않았습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>

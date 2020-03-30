@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -68,6 +70,13 @@
 						location.reload();
 					});
 				});
+			});
+			
+			//사업자번호 클릭시 이미지 넣기
+			$('.venture_img').on('click',function(){
+				var mvphoto = $(this).data('value');
+				console.log(mvphoto);
+				$('#ventureImage>.confirm_wrap img').attr('src','${upload}/'+mvphoto);
 			});
 			
 		});
@@ -172,7 +181,7 @@
 											<label for="festaTbl${i }"><em class="snd_only">선택</em></label>
 										</td>
 										<td>${venture.mvrn }</td>
-										<td><button type="button" class="btn_pop" data-layer="ventureImage">${venture.mvnumber }</button></td>
+										<td><button type="button" class="btn_pop venture_img" data-layer="ventureImage" data-value="${venture.mvphoto }">${venture.mvnumber }</button></td>
 										<td>
 											<p>
 												<c:if test="${venture.camp ne null }">
@@ -303,7 +312,7 @@
 <div id="ventureImage" class="fstPop">
 	<div class="confirm_wrap pop_wrap">
 		<p class="pop_tit">사업자등록증 사진</p><br/>
-		<img src="http://placehold.it/400x450">
+			<img alt="">
 		<ul class="comm_buttons">
 			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
 		</ul>

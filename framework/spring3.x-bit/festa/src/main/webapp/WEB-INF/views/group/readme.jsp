@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty" />
+	</c:if>
+</c:if>
 <c:url value="/" var="root" />
 <!DOCTYPE html>
+<html lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +20,42 @@
 	<link rel="stylesheet" href="${root }resources/css/site.css">
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			
+			$('#request').on('click', function(){
+				var grnum=$('#grnum').val();
+				var grname=$('#grname').val();
+				var grsayone=$('#grsayone').val();
+				var pronum=$('#pronum').val();
+				var proname=$('#proname').val();
+				
+				if(grsayone == ''){
+					openPop("fail");
+					$('#failed').on('click', function(){
+						window.location.reload();
+					});
+				}
+				$.post('${root}group/join', 'grnum='+grnum+'&grname='+grname+
+						'&grsayone='+grsayone+'&pronum='+pronum+'&proname='+proname, function(){
+					openPop("ok");
+					$('#success').on('click', function(){
+						window.location.href='http://localhost:8080/festa/group/standby?grnum='+grnum;
+					});
+				});
+				
+			});
+			
+		});
+	
+	</script>
 </head>
 <body>
+<input type="hidden" id="grnum" value="${detail.grnum }" >
+<input type="hidden" id="grname" value="${detail.grnum }" >
+<input type="hidden" id="pronum" value="${login.pronum }" >
+<input type="hidden" id="proname" value="${login.proname }" >
 <div id="wrap">
 	<div id="header">
 		<div class="scrX">
@@ -25,76 +65,84 @@
 				</h1>
 				<form class="search_box">
 					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-					<button type="submit"><img src="${root }resources/images/ico/btn_search.png" alt="검색"></button>
+					<button type="submit">
+						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
+					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root }camp/">캠핑정보</a></li>
-					<li><a href="${root }hot/">인기피드</a></li>
-					<li><a href="${root }news/">뉴스피드</a></li>
-					<c:if test="${login ne null }">
-							<li><a href="${root}user/index">마이페이지</a></li>
-						</c:if>
-					</ul>
-					<c:if test="${login ne null }">
-						<div id="userMenu" class="fstLyr">
-							<button class="btn_menu">
-								<em class="snd_only">나의 메뉴 더보기</em>
-							</button>
-							<dl class="menu_box" tabindex="0">
-								<dt>
-									<b>${login.proname }</b>
-								</dt>
-								<dd>
-		                           <span class="btn_mylist">나의 그룹</span>
-		                           <div class="my_list">
-		                              <ul>
-		                                 <c:forEach items="${joinGroup }" var="joinGroup">
-		                                    <li>
-		                                    <a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-		                                    	<span>
-		                                    		<img src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일">
-		                                    	</span>
-		                                        <b>${joinGroup.group.grname }</b>
-		                                    </a></li>
-		                                 </c:forEach>
-		                              </ul>
-		                           </div>
-								</dd>
-								<dd>
-									<span class="btn_mylist">나의 채팅</span>
-									<div class="my_list">
-										<ul>
-											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a href=""> <span><img
-															src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
-												</a></li>
-											</c:forEach>
-										</ul>
-									</div>
-								</dd>
-								<dd>
-									<span class="btn_mylist">나의 캠핑장</span>
-									<div class="my_list">
-										<ul>
-											<c:forEach items="${bookMark }" var="bookMark">
-												<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
-												</a></li>
-											</c:forEach>
-										</ul>
-									</div>
-								</dd>
-								<dd class="btn_logout">
-									<form>
-										<a href="${root}member/logout" class="btn_pop">로그아웃</a>
-									</form>
-								</dd>
-							</dl>
-						</div>
+					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+					<li><a href="${root}hot/">인기피드</a></li>
+					<li><a href="${root}news/">뉴스피드</a></li>
+					<c:if test="${login eq null }">
+						<%
+							out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
+						%>
+						<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 					</c:if>
-				<button type="button" id="btnTop"><em class="snd_only">맨 위로</em></button>
+					<c:if test="${login ne null }">
+						<li><a href="${root}user/">마이페이지</a></li>
+					</c:if>
+				</ul>
+				<c:if test="${login ne null }">
+					<div id="userMenu" class="fstLyr">
+						<button class="btn_menu">
+							<em class="snd_only">나의 메뉴 더보기</em>
+						</button>
+						<dl class="menu_box" tabindex="0">
+							<dt>
+								<b>${login.proname }님 환영합니다.</b>
+							</dt>
+							<dd>
+								<span class="btn_mylist">나의 그룹</span>
+								<div class="my_list">
+									<ul>
+										<c:forEach items="${joinGroup }" var="joinGroup">
+											<li><a
+												href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+													<span><img src="http://placehold.it/45x45"
+														alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+											</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</dd>
+							<dd>
+								<span class="btn_mylist">나의 채팅</span>
+								<div class="my_list">
+									<ul>
+										<c:forEach items="${joinGroup }" var="joinGroup">
+											<li><a href=""> <span><img
+														src="http://placehold.it/45x45" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+													<b>${joinGroup.group.grname }</b>
+											</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</dd>
+							<dd>
+								<span class="btn_mylist">나의 캠핑장</span>
+								<div class="my_list">
+									<ul>
+										<c:forEach items="${bookMark }" var="bookMark">
+											<li><a href="${root }camp?canum=${bookMark.camp.canum}">
+													<span><img src="http://placehold.it/45x45"
+														alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
+											</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</dd>
+							<dd class="btn_logout">
+								<form>
+									<a href="${root}member/logout" class="btn_pop">로그아웃</a>
+								</form>
+							</dd>
+						</dl>
+					</div>
+				</c:if>
+				<button type="button" id="btnTop">
+					<em class="snd_only">맨 위로</em>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -108,27 +156,56 @@
 				<div class="info_box">
 					<dl>
 						<dt class="pf_tit">
-							<a class="pf_name" href="${root }group/?grnum=${detail.grnum}&pronum=${detail.pronum}"><b>${detail.grname }</b></a>
-							<!-- 캠핑장 공식그룹일 경우 { -->
-							<span class="gp_official"></span>
-							<!-- } 캠핑장 공식그룹일 경우 -->
-							<!-- 그룹페이지일 경우 신고하기 { -->
-							<a href="${root }group/gp_report" class="pf_opt btn_pop btn_report"><em class="snd_only">신고하기</em></a>
-							<!-- } 그룹페이지일 경우 신고하기 -->
+							<a class="pf_name"
+								href="">
+								<b>${detail.grname }</b>
+							</a>
+							<c:if test="${detail.grventure eq 2 }">
+								<span class="gp_official"></span>
+							</c:if>
+							<c:if test="${login.pronum ne detail.pronum }">
+								<a href="${root }group/gp_report"
+									class="pf_opt btn_pop btn_report"> <em class="snd_only">신고하기</em>
+								</a>
+							</c:if>
 						</dt>
-						<dd class="pf_intro">안녕하세요 ㅇㅇㅇ입니다. 그룹 소개글을 입력해주세요. 그룹 소개글을 입력해주세요.</dd>
+						<dd class="pf_intro">${detail.grintro }
 						<dd class="pf_hashtag">
-							<a href="">해시태그</a>
-							<a href="">해시태그</a>
-							<a href="">해시태그</a>
+							<c:choose>
+								<c:when
+									test="${empty detail.httitle1 && empty detail.httitle2 && empty detail.httitle3}">
+								</c:when>
+								<c:when
+									test="${empty detail.httitle1 && empty detail.httitle3}">
+									<a href="">${detail.httitle2}</a>
+								</c:when>
+								<c:when
+									test="${empty detail.httitle2 && empty detail.httitle3}">
+									<a href="">${detail.httitle1}</a>
+								</c:when>
+								<c:when
+									test="${empty detail.httitle1 && empty detail.httitle2}">
+									<a href="">${detail.httitle3}</a>
+								</c:when>
+								<c:when test="${empty detail.httitle1}">
+									<a href="">${detail.httitle2}</a>
+									<a href="">${detail.httitle3}</a>
+								</c:when>
+								<c:otherwise>
+									<a href="">${detail.httitle1}</a>
+									<a href="">${detail.httitle2}</a>
+									<a href="">${detail.httitle3}</a>
+								</c:otherwise>
+							</c:choose>
 						</dd>
 						<dd class="gp_list">
-							<span>그룹장 : 고재현</span>
-							<a class="btn_pop btn_member" href="${root }group/member">멤버 : 33명</a>
-							<span>개설일 : 2020년 02월 03일</span>
+							<span>그룹장 : ${detail.profile.proname}</span> <a
+								class="btn_pop btn_member"
+								href="${root }group/member?grnum=${detail.grnum}">멤버 :
+								${detail.grtotal }명</a> <span>개설일 : ${detail.grdate }</span>
 						</dd>
 						<dd class="pf_picture">
-							<img src="http://placehold.it/120x120" alt="입돌아간다 그룹 썸네일">
+							<img src="http://placehold.it/120x120" alt="${detail.grname } 그룹 썸네일">
 						</dd>
 					</dl>
 				</div>
@@ -141,10 +218,10 @@
 				<!-- #비공개 시작 {  -->
 				<div class="readme_wrap">
 					<div>
-						<h3 class="set_tit">그룹 멤버에게만 공개된 페이지입니다.</h3>
+						<h3 class="set_tit">${detail.grname} 그룹 멤버에게만 공개된 페이지입니다.</h3>
 						<dl>
-							<dt><span>입돌아간다</span> 그룹에 가입해보세요!</dt>
-							<dd>안녕하세요. ㅇㅇㅇ입니다. 그룹 소개글을 입력해주세요. 그룹 소개글을 입력해주세요.</dd>
+							<dt><span>${detail.grname }</span> 그룹에 가입해보세요!</dt>
+							<dd>${detail.grintro} </dd>
 						</dl>
 						<p class="comm_buttons">
 						   <button class="btn_pop comm_btn cfm" data-layer="gpJoin">가입 신청하기</button>
@@ -262,17 +339,54 @@
 		</div>
 		<form class="comm_form">
 			<div class="ip_box">
-				<input type="text" id="festa1" name="" required="required">
+				<input type="text" id="grsayone" name="" required="required">
 				<label for="festa1" class="comm_label"><span>(필수)</span> <span>가입신청 동기 또는 </span>하고싶은 말<span>을 입력해주세요.</span></label>
 			</div>
 			<div class="btn_box">
 				<ul class="comm_buttons">
 					<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-					<li><button type="button" class="comm_btn sbm">신청하기</button></li>
+					<li><button type="button" id="request" class="btn_close comm_btn cfm" data-layer="hello">신청하기</button></li>
 				</ul>
 			</div>
 		</form>
 	</div>
 </div>
+
+	<div id="hello" class="fstPop">
+		<div class="out_wrap pop_wrap">
+			<h3 class="pop_tit">그룹에 가입하시겠습니까?</h3>
+			<input type="hidden" id="grtotal" value="">
+			<input type="hidden" id="grnum" value="">
+			<div class="btn_box">
+				<ul class="comm_buttons">
+					<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
+					<li><button type="button" id="hi" class="btn_close comm_btn cfm">확인</button></li>
+				</ul>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<em class="snd_only">창 닫기</em>
+		</button>
+	</div>
+	
+	<!-- #팝업 처리완료 { -->
+	<div id="ok" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">가입 신청이 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="success" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- #팝업 처리실패 { -->
+	<div id="fail" class="fstPop">
+		<div class="confirm_wrap pop_wrap"> 
+			<p class="pop_tit">내용을 다시 확인해주세요.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="failed" class="btn_close ok comm_btn cfm" >확인</button></li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>

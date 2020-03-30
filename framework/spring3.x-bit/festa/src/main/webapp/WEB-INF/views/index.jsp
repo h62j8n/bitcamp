@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,6 +20,11 @@
 <title>FESTA</title>
 </head>
 <body>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
+</c:if>
 	<div id="wrap">
 		<div id="header">
 			<div class="scrX">
@@ -32,7 +39,7 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}camp/">캠핑정보</a></li>
 						<li><a href="${root}hot/">인기피드</a></li>
 						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
@@ -55,45 +62,46 @@
 									<b>${login.proname }님 환영합니다.</b>
 								</dt>
 								<dd>
-									<span class="btn_mylist">나의 그룹</span>
-									<div class="my_list">
-										<ul>
-											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-												</a></li>
-											</c:forEach>
-										</ul>
-									</div>
-								</dd>
-								<dd>
-									<span class="btn_mylist">나의 채팅</span>
-									<div class="my_list">
-										<ul>
-											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a href=""> <span><img
-															src="http://placehold.it/45x45" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
-												</a></li>
-											</c:forEach>
-										</ul>
-									</div>
-								</dd>
-								<dd>
-									<span class="btn_mylist">나의 캠핑장</span>
-									<div class="my_list">
-										<ul>
-											<c:forEach items="${bookMark }" var="bookMark">
-												<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
-												</a></li>
-											</c:forEach>
-										</ul>
-									</div>
-								</dd>
+		                           <span class="btn_mylist">나의 그룹</span>
+		                           <div class="my_list">
+		                              <ul>
+		                                 <c:forEach items="${joinGroup }" var="joinGroup">
+		                                    <li><a
+		                                       href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+		                                          <span><img src="${upload }/${joinGroup.group.grphoto}"
+		                                             alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+		                                    </a></li>
+		                                 </c:forEach>
+		                              </ul>
+		                           </div>
+		                        </dd>
+		                        <dd>
+		                           <span class="btn_mylist">나의 채팅</span>
+		                           <div class="my_list">
+		                              <ul>
+		                                 <c:forEach items="${joinGroup }" var="joinGroup">
+		                                    <li><a href=""> <span><img
+		                                             src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+		                                          <b>${joinGroup.group.grname }</b>
+		                                    </a></li>
+		                                 </c:forEach>
+		                              </ul>
+		                           </div>
+		                        </dd>
+		                        <dd>
+		                           <span class="btn_mylist">나의 캠핑장</span>
+		                           <div class="my_list">
+		                              <ul>
+		                                 <c:forEach items="${bookMark }" var="bookMark">
+		                                 <c:set var="image" value="${fn:substringBefore(bookMark.camp.caphoto,',') }"/>
+		                                    <li><a href="${root }camp/detail?canum=${bookMark.camp.canum}">
+		                                          <span><img src="${upload }/${image}"
+		                                             alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
+		                                    </a></li>
+		                                 </c:forEach>
+		                              </ul>
+		                           </div>
+		                        </dd>
 								<dd class="btn_logout">
 									<form>
 										<a href="${root}member/logout" class="btn_pop">로그아웃</a>
@@ -130,10 +138,18 @@
 					</h2>
 					<ul class="group_list">
 						<c:forEach items="${grouplist }" var="grouplist">
-						<li><a class="gp_thumb" href="${root }group?grnum=${grouplist.grnum}"> <img
-								src="http://placehold.it/110x110" alt="입돌아간다 그룹 썸네일">
-						</a> <a class="gp_text" href="${root }group?grnum=${grouplist.grnum}"> <strong>${grouplist.grname }</strong> <span>${grouplist.grintro }</span>
-						</a></li>
+							<c:if test="${login ne null }">
+								<li><a class="gp_thumb" href="${root }group/?grnum=${grouplist.grnum}&pronum=${login.pronum}"> 
+								<img src="${upload }/${grouplist.grphoto}" alt="${grouplist.grname } 그룹 썸네일">
+								</a> <a class="gp_text" href="${root }group/?grnum=${grouplist.grnum}&pronum=${login.pronum}"> <strong>${grouplist.grname }</strong> <span>${grouplist.grintro }</span>
+								</a></li>
+							</c:if>
+							<c:if test="${login eq null }">
+								<li><a class="gp_thumb" href="${root }group/?grnum=${grouplist.grnum}"> 
+								<img src="${upload }/${grouplist.grphoto}" alt="${grouplist.grname } 그룹 썸네일">
+								</a> <a class="gp_text" href="${root }group/?grnum=${grouplist.grnum}"> <strong>${grouplist.grname }</strong> <span>${grouplist.grintro }</span>
+								</a></li>
+							</c:if>
 						</c:forEach>
 					</ul>
 				</div>
@@ -148,11 +164,12 @@
 						<c:forEach items="${camplist }" var="camplist">
 							<dl class="swiper-slide">
 								<dt>
-									<span><img src="http://placehold.it/492x223"
-										alt="바다애캠핑장 썸네일"></span>
+									 <c:set var="image" value="${fn:substringBefore(camplist.caphoto,',') }"/>
+									<span><img src="${upload }/${image}"
+										alt="${camplist.caname } 썸네일"></span>
 								</dt>
 								<dd>
-									<a href="${root }camp?canum=${camplist.canum}" class="txtbox"> <strong>${camplist.caname }</strong> <span>${camplist.caaddrsel }</span> 
+									<a href="${root }camp/detail?canum=${camplist.canum}" class="txtbox"> <strong>${camplist.caname }</strong> <span>${camplist.caaddrsel }</span> 
 									<b class="cp_liked">${camplist.cagood }</b>
 									</a>
 								</dd>

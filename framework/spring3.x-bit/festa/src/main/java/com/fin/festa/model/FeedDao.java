@@ -14,11 +14,11 @@ public interface FeedDao {
 	
 	List<FeedVo> hotGroupFeedSelectAll();
 	
-	List<GroupCommentVo> hotGroupCommentSelectAll(GroupPostVo grouppost);
+	List<GroupCommentVo> hotGroupCommentSelectAll(FeedVo feed);
 	
 	List<FeedVo> hotMyFeedSelectAll();
 	
-	List<MyCommentVo> hotMyCommentSelectAll(MyPostVo post);
+	List<MyCommentVo> hotMyCommentSelectAll(FeedVo feed);
 	
 	void myFeedCmmtInsertOne(MyCommentVo cmmt);
 	
@@ -59,4 +59,8 @@ public interface FeedDao {
 	List<MyGoodVo> myGoodRenewal(MyGoodVo good);
 	
 	int feedReportCountUpdate(ReportListVo report);
+	
+	List<GroupCommentVo> groupFeedCmmtMore(GroupPostVo grouppost);
+	
+	List<MyCommentVo> myFeedCmmtMore(MyPostVo mypost);
 }

@@ -33,9 +33,9 @@ public class FeedDaoImpl implements FeedDao{
 
 	//인기그룹피드 댓글출력
 	@Override
-	public List<GroupCommentVo> hotGroupCommentSelectAll(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<GroupCommentVo> hotGroupCommentSelectAll(FeedVo feed) {
+
+		return sqlSession.selectList("feed.hotGroupCommentList", feed);
 	}
 	
 	//인기개인피드 출력
@@ -47,11 +47,25 @@ public class FeedDaoImpl implements FeedDao{
 	
 	//인기개인피드 댓글출력
 	@Override
-	public List<MyCommentVo> hotMyCommentSelectAll(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<MyCommentVo> hotMyCommentSelectAll(FeedVo feed) {
+		
+		return sqlSession.selectList("feed.hotMyCommentList", feed);
 	}
 
+	//인기그룹피드 댓글더보기
+	@Override
+	public List<GroupCommentVo> groupFeedCmmtMore(GroupPostVo grouppost) {
+		
+		return sqlSession.selectList("feed.groupFeedCmmtMore", grouppost);
+	}
+
+	//인기개인피드 댓글더보기
+	@Override
+	public List<MyCommentVo> myFeedCmmtMore(MyPostVo mypost) {
+		
+		return sqlSession.selectList("feed.myFeedCmmtMore", mypost);
+	}
+	
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////피드,댓글 수정,등록,삭제/////////////////////////
 	//////////////////////////////////////////////////////////////////////
@@ -59,43 +73,43 @@ public class FeedDaoImpl implements FeedDao{
 	//인기개인피드 댓글등록
 	@Override
 	public void myFeedCmmtInsertOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.myFeedCmmtInsert", cmmt);
 	}
 
 	//인기그룹피드 댓글등록
 	@Override
 	public void groupFeedCmmtInsertOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.groupFeedCmmtInsert", groupcmmt);
 	}
 
 	//인기개인피드 댓글삭제
 	@Override
 	public int myFeedCmmtDeleteOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.myFeedCmmtDelete", cmmt);
 	}
 
 	//인기그룹피드 댓글삭제
 	@Override
 	public int groupFeedCmmtDeleteOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.groupFeedCmmtDelete", groupcmmt);
 	}
 	
 	//인기개인피드 삭제
 	@Override
 	public int myFeedDeleteOne(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.myFeedDelete", post);
 	}
 
 	//인기그룹피드 삭제
 	@Override
 	public int GroupFeedDeleteOne(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.groupFeedDelete", grouppost);
 	}
 
 	//인기개인피드 수정
@@ -119,64 +133,64 @@ public class FeedDaoImpl implements FeedDao{
 	//인기개인피드 좋아요등록
 	@Override
 	public void myFeedLikeInsertOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.myFeedLikeInsert", good);
 	}
 	
 	//인기그룹피드 좋아요등록
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.groupFeedLikeInsert", good);
 	}
 
 	//인기개인피드 좋아요해제
 	@Override
 	public int myFeedLikeDeleteOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.myFeedLikeDelete", good);
 	}
 	
 	//인기그룹피드 좋아요해제
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.delete("feed.groupFeedLikeDelete", good);
 	}
 	
 	//인기개인피드 좋아요등록시 개인피드좋아요 갯수 +1
 	@Override
 	public int myFeedLikeOnePlus(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return sqlSession.update("feed.myFeedLikeOnePlus", post);
 	}
 
 	//인기그룹피드 좋아요등록시 그룹피드좋아요 갯수+1
 	@Override
 	public int groupFeedLikeOnePlus(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("feed.groupFeedLikeOnePlus", grouppost);
 	}
 
 	//인기개인피드 좋아요해제시 개인피드좋아요 갯수 -1
 	@Override
 	public int myFeedLikeOneMinus(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("feed.myFeedLikeOneMinus", post);
 	}
 
 	//인기그룹피드 좋아요해제시 그룹피드좋아요 갯수 -1
 	@Override
 	public int groupFeedLikeOneMinus(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("feed.groupFeedLikeOneMinus", grouppost);
 	}
 
 	//내 좋아요목록 갱신
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sqlSession.selectList("feed.myGoodRenewal", good);
 	}
 	
 	//////////////////////////////////////////////////////////////////////
@@ -186,24 +200,24 @@ public class FeedDaoImpl implements FeedDao{
 	//인기개인피드 신고등록
 	@Override
 	public void myFeedReportInsertOne(ReportListVo report) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.myFeedReportInsert", report);
 	}
 	
 	//인기그룹피드 신고등록
 	@Override
 	public void groupFeedReportInsertOne(ReportListVo report) {
-		// TODO Auto-generated method stub
-		
+
+		sqlSession.insert("feed.groupFeedReportInsert", report);
 	}
 
 	//해당 신고당한유저 신고당한횟수 +1
 	@Override
 	public int feedReportCountUpdate(ReportListVo report) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return sqlSession.update("feed.feedReportCountUpdate", report);
 	}
-	
+
 	
 
 }

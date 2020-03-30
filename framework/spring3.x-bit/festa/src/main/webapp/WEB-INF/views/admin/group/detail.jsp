@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -84,10 +86,10 @@
 							btn.hide();
 						}
 						comments.append('<li>'+
-								'<a href="" class="pf_picture">'+
-									'<img src="${root }resources/images/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">'+
+								'<a href="${root }admin/user/detail?pronum='+data[index].pronum+'" class="pf_picture">'+
+									'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일">'+
 								'</a><p class="cmt_content">'+
-									'<a href="" class="cmt_name">'+data[index].gcauthor+'</a>'+
+									'<a href="${root }admin/user/detail?pronum='+data[index].pronum+'" class="cmt_name">'+data[index].gcauthor+'</a>'+
 									data[index].gccontent+
 									'<span class="cmt_date">'+data[index].gcdate1+'</span>'+
 									'<button class="btn_pop btn_delete btn_cmmt dt" data-layer="delete" data-value="'+data[index].gcnum+'"><em class="snd_only">삭제하기</em></button></p>'+
@@ -164,9 +166,40 @@
 						</dt>
 						<dd class="pf_intro">${groupinfo.grintro }</dd>
 						<dd class="pf_hashtag">
-							<a href="">${groupinfo.httitle1 }</a>
-							<a href="">${groupinfo.httitle2 }</a>
-							<a href="">${groupinfo.httitle3 }</a>
+							<c:choose>
+								<c:when
+									test="${empty groupinfo.httitle1 && empty groupinfo.httitle2 && empty groupinfo.httitle3}">
+								</c:when>
+								<c:when
+									test="${empty groupinfo.httitle1 && empty groupinfo.httitle2}">
+									<a href="">${groupinfo.httitle3}</a>
+								</c:when>
+								<c:when
+									test="${empty groupinfo.httitle2 && empty groupinfo.httitle3}">
+									<a href="">${groupinfo.httitle1}</a>
+								</c:when>
+								<c:when
+									test="${empty groupinfo.httitle1 && empty groupinfo.httitle3}">
+									<a href="">${groupinfo.httitle2}</a>
+								</c:when>
+								<c:when test="${empty groupinfo.httitle1}">
+									<a href="">${groupinfo.httitle2}</a>
+									<a href="">${groupinfo.httitle3}</a>
+								</c:when>
+								<c:when test="${empty groupinfo.httitle2}">
+									<a href="">${groupinfo.httitle1}</a>
+									<a href="">${groupinfo.httitle3}</a>
+								</c:when>
+								<c:when test="${empty groupinfo.httitle3}">
+									<a href="">${groupinfo.httitle1}</a>
+									<a href="">${groupinfo.httitle2}</a>
+								</c:when>
+								<c:otherwise>
+									<a href="">${groupinfo.httitle1}</a>
+									<a href="">${groupinfo.httitle2}</a>
+									<a href="">${groupinfo.httitle3}</a>
+								</c:otherwise>
+							</c:choose>
 						</dd>
 						<dd class="gp_list">
 							<span>그룹장 : ${groupinfo.profile.proname }</span>
@@ -174,7 +207,8 @@
 							<span>개설일 : ${groupinfo.grdate }</span>
 						</dd>
 						<dd class="pf_picture">
-							<img src="http://placehold.it/120x120" alt="입돌아간다 그룹 썸네일">
+							<img src="${upload }/${groupinfo.grphoto}" alt="${groupinfo.grname } 그룹 썸네일">
+							<!-- <img src="http://placehold.it/120x120" alt="입돌아간다 그룹 썸네일"> -->
 						</dd>
 					</dl>
 				</div>
@@ -210,7 +244,7 @@
 								<dt>
 									<a href="${root }admin/user/detail?pronum=${groupfeed.pronum}">
 										<input type="hidden" value="${groupfeed.gpnum }">
-										<span class="pf_picture"><img src="http://placehold.it/55x55" alt="김덕수님의 프로필 썸네일"></span>
+										<span class="pf_picture"><img src="${upload }/${groupfeed.profile.prophoto}" alt="${groupfeed.profile.proname }님의 프로필 썸네일"></span>
 										<span class="fd_name">${groupfeed.gpauthor }</span>
 									</a>
 									<a href="${root }admin/group/detail?grnum=${groupinfo.grnum}">
@@ -230,9 +264,40 @@
 							<div class="scrBar">
 								<div class="feed_content">
 									<ul class="fd_hashtag">
-										<li><a href="">${groupfeed.httitle1 }</a></li>
-										<li><a href="">${groupfeed.httitle2 }</a></li>
-										<li><a href="">${groupfeed.httitle3 }</a></li>
+										<c:choose>
+											<c:when
+												test="${empty groupfeed.httitle1 && empty groupfeed.httitle2 && empty groupfeed.httitle3}">
+											</c:when>
+											<c:when
+												test="${empty groupfeed.httitle1 && empty groupfeed.httitle2}">
+												<li><a href="">${groupfeed.httitle3}</a></li>
+											</c:when>
+											<c:when
+												test="${empty groupfeed.httitle2 && empty groupfeed.httitle3}">
+												<li><a href="">${groupfeed.httitle1}</a></li>
+											</c:when>
+											<c:when
+												test="${empty groupfeed.httitle1 && empty groupfeed.httitle3}">
+												<li><a href="">${groupfeed.httitle2}</a></li>
+											</c:when>
+											<c:when test="${empty groupfeed.httitle1}">
+												<li><a href="">${groupfeed.httitle2}</a></li>
+												<li><a href="">${groupfeed.httitle3}</a></li>
+											</c:when>
+											<c:when test="${empty groupfeed.httitle2}">
+												<li><a href="">${groupfeed.httitle1}</a></li>
+												<li><a href="">${groupfeed.httitle3}</a></li>
+											</c:when>
+											<c:when test="${empty groupfeed.httitle3}">
+												<li><a href="">${groupfeed.httitle1}</a></li>
+												<li><a href="">${groupfeed.httitle2}</a></li>
+											</c:when>
+											<c:otherwise>
+												<li><a href="">${groupfeed.httitle1}</a></li>
+												<li><a href="">${groupfeed.httitle2}</a></li>
+												<li><a href="">${groupfeed.httitle3}</a></li>
+											</c:otherwise>
+										</c:choose>
 									</ul>
 									<p class="fd_content">${groupfeed.gpcontent }</p>
 								</div>
@@ -245,7 +310,7 @@
 										<li>
 											<!-- # 프로필 이미지 없음 { -->
 											<a href="${root }admin/user/detail?pronum=${groupcmmt.pronum}" class="pf_picture">
-												<img src="${root }resources/upload/thumb/no_profile.png" alt="김진혁님의 프로필 썸네일">
+												<img src="${upload }/${groupcmmt.profile.prophoto}" alt="${groupcmmt.profile.proname }님의 프로필 썸네일">
 											</a>
 											<!-- } # 프로필 이미지 없음 -->
 											<p class="cmt_content">
@@ -274,15 +339,12 @@
 						<div class="img box">
 							<div class="thumb_slide">
 								<div class="swiper-wrapper">
-									<div class="swiper-slide">
-										<img src="http://placehold.it/290x290" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="http://placehold.it/290x290" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="http://placehold.it/290x290" alt="">
-									</div>
+									<c:set var="feedphoto" value="${groupfeed.gpphoto }" />
+									<c:forTokens items="${feedphoto }" delims="," var="item">
+										<div class="swiper-slide">
+											<img src="${upload }/${item }" alt="">
+										</div>
+									</c:forTokens>
 								</div>
 								<div class="swiper-pagination"></div>
 							</div>

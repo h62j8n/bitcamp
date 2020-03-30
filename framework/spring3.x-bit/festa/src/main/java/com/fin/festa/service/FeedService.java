@@ -1,8 +1,11 @@
 package com.fin.festa.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
@@ -23,9 +26,13 @@ public interface FeedService {
 		
 		void hotLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo);
 		
-		void hotFeedReport(Model model, ReportListVo reportListVo);
+		void hotFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 		
 		void hotFeedUpdateOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
 		
 		void hotFeedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
+		
+		List<GroupCommentVo> groupFeedCmmtMore(Model model, GroupPostVo groupPostVo);
+		
+		List<MyCommentVo> myFeedCmmtMore(Model model, MyPostVo myPostVo);
 }

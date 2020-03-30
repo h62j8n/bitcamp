@@ -22,17 +22,34 @@
 		<div class="scrX">
 			<div class="container">
 				<h1>
-					<a href="${root }"><em class="snd_only">FESTA</em></a>
+					<c:choose>
+						<c:when test="${login.proid eq 'admin@festa.com' }">
+							<a href="${root }admin/"><em class="snd_only">FESTA</em></a>
+						</c:when>
+						<c:otherwise>
+							<a href="${root }"><em class="snd_only">FESTA</em></a>
+						</c:otherwise>
+					</c:choose>
 				</h1>
 				<form class="search_box">
 					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
 					<button type="submit"><img src="${root }resources/images/ico/btn_search.png" alt="검색"></button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root }camp">캠핑정보</a></li>
-					<li><a href="${root }hot">인기피드</a></li>
-					<li><a href="${root }news">뉴스피드</a></li>
-					<li><a href="${root }member/login" class="btn_pop">로그인</a></li>
+					<li><a href="${root }camp/">캠핑정보</a></li>
+					<li><a href="${root }hot/">인기피드</a></li>
+					<li><a href="${root }news/">뉴스피드</a></li>
+					<c:if test="${login eq null }">
+						<li><a href="${root }member/login" class="btn_pop">로그인</a></li>
+					</c:if>
+					<c:if test="${login ne null }">
+						<c:if test="${login.proid ne 'admin@festa.com' }">
+							<li><a href="${root}user/">마이페이지</a></li>
+						</c:if>
+						<c:if test="${login.proid eq 'admin@festa.com' }">
+							<li><a href="${root}admin/">관리자</a></li>
+						</c:if>
+					</c:if>
 				</ul>
 				<button type="button" id="btnTop"><em class="snd_only">맨 위로</em></button>
 			</div>

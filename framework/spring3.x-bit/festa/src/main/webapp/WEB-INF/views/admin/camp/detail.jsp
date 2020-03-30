@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -199,9 +201,40 @@
 						<h3><span>${campdetail.caaddrsel }</span> ${campdetail.caname }</h3>
 						<p class="cp_subtit">${campdetail.caintroone }</p>
 						<ul class="cp_hashtag">
-							<li><a href="">${campdetail.httitle1 }</a></li>
-							<li><a href="">${campdetail.httitle2 }</a></li>
-							<li><a href="">${campdetail.httitle3 }</a></li>
+							<c:choose>
+								<c:when
+									test="${empty campdetail.httitle1 && empty campdetail.httitle2 && empty campdetail.httitle3}">
+								</c:when>
+								<c:when
+									test="${empty campdetail.httitle1 && empty campdetail.httitle2}">
+									<li><a href="">${campdetail.httitle3}</a></li>
+								</c:when>
+								<c:when
+									test="${empty campdetail.httitle2 && empty campdetail.httitle3}">
+									<li><a href="">${campdetail.httitle1}</a></li>
+								</c:when>
+								<c:when
+									test="${empty campdetail.httitle1 && empty campdetail.httitle3}">
+									<li><a href="">${campdetail.httitle2}</a></li>
+								</c:when>
+								<c:when test="${empty campdetail.httitle1}">
+									<li><a href="">${campdetail.httitle2}</a></li>
+									<li><a href="">${campdetail.httitle3}</a></li>
+								</c:when>
+								<c:when test="${empty campdetail.httitle2}">
+									<li><a href="">${campdetail.httitle1}</a></li>
+									<li><a href="">${campdetail.httitle3}</a></li>
+								</c:when>
+								<c:when test="${empty campdetail.httitle3}">
+									<li><a href="">${campdetail.httitle1}</a></li>
+									<li><a href="">${campdetail.httitle2}</a></li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="">${campdetail.httitle1}</a></li>
+									<li><a href="">${campdetail.httitle2}</a></li>
+									<li><a href="">${campdetail.httitle3}</a></li>
+								</c:otherwise>
+							</c:choose>
 						</ul>
 						<ul class="cp_options">
 							<li>
@@ -220,15 +253,12 @@
 					<h4 class="snd_only">캠핑장 사진</h4>
 					<div class="thumb_slide">
 						<div class="swiper-wrapper">
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
-							<div class="swiper-slide">
-								<img src="http://placehold.it/720x380" alt="">
-							</div>
+							<c:set var="caphoto" value="${campdetail.caphoto }" />
+							<c:forTokens items="${caphoto }" delims="," var="item">
+								<div class="swiper-slide">
+									<img src="${upload }/${item }" alt="">
+								</div>
+							</c:forTokens>
 						</div>
 						<div class="swiper-pagination"></div>
 					</div>
@@ -250,13 +280,13 @@
 							<li class="fstEmpty">등록된 시설 안내 사항이 없습니다</li>
 						</c:when>
 						<c:otherwise>
-							<li>${campdetail.caguide1 }</li>
-							<li>${campdetail.caguide2 }</li>
-							<li>${campdetail.caguide3 }</li>
-							<li>${campdetail.caguide4 }</li>
-							<li>${campdetail.caguide5 }</li>
-							<li>${campdetail.caguide6 }</li>
-							<li>${campdetail.caguide7 }</li>
+							<c:if test="${!empty campdetail.caguide1 }"><li>${campdetail.caguide1 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide2 }"><li>${campdetail.caguide2 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide3 }"><li>${campdetail.caguide3 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide4 }"><li>${campdetail.caguide4 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide5 }"><li>${campdetail.caguide5 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide6 }"><li>${campdetail.caguide6 }</li></c:if>
+							<c:if test="${!empty campdetail.caguide7 }"><li>${campdetail.caguide7 }</li></c:if>
 						</c:otherwise>
 					</c:choose>
 					</ol>
@@ -282,8 +312,9 @@
 						<c:forEach items="${campreview }" var="campreview">
 							<li>
 								<!-- # 프로필 이미지 없음 { -->
-								<a class="pf_picture" href="">
-									<img src="${root }resources/upload/thumb/no_profile.png" alt="김덕수님의 프로필 썸네일">
+								<a class="pf_picture" href="${root }admin/user/detail?pronum=${campreview.pronum}">
+									<c:set var="crphoto" value="${campreview.profile.prophoto }" />
+									<img src="${upload }/${crphoto}" alt="${campreview.profile.proname }님의 프로필 썸네일">
 								</a>
 								<!-- } # 프로필 이미지 없음 -->
 								<p class="rt_option">

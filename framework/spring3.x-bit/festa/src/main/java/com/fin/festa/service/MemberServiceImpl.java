@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -103,17 +104,44 @@ public class MemberServiceImpl implements MemberService {
 
 	// 아이디찾기
 	@Override
-	public void findId(Model model, LoginVo loginVo) {
-		// TODO Auto-generated method stub
-
+	public ProfileVo findId(Model model, LoginVo loginVo) {
+		StringBuffer sb = new StringBuffer(loginVo.getProidnum());
+		sb.insert(4,"년");
+		sb.insert(7, "월");
+		String proidnum = sb.toString();
+		proidnum +="일";
+		loginVo.setProidnum(proidnum);
+		
+		ProfileVo profile = memberDao.findId(loginVo);
+		return profile;
 	}
 
 	// 비밀번호찾기
-	// 비밀번호 재설정
 	@Override
-	public void findPw(Model model, LoginVo loginVo) {
-		// TODO Auto-generated method stub
-
+	public ProfileVo findPw(Model model, LoginVo loginVo) {
+		StringBuffer sb = new StringBuffer(loginVo.getProidnum());
+		sb.insert(4,"년");
+		sb.insert(7, "월");
+		String proidnum = sb.toString();
+		proidnum +="일";
+		loginVo.setProidnum(proidnum);
+		ProfileVo profile = memberDao.findPw(loginVo);
+		
+		if(profile.getProid().contentEquals(loginVo.getId()) && profile.getProidnum().equals(loginVo.getProidnum())) {
+			memberDao.pwUpdate(profile);
+			return profile;
+		}
+		else {
+			return null;
+		}
+	}
+	//비밀번호 재설정
+	@Override
+	public String updatePw(Model model,ProfileVo profile) {
+		System.out.println(profile.getPronum());
+		System.out.println(profile.getPropw());
+		memberDao.pwUpdate(profile);
+		return "index";
 	}
 
 }
