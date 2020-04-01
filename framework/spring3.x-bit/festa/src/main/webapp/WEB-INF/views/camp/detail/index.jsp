@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:url value="/" var="root"></c:url>
-<c:url value="/resources/upload" var="upload"></c:url>
+<c:url value="/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,19 +19,30 @@
 	<title>FESTA</title>
 	<script type="text/javascript">
 	$(function() {
-		var goBtn = $('.btn_go a');
 		var login = '${login.pronum ne null}';
-		
+		var goBtn = $('.btn_go a');
 		goBtn.on('click', function(e) {
 			if (login == 'false') {
 				openLayer(e, '${root}member/login');
 			}
 		});
-
+		$('.btn_report').on('click', function(e) {
+			openLayer(e, '${root}camp/detail/report?canum=${camp.canum}&profile.pronum=${camp.profile.pronum}&profile.proname=${camp.profile.proname}&profile.proid=${camp.profile.proid}');
+		});
 		var rvForm = $('.rate_form');
 		rvForm.on('submit', function(e) {
 			e.preventDefault();
-			rvUpdate();
+			var rvParam = {
+				'crauthor': $('[name=crauthor]').val(),
+				'crcontent': $('[name=crcontent]').val(),
+				'crgood': $('[name=crgood]:checked').val(),
+				'canum': $('[name=canum]').val(),
+				'camp.caavg': $('[name=caavg]').val(),
+				'pronum': $('[name=pronum]').val(),
+			};
+			$.post('${root}camp/detail/revadd', rvParam)
+				.done(refresh
+			);
 		});
 		
 		var alertText = $('#layer').find('.pop_tit');
@@ -41,26 +52,28 @@
 		var otherBtns = buttons.find('button').not('#confirmBtn');
 		var deleteVal;
 		var container = '.rateList';
-		$(document).on('click', '.btn_delete', function() {
-			console.log(otherBtns);
-			deleteVal = $(this).data('value');
+		
+		function cfmMessage() {
 			alertText.text('한줄평을 삭제하시겠습니까?');
 			confirmBtn.hide();
 			otherBtns.show();
-			openPop('layer', none, refresh);
+		}
+		$(document).on('click', '.btn_delete', function() {
+			openPop('layer', cfmMessage, refresh);
 		});
 		
+		function delMessage() {
+			alertText.text('삭제가 완료되었습니다.');
+			otherBtns.hide();
+			confirmBtn.show();
+		}
 		deleteBtn.on('click', function() {
+			deleteVal = $(this).data('value');
 			$.ajax({
 				type: 'POST',
 				url: '${root}/camp/detail/revdel?crnum='+deleteVal,
 				data: deleteVal,
-				success: function() {
-					alertText.text('삭제가 완료되었습니다.');
-					otherBtns.hide();
-					confirmBtn.show();
-					
-				},
+				success: delMessage,
 				error: function() {
 					alertText.text('올바른 방법으로 다시 시도해주세요.');
 					otherBtns.hide();
@@ -69,19 +82,6 @@
 			});
 		});
 	});
-	function rvUpdate() {
-		var rvParam = {
-			'crauthor': $('[name=crauthor]').val(),
-			'crcontent': $('[name=crcontent]').val(),
-			'crgood': $('[name=crgood]:checked').val(),
-			'canum': $('[name=canum]').val(),
-			'camp.caavg': $('[name=caavg]').val(),
-			'pronum': $('[name=pronum]').val(),
-		};
-		$.post('${root}camp/detail/revadd', rvParam)
-			.done(refresh
-		);
-	}
 	</script>
 </head>
 <body>
@@ -127,11 +127,26 @@
 							<span class="btn_mylist">나의 그룹</span>
 							<div class="my_list">
 								<ul>
-								<c:forEach items="${joinGroup }" var="joinGroup">
-									<li><a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
-												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-									</a></li>
-								</c:forEach>
+									<c:forEach items="${joinGroup }" var="joinGroup">
+									<c:choose>
+										<c:when test="${joinGroup.group.grphoto eq null }">
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${root }resources/upload/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:when>
+										<c:otherwise>
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:otherwise>
+									</c:choose>
+									</c:forEach>
 								</ul>
 							</div>
 						</dd>
@@ -192,14 +207,13 @@
 						<ul class="cp_options">
 							<li>
 								<b class="cp_liked">${camp.cagood}</b>
-								<button class="btn_liked"><em class="snd_only">하트</em></button>
-								<!-- 하트 누른 경우 {
 								<button class="btn_liked act"><em class="snd_only">하트</em></button>
-								} 하트 누른 경우 -->
 							</li>
 							<li><button class="btn_bookmark"><em class="snd_only">저장하기</em></button></li>
-							<li><a href="${root}/detail/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
-							<li><a class="btn_back" href="${root}camp/?caaddrsel="><em class="snd_only">목록으로</em></a></li>
+							<c:if test="${login.pronum ne null}">
+							<li><a href="${root}camp/detail/report" class="btn_report"><em class="snd_only">신고하기</em></a></li>
+							</c:if>
+							<li><a class="btn_back" href="${root}camp/"><em class="snd_only">목록으로</em></a></li>
 						</ul>
 						<ul class="cp_date">
 							<li>정보 등록일 ${camp.cadate}</li>
@@ -305,7 +319,7 @@
 				<div class="fstPage"><ul></ul></div>
 				<c:if test="${login.pronum ne null}">
 				<h4 class="snd_only">한줄평 작성</h4>
-				<form class="rate_form" action="${root}camp/detail/revadd" method="POST">
+				<form class="rate_form" method="POST" action="${root}camp/detail/revadd">
 					<input type="hidden" name="pronum" value="${profile.pronum}">
 					<input type="hidden" name="canum" value="${camp.canum}">
 					<input type="hidden" name="caavg" value="${camp.caavg}">
@@ -347,23 +361,23 @@
 				<div class="camp_slide"> 	
 					<div>
 						<ul class="camp_list swiper-wrapper">
-							<c:forEach items="${campList}" var="camp">
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-								<c:set var="image" value="${fn:substringBefore(camp.caphoto,',')}"></c:set>
+							<c:forEach items="${sameList}" var="same">
+							<li class="swiper-slide" data-canum="${same.canum}">
+								<a class="cp_thumb" href="${root}camp/detail?canum=${same.canum}&caaddrsel=${same.caaddrsel}">
+								<c:set var="image" value="${fn:substringBefore(same.caphoto,',')}"></c:set>
 								<c:choose>
-									<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${camp.caname}"></c:when>
-									<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
+									<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${same.caname}"></c:when>
+									<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${same.caname}"></c:otherwise>
 								</c:choose>
-									<b class="cp_liked">${camp.cagood}</b>
+									<b class="cp_liked">${same.cagood}</b>
 								</a>
-								<a class="cp_text" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}">
-									<b class="cp_name">${camp.caname}</b>
+								<a class="cp_text" href="${root}camp/detail?canum=${same.canum}&caaddrsel=${same.caaddrsel}">
+									<b class="cp_name">${same.caname}</b>
 									<span>
-										<b class="cp_loc">${camp.caaddrsel}</b>
-										<c:if test="${!empty camp.httitle1}">#${camp.httitle1}</c:if>
-										<c:if test="${!empty camp.httitle2}">#${camp.httitle2}</c:if>
-										<c:if test="${!empty camp.httitle3}">#${camp.httitle3}</c:if>
+										<b class="cp_loc">${same.caaddrsel}</b>
+										<c:if test="${!empty same.httitle1}">#${same.httitle1}</c:if>
+										<c:if test="${!empty same.httitle2}">#${same.httitle2}</c:if>
+										<c:if test="${!empty same.httitle3}">#${same.httitle3}</c:if>
 									</span>
 								</a>
 							</li>

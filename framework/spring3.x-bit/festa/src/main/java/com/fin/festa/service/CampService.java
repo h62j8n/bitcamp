@@ -3,6 +3,7 @@ package com.fin.festa.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.CampReviewVo;
 import com.fin.festa.model.entity.CampVo;
@@ -29,7 +30,9 @@ public interface CampService {
 		
 		void reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo);
 		
-		void reviewDeleteOne(Model model, CampReviewVo campReviewVo);
+		void reviewDeleteOne(CampReviewVo campReviewVo);
 		
-		void campReport(Model model, ReportListVo reportListVo);
+		void campReport(HttpServletRequest req, MultipartFile[] files, ReportListVo reportListVo);
+
+		void sameLocation(Model model, CampVo campVo);
 }

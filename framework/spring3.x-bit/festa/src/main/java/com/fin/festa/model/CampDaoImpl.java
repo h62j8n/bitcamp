@@ -79,6 +79,12 @@ public class CampDaoImpl implements CampDao{
 	public List<CampReviewVo> campReview(CampVo campVo) {
 		return sqlSession.selectList("camp.campReview", campVo);
 	}
+	
+	//해당캠핑장과 같은지역의 캠핑장목록 출력
+	@Override
+	public List<CampVo> sameLocationCamp(CampVo campVo) {
+		return sqlSession.selectList("camp.sameLocationCamp", campVo);
+	}
 
 	///////////////////////////////////////////////////////////////
 	/////////////////캠핑장한줄평 등록,삭제////////////////////////
@@ -148,16 +154,14 @@ public class CampDaoImpl implements CampDao{
 	
 	//캠핑장 신고등록
 	@Override
-	public void campReport(ReportListVo report) {
-		// TODO Auto-generated method stub
-		
+	public void campReport(ReportListVo reportListVo) {
+		sqlSession.insert("camp.campReport", reportListVo);
 	}
 
 	//캠핑장주인 신고당한횟수 +1
 	@Override
-	public int campReportCountUpdate(ReportListVo report) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campReportCountUpdate(ReportListVo reportListVo) {
+		return sqlSession.update("camp.campReportCountUpdate", reportListVo);
 	}
 
 	///////////////////////////////////////////////////////////////

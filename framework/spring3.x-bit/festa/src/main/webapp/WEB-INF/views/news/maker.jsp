@@ -2,6 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:url value="/" var="root"></c:url>
 <!DOCTYPE html>
+<script type="text/javascript">
+	var url = window.location.href;
+	if (url.indexOf('maker') > 0) location.href='${root}empty';
+</script>
 <!-- #피드 수정하기 -->
 <div class="feed_maker">
 	<h3>피드 만들기</h3>

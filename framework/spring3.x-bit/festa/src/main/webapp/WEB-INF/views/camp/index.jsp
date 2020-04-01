@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:url value="/" var="root"></c:url>
-<c:url value="/resources/upload" var="upload"></c:url>
+<c:url value="/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -97,11 +97,26 @@
 							<span class="btn_mylist">나의 그룹</span>
 							<div class="my_list">
 								<ul>
-								<c:forEach items="${joinGroup }" var="joinGroup">
-									<li><a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
-												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-									</a></li>
-								</c:forEach>
+									<c:forEach items="${joinGroup }" var="joinGroup">
+									<c:choose>
+										<c:when test="${joinGroup.group.grphoto eq null }">
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${root }resources/upload/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:when>
+										<c:otherwise>
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:otherwise>
+									</c:choose>
+									</c:forEach>
 								</ul>
 							</div>
 						</dd>

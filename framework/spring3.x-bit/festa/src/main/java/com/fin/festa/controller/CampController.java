@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.CampReviewVo;
 import com.fin.festa.model.entity.CampVo;
@@ -43,7 +44,7 @@ public class CampController {
 	@RequestMapping(value = "detail", method = RequestMethod.GET)
 	public String campSelectOne(Model model, CampVo campVo) {
 		campService.campSelectOne(model, campVo);
-		campService.campLocation(model, campVo);
+		campService.sameLocation(model, campVo);
 		return "camp/detail/index";
 	}
 	
@@ -80,20 +81,23 @@ public class CampController {
 	
 	//Ä·ÇÎÀå ÇÑÁÙÆò »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
 	@RequestMapping(value = "detail/revdel", method = RequestMethod.POST)
-	public String reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
-		campService.reviewDeleteOne(model, campReviewVo);
+	public String reviewDeleteOne(CampReviewVo campReviewVo) {
+		campService.reviewDeleteOne(campReviewVo);
 		return "camp/detail/index";
 	}
 
 	//Ä·ÇÎÀå ½Å°í (ÆË¾÷)
 	@RequestMapping(value = "detail/report", method = RequestMethod.GET)
-	public String campReport() {
+	public String campReport(Model model, CampVo campVo) {
+		model.addAttribute("campReport", campVo);
 		return "camp/detail/report";
 	}
 	
 	//Ä·ÇÎÀå ½Å°í (ÆË¾÷>ÆË¾÷ ³» ±â´É)
 	@RequestMapping(value = "detail/report", method = RequestMethod.POST)
-	public String campReport(Model model, ReportListVo reportListVo) {
+	public String campReport(HttpServletRequest req, MultipartFile[] files, ReportListVo reportListVo) {
+		campService.campReport(req, files, reportListVo);
+		System.out.println(reportListVo);
 		return "camp/detail/index";
 	}
 }

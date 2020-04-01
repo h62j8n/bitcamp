@@ -131,6 +131,10 @@
 		select count(*) from campreview where canum1=#{canum}
 	</select>
 	
+	<!-- 해당캠핑장과 같은 지역의 캠핑장목록 출력 -->
+	<select id="sameLocationCamp" parameterType="CampVo" resultMap="camp">
+		select a.* from camp a where canum!=1 and canum!=#{canum} and caaddrsel like concat('%',#{caaddrsel},'%') order by cagood desc
+	</select>
 	<!-- 캠핑장상세 화면출력 end -->
 	<!-- 캠핑장한줄평 등록,삭제 start -->
 	

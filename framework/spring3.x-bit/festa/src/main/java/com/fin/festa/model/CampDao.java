@@ -26,6 +26,8 @@ public interface CampDao {
 	
 	List<CampReviewVo> campReview(CampVo campVo);
 	
+	List<CampVo> sameLocationCamp(CampVo campVo);
+	
 	int campReviewCount(CampVo campVo);
 	
 	void campReviewInsert(CampReviewVo campReviewVo);
@@ -42,7 +44,7 @@ public interface CampDao {
 	
 	int campLikeOneMinus(CampVo camp);
 	
-	void campReport(ReportListVo report);
+	void campReport(ReportListVo reportListVo);
 	
 	void campBookMarkInsert(MyBookMarkVo bookMark);
 	
@@ -52,5 +54,5 @@ public interface CampDao {
 	
 	List<MyBookMarkVo> myboodRenewal(MyBookMarkVo bookMark);
 	
-	int campReportCountUpdate(ReportListVo report);
+	int campReportCountUpdate(ReportListVo reportListVo);
 }

@@ -4,7 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.CampDaoImpl;
 import com.fin.festa.model.entity.CampReviewVo;
@@ -14,6 +16,7 @@ import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.util.CampAvg;
+import com.fin.festa.util.UploadPhoto;
 
 @Service
 public class CampServiceImpl implements CampService{
@@ -60,7 +63,11 @@ public class CampServiceImpl implements CampService{
 			campVo.getPageSearch().setTotalCount2(campReviewCount);				// 한줄평 페이지 총 로우갯수
 			model.addAttribute("campReviewList", campDao.campReview(campVo));	// 한줄평 출력
 		}
-		
+	}
+	
+	@Override
+	public void sameLocation(Model model, CampVo campVo) {
+		model.addAttribute("sameList", campDao.sameLocationCamp(campVo));
 	}
 
 	//캠핑장 좋아요등록
@@ -99,32 +106,45 @@ public class CampServiceImpl implements CampService{
 
 	//한줄평 등록
 	//한줄평 등록시 캠핑장 평점업데이트
+	@Transactional
 	@Override
 	public void reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo) {
 		campDao.campReviewInsert(campReviewVo);
-		System.out.println(campReviewVo.toString());
-//		System.out.println(campReviewVo.getCrgood());
 		CampAvg avg = new CampAvg();
 		avg.avgCalculate(campReviewVo);
-//		System.out.println(avg.avgCalculate(campReviewVo));
 		campDao.campAvgUpdate(campReviewVo);
-		
 	}
 
 	//한줄평 삭제
 	@Override
-	public void reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
+	public void reviewDeleteOne(CampReviewVo campReviewVo) {
 		campDao.campReviewDelete(campReviewVo);
 	}
 
 	//해당 캠핑장 신고
 	//캠핑장주인 신고당한횟수 +1
+	@Transactional
 	@Override
-	public void campReport(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
+	public void campReport(HttpServletRequest req, MultipartFile[] files, ReportListVo reportListVo) {
+		UploadPhoto up = new UploadPhoto();
+		String rlphoto = up.upload(files, req, reportListVo);
+		reportListVo.setRlphoto(rlphoto);
 		
+		//기타버튼눌렀다가 다른거 체크하고 넘어온경우 다른거 체크값으로 대체
+		String rlreport = reportListVo.getRlreport();
+		String[] report = rlreport.split(",");
+		if(report.length>1) {
+			if(report[0].equals("기타")) {
+				rlreport = report[1];
+			}else {
+				rlreport = report[0];
+			}
+		}else {
+			rlreport=rlreport.substring(0, rlreport.length()-1);
+		}
+		reportListVo.setRlreport(rlreport);
+		
+		campDao.campReport(reportListVo);
+		campDao.campReportCountUpdate(reportListVo);
 	}
-
-
-
 }
