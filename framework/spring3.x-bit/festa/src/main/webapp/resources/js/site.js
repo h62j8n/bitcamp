@@ -93,7 +93,7 @@ function myListOff() {
 }
 /* } #나의 메뉴 (상단 더보기) */
 /* #썸네일슬라이드 { */
-function commSlider(w, h) {
+function commSlider() {
 	var swiper = new Swiper('.thumb_slide', {
 		pagination: {
 			el: '.swiper-pagination',
@@ -103,8 +103,6 @@ function commSlider(w, h) {
 		preventClicks: false,
 		allowTouchMove: false,
 	});
-	var images = $('.thumb_slide').find('img');
-	imgTrim(images, w, h);
 }
 /* } #썸네일슬라이드 */
 /* #피드 { */
@@ -116,20 +114,17 @@ function feedType(target) {
 			$(this).addClass('half');
 		}
 	});
-
 	commSlider(290);
-
-	$('.rc_thumb').each(function() {
-		var w = $(this).width(),
-			images = $(this).find('img');
-		imgTrim(images, w);
-	});
 }
 /* } #피드 */
 
 var layerCnt = 0;
 var popCloseBtn = '<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>';
 var popSpiner = '<p id="fstLoad"><i class="xi-spinner-5 xi-spin"></i></p>';
+function refresh() {
+	location.reload();
+}
+function none() {}
 /* #레이어 팝업 { */
 function btnPop(button) {
 	$(document).on('click', '.'+button, function(e) {
@@ -139,15 +134,13 @@ function btnPop(button) {
 			var layer = $(this).data('layer');
 			openPop(layer);
 		} else {
-			openLayer(e, url, none, none);
+			openLayer(e, url);
 		}
 	});
 }
-function refresh() {
-	location.reload();
-}
-function none() {}
-function openPop(layer, open, close) {
+function openPop(layer, open, close, content) {
+	var methods3 = arguments.length == 3;
+	var methods4 = arguments.length == 4;
 	layerCnt++;
 	var layer = $('#'+layer);
 	layer.addClass('pop'+layerCnt);
@@ -158,18 +151,22 @@ function openPop(layer, open, close) {
 		onOpen: function() {
 			$('#fstLoad').remove();
 			$(this).append(popCloseBtn);
-			open();
+			if (methods3) open();
 		},
 		onClose: function() {
 			layer.removeClass('pop'+layerCnt);
 			layerCnt--;
-			close();
+			if (methods3) close();
 		},
 	}, function() {
+		popSquare();
 		$('#fstLoad').remove();
+		if (methods4) content();
 	});
 }
-function openLayer(e, url, open, close) {
+function openLayer(e, url, open, close, content) {
+	var methods4 = arguments.length == 4;
+	var methods5 = arguments.length == 5;
 	e.preventDefault();
 	layerCnt++;
 	var url = url;
@@ -182,15 +179,17 @@ function openLayer(e, url, open, close) {
 		loadUrl: url,
 		onOpen: function() {
 			$(this).append(popSpiner);
-			open();
+			if (methods4) open();
 		},
 		onClose: function() {
 			$(this).remove();
 			layerCnt--;
-			close();
+			if (methods4) close();
 		},
 	}, function() {
+		popSquare();
 		$('#fstLoad').remove();
+		if (methods5) content();
 	});
 }
 // 라디오버튼 클릭 시
@@ -235,7 +234,6 @@ function loginMove() {
 	var section = $('.login_wrap section');
 	$('.btn_move').on('click', function() {
 		section.removeClass('act');
-
 		var layer = $(this).data('layer');
 		if (layer == undefined) {
 			$('#log1').addClass('act');
@@ -246,10 +244,6 @@ function loginMove() {
 }
 
 $(document).ready(function() {
-	$('img').each(function() {
-		// $(this).removeAttr('src');
-	});
-
 	var topBtn = $('#btnTop');
 	var userMenuBtn = $('#userMenu .btn_menu');
 	var mylistBtn = $('#userMenu .btn_mylist');
@@ -257,6 +251,7 @@ $(document).ready(function() {
 	scrX();
 	scrBar();
 	setMyList();
+	square();
 
 	// 맨 위로
 	topBtn.on('click', function() {
@@ -298,13 +293,97 @@ $(document).ready(function() {
 	btnToggle('btn_bookmark');
 	// 팔로잉 CSS
 	btnFollow();
-
-	$('.pf_picture').each(function() {
-		var w = $(this).width(),
-			images = $(this).find('img');
-		imgTrim(images, w);
-	});
 });
+
+function square() {
+	var commSquare = {
+		30: [
+			$('.comment_list .pf_picture'),
+		],
+		45: [
+			$('.my_list'),
+		],
+		55: [
+			$('.feed_maker .pf_picture'),
+			$('.feed_viewer .tit .pf_picture'),
+			$('.rcmm_list .rc_thumb'),
+		],
+		80: [
+			$('.rate_list .pf_picture'),
+		],
+		110: [
+			$('#main .gp_thumb'),
+		],
+		120: [
+			$('.profile_area .pf_picture'),
+		],
+	};
+	squareArrTrim(commSquare);
+}
+function popSquare() {
+	var popSquare = {
+		30: [
+			$('.comment_list .pf_picture'),
+		],
+		50: [
+			$('.follow_wrap .pf_picture'),
+		],
+		55: [
+			$('.feed_maker .pf_picture'),
+			$('.feed_viewer .tit .pf_picture'),
+		],
+		80: [
+			$('.feed_maker .ft_thumb'),
+		],
+	};
+	squareArrTrim(popSquare);
+}
+
+function squareTrim(img, size) {
+	img.each(function() {
+		var w = $(this).width(),
+			h = $(this).height();
+		if (w > h) {
+			$(this).height(size);
+		} else {
+			$(this).width(size);
+		}
+	});
+}
+function squareArrTrim(arrays) {
+	var size = Object.keys(arrays),
+		square = Object.values(arrays);
+	for (var i=0; i<square.length; i++) {
+		var mySize = size[i];
+		for (var j=0; j<square[i].length; j++) {
+			var img = $(square[i][j]).find('img');
+			squareTrim(img, mySize);
+		}
+	}
+}
+function rectangleArrTrim() {
+	var rectangle = [
+		[$('#main .camp_area'), 492, 223],
+		[$('.camp_list'), 320, 180],
+		[$('.thumb_slide'), 720, 380],
+	];
+	for (var i=0; i<rectangle.length; i++) {
+		var img = $(rectangle[i][0]).find('img');
+		img.each(function() {
+			var w = rectangle[i][1],
+				h = rectangle[i][2];
+			var myW = $(this).width(),
+				myH = $(this).height();
+			var testH = (myH * w) / myW;
+			// console.log(testH, testH < h);
+			if (testH < h) {
+				$(this).height(h);
+			} else {
+				$(this).width(w);
+			}
+		});
+	}
+}
 
 /*
 ---------------------------------------------------------------
@@ -331,8 +410,7 @@ function mainSlider() {
 		preventClicks: false,
 		allowTouchMove: false,
 	});
-	var images = $('.camp_area .slide_box').find('img');
-	imgTrim(images, 492, 223);
+	rectangleArrTrim();
 }
 function headerBg(scrTop) {
 	var visualH = $('.visual_area').height(),
@@ -356,9 +434,6 @@ function main() {
 	});
 	
 	mainSlider();
-
-	var images = $('.gp_thumb').find('img');
-	imgTrim(images, 110);
 }
 
 /*
@@ -416,18 +491,42 @@ function formTagCss() {
 // 신고 폼 CSS
 function reportForm() {
 	var form = $('.comm_form'),
-		inputR = form.find('input[type=radio]'),
-		textarea = form.find('textarea');
-	var target = textarea.parent('.txt_box');
-	inputR.on('change', function() {
+		radioName = form.find('input[type=radio]').attr('name');
+	var tags = [
+		form.find('input[type=file]'),
+		form.find('input[name="'+radioName+'"]'),
+		form.find('textarea'),
+	];
+	var file = tags[0],
+		radio = tags[1],
+		textarea = tags[2];
+	var txtBox = textarea.parent('.txt_box');
+	var submitBtn = form.find('.comm_buttons .comm_btn.sbm');
+	function required() {
+		var f = tags[0].val(),
+			r = tags[1].val(),
+			t = tags[2].val();
+		if (f != '' && r != '') {
+			submitBtn.attr('type', 'submit');
+		} else {
+			submitBtn.attr('type', 'button');
+		}
+	}
+	file.on('change', function() {
+		setTimeout(required, 150);
+	});
+	radio.on('change', function() {
 		var value = $(this).val();
 		if (value == '기타') {
-			target.slideDown(250);
+			txtBox.slideDown(250);
 			textarea.focus();
 		} else {
-			target.hide();
+			txtBox.hide();
+			textarea.val('');
 		}
+		required();
 	});
+	textarea.on('change', required);
 }
 // 전체선택 기능
 function inputAllChecked() {
@@ -518,114 +617,148 @@ function addInputs() {
 
 // 파일 업로드 시 파일명 출력
 function fileName() {
-	var name;
-	var inputF = $('.fl_name'),
-		label = inputF.siblings('.txt_hf');
+	var file = $('.fl_name'),
+		label = file.siblings('.txt_hf');
 	var resetText = label.html();
-	inputF.on('change', function(e) {
-		var file = e.target.files;
-		if (file.length == 0) {
-			name = resetText;
-			label.addClass('plc_holder');
+	var form = file.parents('form');
+	file.on('change', function(e) {
+		var v = this.value;
+		if (v != '') {
+			var f = this.files[0];
+			var limit = 5242880,	// 5MB
+				imgFile = f.type.match('image.*');
+			if ((f.size < limit) && imgFile) {
+				label.removeClass('plc_holder').text(f.name);
+			} else {
+				this.value = '';
+				if (form.hasClass('set_form')) {
+					label.addClass('plc_holder').text(resetText);
+					$(this).siblings('.f_message').text('5MB이하의 이미지파일만 업로드 가능합니다');
+				} else {
+					label.addClass('plc_holder').html('<span>(필수)</span> 5MB이하의 이미지파일만 업로드 가능합니다');
+				}
+			}
 		} else {
-			name = file[0].name;
-			label.removeClass('plc_holder');
+			label.addClass('plc_holder').html(resetText);
 		}
-		label.html(name);
 	});
 }
 function fileRemove() {
-	var container = $(this).parents('.file_thumbnail'),
-		ul = container.find('ul');
-	var thumbBox = container.find('.ft_thumb');
-	var commBtn = $('.mk_btns .btn_file');
 	var my = $(this),
-		file = my.siblings($('input[type=file]')),
-		id = file.attr('id'),
+		file = my.siblings('input[type=file]'),
+		hidden = my.siblings('input[type=hidden]'),
 		img = my.siblings('img'),
-		box = my.parent('li');
-	var btnBox = container.find('.ft_btn:visible');
-	var feed = container.hasClass('mk_thumb');
-	if (btnBox.length > 0) {
-		btnBox.hide();
-	}
-	if (feed && thumbBox.length == 1) {
-		container.hide();
-	}
-	box.attr('class', 'ft_btn').appendTo(ul);
-	commBtn.attr('for', id);
+		box = my.parent('li'),
+		container = my.parents('.file_thumbnail');
+	box.attr('class', 'ft_btn');
 	file.val('');
+	hidden.remove();
 	img.removeAttr('src').removeAttr('alt');
+	fileBoxControll(container);
+}
+function profileRemove() {
+	var container = $('.set_file1'),
+		file = container.find('input[type=file]'),
+		hidden = container.find('input[type=hidden]'),
+		img = container.find('.pf_picture img');
+	var noImg = '/festa/resources/images/thumb/no_profile.png';
+	file.val('');
+	hidden.remove();
+	img.attr('src', noImg).removeAttr('alt');
 }
 function fileUpload() {
-	var container = $(this).parents('.file_thumbnail'),
-	ul = container.find('ul');
-	console.log(container);
-	var commBtn = $('.mk_btns .btn_file');
 	var my = $(this),
 		img = my.siblings('img'),
-		box = my.parent('li');
-	var btnBox = container.find('.ft_btn').not(box).first(),
-		next = btnBox.find($('input[type=file]')).attr('id');
+		box = my.parent('li'),
+		container = my.parents('.file_thumbnail'),
+		feed = container.length > 0;
+	var noImg = '/festa/resources/images/thumb/no_profile.png';
 	var f = this.files[0];
 	var limit = 5242880,	// 5MB
 		imgFile = f.type.match('image.*'),
 		vdoFile = f.type.match('video.*');
 	if ((f.size < limit) && imgFile || vdoFile) {
-		var visible = container.is(':visible');
-		if (!visible) {
-			container.show();
-		}
-		fileThumbnail(f, img);
-		box.attr('class', 'ft_thumb').appendTo(ul).show();
-		if (btnBox.length > 0) {
-			commBtn.attr('for', next);
-			btnBox.appendTo(ul).show();
+		if (feed) {
+			fileThumbnail(f, img, 80);
+			setTimeout(function() {squareTrim(img, 80)}, 150);
+			box.attr('class', 'ft_thumb');
+			fileBoxControll(container);
 		} else {
-			commBtn.attr('for', '');
+			fileThumbnail(f, img, 140);
+			setTimeout(function() {squareTrim(img, 140)}, 150);
 		}
 	} else {
+		if (feed) {
+			img.removeAttr('src').removeAttr('alt');
+		} else {
+			img.attr('src', noImg).removeAttr('alt');
+		}
 		this.value = '';
 	}
 }
-function fileThumbnail(file, img) {
+function fileThumbnail(file, img, size) {
 	var fileReader = new FileReader();
 	fileReader.onload = function(e) {
 		var src = e.target.result;
 		img.attr('src', src).attr('alt', file.name);
 	};
 	fileReader.readAsDataURL(file);
-	setTimeout(function() {
-		if (img.width() > img.height()) {
-			img.height(80);
-		} else {
-			img.width(80);
-		}
-	}, 200);
 }
-
 function setFile() {
-	var file = $('input[type=file]');
-	var cancleBtn = $('.btn_cancle');
+	var container, file, cancleBtn;
+	var pop = $('.fstPop').is(':visible');
+	if (pop) {
+		container = $('.fstPop').find('.file_thumbnail');
+		file = container.find('input[type=file]');
+		cancleBtn = container.find('.btn_cancle');
+	} else {
+		container = $('#wrap').find('.file_thumbnail');
+		file = container.find('input[type=file]');
+		cancleBtn = container.find('.btn_cancle');
+	}
+	fileBoxControll(container);
 	$(file).on('change', fileUpload);
 	$(cancleBtn).on('click', fileRemove);
+}
+function setOneFile() {
+	var container = $('.set_file1'),
+		file = container.find('input[type=file]'),
+		cancleBtn = container.find('.btn_cancle');
+	var img = container.find('img');
+	$(cancleBtn).on('click', profileRemove);
+	$(file).on('change', fileUpload);
+	squareTrim(img, 140);
+}
 
-	$(file).each(function() {
-		var my = $(this),
-			img = my.siblings('img');
-		var v = $(this).val();
-		if (v != '') {
-			var f = this.files[0];
-			fileThumbnail(f, img);
+function fileBoxControll(container) {
+	var ul = container.find('ul'),
+		thumbBoxes = container.find('.ft_thumb'),
+		lastThumbBox = thumbBoxes.last(),
+		btnBoxes = container.find('.ft_btn'),
+		firstBtnBox = btnBoxes.first();
+	var commLabel = container.siblings('.mk_bottom').find('.btn_file'),
+		fileId = firstBtnBox.find('input[type=file]').attr('id');
+	
+	var feed = $('.maker_form').length > 0;
+		if (feed) {
+		if (thumbBoxes.length > 0) {
+			container.show();
+		} else {
+			container.hide();
 		}
-	});
-
-	if ($('.mk_btns .btn_file').length == 0) {
-		$('.file_thumbnail li').first().show();
+		if (thumbBoxes.length == 5) {
+			commLabel.removeAttr('for');
+		}
+	} else {
+		if (thumbBoxes.length == 0) {
+			firstBtnBox.show();
+		}
 	}
+	commLabel.attr('for', fileId);
+	lastThumbBox.appendTo(ul).after(btnBoxes);
 }
 /* } 폼 */
-function imgTrim(tag, max) {
+function oirginImgTrim(tag, max) {
 	var rectangle = arguments[2];
 	var tagName = $(tag).prop('tagName');
 	var img;
@@ -650,19 +783,7 @@ function imgTrim(tag, max) {
 }
 
 // 댓글입력/채팅입력 CSS
-function shortMessage() {
-	// formTags('message_form');
-	// textarea.on('keydown', function(e) {
-		// var scrHeight = textarea.prop('scrollHeight');
-		// textarea.css('height', scrHeight);
-		// console.log(scrHeight);
-		// console.log(e.which);
-		// if (e.which == )
-	// });
-	// textarea.keypress(function(e) {
-	// 	console.log(e.which);
-	// });
-};
+function shortMessage() {};
 
 /* 캠핑장 정보 (메인, 상세) { */
 function campDetail() {
@@ -670,7 +791,7 @@ function campDetail() {
 	numbering('info_list');
 	starRating();
 	kakaoMap();
-	commSlider(720, 380);
+	commSlider();
 }
 function campSlider() {
 	var swiper = new Swiper('.camp_slide > div', {
@@ -687,8 +808,7 @@ function campSlider() {
 		preventClicks: false,
 		allowTouchMove: false,
 	});
-	var images = $('.camp_list').find('img');
-	imgTrim(images, 320, 180);
+	rectangleArrTrim();
 }
 // 시설안내 CSS
 function numbering(target) {
