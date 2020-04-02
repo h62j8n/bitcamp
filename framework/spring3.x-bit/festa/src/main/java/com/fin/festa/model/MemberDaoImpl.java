@@ -95,29 +95,31 @@ public class MemberDaoImpl implements MemberDao{
 	//회원가입 아이디중복처리
 	@Override
 	public int idDuplicate(LoginVo login) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.selectOne("member.idDuplicate",login);
 	}
 	
 	//회원가입등록처리 - 일반
 	@Override
 	public void memberInsert_nomal(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("member.memberInsert_nomal",profile);
 	}
 
 	//회원가입등록처리 - 소셜
 	@Override
 	public void memberInsert_social(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("member.memberInsert_social",profile);
 	}
 
+	//회원가입한 유저 pronum받기
+	@Override
+	public ProfileVo find_pronum(ProfileVo profile) {
+		return sqlSession.selectOne("member.find_pronum",profile);
+	}
+	
 	//회원가입 성공시 내관리테이블 생성
 	@Override
 	public void myadminInsert(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("member.myadminInsert",profile);
 	}
 	
 	////////////////////////////////////////////////////////////
@@ -127,8 +129,7 @@ public class MemberDaoImpl implements MemberDao{
 	//아이디찾기
 	@Override
 	public ProfileVo findId(LoginVo login) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectOne("member.findId",login);
 	}
 	
 	////////////////////////////////////////////////////////////
@@ -138,15 +139,13 @@ public class MemberDaoImpl implements MemberDao{
 	//비밀번호찾기
 	@Override
 	public ProfileVo findPw(LoginVo login) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectOne("member.findPw",login);
 	}
 
 	//비번찾기 후 비번설정
 	@Override
 	public int pwUpdate(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("member.pwUpdate",profile);
 	}
 
 

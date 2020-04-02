@@ -1,24 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
 <c:url value="/upload" var="upload"></c:url>
-<!DOCTYPE html>
-<!-- #피드 수정하기 -->
 <script type="text/javascript">
 	$('#feedUpdate').on('click',function(){
-		var gpcontent = $('#gpcontent1').val();
+		var mpcontent = $('#mpcontent1').val();
 		
 		var httitle1= $('#httitle1_1').val();
 		var httitle2= $('#httitle2_1').val();
 		var httitle3= $('#httitle3_1').val();
-		var mpnum = "${feedDetail.gpnum}";
+		var mpnum = "${feedDetail.mpnum}";
 			
 		var files = new FormData($('#update_feed')[0]);
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
-			url: '${root}group/maker',
+			url: '${root}user/maker',
 			data: files,
 			processData: false,
 			contentType: false,
@@ -41,7 +40,7 @@
 <div class="feed_maker">
 	<h3>피드 수정하기</h3>
 	<form class="maker_form" id="update_feed" enctype="multipart/form-data">
-		<input type="hidden" name="gpnum" value="${feedDetail.gpnum }"/>
+		<input type="hidden" name="mpnum" value="${feedDetail.mpnum }"/>
 		<!-- 그룹페이지일 경우 공지 {
 		<p class="mk_noti">
 			<input type="checkbox" class="comm_chk" id="festaNt" name="">
@@ -52,18 +51,18 @@
 			<p class="pf_picture">
 				<img src="http://placehold.it/55x55" alt="${login.proname }님의 프로필 썸네일">
 			</p>
-			<textarea id="gpcontent1" name="gpcontent" placeholder="${login.proname } 님, 무슨 생각을 하고 계신가요?" >${feedDetail.gpcontent}</textarea>
+			<textarea id="mpcontent1" name="mpcontent" placeholder="${login.proname } 님, 무슨 생각을 하고 계신가요?" >${feedDetail.mpcontent}</textarea>
 		</div>
 		<div class="file_thumbnail mk_thumb box" style="display: block">
 			<ul>
 				<c:set var="count" value="0" />
-				<c:forTokens items="${feedDetail.gpphoto }" delims="," var="item">
+				<c:forTokens items="${feedDetail.mpphoto }" delims="," var="item">
 					<c:set var="count" value="${count+1 }" />
 					<li class="ft_thumb">
-						<input type="hidden" id="gpphoto${count }" name="gpphoto" value="${item }" />
+						<input type="hidden" id="mpphoto${count }" name="mpphoto" value="${item }" />
 						<input type="file" id="file1_${count }" name="filess" accept="video/*, image/*" value="${item }" /> 
 						<img src="${upload }/${item}" alt="">
-						<button class="btn_cancle" id="btn_gpphoto${count }" type="button">
+						<button class="btn_cancle" id="btn_mpphoto${count }" type="button">
 							<em class="snd_only">업로드 취소하기</em>
 						</button> <label for="file1_${count }" class="btn_file">
 							<em	class="snd_only">사진/동영상 업로드하기</em>

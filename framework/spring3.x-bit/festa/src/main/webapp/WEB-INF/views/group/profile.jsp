@@ -7,6 +7,7 @@
 	</c:if>
 </c:if>
 <c:url value="/" var="root"></c:url>
+<c:url value="/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
@@ -28,30 +29,33 @@
 		$('#festa4').val('${detail.graddr}').prop('selected', 'selected');
 		$('select').each(function() {
 			   var label = $(this).siblings('.comm_sel_label');
-			   var value = $(this).val();
+			   var value = $('#graddr').val();
 			   label.text(value);
 			});
 		
-	 	$('#editok').on('click', function(){
-			var grname=$('#festa1').val();
-			var grphoto=$('#festa2').val();
-			var grintro=$('#festa3').val();
-			var graddr=$('#festa4').val();
-			var httitle1=$('#festa5').val();
-			var httitle2=$('#festa6').val();
-			var httitle3=$('#festa7').val();
-			var grnum=$('#festa9').val();
-			console.log(grname+"/"+grphoto+"/"+grintro+"/"+graddr+"/"+httitle1+"/"+httitle2+"/"+httitle3+"/"+grnum);
-			
-			$.post('${root}group/profile/edit', 'grname='+grname+'&grphoto='+grphoto+'&grintro='+grintro+'&graddr='+graddr+'&httitle1='
-					+httitle1+'&httitle2='+httitle2+'&httitle3='+httitle3+'&grnum='+grnum, function(data){
-				openPop("ok");
-				$('#editsuccess').on('click', function(){
-					var link = document.location.href;
-					window.location.href=link;				
-				});
+		$('#editok').on('click', function(){
+			var files = new FormData($('#update_group')[0]);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: '${root}group/profile/edit',
+				data: files,
+				processData: false,
+				contentType: false,
+				cache: false,
+				success: function (data) {
+					openPop('ok');
+					$('#editsuccess').on('click', function() {
+						location.reload();
+					});
+				},
+				error: function (e) { 
+					openPop('fail');
+					e.preventDefault();
+				}
 			});
-		}); 
+		});
+		
 	 	
 	 	$('#festa8').on('click', function(){
 	 		var grnum=$('#postgrnum').val();
@@ -116,12 +120,12 @@
 					</h1>
 					<form class="search_box">
 						<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-						<button type="submit">
+						<button type="button" id="search">
 							<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}camp/">캠핑정보</a></li>
 						<li><a href="${root}hot/">인기피드</a></li>
 						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
@@ -148,11 +152,22 @@
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null }">
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${root }resources/upload/thumb/no_profile.png"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${upload }/${joinGroup.group.grphoto}"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -163,7 +178,7 @@
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
 												<li><a href=""> <span><img
-															src="http://placehold.it/45x45" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+															src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
 														<b>${joinGroup.group.grname }</b>
 												</a></li>
 											</c:forEach>
@@ -176,7 +191,7 @@
 										<ul>
 											<c:forEach items="${bookMark }" var="bookMark">
 												<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-														<span><img src="http://placehold.it/45x45"
+														<span><img src="${upload }/${image}"
 															alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
 												</a></li>
 											</c:forEach>
@@ -255,9 +270,18 @@
 									<a class="btn_pop btn_out" href="${root }group/out">탈퇴</a>
 								</c:if>
 							</dd>
-							<dd class="pf_picture">
-								<img src="http://placehold.it/120x120" alt="${detail.grname } 그룹 썸네일">
-							</dd>
+							<c:choose>
+								<c:when test="${detail.grphoto eq null }">
+									<dd class="pf_picture">
+										<img src="${root }resources/upload/thumb/no_profile.png" alt="${detail.grname } 그룹 썸네일">
+									</dd>
+								</c:when>
+								<c:otherwise>
+									<dd class="pf_picture">
+										<img src="${upload }/${detail.grphoto }" alt="${detail.grname } 그룹 썸네일">
+									</dd>
+								</c:otherwise>
+							</c:choose>
 						</dl>
 					</div>
 					<p class="social_btns">
@@ -283,20 +307,28 @@
 					<input type="hidden" id="postgrnum" value="${detail.grnum }" />
 					<input type="hidden" id="postgrtotal" value="${detail.grtotal }" />
 					<input type="hidden" id="postpronum" value="${login.pronum }" />
-					<form action="${root }group/profile/edit" method="post" class="set_form">
+					<form action="${root }group/profile/edit" method="post" class="set_form" id="update_group" enctype="multipart/form-data">
 						<ul class="input_list">
 							<li class="set_file1 box">
 								<p>그룹 대표사진</p>
 								<div>
 									<p class="pf_picture">
-										<input type="file" id="festa2" name="grphoto" accept="image/*">
-										<img src="${root }resources/images/thumb/no_profile.png"
-											alt="그룹의 프로필 썸네일">
+										<input type="file" id="festa2" name="files" accept="image/*">
+										<c:choose>
+											<c:when test="${detail.grphoto eq null }">
+												<input type="hidden" id="grphoto" name="grphoto" value="" />
+												<img src="${root}resources/images/thumb/no_profile.png" alt="그룹의 프로필 썸네일">	
+											</c:when>
+											<c:otherwise>
+												<input type="hidden" id="grphoto" name="grphoto" value="${detail.grphoto }" />
+												<img src="${upload }/${detail.grphoto }" alt="그룹의 프로필 썸네일">											
+											</c:otherwise>
+										</c:choose>
 									</p>
 									<ul class="comm_buttons_s">
 										<li><label for="festa2" class="comm_btn cfm">등록</label></li>
 										<li>
-											<button type="button" class="comm_btn">삭제</button>
+											<button type="button" id="grphotoDel" class="comm_btn btn_cancle">삭제</button>
 										</li>
 									</ul>
 								</div>
@@ -306,7 +338,7 @@
 									<label for="festa1">그룹 이름</label>
 								</p>
 								<div>
-									<input type="text" style="background-color: #eef0f3" id="festa1" name="grname" value="${detail.grname }" required="required" disabled="disabled">
+									<input type="text" style="background-color: #eef0f3" id="festa1" name="grname" value="${detail.grname }" required="required" readonly="readonly">
 								</div>
 							</li>
 							<li class="box">
@@ -324,6 +356,7 @@
 									<label for="festa4">그룹 관심지역</label>
 								</p>
 								<div>
+									<input type="hidden" id="graddr" value="${detail.graddr }" />
 									<select class="comm_sel" id="festa4" name="graddr">
 										<option value="서울">서울</option>
 										<option value="경기도">경기도</option>
@@ -370,7 +403,8 @@
 								</div>
 							</li>
 						</ul>
-						<input type="hidden" id="festa9" value="${detail.grnum}"/>
+						<input type="hidden" name="pronum" value="${detail.pronum }" />
+						<input type="hidden" name="grnum" value="${detail.grnum}"/>
 						<ul class="comm_buttons">
 							<li><button type="reset" class="btn_close comm_btn cnc">취소</button></li>
 							<li><button type="button" id="save" class="comm_btn cfm btn_pop" data-layer="edit">저장</button></li>
@@ -482,7 +516,7 @@
 	<!-- } #팝업 처리완료 -->
 	<script type="text/javascript">
 		rdoPop();
-		setFile();
+		setOneFile();
 		btnPop('btn_pop2');
 	</script>
 </body>

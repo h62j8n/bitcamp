@@ -49,7 +49,6 @@ public class GroupController {
 	public String groupSelectOne(HttpServletRequest req, UpdateWaitVo updateWaitVo){
 		
 		result=groupService.joinGroup(req, updateWaitVo);
-		System.out.println(result);
 		GroupVo group=new GroupVo();
 		group.setGrnum(updateWaitVo.getGrnum());
 		groupService.groupSelectOne(req, group);
@@ -160,7 +159,8 @@ public class GroupController {
 	
 	//공지사항 수정 완료 (팝업>팝업>팝업 내 기능)
 	@RequestMapping(value = "ntc_maker", method = RequestMethod.POST)
-	public String noticeUpdateOne(Model model, GroupNoticeVo groupNoticeVo){
+	public String noticeUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupNoticeVo groupNoticeVo){
+		groupService.noticeUpdateOne(req, filess, groupNoticeVo);
 		return "group/ntc_feed";
 	}
 	
@@ -220,13 +220,15 @@ public class GroupController {
 	
 	//그룹 피드 수정 (팝업)
 	@RequestMapping(value = "maker", method = RequestMethod.GET)
-	public String groupFeedUpdateOne(){
+	public String groupFeedDetailOne(Model model, GroupPostVo groupPostVo){
+		groupService.groupFeedDetail(model, groupPostVo);
 		return "group/maker";
 	}
 	
 	//그룹 피드 수정 완료 (팝업>팝업 내 기능)
 	@RequestMapping(value = "maker", method = RequestMethod.POST)
-	public String groupFeedUpdateOne(Model model, GroupPostVo groupPostVo){
+	public String groupFeedUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupPostVo groupPostVo){
+		groupService.groupFeedUpdateOne(req, filess, groupPostVo);
 		return "group/index";
 	}
 
@@ -266,12 +268,14 @@ public class GroupController {
 	//그룹 피드 좋아요
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String FeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
+		groupService.FeedLikeInsertOne(req, myGoodVo);
 		return "group/index";
 	}
 	
 	//그룹 피드 좋아요 해제
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String FeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
+		groupService.FeedLikeDeleteOne(req, myGoodVo);
 		return "group/index";
 	}
 	
@@ -300,7 +304,7 @@ public class GroupController {
 	public String doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-		String	 chatName = request.getParameter("chatName");
+		String chatName = request.getParameter("chatName");
 		String chatContent = request.getParameter("chatContent");
 		if(chatContent.equals("")) {
 			chatContent=null;
@@ -328,8 +332,8 @@ public class GroupController {
 	
 	//그룹 수정
 	@RequestMapping(value = "profile/edit", method = RequestMethod.POST)
-	public String groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo){
-		groupService.groupAdminUpdateOne(req, groupVo);
+	public String groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo, MultipartFile[] files){
+		groupService.groupAdminUpdateOne(req, groupVo, files);
 		groupService.groupSelectOne(req, groupVo);
 		return "redirect:/group/profile?grnum="+groupVo.getGrnum();
 	}

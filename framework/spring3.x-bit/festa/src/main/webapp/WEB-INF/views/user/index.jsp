@@ -22,6 +22,7 @@
 <title>FESTA</title>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
 		$('.feed_viewer').each(function(index) {
 			if (index > 1) {
 				$('.feed_viewer').eq(index).hide();
@@ -43,13 +44,15 @@
 		});
 			//댓글 입력하기
 			$('.btn_send.cmmt').on('click',function() {
+				console.log('접속');
 				btn = $(this);
 				var feed = btn.parents('.feed_viewer.ind');
 				var mccontent = feed.find('#mccontent').val();
 				var mcauthor = feed.find('#mcauthor').val();
 				var mpnum = feed.find('#mpnum').val();
 				var pronum = feed.find('#pronum').val();
-				$.post('${root}user/cmmtadd','mccontent=' + mccontent+ '&mcauthor='+ mcauthor+ '&mpnum=' + mpnum+ '&pronum='+ pronum, function(data) {
+				var pronum_sync = feed.find('#pronum_sync').val();
+				$.post('${root}user/cmmtadd','mccontent=' + mccontent+ '&mcauthor='+ mcauthor+ '&mpnum=' + mpnum+ '&pronum='+ pronum +'&pronum_sync='+pronum_sync, function(data) {
 					window.location.reload();
 				});
 			});
@@ -70,6 +73,7 @@
 				var pronum = feed.find('#pronum').val();
 				var fpronum = feed.find('#feedPronum').val();
 				$.get('${root}user/cmmt','mpnum='+ mpnum+ '&pageSearch.page4='+ myPage,function(data) {
+					console.log(mpnum);
 				$(data).each(function(index) {
 				if (index == 3) {
 					return false;
@@ -90,6 +94,7 @@
 						+ '</span>'
 						+ '<button class="btn_pop btn_delete btn_cmmt" id="mycmmtdelete" data-layer="deletecmmt" data-value="'+data[index].mcnum+'"><em class="snd_only">삭제하기</em></button></p>'
 						+ '</li>');
+					$('.snd_only').last().focus();
 				} else {
 					comments.append('<li>'
 						+ '<a href="" class="pf_picture">'
@@ -102,6 +107,7 @@
 						+ '<span class="cmt_date">'
 						+ data[index].mcdate1
 						+ '</span></li>');
+					$('<li>').last().focus();
 				}
 			});//each문 end
 		});//ajax통신 end		
@@ -123,17 +129,7 @@
 			});
 		});
 	});
-	//고정되는거 $(아이디) 유동적인거 $(document)
-	
-	//피드 수정
-	$(document).on('click','#feedmaker',function(){
-		var mpnum = $('#makerMpnum').val();
-		console.log(mpnum);
-		$.post('${root}user/maker','mpnum='+mpnum,function(data){
-			return false;
-		});
-	});
-	
+
 	//피드 삭제
 	$(document).on('click','#delmyfeed', function() {
 		var feeddel = $(this).data('value');
@@ -142,8 +138,8 @@
 	
 	//피드삭제>확인
 	$('#deletefeed').on('click',function() {
-		var gpnum = $('#fnum').val();
-		$.post('${root}user/del','mpnum=' + mpnum,function(data) {
+		var mpnum = $('#fnum').val();
+		$.post('${root}user/del','mpnum='+mpnum,function(data) {
 			$('.btn_close.comm_btn.cfm').on('click',function() {
 				location.reload();
 			});
@@ -176,7 +172,7 @@
 						</button>
 					</form>
 					<ul id="gnb">
-						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}camp/">캠핑정보</a></li>
 						<li><a href="${root}hot/">인기피드</a></li>
 						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
@@ -186,7 +182,7 @@
 							<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 						</c:if>
 						<c:if test="${login ne null }">
-							<li><a href="${root}user/">마이페이지</a></li>
+							<li><a href="${root}user/?pronum=${login.pronum}">마이페이지</a></li>
 						</c:if>
 					</ul>
 					<c:if test="${login ne null }">
@@ -203,11 +199,24 @@
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null }">
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img
+																	src="${root }resources/upload/thumb/no_profile.png"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img
+																	src="${upload }/${joinGroup.group.grphoto}"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -281,14 +290,8 @@
 								<a href="">${profile.proaddr }</a>
 							</dd>
 							<dd class="pf_picture">
-								<c:if test="${login.prophoto ne null}">
-									<img src="http://placehold.it/120x120"
-										alt="${profile.prophoto }님의 프로필 썸네일">
-								</c:if>
-								<c:if test="${login.prophoto eq null }">
-									<img src="${root }resources/images/thumb/no_profile.png"
+									<img src="${upload }/${profile.prophoto}"
 										alt="${profile.proname }님의 프로필 썸네일">
-								</c:if>
 							</dd>
 						</dl>
 					</div>
@@ -310,11 +313,11 @@
 						<h3>피드 만들기</h3>
 						<form action="${root }user/add" method="post" class="maker_form"
 							enctype="multipart/form-data">
-							<input type="hidden" name="mpauthor" value="${profile.proname }" />
-							<input type="hidden" name="pronum" value="${profile.pronum }" />
+							<input type="hidden" name="mpauthor" value="${login.proname }" />
+							<input type="hidden" name="pronum" value="${login.pronum }" />
 							<div class="mk_cont box">
 								<p class="pf_picture">
-									<img src="http://placehold.it/55x55"
+										<img src="${upload }/${profile.prophoto}"
 										alt="${profile.proname }님의 프로필 썸네일">
 								</p>
 								<textarea id="mpcontent" name="mpcontent"
@@ -393,9 +396,9 @@
 											value="${myFeedSelectAll.pronum}" /> 
 											<input type="hidden" id="feedPronum" value="${myFeedSelectAll.pronum }"/>
 											<span
-											class="pf_picture"><img
-												src="http://placehold.it/55x55"
-												alt="${profile.proname }님의 프로필 썸네일"></span> <span
+											class="pf_picture">									
+											<img src="${upload }/${profile.prophoto}"
+										alt="${profile.proname }님의 프로필 썸네일"></span> <span
 											class="fd_name">${profile.proname }</span>
 										</a>
 									</dt>
@@ -405,20 +408,20 @@
 									</dd>
 								</dl>
 								<ul class="feed_options">
-									<li><a href=""><em class="snd_only">하트</em></a></li>
-									<c:if test="${profile.pronum ne myFeedSelectAll.pronum }">
+									<li><a href="" class="btn_liked act"><em class="snd_only">하트</em></a></li>
+									<c:if test="${login.pronum ne myFeedSelectAll.pronum }">
 										<li><a href="${root }user/report"
 											class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
 									</c:if>
-									<c:if test="${profile.pronum eq myFeedSelectAll.pronum }">
+									<c:if test="${login.pronum eq myFeedSelectAll.pronum }">
 										<li>
-											<input type="hidden" name="makerMpnum" value="${myFeedSelectAll.mpnum }"/>
-											<a href="" class="btn_pop btn_edit" id="feedmaker">
+											<input type="hidden" name="makerMpnum" id="makerMpnum" value="${myFeedSelectAll.mpnum }"/>
+											<a href="${root }user/maker?mpnum=${myFeedSelectAll.mpnum}" class="btn_pop btn_edit" id="feedmaker">
 											<em class="snd_only">수정하기</em>
 											</a>
 										</li>
 										<li>
-											<button class="btn_delete feed btn_pop" id="delmyfeed" data-layer="deletemyfeed" data-value="${myFeedSelectAll.mpnum }">
+											<button class="btn_delete feed btn_pop" id="delmyfeed" name="delmyfeed" data-layer="deletefeed" data-value="${myFeedSelectAll.mpnum }">
 												<em class="snd_only">삭제하기</em>
 											</button>
 										</li>
@@ -448,30 +451,27 @@
 												</c:otherwise>
 											</c:choose>
 										</ul>
-										<p class="fd_content">${myFeedSelectAll.mpcontent }</p>
+										<pre id="feed_mpcontent" class="fd_content"><c:out value="${myFeedSelectAll.mpcontent }"/></pre>
 									</div>
 									<input type="hidden" id="cmmtMpnum" value="${myFeedSelectAll.mpnum }"/>
 									<ul class="comment_list ind">
 										<c:set var="i" value="0" />
 										<c:set var="doneLoop" value="false" />
-										<c:forEach items="${myFeedCmmtSelectAll }"
-											var="feedcmmt">
-											${myFeedSelectAll.mpnum } + ${feedcmmt.mpnum } ,
-											<c:if
-												test="${myFeedSelectAll.mpnum eq feedcmmt.mpnum }">
+										<c:forEach items="${myFeedCmmtSelectAll }" var="myFeedCmmtSelectAll">
+											<c:if test="${myFeedSelectAll.mpnum eq myFeedCmmtSelectAll.mpnum }">
 												<c:if test="${not doneLoop }">
 													<li class="">
 														<!-- # 프로필 이미지 없음 { -->
-														<a href="" class="pf_picture">
-															<img src="${root }resources/upload/thumb/no_profile.png" alt="${feedcmmt.mcauthor }님의 프로필 썸네일">
+														<a href="${root }user/?pronum=${myFeedCmmtSelectAll.pronum}" class="pf_picture">
+														<img src="${upload }/${profile.prophoto}" alt="${myFeedCmmtSelectAll.mcauthor }님의 프로필 썸네일"/>
 														</a>
 														<!-- } # 프로필 이미지 없음 -->
 														<p class="cmt_content">
-														<input type="hidden" id="delCmmtNum" value="${feedcmmt.mcnum}" />
-														<a href="" class="cmt_name">${feedcmmt.mcauthor }</a>&nbsp;&nbsp;${feedcmmt.mccontent }
-														<span class="cmt_date">${feedcmmt.mcdate1 }</span>
+														<input type="hidden" id="delCmmtNum" value="${myFeedCmmtSelectAll.mcnum}" />
+														<a href="" class="cmt_name">${myFeedCmmtSelectAll.mcauthor }</a>&nbsp;&nbsp;${myFeedCmmtSelectAll.mccontent }
+														<span class="cmt_date">${myFeedCmmtSelectAll.mcdate1 }</span>
 															<c:if test="${(profile.pronum eq myFeedSelectAll.pronum ) or (profile.pronum eq feedcmmt.pronum)}">
-																<button class="btn_delete btn_pop" id="mycmmtdelete" data-layer="deletecmmt" data-value="${feedcmmt.mcnum }">
+																<button class="btn_delete btn_pop" id="mycmmtdelete" data-layer="deletecmmt" data-value="${myFeedCmmtSelectAll.mcnum }">
 																	<em class="snd_only">삭제하기</em>
 																</button>
 															</c:if>
@@ -492,8 +492,8 @@
 									</c:if>
 								</div>
 								<form class="message_form">
-									<a class="pf_picture" href=""> <img
-										src="http://placehold.it/30x30" alt="나의 프로필 썸네일">
+									<a class="pf_picture" href=""> <img src="${upload }/${profile.prophoto}"
+										alt="${profile.proname }님의 프로필 썸네일">
 									</a>
 									<p class="msg_input">
 										<textarea id="mccontent" name="mccontent"
@@ -510,8 +510,6 @@
 									<div class="thumb_slide">
 										<div class="swiper-wrapper">
 											<c:set var="myphoto" value="${myFeedSelectAll.mpphoto }" />
-											<%-- <c:out value='${myphoto }'/> --%>
-			
 											<c:forTokens items="${myphoto }" delims="," var="item">
 												<div class="swiper-slide">
 													<img src="${upload }/${item }" alt="">

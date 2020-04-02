@@ -16,7 +16,7 @@ import com.fin.festa.model.entity.ReportListVo;
 
 public interface FeedService {
 
-		void hotFeedSelectAll(Model model);
+		void hotFeedSelectAll(HttpServletRequest req);
 		
 		void hotFeedCmmtInsertOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo);
 		
@@ -28,7 +28,9 @@ public interface FeedService {
 		
 		void hotFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 		
-		void hotFeedUpdateOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
+		void hotFeedUpdateOne(HttpServletRequest req, GroupPostVo groupPostVo, MyPostVo myPostVo, MultipartFile[] files);
+		
+		void hotFeedUpdateOnePop(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
 		
 		void hotFeedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
 		

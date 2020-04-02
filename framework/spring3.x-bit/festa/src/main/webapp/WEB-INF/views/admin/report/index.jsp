@@ -44,6 +44,7 @@
 			//처리하기버튼 클릭시 데이터처리
 			$(document).on('click', '.report_status', function() {
 				$.post('${root}admin/report/complate',parameter,function(){
+					$('#status').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();

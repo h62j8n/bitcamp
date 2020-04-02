@@ -45,6 +45,7 @@
 			//삭제하기버튼 클릭시 데이터삭제
 			$(document).on('click', '.camp_delete', function() {
 				$.post('${root}admin/camp/del',parameter,function(){
+					$('#delete').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();

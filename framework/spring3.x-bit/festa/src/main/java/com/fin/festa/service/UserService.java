@@ -24,15 +24,9 @@ public interface UserService {
 
 		List<MyCommentVo> userDetailCmmt(Model model,MyPostVo post);
 	
-		void feedSelectOne(HttpServletRequest req);
-		
 		void feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo);
 
-		void feedUpdateOne(Model model, MyPostVo myPostVo);
-
 		void feedDeleteOne(Model model, MyPostVo myPostVo);
-
-		void feedCmmtInsertOne(Model model, MyCommentVo myCommentVo);
 
 		void feedCmmtDeleteOne(Model model, MyCommentVo myCommentVo);
 
@@ -79,4 +73,12 @@ public interface UserService {
 		void followerList(Model model, ProfileVo profile);
 		
 		void followList(Model model, ProfileVo profile);
+
+		void feedCmmtInsertOne(HttpServletRequest req, MyCommentVo myCommentVo);
+
+		void myFeedDetail(Model model, MyPostVo myPostVo);
+
+		void feedUpdateOne(HttpServletRequest req, MultipartFile[] filess, MyPostVo myPostVo);
+
+		void feedSelectOne(HttpServletRequest req, ProfileVo profile);
 }

@@ -31,7 +31,7 @@ public interface GroupService {
 		
 		void noticeSelectOne(HttpServletRequest req, GroupNoticeVo groupNoticeVo);
 		
-		void noticeUpdateOne(Model model, GroupNoticeVo groupNoticeVo);
+		void noticeUpdateOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo);
 		
 		void noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo);
 		
@@ -39,11 +39,13 @@ public interface GroupService {
 		
 		void noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo);
 		
+		void groupFeedDetail(Model model, GroupPostVo groupPostVo);
+		
 		void noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files);
 		
 		void groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo);
 
-		void groupFeedUpdateOne(Model model, GroupPostVo groupPostVo);
+		void groupFeedUpdateOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo);
 		
 		void groupFeedDeleteOne(Model model, GroupPostVo groupPostVo);
 		
@@ -61,7 +63,7 @@ public interface GroupService {
 		
 		void groupAdminSelectOne(Model model, GroupVo groupVo);
 		
-		void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo);
+		void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo, MultipartFile[] files);
 		
 		void groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo);
 		

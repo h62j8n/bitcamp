@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.GroupDaoImpl;
+import com.fin.festa.model.IndexDaoImpl;
 import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupNoticeCommentVo;
@@ -42,6 +43,9 @@ public class GroupServiceImpl implements GroupService{
 	@Autowired
 	MemberDaoImpl memberDao;
 
+	@Autowired
+	IndexDaoImpl indexDao;
+	
 	int check;
 	
 	//가입된 그룹인지 체크
@@ -86,6 +90,13 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("feed", groupDao.groupFeedSelectAll(groupVo));
 		req.setAttribute("ntc", groupDao.groupNoticeSelectAll(groupVo));
 		req.setAttribute("feedcmmt", groupDao.groupFeedCmmtSelectAll(groupVo));
+		
+		if(req.getSession().getAttribute("login")!=null) {
+			req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo) req.getSession().getAttribute("login")));
+		} else {
+			req.setAttribute("grouplist", indexDao.totalGroupSelectAll());
+		}
+		req.setAttribute("camplist", indexDao.veryHotCampSelectAll());
 	}
 	
 	//공지사항댓글 더보기 비동기
@@ -158,8 +169,18 @@ public class GroupServiceImpl implements GroupService{
 
 	//공지사항 수정
 	@Override
-	public void noticeUpdateOne(Model model, GroupNoticeVo groupNoticeVo) {
-		
+	public void noticeUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupNoticeVo groupNoticeVo) {
+		UploadPhoto up = new UploadPhoto();
+		String gnphoto=up.upload(filess, req, groupNoticeVo);
+		if (groupNoticeVo.getGnphoto()!=null) {
+			if (!gnphoto.isEmpty()) {
+				groupNoticeVo.setGnphoto(groupNoticeVo.getGnphoto() + "," + gnphoto);
+			}
+		}
+		else {
+			groupNoticeVo.setGnphoto(gnphoto);
+		}
+		groupDao.groupNoticeUpdate(groupNoticeVo);
 	}
 
 	//공지사항 삭제
@@ -217,12 +238,26 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupFeedInsert(groupPostVo);
 	}
 
+	//그룹피드 수정 전 출력
+	@Override
+	public void groupFeedDetail(Model model, GroupPostVo groupPostVo) {
+		model.addAttribute("feedDetail", groupDao.groupFeedDetailOne(groupPostVo));
+	}
 	
 	//그룹피드 수정
 	@Override
-	public void groupFeedUpdateOne(Model model, GroupPostVo groupPostVo) {
-		// TODO Auto-generated method stub
-		
+	public void groupFeedUpdateOne(HttpServletRequest req, MultipartFile[] filess ,GroupPostVo groupPostVo) {
+		UploadPhoto up = new UploadPhoto();
+		String gpphoto=up.upload(filess, req, groupPostVo);
+		if (groupPostVo.getGpphoto()!=null) {
+			if (!gpphoto.isEmpty()) {
+				groupPostVo.setGpphoto(groupPostVo.getGpphoto() + "," + gpphoto);
+			}
+		}
+		else {
+			groupPostVo.setGpphoto(gpphoto);
+		}
+		groupDao.groupFeedUpdate(groupPostVo);
 	}
 
 	//그룹피드 삭제
@@ -245,18 +280,36 @@ public class GroupServiceImpl implements GroupService{
 
 	//그룹피드 좋아요등록
 	//피드 좋아요 갯수 +1
+	//좋아요목록 갱신
+	@Transactional
 	@Override
 	public void FeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
 		
+		groupDao.groupFeedLikeInsertOne(myGoodVo);
+		
+		GroupPostVo post=new GroupPostVo();
+		post.setGpnum(myGoodVo.getGpnum());
+		
+		groupDao.groupFeedLikeOnePlus(post);
+		
+		req.getSession().setAttribute("goodlist", groupDao.myGoodRenewal(myGoodVo));
 	}
 
 	//그룹피드 좋아요해제
 	//피드 좋아요 갯수 -1
+	//좋아요목록 갱신
+	@Transactional
 	@Override
 	public void FeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
 		
+		groupDao.groupFeedLikeDeleteOne(myGoodVo);
+		
+		GroupPostVo post=new GroupPostVo();
+		post.setGpnum(myGoodVo.getGpnum());
+		
+		groupDao.groupFeedLikeOneMinus(post);
+		
+		req.getSession().setAttribute("goodlist", groupDao.myGoodRenewal(myGoodVo));
 	}
 
 	//그룹피드 신고등록
@@ -305,8 +358,23 @@ public class GroupServiceImpl implements GroupService{
 
 	//그룹관리 수정
 	@Override
-	public void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo) {
+	public void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo, MultipartFile[] files) {	
+		UploadPhoto up = new UploadPhoto();
+		String grPhoto=up.upload(files, req, groupVo);
+		if(grPhoto.equals("")) {
+			groupVo.setGrphoto(groupVo.getGrphoto());
+			System.out.println("null"+groupVo.getGrphoto());
+		}else {
+			groupVo.setGrphoto(grPhoto);
+			System.out.println("notnull"+groupVo.getGrphoto());
+		}
 		groupDao.groupInfoUpdate(groupVo);
+
+		ProfileVo profileVo=new ProfileVo();
+		profileVo.setPronum(groupVo.getPronum());
+		HttpSession session = req.getSession();
+		List<JoinGroupVo> joinGroup = memberDao.myJoinGroupSelectAll(profileVo.getPronum());
+		session.setAttribute("joinGroup", joinGroup);
 	}
 
 	//가입된 유저정보 출력
@@ -468,7 +536,6 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
 		System.out.println("해제 : " + req.getSession().getAttribute("followlist"));
 	}
-
 
 
 

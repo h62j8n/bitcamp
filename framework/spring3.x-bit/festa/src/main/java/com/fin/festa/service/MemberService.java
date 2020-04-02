@@ -9,13 +9,13 @@ import com.fin.festa.model.entity.ProfileVo;
 
 public interface MemberService {
 
-		int  login(HttpServletRequest req, LoginVo loginVo);
+		ProfileVo  login(HttpServletRequest req, LoginVo loginVo);
 
 		void  logout(HttpServletRequest req);
 
 		void  memberInsertOne(Model model, ProfileVo profileVo);
 		
-		void  idCheck(Model model, LoginVo loginVo);
+		int  idCheck(Model model, LoginVo loginVo);
 		 
 		ProfileVo  findId(Model model, LoginVo loginVo);
 		

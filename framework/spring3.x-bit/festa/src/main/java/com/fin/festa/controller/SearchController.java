@@ -28,69 +28,70 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 
-	//검색 결과
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	//검색
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String search(Model model, PageSearchVo pageSearchVo) {
-		return "search/index";
+		searchService.search(model, pageSearchVo);
+		return "search";
 	}
 	
-	//검색 결과 피드 상세(팝업)
+	//검색 결과 피드 상세(내부팝업)
 	@RequestMapping(value="feed", method = RequestMethod.GET)
 	public String searchFeedDetail(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search/feed";
+		return "search";
 	}
 	
-	//검색 결과 피드 수정(팝업>팝업)
+	//검색 결과 피드 수정(내부팝업 내 기능)
 	@RequestMapping(value="feed/maker", method = RequestMethod.GET)
 	public String searchFeedUpdateOne() {
-		return "search/maker";
+		return "search";
 	}
 	
-	//검색 결과 피드 수정(팝업>팝업>팝업 내 기능)
+	//검색 결과 피드 수정(내부팝업 내 기능)
 	@RequestMapping(value="feed/maker", method = RequestMethod.POST)
 	public String searchFeedUpdateOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search/feed";
+		return "search";
 	}
 	
-	//검색 결과 피드 삭제(팝업>내부팝업 기능)
+	//검색 결과 피드 삭제(내부팝업 내 기능)
 	@RequestMapping(value="feed/del", method = RequestMethod.POST)
 	public String searchFeedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search/index";
+		return "search";
 	}
 	
-	//검색 결과 피드 댓글 등록(팝업>팝업 내 기능)
+	//검색 결과 피드 댓글 등록(내부팝업 내 기능)
 	@RequestMapping(value = "feed/cmmtadd", method = RequestMethod.POST)
 	public String searchFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
-		return "search/feed";
+		return "search";
 	}
 	
-	//검색 결과 피드 댓글 삭제(팝업>내부팝업 기능)
+	//검색 결과 피드 댓글 삭제(내부팝업 내 기능)
 	@RequestMapping(value = "feed/cmmtdel", method = RequestMethod.POST)
 	public String searchFeedCmmtDeletetOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
-		return "search/feed";
+		return "search";
 	}
 
-	//검색 결과 피드 좋아요(팝업>팝업 내 기능)
+	//검색 결과 피드 좋아요(내부팝업 내 기능)
 	@RequestMapping(value = "feed/likeadd", method = RequestMethod.POST)
 	public String searchFeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
-		return "search/feed";
+		return "search";
 	}
 	
-	//검색 결과 피드 좋아요 취소(팝업>팝업 내 기능)
+	//검색 결과 피드 좋아요 취소(내부팝업 내 기능)
 	@RequestMapping(value = "feed/likedel", method = RequestMethod.POST)
 	public String searchFeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
-		return "search/feed";
+		return "search";
 	}
 
-	//검색 결과 피드 신고(팝업)
+	//검색 결과 피드 신고(내부팝업)
 	@RequestMapping(value="feed/report", method = RequestMethod.GET)
 	public String searchFeedReport() {
-		return "search/report";
+		return "search";
 	}
 
-	//검색 결과 피드 신고(팝업>팝업 내 기능)
+	//검색 결과 피드 신고(내부팝업 내 기능)
 	@RequestMapping(value="feed/report", method = RequestMethod.POST)
 	public String searchFeedReport(Model model, ReportListVo reportListVo) {
-		return "search/feed";
+		return "search";
 	}
 }

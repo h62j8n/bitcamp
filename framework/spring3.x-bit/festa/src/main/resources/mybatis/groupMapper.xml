@@ -137,6 +137,14 @@
 		<result column="prophoto" property="prophoto"/>
 	</resultMap>
 	
+	<!-- 내 좋아요목록 -->
+	<resultMap type="MyGoodVo" id="good">
+	   <result column="pronum6" property="pronum"/>
+	   <result column="canum3" property="canum"/>
+	   <result column="gpnum3" property="gpnum"/>
+	   <result column="mpnum2" property="mpnum"/>
+	</resultMap>
+	
 	<!-- 그룹화면출력 전 체크 start -->
 	
 	<!-- 공식그룹 유무 체크 -->
@@ -224,6 +232,11 @@
 	<insert id="groupFeedInsert" parameterType="GroupPostVo">
 		insert into grouppost (gpauthor,gpcontent,gpdate,gpgood,grnum1,pronum3,gpphoto,httitle1,httitle2,httitle3) values (#{gpauthor},#{gpcontent},now(),0,#{grnum},#{pronum},#{gpphoto},#{httitle1},#{httitle2},#{httitle3})
 	</insert>
+	
+	<!-- 그룹 피드 수정 전 출력 -->
+	<select id="groupFeedDetail" parameterType="GroupPostVo" resultMap="grouppost" >
+		select a.*,b.prophoto from grouppost as a inner join profile as b on a.pronum3=b.pronum where a.gpnum = #{gpnum}
+	</select>
 	
 	<!-- 그룹 피드수정 -->
 	<update id="groupFeedUpdate" parameterType="GroupPostVo">
@@ -320,7 +333,7 @@
 	</update>
 		
 	<!-- 내 좋아요목록 갱신 -->
-	<select id="myGoodRenewal" parameterType="MyGoodVo" resultType="MyGoodVo">
+	<select id="myGoodRenewal" parameterType="MyGoodVo" resultMap="good">
 		select * from mygood where pronum6=#{pronum}
 	</select>
 	

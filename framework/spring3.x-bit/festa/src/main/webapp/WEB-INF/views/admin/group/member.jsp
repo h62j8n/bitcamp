@@ -9,6 +9,13 @@
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
 </c:if>
+<html>
+<script type="text/javascript">
+	var url = window.location.href;
+	if(url.indexOf('member')>0){
+		window.location.href='${root}empty';
+	}
+</script>
 <div class="adm">
 	<div class="follow_wrap pop_wrap">
 		<h3 class="pop_tit"><span>그룹 멤버</span></h3>
@@ -40,3 +47,4 @@
 <script type="text/javascript">
 	scrBar();
 </script>
+</html>

@@ -48,4 +48,6 @@ public interface MemberDao {
 	
 	void myadminInsert(ProfileVo profile);
 
+	ProfileVo find_pronum(ProfileVo profile);
+
 }

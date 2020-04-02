@@ -50,6 +50,7 @@
 					console.log(text);
 					var mcnum = $('#num').val();
 					$.post('${root}admin/cmmt/del','mcnum='+mcnum,function(){
+						$('#delete').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
@@ -60,6 +61,7 @@
 					console.log(text);
 					var mpnum = $('#num').val();
 					$.post('${root}admin/user/detail/del','mpnum='+mpnum,function(){
+						$('#delete').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
@@ -188,7 +190,9 @@
 							<dt>
 								<a href="${root }admin/user/detail?pronum=${userfeed.pronum}">
 									<input type="hidden" value="${userfeed.mpnum }">
-									<span class="pf_picture"><img src="${upload }/${userfeed.profile.prophoto}" alt="${userfeed.profile.proname }님의 프로필 썸네일"></span>
+									<span class="pf_picture">
+										<img src="${upload }/${userfeed.profile.prophoto}" alt="${userfeed.profile.proname }님의 프로필 썸네일">
+									</span>
 									<span class="fd_name">${userfeed.mpauthor }</span>
 								</a>
 							</dt>
@@ -240,7 +244,7 @@
 										</c:otherwise>
 									</c:choose>
 								</ul>
-								<p class="fd_content">${userfeed.mpcontent }</p>
+								<pre class="fd_content"><c:out value="${userfeed.mpcontent }"/></pre>
 							</div>
 							<ul class="comment_list">
 								<c:set var="i" value="0"/>

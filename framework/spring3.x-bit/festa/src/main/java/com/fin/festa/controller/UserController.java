@@ -1,5 +1,7 @@
 package com.fin.festa.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupCommentVo;
+import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.LoginVo;
 import com.fin.festa.model.entity.MyAdminVo;
@@ -36,41 +41,45 @@ public class UserController {
 	
 	//내 피드
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String feedSelectOne(HttpServletRequest req) {
-		userSerivce.feedSelectOne(req);
+	public String feedSelectOne(HttpServletRequest req, ProfileVo profile) {
+		userSerivce.feedSelectOne(req,profile);
 		return "user/index";
 	}
 	
 	//게시글 입력
 	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public String feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo) {
+	public String feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo,ProfileVo profile) {
 		userSerivce.feedInsertOne(req, files, myPostVo);
-		userSerivce.feedSelectOne(req);
+		userSerivce.feedSelectOne(req,profile);
 		return "redirect:/user/";
 	}
 
 
 	//게시글 수정 (팝업)
 	@RequestMapping(value = "maker", method = RequestMethod.GET)
-	public String feedUpdateOne() {
+	public String feedDetail(Model model,MyPostVo myPostVo) {
+		userSerivce.myFeedDetail(model, myPostVo);
 		return "user/maker";
 	}
 
 	//게시글 수정 (팝업>팝업 내 기능)
 	@RequestMapping(value = "maker", method = RequestMethod.POST)
-	public String feedUpdateOne(Model model, MyPostVo myPostVo) {
+	public String feedUpdateOne(HttpServletRequest req,MultipartFile[] filess,  MyPostVo myPostVo) {
+		userSerivce.feedUpdateOne(req, filess, myPostVo);
 		return "user/index";
 	}
 
 	//게시글 삭제 (내부팝업 기능)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
 	public String feedDeleteOne(Model model, MyPostVo myPostVo) {
+		userSerivce.feedDeleteOne(model, myPostVo);
 		return "user/index";
 	}
 
 	//피드 댓글 입력
 	@RequestMapping(value = "cmmtadd", method = RequestMethod.POST)
-	public String feedCmmtInsertOne(Model model, MyCommentVo myCommentVo) {
+	public String feedCmmtInsertOne(HttpServletRequest req, MyCommentVo myCommentVo) {
+		userSerivce.feedCmmtInsertOne(req, myCommentVo);
 		return "user/index";
 	}
 
@@ -78,6 +87,13 @@ public class UserController {
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String feedCmmtDeleteOne(Model model, MyCommentVo myCommentVo) {
 		return "user/index";
+	}
+	
+	//피드댓글 더보기 비동기
+	@RequestMapping(value = "cmmt", method = RequestMethod.GET)
+	public @ResponseBody List<MyCommentVo> GroupDetailCmmt(Model model, MyPostVo mypost){
+		System.out.println("접속");
+		return userSerivce.userDetailCmmt(model, mypost);
 	}
 
 	//좋아요 체크

@@ -45,6 +45,7 @@
 			//삭제하기버튼 클릭시 데이터삭제
 			$(document).on('click', '.group_delete', function() {
 				$.post('${root}admin/group/del',parameter,function(){
+					$('#delete').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();

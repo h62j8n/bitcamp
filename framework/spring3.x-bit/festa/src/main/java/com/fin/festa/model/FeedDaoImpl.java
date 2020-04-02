@@ -65,7 +65,21 @@ public class FeedDaoImpl implements FeedDao{
 		
 		return sqlSession.selectList("feed.myFeedCmmtMore", mypost);
 	}
-	
+
+	//인기그룹피드 수정팝업 상세출력
+	@Override
+	public FeedVo groupFeedSelectOne(GroupPostVo grouppost) {
+
+		return sqlSession.selectOne("feed.groupFeedSelectOne", grouppost);
+	}
+
+	//인기개인피드 수정팝업 상세출력
+	@Override
+	public FeedVo myFeedSelectOne(MyPostVo mypost) {
+
+		return sqlSession.selectOne("feed.myFeedSelectOne", mypost);
+	}
+
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////피드,댓글 수정,등록,삭제/////////////////////////
 	//////////////////////////////////////////////////////////////////////
@@ -115,15 +129,15 @@ public class FeedDaoImpl implements FeedDao{
 	//인기개인피드 수정
 	@Override
 	public int myFeedUpdateOne(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("feed.myFeedUpdate", post);
 	}
 
 	//인기그룹피드 수정
 	@Override
 	public int groupFeedUpdateOne(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return sqlSession.update("feed.groupFeedUpdate", grouppost);
 	}
 
 	//////////////////////////////////////////////////////////////////////

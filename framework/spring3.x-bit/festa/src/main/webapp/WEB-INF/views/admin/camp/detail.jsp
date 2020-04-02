@@ -31,6 +31,7 @@
 			$(document).on('click', '#delete_btn', function() {
 				var crnum = $('#crnum').val();
 				$.post('${root}admin/camp/detail/revdel','crnum='+crnum,function(){
+					$('#delete').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close.ok').click(function(){
 						location.reload();
@@ -239,7 +240,7 @@
 						<ul class="cp_options">
 							<li>
 								<b class="cp_liked">${campdetail.cagood }</b>
-								<button class="btn_liked"><em class="snd_only">하트</em></button>
+								<button class="btn_liked act"><em class="snd_only">하트</em></button>
 							</li>
 							<%-- <li><button class="btn_pop btn_delete btn_camp" data-layer="delete" data-value="${campdetail.canum }"><em class="snd_only">삭제하기</em></button></li> --%>
 						</ul>
@@ -251,24 +252,36 @@
 				</div>
 				<div class="intro box">
 					<h4 class="snd_only">캠핑장 사진</h4>
-					<div class="thumb_slide">
-						<div class="swiper-wrapper">
-							<c:set var="caphoto" value="${campdetail.caphoto }" />
-							<c:forTokens items="${caphoto }" delims="," var="item">
-								<div class="swiper-slide">
-									<img src="${upload }/${item }" alt="">
-								</div>
-							</c:forTokens>
+					<c:if test="${campdetail.caphoto ne '' }">
+						<div class="thumb_slide">
+							<div class="swiper-wrapper">
+								<c:set var="caphoto" value="${campdetail.caphoto }" />
+								<c:forTokens items="${caphoto }" delims="," var="item">
+									<div class="swiper-slide">
+										<img src="${upload }/${item }" alt="">
+									</div>
+								</c:forTokens>
+							</div>
+							<div class="swiper-pagination"></div>
 						</div>
-						<div class="swiper-pagination"></div>
-					</div>
+					</c:if>
+					<c:if test="${campdetail.caphoto eq '' }">
+						<div class="thumb_slide">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<img src="${root }resources/images/thumb/no_profile.png" alt="">
+								</div>
+							</div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</c:if>
 					<div class="text_box">
 						<h4 class="sub_tit">캠핑장 소개</h4>
 						<c:if test="${venturecheck eq 1 }">
 							<p class="btn_go"><a href="${root }admin/group/detail?grnum=${venturegroup.grnum}">그룹 바로가기</a></p>
 						</c:if>
 						<div class="scrBar">
-							<p>${campdetail.caintro }</p>
+							<pre class="fd_content"><c:out value="${campdetail.caintro }"/></pre>
 						</div>
 					</div>
 				</div>

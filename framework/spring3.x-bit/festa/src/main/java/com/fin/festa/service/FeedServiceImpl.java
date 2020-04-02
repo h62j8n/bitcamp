@@ -11,12 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.FeedDaoImpl;
+import com.fin.festa.model.IndexDaoImpl;
 import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.util.DateCalculate;
 import com.fin.festa.util.UploadPhoto;
@@ -29,9 +31,12 @@ public class FeedServiceImpl implements FeedService{
 	@Autowired
 	FeedDaoImpl feedDao;
 	
+	@Autowired 
+	IndexDaoImpl indexDao;
+	
 	//인기피드 출력(그룹피드,개인피드 합쳐서)
 	@Override
-	public void hotFeedSelectAll(Model model) {
+	public void hotFeedSelectAll(HttpServletRequest req) {
 
 		DateCalculate cal=new DateCalculate();
 		FeedVo feed = new FeedVo();
@@ -40,12 +45,20 @@ public class FeedServiceImpl implements FeedService{
 		
 		//그룹피드댓글뽑음
 		feed.setFeedList(groupFeedList);
-		model.addAttribute("groupFeedCmmt", feedDao.hotGroupCommentSelectAll(feed));
+		req.setAttribute("groupFeedCmmt", feedDao.hotGroupCommentSelectAll(feed));
 		//개인피드댓글뽑음
 		feed.setFeedList(myFeedList);
-		model.addAttribute("myFeedCmmt", feedDao.hotMyCommentSelectAll(feed));
+		req.setAttribute("myFeedCmmt", feedDao.hotMyCommentSelectAll(feed));
 		//피드 날짜순 정렬
-		model.addAttribute("feedList", cal.VoDateReturn(groupFeedList, myFeedList));
+		req.setAttribute("feedList", cal.VoDateReturn(groupFeedList, myFeedList));
+		
+		//우측에떠다니는 인기캠핑장,그룹목록
+		if(req.getSession().getAttribute("login")!=null) {
+			req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)req.getSession().getAttribute("login")));
+		}else {
+			req.setAttribute("grouplist", indexDao.totalGroupSelectAll());
+		}
+		req.setAttribute("camplist", indexDao.veryHotCampSelectAll());
 		
 	}
 
@@ -178,9 +191,53 @@ public class FeedServiceImpl implements FeedService{
 
 	//인기피드 수정(그룹피드,개인피드 구별해서 수정)
 	@Override
-	public void hotFeedUpdateOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
-		// TODO Auto-generated method stub
+	public void hotFeedUpdateOne(HttpServletRequest req, GroupPostVo groupPostVo, MyPostVo myPostVo, MultipartFile[] files) {
 		
+		UploadPhoto up = new UploadPhoto();
+		//개인피드인지 그룹피드인지 체크
+		if(groupPostVo.getGpnum()==0) {
+			String mpphoto = up.upload(files, req, myPostVo);
+			//기존에 있던사진이 존재할때
+			if(myPostVo.getMpphoto()!=null) {
+				//넘어온 첨부사진이 존재할때(사진을 새로 등록했을때)
+				if(!mpphoto.equals("")) {
+					mpphoto=myPostVo.getMpphoto()+","+mpphoto;
+					myPostVo.setMpphoto(mpphoto);
+				}
+			//기존에 있던사진이 없을때
+			}else {
+				myPostVo.setMpphoto(mpphoto);
+			}
+			feedDao.myFeedUpdateOne(myPostVo);
+		}else {
+			String gpphoto = up.upload(files, req, groupPostVo);
+			//기존에 있던사진이 존재할때
+			if(groupPostVo.getGpphoto()!=null) {
+				//넘어온 첨부사진이 존재할때(사진을 새로 등록했을때)
+				if(!gpphoto.equals("")) {
+					gpphoto=groupPostVo.getGpphoto()+","+gpphoto;
+					groupPostVo.setGpphoto(gpphoto);
+				}
+			//기존에 있던사진이 없을때
+			}else {
+				groupPostVo.setGpphoto(gpphoto);
+			}
+			feedDao.groupFeedUpdateOne(groupPostVo);
+		}
+	}
+
+	//인기피드 수정팝업 정보출력
+	@Override
+	public void hotFeedUpdateOnePop(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
+
+		//개인피드,그룹피드 구분
+		if(groupPostVo.getGpnum()==0) {
+			model.addAttribute("feedEdit", feedDao.myFeedSelectOne(myPostVo));
+			System.out.println(feedDao.myFeedSelectOne(myPostVo));
+		}else {
+			model.addAttribute("feedEdit", feedDao.groupFeedSelectOne(groupPostVo));
+			System.out.println(feedDao.groupFeedSelectOne(groupPostVo));
+		}
 	}
 
 	//인기피드 삭제(그룹피드,개인피드 구별해서 삭제)

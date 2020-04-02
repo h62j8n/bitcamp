@@ -63,4 +63,8 @@ public interface FeedDao {
 	List<GroupCommentVo> groupFeedCmmtMore(GroupPostVo grouppost);
 	
 	List<MyCommentVo> myFeedCmmtMore(MyPostVo mypost);
+	
+	FeedVo groupFeedSelectOne(GroupPostVo grouppost);
+	
+	FeedVo myFeedSelectOne(MyPostVo mypost);
 }

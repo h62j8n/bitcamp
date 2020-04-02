@@ -23,7 +23,7 @@
 			<div class="scrX">
 				<div class="container">
 					<h1>
-						<a href="/"><em class="snd_only">FESTA</em></a>
+						<a href="${root }"><em class="snd_only">FESTA</em></a>
 					</h1>
 					<form class="search_box">
 						<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">

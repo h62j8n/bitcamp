@@ -37,39 +37,38 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserDaoImpl userDao;
-	
+
 	@Autowired
 	MemberDaoImpl memberDao;
 
-	//추가사항
-	//유저 댓글 더보기 비동기
-	
+	// 추가사항
+	// 유저 댓글 더보기 비동기
+
 	@Override
 	public List<MyCommentVo> userDetailCmmt(Model model, MyPostVo post) {
-		if(post.getPageSearch().getPage4()==1) {
-			post.getPageSearch().setPage4(2);
-		}
-		model.addAttribute("paging",post.getPageSearch());
-		return null;
+//		if (post.getPageSearch().getPage4() == 1) {
+//			post.getPageSearch().setPage4(2);
+//		}
+//		model.addAttribute("paging", post.getPageSearch());
+		return userDao.FeedDetailCmmt(model, post);
 	}
-	
+
 	// 비활성화계정, 정지계정, 추방계정 체크 v
 	// 내정보 출력 v
 	// 내피드 출력 v
 	// 내피드댓글 출력 v
 	// 내피드갯수 출력 v
-	// 내팔로잉갯수 출력  v
+	// 내팔로잉갯수 출력 v
 	// 내팔로워갯수 출력 v
 	@Override
-	public void feedSelectOne(HttpServletRequest req) {
+	public void feedSelectOne(HttpServletRequest req, ProfileVo profile) {
 		HttpSession session = req.getSession();
-		ProfileVo profile = (ProfileVo) session.getAttribute("login");
-
+		//ProfileVo profile = (ProfileVo) session.getAttribute("login");
+		profile = userDao.myInfo(profile);
 		MyAdminVo myAdmin = userDao.adminCheck(profile);
 		if (myAdmin.getPropublic() == 1 && myAdmin.getProstop() == 1 && myAdmin.getProkick() == 1) {
-			profile = userDao.myInfo(profile);
 			List<MyPostVo> myFeedSelectAll = userDao.myFeedSelectAll(profile); // 피드 리스트
-			List<MyCommentVo> myFeedCmmtSelectAll = userDao.myFeedCmmtSelectAll(profile); //피드 댓글 리스트
+			List<MyCommentVo> myFeedCmmtSelectAll = userDao.myFeedCmmtSelectAll(profile); // 피드 댓글 리스트
 			int myFeedCount = userDao.myFeedCount(profile);
 			int myFollowerCount = userDao.myFollowerCount(profile);
 			int myFollowingCount = userDao.myFollowingCount(profile);
@@ -79,47 +78,66 @@ public class UserServiceImpl implements UserService {
 			session.setAttribute("myFollowingCount", myFollowingCount);
 			req.setAttribute("myFeedSelectAll", myFeedSelectAll);
 			req.setAttribute("myFeedCmmtSelectAll", myFeedCmmtSelectAll);
-			
 		}
 	}
 
-	//내피드 등록
+	// 내피드 등록
 	@Override
-	public void feedInsertOne(HttpServletRequest req,MultipartFile[] files, MyPostVo myPostVo) {
+	public void feedInsertOne(HttpServletRequest req, MultipartFile[] files, MyPostVo myPostVo) {
 		UploadPhoto up = new UploadPhoto();
 		String mpphoto = up.upload(files, req, myPostVo);
-		
+
 		myPostVo.setMpphoto(mpphoto);
 		userDao.myFeedInsertOne(myPostVo);
 	}
 
+	// 내피드 디테일
+	@Override
+	public void myFeedDetail(Model model, MyPostVo myPostVo) {
+		myPostVo = userDao.myFeedDetail(myPostVo);
+		model.addAttribute("feedDetail", myPostVo);
+	}
 
 	// 내피드 수정
 	@Override
-	public void feedUpdateOne(Model model, MyPostVo myPostVo) {
-		// TODO Auto-generated method stub
-
+	public void feedUpdateOne(HttpServletRequest req, MultipartFile[] filess, MyPostVo myPostVo) {
+		UploadPhoto up = new UploadPhoto();
+		String mpphoto = up.upload(filess, req, myPostVo);
+		//System.out.println(mpphoto);
+		System.out.println(myPostVo.getMpphoto());
+		if (myPostVo.getMpphoto()!=null) {
+			if (!mpphoto.isEmpty()) {
+				myPostVo.setMpphoto(myPostVo.getMpphoto() + "," + mpphoto);
+			}
+		}
+		else {
+			myPostVo.setMpphoto(mpphoto);
+		}
+		userDao.myFeedUpdateOne(myPostVo);
 	}
 
 	// 내피드 삭제
 	@Override
 	public void feedDeleteOne(Model model, MyPostVo myPostVo) {
-		// TODO Auto-generated method stub
-
+		userDao.myFeedDeleteOne(myPostVo);
 	}
 
 	// 내피드댓글 등록
 	@Override
-	public void feedCmmtInsertOne(Model model, MyCommentVo myCommentVo) {
-		// TODO Auto-generated method stub
-
+	public void feedCmmtInsertOne(HttpServletRequest req, MyCommentVo myCommentVo) {
+		userDao.myFeedCmmtInsertOne(myCommentVo);
+		/*
+		 * HttpSession session = req.getSession(); ProfileVo profile = (ProfileVo)
+		 * session.getAttribute("profile"); List<MyCommentVo> myFeedCmmtSelectAll =
+		 * userDao.myFeedCmmtSelectAll(profile); req.setAttribute("myFeedCmmtSelectAll",
+		 * myFeedCmmtSelectAll);
+		 */
 	}
 
 	// 내피드댓글 삭제
 	@Override
 	public void feedCmmtDeleteOne(Model model, MyCommentVo myCommentVo) {
-		// TODO Auto-generated method stub
-
+		userDao.myFeedCmmtDeleteOne(myCommentVo);
 	}
 
 	// 내피드 좋아요등록
@@ -185,27 +203,27 @@ public class UserServiceImpl implements UserService {
 		HttpSession session = req.getSession();
 		profileVo = (ProfileVo) session.getAttribute("profile");
 		session.setAttribute("profile", userDao.myProfile(profileVo));
-		
+
 		int groupCheck = userDao.groupCheck(profileVo);
-		System.out.println("groupCheck : "+groupCheck);
+		System.out.println("groupCheck : " + groupCheck);
 		int ventureCheck = userDao.ventureCheck(profileVo);
-		
+
 		System.out.println(profileVo.getPronum());
 		BigInteger myVentureRequestCheck = userDao.myVentureRequestCheck(profileVo);
-		
+
 		MyVentureVo myVenture = userDao.myVentureInfo(profileVo);
 		int campCheck = userDao.campCheck(myVenture);
-		
+
 		session.setAttribute("groupCheck", groupCheck);
-		
-		//if(myVentureRequestCheck == null &&  ventureCheck ==1 ) {
-			session.setAttribute("myVenture", myVenture);
-			session.setAttribute("ventureCheck", ventureCheck);
-			session.setAttribute("campCheck", campCheck);
-		//}
-		//else if(myVentureRequestCheck != null) {
-			session.setAttribute("myVentureRequestCheck", myVentureRequestCheck);
-		//}
+
+		// if(myVentureRequestCheck == null && ventureCheck ==1 ) {
+		session.setAttribute("myVenture", myVenture);
+		session.setAttribute("ventureCheck", ventureCheck);
+		session.setAttribute("campCheck", campCheck);
+		// }
+		// else if(myVentureRequestCheck != null) {
+		session.setAttribute("myVentureRequestCheck", myVentureRequestCheck);
+		// }
 	}
 
 	// 내프로필 수정
@@ -216,9 +234,8 @@ public class UserServiceImpl implements UserService {
 		req.setAttribute("profile1", profileVo);
 		System.out.println(result);
 		System.out.println(profileVo.getProintro());
-		//req.setAttribute("result", result);
-		
-		
+		// req.setAttribute("result", result);
+
 		return result;
 
 	}
@@ -269,10 +286,11 @@ public class UserServiceImpl implements UserService {
 	// 그룹 등록
 	// 그룹 등록
 	@Override
-	public GroupVo groupInsertOne(HttpServletRequest req, GroupVo groupVo) {;
+	public GroupVo groupInsertOne(HttpServletRequest req, GroupVo groupVo) {
+		;
 		HttpSession session = req.getSession();
 		ProfileVo profile = (ProfileVo) session.getAttribute("profile");
-		
+
 		userDao.groupInsert(groupVo);
 		groupVo = userDao.groupmyGroup(profile);
 		userDao.myGroupJoin(groupVo);
@@ -283,16 +301,15 @@ public class UserServiceImpl implements UserService {
 		session.setAttribute("group", groupVo);
 		session.setAttribute("groupCheck", 1);
 		req.setAttribute("detail", groupVo);
-		
+
 		return groupVo;
 	}
-
 
 	// 사업자등록 신청
 	@Override
 	public void ventureInsertOne(HttpServletRequest req, UpdateWaitVo updateWaitVo) {
 		userDao.ventureRequest(updateWaitVo);
-		
+
 		HttpSession session = req.getSession();
 		session.setAttribute("myVentureRequestCheck", 1);
 	}
@@ -302,7 +319,7 @@ public class UserServiceImpl implements UserService {
 	public void ventureAdmin(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		ProfileVo profile = (ProfileVo) session.getAttribute("profile");
-		
+
 		MyVentureVo myVenture = userDao.myVentureInfo(profile);
 		req.setAttribute("myVenture", myVenture);
 		session.setAttribute("myVenture", myVenture);
@@ -314,7 +331,7 @@ public class UserServiceImpl implements UserService {
 	public void ventureAdminUpdateOne(HttpServletRequest req, MyVentureVo myVenture) {
 		userDao.ventureUpdate(myVenture);
 		userDao.campInfoUpdate(myVenture);
-		
+
 		HttpSession session = req.getSession();
 		session.setAttribute("myVenture", myVenture);
 	}
@@ -322,7 +339,6 @@ public class UserServiceImpl implements UserService {
 	// 캠핑장 등록
 	@Override
 	public void campInsertOne(Model model, CampVo campVo) {
-		
 
 	}
 
@@ -330,8 +346,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void campAdmin(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		MyVentureVo myVenture =  (MyVentureVo) session.getAttribute("myVenture");
-		
+		MyVentureVo myVenture = (MyVentureVo) session.getAttribute("myVenture");
+
 		CampVo camp = userDao.myCampSelectOne(myVenture);
 		System.out.println(camp.getCanum());
 		session.setAttribute("myCamp", camp);
@@ -341,7 +357,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void campUpdateOne(Model model, CampVo campVo) {
 		int result = userDao.campUpdate(campVo);
-		model.addAttribute("myCamp",campVo);
+		model.addAttribute("myCamp", campVo);
 	}
 
 	// 내 팔로워리스트 출력

@@ -61,7 +61,7 @@
 	<select id="login" parameterType="LoginVo" resultType="ProfileVo">
 		select count(*) as logincheck,max(pronum) as pronum,max(proname) as proname, max(proid) as proid,
 		 max(propw) as propw, max(proaddr) as proaddr, max(projob) as projob, max(projender) as projender,
-		  max(proidnum) as proidnum,max(prophoto) as prophoto from profile where proid=#{id} and propw=#{pw}
+		  max(proidnum) as proidnum,max(prophoto) as prophoto , max(proprovide) as proprovide from profile where proid=#{id} and propw=#{pw}
 	</select>
 	
 	<!-- 로그인성공시 비활성화 항상 1(활성화)로 업데이트 -->
@@ -124,9 +124,14 @@
 		(#{proname},#{proid},#{propw},#{proaddr},#{projob},#{projender},#{proidnum},#{prophoto},now(),1)
 	</insert>
 	
+	<!-- 회원가입한 회원 pronum받기 -->
+	<select id="find_pronum" parameterType="ProfileVo" resultType="ProfileVo">
+		select * from profile where proname=#{proname} and proid=#{proid}
+	</select>
+	
 	<!-- 회원가입 완료시 내관리테이블 생성 -->
 	<insert id="myadminInsert" parameterType="ProfileVo">
-		insert into myadmin (#{pronum},1,1,1,0,0,'',0)
+		insert into myadmin values(#{pronum},1,1,1,0,0,'',0)
 	</insert>
 	
 	<!-- 회원가입처리 end -->

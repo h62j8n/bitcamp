@@ -70,6 +70,7 @@
 			//거절하기버튼 클릭시 데이터삭제
 			$(document).on('click', '.venture_sorry', function() {
 				$.post('${root}admin/venture/reqbye',parameter,function(){
+					$('#sorry').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();
@@ -107,6 +108,7 @@
 			//승인하기버튼 클릭시 데이터처리
 			$(document).on('click', '.venture_hello', function() {
 				$.post('${root}admin/venture/reqhi',parameter,function(){
+					$('#hello').find('.comm_buttons .btn_close').click();
 					openPop('success');
 					$('.btn_close').click(function(){
 						location.reload();

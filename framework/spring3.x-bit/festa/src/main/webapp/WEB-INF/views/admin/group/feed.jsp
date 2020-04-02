@@ -8,6 +8,10 @@
 <html>
 <head>
 <script type="text/javascript">
+	var url = window.location.href;
+	if(url.indexOf('feed')>0){
+		window.location.href='${root}empty';
+	}
 	$(document).ready(function(){
 		/* var closeBtn = $('#success2').find('.btn_close');
 		closeBtn.on('click', function() {
@@ -48,6 +52,7 @@
 				console.log(text);
 				var gncnum = $('#num').val();
 				$.post('${root}admin/group/detail/ntc_feed/cmmtdel','gncnum='+gncnum,function(data){
+					$('#delete2').find('.comm_buttons .btn_close').click();
 					$('.btn_close.ok').click(function(){
 						location.reload();
 					});
@@ -57,6 +62,7 @@
 				console.log(text);
 				var gnnum = $('#num').val();
 				$.post('${root}admin/group/detail/ntc_feed/del','gnnum='+gnnum,function(){
+					$('#delete2').find('.comm_buttons .btn_close').click();
 					$('.btn_close.ok').click(function(){
 						location.reload();
 					});
@@ -129,7 +135,7 @@
 		<div class="text box">
 			<div class="scrBar">
 				<div class="feed_content">
-					<p class="fd_content">${noticedetail.gncontent }</p>
+					<pre class="fd_content"><c:out value="${noticedetail.gncontent }"/></pre>
 				</div>
 				<ul class="comment_list">
 					<c:set var="i" value="0"/>
@@ -161,6 +167,7 @@
 				</c:if>
 			</div>
 		</div>
+		<c:if test="${noticedetail.gnphoto ne '' }">
 		<!-- # 썸네일 영역 { -->
 		<div class="img box">
 			<div class="thumb_slide">
@@ -175,6 +182,7 @@
 				<div class="swiper-pagination"></div>
 			</div>
 		</div>
+		</c:if>
 		<!--  } # 썸네일 영역 -->
 	</div>
 </div>

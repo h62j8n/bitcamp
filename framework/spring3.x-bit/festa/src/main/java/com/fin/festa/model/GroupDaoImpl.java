@@ -162,13 +162,13 @@ public class GroupDaoImpl implements GroupDao{
 	//그룹피드 수정
 	@Override
 	public int groupFeedUpdate(GroupPostVo post) {
-		return 0;
+		return sqlSession.update("group.groupFeedUpdate", post);
 	}
 
 	//그룹 공지사항 수정
 	@Override
 	public int groupNoticeUpdate(GroupNoticeVo notice) {
-		return 0;
+		return sqlSession.update("group.groupNoticeUpdate", notice);
 	}
 
 	//그룹 피드 삭제
@@ -220,36 +220,31 @@ public class GroupDaoImpl implements GroupDao{
 	//피드좋아요등록
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("group.groupFeedLikeInsert", good);
 	}
 
 	//피드좋아요해제
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("group.groupFeedLikeDelete", good);
 	}
 
 	//피드 좋아요 등록시 피드좋아요 갯수 +1
 	@Override
 	public int groupFeedLikeOnePlus(GroupPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("group.groupFeedLikeOnePlus", post);
 	}
 
 	//피드 좋아요 해제시 피드좋아요 갯수 -1
 	@Override
 	public int groupFeedLikeOneMinus(GroupPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("group.groupFeedLikeOneMinus", post);
 	}
 
 	//내 좋아요목록 갱신
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("group.myGoodRenewal", good);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -391,6 +386,10 @@ public class GroupDaoImpl implements GroupDao{
 	@Override
 	public int groupDelete(GroupVo group) {
 		return sqlSession.delete("group.groupDelete", group);
+	}
+
+	public GroupPostVo groupFeedDetailOne(GroupPostVo groupPostVo) {
+		return sqlSession.selectOne("group.groupFeedDetail", groupPostVo);
 	}
 
 }

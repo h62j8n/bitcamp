@@ -7,6 +7,7 @@
 	</c:if>
 </c:if>
 <c:url value="/" var="root" />
+<c:url value="/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <head>
 	<meta charset="UTF-8">
@@ -159,7 +160,7 @@
 					</h1>
 					<form class="search_box">
 						<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-						<button type="submit">
+						<button type="button" id="search">
 							<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 						</button>
 					</form>
@@ -191,11 +192,22 @@
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null }">
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${root }resources/upload/thumb/no_profile.png"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${upload }/${joinGroup.group.grphoto}"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -206,7 +218,7 @@
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
 												<li><a href=""> <span><img
-															src="http://placehold.it/45x45" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+															src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
 														<b>${joinGroup.group.grname }</b>
 												</a></li>
 											</c:forEach>
@@ -219,7 +231,7 @@
 										<ul>
 											<c:forEach items="${bookMark }" var="bookMark">
 												<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-														<span><img src="http://placehold.it/45x45"
+														<span><img src="${upload }/${image}"
 															alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
 												</a></li>
 											</c:forEach>
@@ -301,9 +313,18 @@
 									<a class="btn_pop btn_out" href="${root }group/out">탈퇴</a>
 								</c:if>
 							</dd>
-							<dd class="pf_picture">
-								<img src="http://placehold.it/120x120" alt="${detail.grname } 그룹 썸네일">
-							</dd>
+							<c:choose>
+								<c:when test="${detail.grphoto eq null }">
+									<dd class="pf_picture">
+										<img src="${root }resources/upload/thumb/no_profile.png" alt="${detail.grname } 그룹 썸네일">
+									</dd>
+								</c:when>
+								<c:otherwise>
+									<dd class="pf_picture">
+										<img src="${upload }/${detail.grphoto }" alt="${detail.grname } 그룹 썸네일">
+									</dd>
+								</c:otherwise>
+							</c:choose>
 						</dl>
 					</div>
 					<p class="social_btns">

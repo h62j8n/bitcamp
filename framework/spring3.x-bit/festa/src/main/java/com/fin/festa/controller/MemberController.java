@@ -32,18 +32,10 @@ public class MemberController {
 
 	// 로그인 처리
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public @ResponseBody int login(HttpServletRequest req, LoginVo loginVo) {
-		int result = memberService.login(req, loginVo);
-		/*
-		 * if(result == 0) { System.out.println("정상"); return "user/index"; } else
-		 * if(result == 1) { System.out.println("정지"); return "member/stop"; } else
-		 * if(result == 2){ System.out.println("추방"); return "member/kick"; } else
-		 * if(result == 3){ System.out.println("관리자"); return "admin/index"; } else {
-		 * System.out.println("아이디 비밀번호 확인");
-		 * 
-		 * return "redirect:/?err=Err"; }
-		 */		// 성공시 로그인정보, 가입그룹목록, 북마크, 채팅, 팔로워, 팔로잉 목록을 세션에 담아서 가져간다.
-		return result;
+	public @ResponseBody ProfileVo login(HttpServletRequest req, LoginVo loginVo) {
+		ProfileVo profile = memberService.login(req, loginVo);
+
+		return profile;
 	}
 	
 	//정지
@@ -81,13 +73,18 @@ public class MemberController {
 
 	// ID중복체크
 	@RequestMapping(value = "join/idcheck", method = RequestMethod.POST)
-	public String idCheck(Model model, LoginVo loginVo) {
-		return "member/join";
+	@ResponseBody
+	public int idCheck(Model model, LoginVo loginVo) {
+		System.out.println("접속");
+		int result = memberService.idCheck(model, loginVo);
+		System.out.println(result);
+		return result;
 	}
 
 	// 회원가입 성공
 	@RequestMapping(value = "join", method = RequestMethod.POST)
 	public String memberInsertOne(Model model, ProfileVo profileVo) {
+		memberService.memberInsertOne(model, profileVo);
 		return "member/success";
 	}
 
@@ -105,8 +102,11 @@ public class MemberController {
 
 	// ID찾기 처리 (팝업>팝업 내 기능)
 	@RequestMapping(value = "find_id", method = RequestMethod.POST)
-	public String findId(Model model, LoginVo loginVo) {
-		return "member/find_id";
+	@ResponseBody
+	public ProfileVo findId(Model model, LoginVo loginVo) {
+		ProfileVo profile =  memberService.findId(model, loginVo);
+		
+		return profile;
 	}
 
 	// PW찾기 화면 (팝업)
@@ -117,8 +117,18 @@ public class MemberController {
 
 	// PW찾기 처리 (팝업>팝업 내 기능)
 	@RequestMapping(value = "find_pw", method = RequestMethod.POST)
-	public String findPw(Model model, LoginVo loginVo) {
-		return "member/find_pw";
+	@ResponseBody
+	public ProfileVo findPw(Model model, LoginVo loginVo) {
+		ProfileVo profile =  memberService.findPw(model, loginVo);
+		return profile;
+	}
+	
+	// PW 업데이트
+	@RequestMapping(value="update_pw", method= RequestMethod.POST)
+	public String updatePw(Model model,ProfileVo profile) {
+		System.out.println("접속");
+		memberService.updatePw(model, profile);
+		return "index";
 	}
 
 }

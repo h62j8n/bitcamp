@@ -4,11 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import com.fin.festa.model.GroupDaoImpl;
 import com.fin.festa.model.SearchDaoImpl;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
+import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
@@ -23,15 +26,32 @@ public class SearchServiceImpl implements SearchService{
 	
 	@Autowired
 	SearchDaoImpl searchDao;
+
+	@Autowired
+	GroupDaoImpl groupDao;
 	
 	//검색조건으로 캠핑장, 그룹, 피드출력 (정렬순 좋아요)
 	//캠핑장 - 캠핑장이름으로 출력
 	//그룹 - 그룹명으로 출력
 	//피드(개인,그룹) - 해시태그로 출력
+	@Transactional
 	@Override
 	public void search(Model model, PageSearchVo pageSearchVo) {
-		// TODO Auto-generated method stub
 		
+		model.addAttribute("searchCamp", searchDao.searchCampSelectAll(pageSearchVo));
+		model.addAttribute("searchGroup", searchDao.searchGroupSelectAll(pageSearchVo));
+		model.addAttribute("searchGRFeed", searchDao.searchMyFeedSelectAll(pageSearchVo));
+		model.addAttribute("searchFeed", searchDao.searchGroupFeedSelectAll(pageSearchVo));
+		
+		//첫화면불러올때 페이지넘버가 0이니까 1로 맞춰줌
+		if(pageSearchVo.getPage()==0) {
+			pageSearchVo.setPage(1);
+		}		
+		GroupVo groupVo=new GroupVo();
+		groupVo.setPageSearch(pageSearchVo);		
+		groupVo.getPageSearch().setTotalCount(groupDao.groupUserTotalCount(groupVo));
+		model.addAttribute("userdetail", groupDao.groupUserSearch(groupVo));
+		model.addAttribute("pageSearch", groupVo.getPageSearch());
 	}
 
 	//피드상세페이지 출력(그룹피드,개인피드 구분) 

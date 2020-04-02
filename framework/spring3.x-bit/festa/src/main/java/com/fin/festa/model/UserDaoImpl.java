@@ -6,8 +6,11 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.ui.Model;
 
 import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupCommentVo;
+import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.LoginVo;
 import com.fin.festa.model.entity.MyAdminVo;
@@ -55,6 +58,12 @@ public class UserDaoImpl implements UserDao{
 		return sqlSession.selectList("user.myFeedCmmtSelectAll",profile);
 	}
 
+	//피드댓글 더보기 비동기
+	@Override
+	public List<MyCommentVo> FeedDetailCmmt(Model model, MyPostVo mypost) {
+		return sqlSession.selectList("user.FeedDetailCmmt",mypost);
+	}
+	
 	//내피드갯수 출력
 	@Override
 	public int myFeedCount(ProfileVo profile) {
@@ -94,7 +103,13 @@ public class UserDaoImpl implements UserDao{
 	public void myFeedInsertOne(MyPostVo post) {
 		sqlSession.insert("user.myFeedInsert",post);
 	}
-
+	
+	//내피드 디테일
+	@Override
+	public MyPostVo myFeedDetail(MyPostVo post) {
+		return sqlSession.selectOne("user.myFeedDetail",post);
+	}
+	
 	//내피드 수정
 	@Override
 	public int myFeedUpdateOne(MyPostVo post) {

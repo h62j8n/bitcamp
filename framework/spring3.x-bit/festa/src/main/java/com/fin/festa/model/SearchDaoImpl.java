@@ -29,29 +29,25 @@ public class SearchDaoImpl implements SearchDao{
 	//검색했을시 캠핑장정보 출력
 	@Override
 	public List<CampVo> searchCampSelectAll(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.searchCampSelectAll", search);
 	}
 
 	//검색했을시 그룹정보 출력
 	@Override
 	public List<GroupVo> searchGroupSelectAll(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.searchGroupSelectAll", search);
 	}
 
 	//검색했을시 내피드정보 출력
 	@Override
 	public List<MyPostVo> searchMyFeedSelectAll(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.searchMyFeedSelectAll", search);
 	}
 
 	//검색했을시 그룹피드정보 출력
 	@Override
 	public List<GroupPostVo> searchGroupFeedSelectAll(PageSearchVo search) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.searchGroupFeedSelectAll", search);
 	}
 
 	/////////////////////////////////////////////////////////
@@ -61,29 +57,25 @@ public class SearchDaoImpl implements SearchDao{
 	//개인피드 상세페이지
 	@Override
 	public MyPostVo myFeedDetail(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectOne("search.myFeedDetail", post);
 	}
 
 	//그룹피드 상세페이지
 	@Override
 	public GroupPostVo groupFeedDetail(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectOne("search.groupFeedDetail", grouppost);
 	}
 
 	//내피드 댓글출력
 	@Override
 	public List<MyCommentVo> myFeedCmmtSelectAll(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.myFeedCmmtSelectAll", post);
 	}
 
 	//그룹피드 댓글출력
 	@Override
 	public List<GroupCommentVo> groupFeedCmmtSelectAll(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.groupFeedCmmtSelectAll", grouppost);
 	}
 
 	/////////////////////////////////////////////////////////
@@ -93,57 +85,49 @@ public class SearchDaoImpl implements SearchDao{
 	//내피드수정
 	@Override
 	public int myFeedUpdateOne(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.myFeedUpdateOne", post);
 	}
 
 	//그룹피드수정
 	@Override
 	public int groupFeedUpdateOne(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.groupFeedUpdateOne", grouppost);
 	}
 
 	//내피드삭제
 	@Override
 	public int myFeedDeleteOne(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.myFeedDeleteOne", post);
 	}
 
 	//그룹피드삭제
 	@Override
 	public int groupFeedDeleteOne(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.groupFeedDeleteOne", grouppost);
 	}
 
 	//내피드 댓글등록
 	@Override
 	public void myFeedCmmtInsertOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.myFeedCmmtInsertOne", cmmt);
 	}
 
 	//그룹피드 댓글등록
 	@Override
 	public void groupFeedCmmtInsertOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.groupFeedCmmtInsertOne", groupcmmt);
 	}
 
 	//내피드 댓글삭제
 	@Override
 	public int myFeedCmmtDeleteOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.myFeedCmmtDeleteOne", cmmt);
 	}
 
 	//그룹피드 댓글삭제
 	@Override
 	public int groupFeedCmmtDeleteOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.groupFeedCmmtDeleteOne", groupcmmt);
 	}
 
 	/////////////////////////////////////////////////////////
@@ -153,64 +137,55 @@ public class SearchDaoImpl implements SearchDao{
 	//내피드 좋아요등록
 	@Override
 	public void myFeedLikeInsertOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.myFeedLikeInsertOne", good);
 	}
 
 	//그룹피드 좋아요등록
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.groupFeedLikeInsertOne", good);
 	}
 
 	//내피드 좋아요해제
 	@Override
 	public int myFeedLikeDeleteOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.myFeedLikeDeleteOne", good);
 	}
 
 	//그룹피드 좋아요해제
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("search.groupFeedLikeDeleteOne", good);
 	}
 
 	//내피드 좋아요등록시 피드좋아요 갯수+1
 	@Override
 	public int myFeedLikePlusOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.myFeedLikePlusOne", good);
 	}
 
 	//그룹피드 좋아요등록시 피드좋아요 갯수+1
 	@Override
 	public int groupFeedLikePlusOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.groupFeedLikePlusOne", good);
 	}
 
 	//내피드 좋아요해제시 피드좋아요 갯수-1
 	@Override
 	public int myFeedLikeMinusOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.myFeedLikeMinusOne", good);
 	}
 
 	//그룹피드 좋아요해제시 피드좋아요 갯수-1
 	@Override
 	public int groupFeedLikeMinusOne(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.groupFeedLikeMinusOne", good);
 	}
 
 	//내 좋아요목록 갱신
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("search.myGoodRenewal", good);
 	}
 
 	/////////////////////////////////////////////////////////
@@ -220,22 +195,19 @@ public class SearchDaoImpl implements SearchDao{
 	//내피드신고등록
 	@Override
 	public void myFeedReportInsertOne(ReportListVo report) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.myFeedReportInsertOne", report);
 	}
 
 	//그룹피드신고등록
 	@Override
 	public void groupFeedReportInsertOne(ReportListVo report) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("search.groupFeedReportInsertOne", report);
 	}
 	
 	//피드신고등록시 신고당한사람 신고당한횟수 +1
 	@Override
 	public int feedUserReportCountUpdate(ReportListVo report) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("search.feedUserReportCountUpdate", report);
 	}
 
 

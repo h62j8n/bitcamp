@@ -1,4 +1,5 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
@@ -53,16 +54,21 @@
 				var pronum = $('#wrap>input[type=hidden]').eq(0).val();
 				var num;
 				var checking = $(this).hasClass('act');
+				var heart = $(this).parent().parent().siblings('.feed_inform').find('.fd_liked');
 				//좋아요 등록
 				if(checking){
 					//그 피드가 개인피드일때
 					if($(this).parent().parent().siblings('.feed_inform').find('.fd_group').length==0){
 						num = $(this).parent().parent().siblings('.feed_inform').find('input[type=hidden]').eq(1).val();
-						$.post('${root}hot/likeadd','pronum='+pronum+'&mpnum='+num);
+						$.post('${root}hot/likeadd','pronum='+pronum+'&mpnum='+num,function(){
+							heart.html(Number(heart.text())+1);
+						});
 					//그 피드가 그룹피드일때
 					}else{
 						num = $(this).parent().parent().siblings('.feed_inform').find('input[type=hidden]').eq(1).val();
-						$.post('${root}hot/likeadd','pronum='+pronum+'&gpnum='+num);
+						$.post('${root}hot/likeadd','pronum='+pronum+'&gpnum='+num,function(){
+							heart.html(Number(heart.text())+1);
+						});
 					}
 					
 				//좋아요 해제
@@ -70,11 +76,15 @@
 					//그 피드가 개인피드일때
 					if($(this).parent().parent().siblings('.feed_inform').find('.fd_group').length==0){
 						num = $(this).parent().parent().siblings('.feed_inform').find('input[type=hidden]').eq(1).val();
-						$.post('${root}hot/likedel','pronum='+pronum+'&mpnum='+num);
+						$.post('${root}hot/likedel','pronum='+pronum+'&mpnum='+num,function(){
+							heart.html(Number(heart.text())-1);
+						});
 					//그 피드가 그룹피드일때
 					}else{
 						num = $(this).parent().parent().siblings('.feed_inform').find('input[type=hidden]').eq(1).val();
-						$.post('${root}hot/likedel','pronum='+pronum+'&gpnum='+num);
+						$.post('${root}hot/likedel','pronum='+pronum+'&gpnum='+num,function(){
+							heart.html(Number(heart.text())-1);
+						});
 					}
 				}
 			});
@@ -84,11 +94,11 @@
 			if($('#wrap>input[type=hidden]').eq(0).val()!=''){
 			    for(var i = 0; i< goodSize; i++){
 			    	if($('.content_area>.feed_viewer .feed_options').eq(i).find('.btn_liked').hasClass('act')==false){
-			        	 var userNum = $('.content_area>.feed_viewer .feed_inform').eq(i).find('input[type=hidden]').eq(0).val();
+			         	$('.content_area>.feed_viewer .feed_options').eq(i).prepend('<li><button class="btn_liked"><em class="snd_only">하트</em></button></li>');
+			        	 /* var userNum = $('.content_area>.feed_viewer .feed_inform').eq(i).find('input[type=hidden]').eq(0).val();
 			        	 var myNum = $('#wrap>input[type=hidden]').eq(0).val();
 			        	 if(userNum!=myNum){
-				         	$('.content_area>.feed_viewer .feed_options').eq(i).prepend('<li><button class="btn_liked"><em class="snd_only">하트</em></button></li>');
-			        	 }
+			        	 } */
 			        }
 			    }
 			}
@@ -120,6 +130,7 @@
 				if($('#feednum').attr('name')=='mpnum'){
 					var mpnum = $('#feednum').val();
 					$.post('${root}hot/del','mpnum='+mpnum,function(){
+						$('#delete_feed').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -128,6 +139,7 @@
 				}else{
 					var gpnum = $('#feednum').val();
 					$.post('${root}hot/del','gpnum='+gpnum,function(){
+						$('#delete_feed').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -141,6 +153,7 @@
 				if($('#cmmtnum').attr('name')=='mcnum'){
 					var mcnum = $('#cmmtnum').val();
 					$.post('${root}hot/cmmtdel','mcnum='+mcnum,function(){
+						$('#delete_cmmt').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -149,6 +162,7 @@
 				}else{
 					var gcnum = $('#cmmtnum').val();
 					$.post('${root}hot/cmmtdel','gcnum='+gcnum,function(){
+						$('#delete_cmmt').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -185,7 +199,7 @@
 					}
 					comments.append('<li>'+
 							'<a href="${root }user/?pronum='+data[index].pronum+'" class="pf_picture">'+
-								'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일">'+
+								'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일" onload="squareTrim($(this), 30)">'+
 							'</a><p class="cmt_content">'+
 								'<a href="${root }user/?pronum='+data[index].pronum+'" class="cmt_name">'+data[index].gcauthor+'</a>'+
 								data[index].gccontent+
@@ -224,7 +238,7 @@
 						}
 						comments.append('<li>'+
 								'<a href="${root }user/?pronum='+data[index].pronum+'" class="pf_picture">'+
-									'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일">'+
+									'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일" onload="squareTrim($(this), 30)">'+
 								'</a><p class="cmt_content">'+
 									'<a href="${root }user/?pronum='+data[index].pronum+'" class="cmt_name">'+data[index].mcauthor+'</a>'+
 									data[index].mccontent+
@@ -258,31 +272,9 @@
 				}
 			});
 			
-			$('.btn_edit').on('click',function(){
-				var btn = $(this);
-				var thisnum = btn.parent().parent().parent().parent().find('.feed_inform').find('input[type=hidden]').eq(1).val()
-				var content = btn.parent().parent().parent().siblings('.text.box').find('.fd_content').text();
-				var photo = btn.parent().parent().parent().siblings('input[type=hidden]').val();;
-				var hash1 = btn.parent().parent().parent().siblings('.text.box').find('.fd_hashtag li a').eq(0).text();
-				var hash2 = btn.parent().parent().parent().siblings('.text.box').find('.fd_hashtag li a').eq(1).text();
-				var hash3 = btn.parent().parent().parent().siblings('.text.box').find('.fd_hashtag li a').eq(2).text();
-				
-				//개인피드일때
-				if(btn.parent().parent().parent().parent().find('.feed_inform').find('.fd_group').length==0){
-					$.get('${root}hot/maker','mpnum='+thisnum+'&mpcontent='+content+'&mpphoto='+photo+'&httitle1='+hash1+'&httitle2='+hash2+'&httitle3='+hash3,function(){
-						
-					});
-				//그룹피드일때
-				}else{
-					$.get('${root}hot/maker','gpnum='+thisnum+'&gpcontent='+content+'&gpphoto='+photo+'&httitle1='+hash1+'&httitle2='+hash2+'&httitle3='+hash3,function(){
-						
-					});
-				}
-				return false;
-			});
-			
 			
 		});
+		
 			
 	</script>
 </head>
@@ -300,8 +292,8 @@
 				<h1>
 					<a href="${root}"><em class="snd_only">FESTA</em></a>
 				</h1>
-				<form class="search_box">
-					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+				<form class="search_box" action="${root }search/">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
 					<button type="submit"><img src="${root}resources/images/ico/btn_search.png" alt="검색"></button>
 				</form>
 				<ul id="gnb">
@@ -329,11 +321,22 @@
                            <div class="my_list">
                               <ul>
                                  <c:forEach items="${joinGroup }" var="joinGroup">
-                                    <li><a
-                                       href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-                                          <span><img src="${upload }/${joinGroup.group.grphoto}"
-                                             alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-                                    </a></li>
+                                    <c:choose>
+                                       <c:when test="${joinGroup.group.grphoto eq null }">
+                                          <li><a
+                                             href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+                                                <span><img src="${root }resources/upload/thumb/no_profile.png"
+                                                   alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+                                          </a></li>
+                                       </c:when>
+                                       <c:otherwise>
+                                          <li><a
+                                             href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+                                                <span><img src="${upload }/${joinGroup.group.grphoto}"
+                                                   alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+                                          </a></li>
+                                       </c:otherwise>
+                                    </c:choose>
                                  </c:forEach>
                               </ul>
                            </div>
@@ -405,16 +408,18 @@
 									</dd>
 								</dl>
 								<ul class="feed_options">
-									<c:if test="${login ne null and login.pronum ne feedList.pronum }">
+									<c:if test="${login ne null}">
 										<c:forEach items="${goodlist }" var="goodlist">
 											<c:if test="${goodlist.mpnum eq feedList.mpnum }">
 												<li><button class="btn_liked act"><em class="snd_only">하트</em></button></li>
 											</c:if>
 										</c:forEach>
-										<li><a href="${root}hot/report?mpnum=${feedList.mpnum}&profile.pronum=${feedList.pronum}&profile.proname=${feedList.profile.proname}&profile.proid=${feedList.profile.proid}" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+										<c:if test="${login.pronum ne feedList.pronum }">
+											<li><a href="${root}hot/report?mpnum=${feedList.mpnum}&profile.pronum=${feedList.pronum}&profile.proname=${feedList.profile.proname}&profile.proid=${feedList.profile.proid}" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+										</c:if>
 									</c:if>
 									<c:if test="${login ne null and login.pronum eq feedList.pronum }">
-										<li><a href="${root}hot/maker?mpnum=${feedList.mpnum}&mpcontent=${feedList.mpcontent}&mpphoto=${feedList.mpphoto}&httitle1=${feedList.httitle1}&httitle2=${feedList.httitle2}&httitle3=${feedList.httitle3}" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+										<li><a href="${root }hot/maker?mpnum=${feedList.mpnum}" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
 										<li><button class="btn_pop btn_delete btn_feed" data-layer="delete_feed" data-value="${feedList.mpnum }"><em class="snd_only">삭제하기</em></button></li>
 									</c:if>
 								</ul>
@@ -429,36 +434,36 @@
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle1 && empty feedList.httitle2}">
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle2 && empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle1 && empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle1}">
-													<li><a href="">${feedList.httitle2}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle2}">
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
 												</c:when>
 												<c:otherwise>
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle2}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</ul>
-										<p class="fd_content">${feedList.mpcontent }</p>
+										<pre class="fd_content"><c:out value="${feedList.mpcontent }"/></pre>
 									</div>
 									<ul class="comment_list">
 										<c:set var="i" value="0" />
@@ -555,16 +560,18 @@
 									</dd>
 								</dl>
 								<ul class="feed_options">
-									<c:if test="${login ne null and login.pronum ne feedList.pronum }">
+									<c:if test="${login ne null}">
 										<c:forEach items="${goodlist }" var="goodlist">
 											<c:if test="${goodlist.gpnum eq feedList.gpnum }">
 												<li><button class="btn_liked act"><em class="snd_only">하트</em></button></li>
 											</c:if>
 										</c:forEach>
-										<li><a href="${root}hot/report?gpnum=${feedList.gpnum}&profile.pronum=${feedList.pronum}&profile.proname=${feedList.profile.proname}&profile.proid=${feedList.profile.proid}" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+										<c:if test="${login.pronum ne feedList.pronum }">
+											<li><a href="${root}hot/report?gpnum=${feedList.gpnum}&profile.pronum=${feedList.pronum}&profile.proname=${feedList.profile.proname}&profile.proid=${feedList.profile.proid}" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+										</c:if>
 									</c:if>
 									<c:if test="${login ne null and login.pronum eq feedList.pronum }">
-										<li><a href="${root}hot/maker?gpnum=${feedList.gpnum}&gpcontent=${feedList.gpcontent}&gpphoto=${feedList.gpphoto}&httitle1=${feedList.httitle1}&httitle2=${feedList.httitle2}&httitle3=${feedList.httitle3}" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+										<li><a href="${root }hot/maker?gpnum=${feedList.gpnum}" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
 										<li><button class="btn_pop btn_delete btn_feed" data-layer="delete_feed" data-value="${feedList.gpnum }"><em class="snd_only">삭제하기</em></button></li>
 									</c:if>
 								</ul>
@@ -579,36 +586,36 @@
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle1 && empty feedList.httitle2}">
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle2 && empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
 												</c:when>
 												<c:when
 													test="${empty feedList.httitle1 && empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle1}">
-													<li><a href="">${feedList.httitle2}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle2}">
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:when>
 												<c:when test="${empty feedList.httitle3}">
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
 												</c:when>
 												<c:otherwise>
-													<li><a href="">${feedList.httitle1}</a></li>
-													<li><a href="">${feedList.httitle2}</a></li>
-													<li><a href="">${feedList.httitle3}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle1}">${feedList.httitle1}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle2}">${feedList.httitle2}</a></li>
+													<li><a href="${root }search/?keyword=${feedList.httitle3}">${feedList.httitle3}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</ul>
-										<p class="fd_content">${feedList.gpcontent }</p>
+										<pre class="fd_content"><c:out value="${feedList.gpcontent }"/></pre>
 									</div>
 									<ul class="comment_list">
 										<c:set var="i" value="0" />
@@ -797,7 +804,6 @@
 <script type="text/javascript">
 	btnPop('btn_pop2');
 	feedType('feed_viewer');
-	setFile();
 </script>
 </body>
 </html>

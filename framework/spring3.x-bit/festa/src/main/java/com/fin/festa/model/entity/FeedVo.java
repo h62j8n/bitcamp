@@ -429,6 +429,6 @@ public class FeedVo implements Comparable<FeedVo>{
 		o.date.compareTo(this.date);
 		return tmp.compareTo(this.good);
 	}
-	
+
 	
 }

@@ -31,6 +31,10 @@ public interface GroupDao {
 	
 	List<GroupCommentVo> groupFeedCmmtSelectAll(GroupVo group);
 	
+	GroupPostVo groupFeedDetailOne(GroupPostVo groupPostVo);
+
+	int groupFeedUpdate(GroupPostVo post);
+	
 	int joinGroupCheck(UpdateWaitVo wait);
 	
 	void joinGroupRequest(UpdateWaitVo wait);
@@ -38,8 +42,6 @@ public interface GroupDao {
 	void groupNoticeInsert(GroupNoticeVo notice);
 	
 	void groupFeedInsert(GroupPostVo post);
-	
-	int groupFeedUpdate(GroupPostVo post);
 	
 	int groupFeedDelete(GroupPostVo post);
 	

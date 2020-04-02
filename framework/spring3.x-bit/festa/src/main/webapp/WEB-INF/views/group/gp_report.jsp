@@ -2,42 +2,41 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:url value="/upload" var="upload"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <c:url value="/" var="root" />
 <!doctype html>
 <html>
 <head>
 <script type="text/javascript">
+	var url = window.location.href;
+	if(url.indexOf('report')>0){
+		window.location.href='${root}empty';
+	}
 	$(document).ready(function(){
 		
 		//신고하기버튼 클릭
-		$('.report_btn').on('click',function(e){
-			if($('.fl_name').val()==''){
-				openPop('empty_file');
-			}else if($('.rdo_list input[type=radio]:checked').val()==undefined){
-				openPop('empty_check');
-			}else{
-				var files = new FormData($('#form_data')[0]);
-				$.ajax({
-					type: "POST",
-					enctype: 'multipart/form-data',
-					url: '${root}group/report',
-					data: files,
-					processData: false,
-					contentType: false,
-					cache: false,
-					success: function (data) {
-						openPop('ok');
-						$('.ok_btn').on('click', function(){
-							window.location.reload();					
-						});
-					},
-					error: function (e) { 
-						openPop('fail');
-					}
-				});
-				e.preventDefault();
-			}
+		$('#form_data').on('submit',function(e){
+			var files = new FormData($('#form_data')[0]);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: '${root}group/report',
+				data: files,
+				processData: false,
+				contentType: false,
+				cache: false,
+				success: function (data) {
+					$('.comm_buttons .btn_close').click();
+					openPop('ok');
+					$('.ok_btn').on('click', function(){
+						window.location.reload();					
+					});
+				},
+				error: function (e) { 
+					openPop('fail');
+				}
+			});
+			e.preventDefault();
 		});
 	});
 </script>
@@ -60,7 +59,7 @@
 		</div>
 		<ul class="rdo_list">
 			<li>
-				<input type="radio" class="comm_rdo report_1" id="festaRs1" name="rlreport" value="타인에 대한 욕설 또는 비방">
+				<input type="radio" class="comm_rdo report_1" id="festaRs1" name="rlreport" value="타인에 대한 욕설 또는 비방" checked="checked">
 				<label for="festaRs1">타인에 대한 욕설 또는 비방</label>
 			</li>
 			<li>
@@ -101,7 +100,7 @@
 			</li>
 		</ul>
 		<div class="txt_box">
-			<textarea id="festaRs10" class="report_11" name="rlreport"></textarea>
+			<textarea class="report_11" name="rlreport"></textarea>
 		</div>
 		<div class="btn_box">
 			<p>
@@ -110,7 +109,7 @@
 			</p>
 			<ul class="comm_buttons">
 				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
-				<li><button type="button" class="comm_btn cfm report_btn">신고하기</button></li>
+				<li><button type="button" class="comm_btn sbm report_btn">신고하기</button></li>
 			</ul>
 		</div>
 	</form>
@@ -126,22 +125,6 @@
 <div id="fail" class="fstPop">
 	<div class="confirm_wrap pop_wrap">
 		<p class="pop_tit">신고등록에 실패 하였습니다.</p>
-		<ul class="comm_buttons">
-			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
-		</ul>
-	</div>
-</div>
-<div id="empty_file" class="fstPop">
-	<div class="confirm_wrap pop_wrap">
-		<p class="pop_tit">파일을 업로드 해주세요.</p>
-		<ul class="comm_buttons">
-			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
-		</ul>
-	</div>
-</div>
-<div id="empty_check" class="fstPop">
-	<div class="confirm_wrap pop_wrap">
-		<p class="pop_tit">신고내용을 선택 해주세요.</p>
 		<ul class="comm_buttons">
 			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
 		</ul>

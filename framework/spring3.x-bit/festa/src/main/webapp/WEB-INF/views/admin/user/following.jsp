@@ -9,6 +9,13 @@
 <c:if test="${sessionScope.login eq null}">
 	<c:redirect url="/empty"/>
 </c:if>
+<html>
+<script type="text/javascript">
+var url = window.location.href;
+if(url.indexOf('following')>0){
+	window.location.href='${root}empty';
+}
+</script>
 <div class="follow_wrap pop_wrap">
 	<h3 class="pop_tit"><span>팔로우</span></h3>
 	<div class="scrBar">
@@ -34,3 +41,4 @@
 <script type="text/javascript">
 	scrBar();
 </script>
+</html>

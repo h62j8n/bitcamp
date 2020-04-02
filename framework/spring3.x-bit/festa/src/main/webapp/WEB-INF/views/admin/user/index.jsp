@@ -70,6 +70,7 @@
 					stopresult=$('#stopresult').val();
 					pronum=$('#pronum').val();
 					$.post('${root}admin/user/stop','pronum='+pronum+'&stopresult='+stopresult+'&stoplv='+stoplv,function(){
+						$('#stop').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();
@@ -87,6 +88,7 @@
 					stopresult=$('#kickresult').val();
 					pronum=$('#pronum1').val();
 					$.post('${root}admin/user/kick','pronum='+pronum+'&stopresult='+stopresult,function(){
+						$('#kick').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close').click(function(){
 							location.reload();

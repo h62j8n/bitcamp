@@ -31,8 +31,8 @@ public class IndexDaoImpl implements IndexDao{
 	//가입하지않은 선호지역기반 그룹출력 -로그인
 	@Override
 	public List<GroupVo> addrGroupSelectAll(ProfileVo profile) {
-		// TODO Auto-generated method stub
-		return sqlSession.selectList("index.addrGroupList");
+		
+		return sqlSession.selectList("index.addrGroupList",profile);
 	}
 	
 	//좋아요 많은 캠핑장출력

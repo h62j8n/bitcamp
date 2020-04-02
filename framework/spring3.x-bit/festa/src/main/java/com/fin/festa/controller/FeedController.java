@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,9 +35,9 @@ public class FeedController {
 
 	//인기피드 조회
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String hotFeedSelectAll(Model model) {
+	public String hotFeedSelectAll(HttpServletRequest req) {
 		
-		feedService.hotFeedSelectAll(model);
+		feedService.hotFeedSelectAll(req);
 		return "hot/index";
 	}
 
@@ -44,14 +45,16 @@ public class FeedController {
 	@RequestMapping(value = "maker", method = RequestMethod.GET)
 	public String feedUpdateOnePop(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		
-		System.out.println(myPostVo);
-		System.out.println(groupPostVo);
+		feedService.hotFeedUpdateOnePop(model, groupPostVo, myPostVo);
 		return "hot/maker";
 	}
 	
 	//내 인기피드 수정 (팝업>팝업 내 기능)
 	@RequestMapping(value = "maker", method = RequestMethod.POST)
-	public String feedUpdateOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
+	public String feedUpdateOne(HttpServletRequest req, MyPostVo myPostVo, GroupPostVo groupPostVo, MultipartFile[] files) {
+		
+		feedService.hotFeedUpdateOne(req, groupPostVo, myPostVo, files);
+		
 		return "hot/index";
 	}
 

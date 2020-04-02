@@ -45,7 +45,7 @@
 					<button type="submit"><img src="${root }resources/images/ico/btn_search.png" alt="검색"></button>
 				</form>
 				<ul id="gnb">
-						<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+						<li><a href="${root}camp/">캠핑정보</a></li>
 						<li><a href="${root}hot/">인기피드</a></li>
 						<li><a href="${root}news/">뉴스피드</a></li>
 						<c:if test="${login eq null }">
@@ -69,11 +69,24 @@
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group?grnum=${joinGroup.group.grnum}"> <span><img
-															src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null }">
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img
+																	src="${root }resources/upload/thumb/no_profile.png"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img
+																	src="${upload }/${joinGroup.group.grphoto}"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -205,7 +218,7 @@
 										<label for="festa1" class="comm_btn cfm">등록</label>
 									</li>
 									<li>
-										<button type="button" class="comm_btn">삭제</button>
+										<button type="button" class="comm_btn btn_cancle">삭제</button>
 									</li>
 								</ul>
 							</div>
@@ -258,5 +271,9 @@
 		</ul>
 	</div>
 </div>
+<script type="text/javascript">
+setOneFile();
+</script>
+
 </body>
 </html>

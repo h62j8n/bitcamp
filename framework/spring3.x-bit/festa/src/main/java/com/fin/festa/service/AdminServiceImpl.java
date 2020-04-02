@@ -77,7 +77,7 @@ public class AdminServiceImpl implements AdminService{
 		
 		pageSearchVo.setTotalCount(adminDao.adminGroupCount(pageSearchVo));
 		
-		model.addAttribute("grouplist", adminDao.adminGroupSelectAll(pageSearchVo));
+		model.addAttribute("groupList", adminDao.adminGroupSelectAll(pageSearchVo));
 		model.addAttribute("paging", pageSearchVo);
 	}
 
@@ -284,7 +284,7 @@ public class AdminServiceImpl implements AdminService{
 		
 		pageSearchVo.setTotalCount(adminDao.adminCampCount(pageSearchVo));
 		
-		model.addAttribute("camplist", adminDao.adminCampSelectAll(pageSearchVo));
+		model.addAttribute("campList", adminDao.adminCampSelectAll(pageSearchVo));
 		model.addAttribute("paging", pageSearchVo);
 	}
 

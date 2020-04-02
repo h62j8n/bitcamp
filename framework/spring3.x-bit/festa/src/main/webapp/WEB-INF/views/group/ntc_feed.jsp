@@ -161,6 +161,35 @@
 		});//댓글더보기 end
 		
 		
+		$('#feedUpdate').on('click', function(){
+			
+			var files = new FormData($('#update_feed')[0]);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: '${root}group/ntc_maker',
+				data: files,
+				processData: false,
+				contentType: false,
+				cache: false,
+		        success : function(data) {
+	    			$.ajax({   
+	    			      url: "${root}group/ntc_feed?gnnum=${ntcDetail.gnnum}&grnum=${ntcDetail.grnum}",   
+	    			      cache: false   
+	    			}).done(function(html) {
+	    				openPop('updateOk');
+	    				$('#finish_update').on('click', function(){
+		    			    $("#feed_viewerntc").replaceWith(html);   	    					
+	    				});
+	    			});  
+		        },
+				error: function (e) { 
+					openPop('fail');
+					e.preventDefault();
+				}
+			});
+		});
+		
 	});
 </script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -175,7 +204,7 @@
 					<input type="hidden" id="ntcaddPro" value="${login.pronum}" />
 					<input type="hidden" id="ntcaddGr" value="${ntcDetail.grnum}">
 					<input type="hidden" id="ntcaddGn" value="${ntcDetail.gnnum}">
-					<span class="pf_picture"><img src="http://placehold.it/55x55" alt="${ntcDetail.gnauthor}님의 프로필 썸네일"></span>
+					<span class="pf_picture"><img src="${upload }/${ntcDetail.profile.prophoto}" alt="${ntcDetail.gnauthor}님의 프로필 썸네일"></span>
 					<span class="fd_name">[그룹장] ${ntcDetail.gnauthor}</span>
 				</a>
 				<a href="">
@@ -191,7 +220,7 @@
 				<li><a href="${root }group/ntc_report?gnnum=${ntcDetail.gnnum}&profile.pronum=${detail.profile.pronum}&profile.proname=${detail.profile.proname}&profile.proid=${detail.profile.proid}" class="btn_pop2 btn_report"><em class="snd_only">신고하기</em></a></li>
 			</c:if>
 			<c:if test="${login.pronum eq detail.pronum}">
-				<li><a href="${root }group/ntc_maker" class="btn_pop2 btn_edit"><em class="snd_only">수정하기</em></a></li>		
+				<li><button class="btn_edit btn_pop ntc" id="editntcfeed" data-layer="ntcmaker"><em class="snd_only">수정하기</em></button></li>		
 				<li><button class="btn_delete btn_pop ntc" id="deletentcfeed" data-layer="deletentcfe" data-value="${ntcDetail.gnnum }"><em class="snd_only">삭제하기</em></button></li>
 			</c:if>
 		</ul>
@@ -213,7 +242,7 @@
 							<li>
 								<!-- # 프로필 이미지 없음 { -->
 								<a href="" class="pf_picture">
-									<img src="${root }resources/upload/thumb/no_profile.png" alt="${ntcCmmt.gncauthor }님의 프로필 썸네일">
+									<img src="${upload }/${ntcCmmt.profile.prophoto}" alt="${ntcCmmt.gncauthor }님의 프로필 썸네일">
 								</a>
 								<!-- } # 프로필 이미지 없음 -->
 								<p class="cmt_content">
@@ -237,9 +266,20 @@
 			</c:if>
 		</div>
 		<form class="message_form" action="" method="post">
-			<a class="pf_picture" href="">
-				<img src="http://placehold.it/30x30" alt="나의 프로필 썸네일">
-			</a>
+			<c:choose>
+				<c:when test="${login.prophoto eq null}">
+					<a class="pf_picture" href="">
+						<img src="${root}resources/images/thumb/no_profile.png"
+							alt="${login.proname } 님의 프로필 썸네일">
+					</a>
+				</c:when>
+				<c:otherwise>
+					<a class="pf_picture" href="">
+						<img src="${upload }/${login.prophoto }"
+							alt="${login.proname } 님의 프로필 썸네일">
+					</a>
+				</c:otherwise>
+			</c:choose>
 			<p class="msg_input">
 				<textarea id="ntcaddmsg" name="ntcaddmsg" placeholder="메세지를 입력해주세요"></textarea>
 				<button type="button" class="btn_send ntccmmt"><em class="snd_only">전송</em></button>
@@ -320,10 +360,80 @@
 		</div>
 	</div>
 	
+	<div id="ntcmaker" class="fstPop">
+		<div class="feed_maker">
+		<h3>공지사항 수정하기</h3>
+		<form class="maker_form" id="update_feed" enctype="multipart/form-data">
+			<input type="hidden" name="gnnum" value="${ntcDetail.gnnum }"/>
+			<div class="mk_cont box">
+				<p class="pf_picture">
+					<c:choose>
+						<c:when test="${login.prophoto eq null }">
+							<img src="http://placehold.it/55x55" alt="${login.proname }님의 프로필 썸네일">
+						</c:when>
+						<c:otherwise>
+							<img src="${upload }/${login.prophoto}" alt="${login.proname }님의 프로필 썸네일">					
+						</c:otherwise>
+					</c:choose>
+				</p>
+				<textarea id="gpcontent1" name="gncontent" placeholder="${login.proname } 님, 무슨 생각을 하고 계신가요?" >${ntcDetail.gncontent}</textarea>
+			</div>
+			<div class="file_thumbnail mk_thumb box" style="display: block">
+				<ul>
+					<c:set var="count" value="0" />
+					<c:forTokens items="${ntcDetail.gnphoto }" delims="," var="item">
+						<c:set var="count" value="${count+1 }" />
+						<li class="ft_thumb">
+							<input type="hidden" id="gnphoto${count }" name="gnphoto" value="${item }" />
+							<input type="file" id="file1_${count }" name="filess" accept="video/*, image/*" value="${item }" /> 
+							<img src="${upload }/${item}" alt="">
+							<button class="btn_cancle" id="btn_gnphoto${count }" type="button">
+								<em class="snd_only">업로드 취소하기</em>
+							</button> <label for="file1_${count }" class="btn_file">
+								<em	class="snd_only">사진/동영상 업로드하기</em>
+							</label>
+						</li>
+					</c:forTokens>
+					<c:forEach begin="${count }" end="4">
+					<c:set var="count" value="${count+1 }" />
+						<li class="ft_btn"><input type="file"
+							id="file1_${count }" name="filess" accept="video/*, image/*" /> <img
+							src="" alt="">
+							<button class="btn_cancle" type="button">
+								<em class="snd_only">업로드 취소하기</em>
+							</button> <label for="file1_${count }" class="btn_file"><em
+								class="snd_only">사진/동영상 업로드하기</em></label></li>
+					</c:forEach>
+				</ul>
+			</div>
+			<div class="mk_bottom box">
+				<ul class="mk_btns">
+					<li>
+						<label for="file1_1" class="btn_file"><em class="snd_only">사진/동영상 업로드하기</em></label>
+					</li>
+					<li>
+						<button type="button" class="btn_send btn_close" id="feedUpdate" name="feedUpdate"><em class="snd_only">피드 수정하기</em></button>
+					</li>
+				</ul>
+			</div>
+		</form>
+	</div>
+	
+	<div id="updateOk" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">수정이 완료되었습니다.</p>
+			<ul class="comm_buttons">
+				<li><button type="button" id="finish_update" name="finish_update" class="btn_close comm_btn cfm">확인</button></li>
+			</ul>
+		</div>
+	</div>
+		<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>
+	</div>
+	
 <script type="text/javascript">
 	scrBar();
 	feedType('feed_viewer');
 	btnToggle('btn_liked');
 	btnPop('btn_pop2');
-	thumbnail();
+	setFile();
 </script>

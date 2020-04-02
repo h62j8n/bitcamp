@@ -3,6 +3,8 @@ package com.fin.festa.model;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.springframework.ui.Model;
+
 import com.fin.festa.model.entity.CampVo;
 import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.LoginVo;
@@ -120,5 +122,9 @@ public interface UserDao {
 	GroupVo groupmyGroup(ProfileVo profile);
 
 	void myGroupJoin(GroupVo group);
+
+	MyPostVo myFeedDetail(MyPostVo post);
+
+	List<MyCommentVo> FeedDetailCmmt(Model model, MyPostVo mypost);
 	
 }

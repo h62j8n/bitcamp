@@ -11,7 +11,6 @@ import com.fin.festa.model.IndexDaoImpl;
 import com.fin.festa.model.entity.ProfileVo;
 
 @Service
-@SessionAttributes("login")
 public class IndexServiceImpl implements IndexService{
 
 	//등록,수정,삭제가 최소2개이상 들어가는 메소드는 꼭 트랜잭션 적용할것!!
@@ -24,13 +23,15 @@ public class IndexServiceImpl implements IndexService{
 	//좋아요많은순 캠핑장리스트 출력
 	@Override
 	public void index(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		if(session.getAttribute("login")!=null) {
-			session.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)session.getAttribute("login")));
+		
+		//로그인상태일때 가입하지않는 그룹중 내 선호지역기반 출력
+		if(req.getSession().getAttribute("login")!=null) {
+			req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)req.getSession().getAttribute("login")));
+		//로그인상태가아닐때 가입인원많은 그룹 출력
 		}else {
-			session.setAttribute("grouplist", indexDao.totalGroupSelectAll());
+			req.setAttribute("grouplist", indexDao.totalGroupSelectAll());
 		}
-		session.setAttribute("camplist", indexDao.veryHotCampSelectAll());
+		req.setAttribute("camplist", indexDao.veryHotCampSelectAll());
 	}
 
 

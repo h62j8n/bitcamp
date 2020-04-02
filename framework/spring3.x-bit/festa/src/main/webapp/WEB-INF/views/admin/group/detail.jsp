@@ -50,6 +50,7 @@
 					console.log(text);
 					var gcnum = $('#num').val();
 					$.post('${root}admin/group/detail/cmmtdel','gcnum='+gcnum,function(){
+						$('#delete').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -60,6 +61,7 @@
 					console.log(text);
 					var gpnum = $('#num').val();
 					$.post('${root}admin/group/detail/del','gpnum='+gpnum,function(){
+						$('#delete').find('.comm_buttons .btn_close').click();
 						openPop('success');
 						$('.btn_close.ok').click(function(){
 							location.reload();
@@ -207,8 +209,12 @@
 							<span>개설일 : ${groupinfo.grdate }</span>
 						</dd>
 						<dd class="pf_picture">
-							<img src="${upload }/${groupinfo.grphoto}" alt="${groupinfo.grname } 그룹 썸네일">
-							<!-- <img src="http://placehold.it/120x120" alt="입돌아간다 그룹 썸네일"> -->
+							<c:if test="${groupinfo.grphoto ne '' }">
+								<img src="${upload }/${groupinfo.grphoto}" alt="${groupinfo.grname } 그룹 썸네일">
+							</c:if>
+							<c:if test="${groupinfo.grphoto eq '' }">
+								<img src="${root }resources/images/thumb/no_profile.png" alt="${groupinfo.grname } 그룹 썸네일">
+							</c:if>
 						</dd>
 					</dl>
 				</div>
@@ -299,7 +305,7 @@
 											</c:otherwise>
 										</c:choose>
 									</ul>
-									<p class="fd_content">${groupfeed.gpcontent }</p>
+									<pre class="fd_content"><c:out value="${groupfeed.gpcontent }"/></pre>
 								</div>
 								<ul class="comment_list">
 								<c:set var="i" value="0"/>
