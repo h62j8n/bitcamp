@@ -467,7 +467,7 @@
 							<c:choose>
 								<c:when test="${!empty ntc }">
 									<c:forEach items="${ntc}" var="ntc">
-										<li><a class="btn_pop"
+										<li><a class="btn_feed"
 											href="${root }group/ntc_feed?gnnum=${ntc.gnnum}&grnum=${detail.grnum}">
 												<b>${ntc.gndate1 }</b>&nbsp;&nbsp;|&nbsp;&nbsp;${ntc.gncontent } </a></li>
 									</c:forEach>
@@ -958,6 +958,7 @@
 		feedType('feed_viewer');
 		btnPop('btn_pop2');
 		setFile();
+		openFeed();
 	</script>
 </body>
 </html>
