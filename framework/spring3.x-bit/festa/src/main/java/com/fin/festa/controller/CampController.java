@@ -42,7 +42,7 @@ public class CampController {
 	
 	//캠핑장 상세페이지
 	@RequestMapping(value = "detail", method = RequestMethod.GET)
-	public String campSelectOne(Model model, CampVo campVo) {
+	public String campSelectOne(HttpServletRequest req, Model model, CampVo campVo) {
 		campService.campSelectOne(model, campVo);
 		campService.sameLocation(model, campVo);
 		return "camp/detail/index";
@@ -51,24 +51,28 @@ public class CampController {
 	//캠핑장 좋아요
 	@RequestMapping(value = "detail/likeadd", method = RequestMethod.POST)
 	public String likeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
+		campService.likeInsertOne(req, myGoodVo);
 		return "camp/detail/index";
 	}
 	
 	//캠핑장 좋아요 취소
 	@RequestMapping(value = "detail/likedel", method = RequestMethod.POST)
 	public String likeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
+		campService.likeDeleteOne(req, myGoodVo);
 		return "camp/detail/index";
 	}
 	
 	//캠핑장 북마크
 	@RequestMapping(value = "detail/bookadd", method = RequestMethod.POST)
 	public String bookInsertOne(HttpServletRequest req, MyBookMarkVo myBookMarkVo) {
+		campService.bookInsertOne(req, myBookMarkVo);
 		return "camp/detail/index";
 	}
 	
 	//캠핑장 북마크 취소
 	@RequestMapping(value = "detail/bookdel", method = RequestMethod.POST)
 	public String bookDeleteOne(HttpServletRequest req, MyBookMarkVo myBookMarkVo) {
+		campService.bookDeleteOne(req, myBookMarkVo);
 		return "camp/detail/index";
 	}
 	

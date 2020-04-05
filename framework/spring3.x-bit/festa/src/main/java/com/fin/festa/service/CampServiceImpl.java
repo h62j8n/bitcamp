@@ -71,54 +71,67 @@ public class CampServiceImpl implements CampService{
 	}
 
 	//캠핑장 좋아요등록
-	//캠핑장 좋아요 등록시 좋아요 갯수 +1
+	//캠핑장 좋아요 갯수 업데이트
 	//내 좋아요목록 갱신
+	@Transactional
 	@Override
 	public void likeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
+		campDao.campLikeInsert(myGoodVo);
 		
+		CampVo camp = new CampVo();
+		camp.setCanum(myGoodVo.getCanum());
+		campDao.campLikeUpdate(camp);
+		
+		req.getSession().setAttribute("goodlist", campDao.myGoodRenewal(myGoodVo));
 	}
 
 	//캠핑장 좋아요해제
-	//캠핑장 좋아요 해제시 좋아요 갯수 -1
+	//캠핑장 좋아요 갯수 업데이트
 	//내 좋아요목록 갱신
+	@Transactional
 	@Override
 	public void likeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
+		campDao.campLikeDelete(myGoodVo);
 		
+		CampVo camp = new CampVo();
+		camp.setCanum(myGoodVo.getCanum());
+		campDao.campLikeUpdate(camp);
+		
+		req.getSession().setAttribute("goodlist", campDao.myGoodRenewal(myGoodVo));
 	}
 
 	//캠핑장 북마크등록
 	//내 북마크목록 갱신
 	@Override
 	public void bookInsertOne(HttpServletRequest req, MyBookMarkVo myBookMarkVo) {
-		// TODO Auto-generated method stub
-		
+		campDao.campBookMarkInsert(myBookMarkVo);
+		req.getSession().setAttribute("bookMark", campDao.mybookRenewal(myBookMarkVo));
 	}
 
 	//캠핑장 북마크해제
 	//내 북마크목록 갱신
 	@Override
 	public void bookDeleteOne(HttpServletRequest req, MyBookMarkVo myBookMarkVo) {
-		// TODO Auto-generated method stub
-		
+		campDao.campBookMarkDelete(myBookMarkVo);
+		req.getSession().setAttribute("bookMark", campDao.mybookRenewal(myBookMarkVo));
 	}
 
 	//한줄평 등록
-	//한줄평 등록시 캠핑장 평점업데이트
+	//캠핑장 평점업데이트
 	@Transactional
 	@Override
 	public void reviewInsertOne(HttpServletRequest req, CampReviewVo campReviewVo) {
 		campDao.campReviewInsert(campReviewVo);
-		CampAvg avg = new CampAvg();
-		avg.avgCalculate(campReviewVo);
 		campDao.campAvgUpdate(campReviewVo);
 	}
 
 	//한줄평 삭제
+	//캠핑장 평점업데이트
+	@Transactional
 	@Override
 	public void reviewDeleteOne(CampReviewVo campReviewVo) {
 		campDao.campReviewDelete(campReviewVo);
+		campDao.campAvgUpdate(campReviewVo);
 	}
 
 	//해당 캠핑장 신고

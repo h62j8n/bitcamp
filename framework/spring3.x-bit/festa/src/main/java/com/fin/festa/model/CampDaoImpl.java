@@ -105,8 +105,7 @@ public class CampDaoImpl implements CampDao{
 	//캠핑장 한줄평삭제
 	@Override
 	public int campReviewDelete(CampReviewVo campReviewVo) {
-		sqlSession.delete("camp.campReviewDelete", campReviewVo);
-		return 0;
+		return sqlSession.delete("camp.campReviewDelete", campReviewVo);
 	}
 
 	///////////////////////////////////////////////////////////////
@@ -115,37 +114,26 @@ public class CampDaoImpl implements CampDao{
 	
 	//캠핑장 좋아요등록
 	@Override
-	public void campLikeInsert(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		
+	public void campLikeInsert(MyGoodVo myGoodVo) {
+		sqlSession.insert("camp.campLikeInsert", myGoodVo);
 	}
 
 	//캠핑장 좋아요해제
 	@Override
-	public int campLikeDelete(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campLikeDelete(MyGoodVo myGoodVo) {
+		return sqlSession.delete("camp.campLikeDelete", myGoodVo);
 	}
-
-	//캠핑장 좋아요등록시 캠핑장좋아요 갯수 +1
+	
+	//캠핑장 좋아요 갯수
 	@Override
-	public int campLikeOnePlus(CampVo camp) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	//캠핑장 좋아요해제시 캠핑장좋아요 갯수 -1
-	@Override
-	public int campLikeOneMinus(CampVo camp) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campLikeUpdate(CampVo campVo) {
+		return sqlSession.update("camp.campLikeUpdate", campVo);
 	}
 
 	//내 좋아요목록 갱신
 	@Override
-	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<MyGoodVo> myGoodRenewal(MyGoodVo myGoodVo) {
+		return sqlSession.selectList("camp.myGoodRenewal", myGoodVo);
 	}
 
 	///////////////////////////////////////////////////////////////
@@ -170,25 +158,19 @@ public class CampDaoImpl implements CampDao{
 	
 	//캠핑장 북마크등록
 	@Override
-	public void campBookMarkInsert(MyBookMarkVo bookMark) {
-		// TODO Auto-generated method stub
-		
+	public void campBookMarkInsert(MyBookMarkVo myBookMarkVo) {
+		sqlSession.insert("camp.campBookMarkInsert", myBookMarkVo);
 	}
 
 	//캠핑장 북마크해제
 	@Override
-	public int campBookMarkDelete(MyBookMarkVo bookMark) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int campBookMarkDelete(MyBookMarkVo myBookMarkVo) {
+		return sqlSession.delete("camp.campBookMarkDelete", myBookMarkVo);
 	}
 
 	//내 북마크목록 갱신
 	@Override
-	public List<MyBookMarkVo> myboodRenewal(MyBookMarkVo bookMark) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<MyBookMarkVo> mybookRenewal(MyBookMarkVo bookMarkVo) {
+		return sqlSession.selectList("camp.mybookRenewal", bookMarkVo);
 	}
-
-	
-
 }
