@@ -5,15 +5,15 @@ import java.util.List;
 
 import com.fin.festa.model.entity.ProfileVo;
 
-//ÇÏ·ç¸¶´Ù Á¤Áö±â°£ Ã³¸®
+//í•˜ë£¨ë§ˆë‹¤ ì •ì§€ê¸°ê°„ ì²˜ë¦¬
 public class StopUser {
 
-	//Á¤ÁöÀ¯Àú ±â°£ 1ÀÏ¾¿ °¨¼Ò
+	//ì •ì§€ìœ ì € ê¸°ê°„ 1ì¼ì”© ê°ì†Œ
 	public Object[] StopUserCount(List<ProfileVo> list) {
 		
 		Object[] obj= null;
-		List<ProfileVo> stoplv_zero = new ArrayList<>();	//Á¤Áö±â°£ÀÌ 0ÀÏÀÎ»ç¶÷À» ´ã´Â¸®½ºÆ®
-		List<ProfileVo> stoplv_over = new ArrayList<>();	//Á¤Áö±â°£ÀÌ ³²¾ÆÀÖ´Â»ç¶÷À» ´ã´Â¸®½ºÆ®
+		List<ProfileVo> stoplv_zero = new ArrayList<>();	//ì •ì§€ê¸°ê°„ì´ 0ì¼ì¸ì‚¬ëŒì„ ë‹´ëŠ”ë¦¬ìŠ¤íŠ¸
+		List<ProfileVo> stoplv_over = new ArrayList<>();	//ì •ì§€ê¸°ê°„ì´ ë‚¨ì•„ìˆëŠ”ì‚¬ëŒì„ ë‹´ëŠ”ë¦¬ìŠ¤íŠ¸
 		int stoplv=0;
 		
 		for(int i=0; i<list.size(); i++) {
@@ -21,11 +21,11 @@ public class StopUser {
 			stoplv=list.get(i).getMyAdmin().getStoplv();
 			stoplv--;
 			
-			//Á¤Áö±â°£ÀÌ 0ÀÏÀÎ »ç¶÷¸®½ºÆ®¿¡ °ªÀ» ´ãÀ½
+			//ì •ì§€ê¸°ê°„ì´ 0ì¼ì¸ ì‚¬ëŒë¦¬ìŠ¤íŠ¸ì— ê°’ì„ ë‹´ìŒ
 			if(stoplv == 0) {
 				list.get(i).getMyAdmin().setStoplv(stoplv);
 				stoplv_zero.add(list.get(i));
-			//Á¤Áö±â°£ÀÌ ³²¾ÆÀÖ´Â »ç¶÷¸®½ºÆ®¿¡ °ªÀ» ´ãÀ½
+			//ì •ì§€ê¸°ê°„ì´ ë‚¨ì•„ìˆëŠ” ì‚¬ëŒë¦¬ìŠ¤íŠ¸ì— ê°’ì„ ë‹´ìŒ
 			}else {
 				list.get(i).getMyAdmin().setStoplv(stoplv);
 				stoplv_over.add(list.get(i));

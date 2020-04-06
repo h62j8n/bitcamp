@@ -3,23 +3,23 @@ package com.fin.festa.model.entity;
 import java.sql.Date;
 import java.util.List;
 
-public class GroupVo {					//±×·ì
+public class GroupVo {					//ê·¸ë£¹
 	
-	private List<GroupVo> groupList;	//±×·ì ¹è¿­ÆÄ¶ó¹ÌÅÍ¿¡ ¾²ÀÌ´Â°ª
-	private int grnum;					//±×·ì ¹øÈ£ (pk)
-	private String grname;				//±×·ì ÀÌ¸§
-	private String grintro;				//±×·ì ¼Ò°³
-	private String grphoto;				//±×·ì »çÁøs
-	private String graddr;				//±×·ì ÁÖ¼Ò
-	private String httitle1;			//±×·ìÇØ½ÃÅÂ±×1
-	private String httitle2;			//±×·ìÇØ½ÃÅÂ±×2
-	private String httitle3;			//±×·ìÇØ½ÃÅÂ±×3
-	private Date grdate;				//±×·ì »ı¼ºÀÏ
-	private int pronum;					//±×·ì ´ëÇ¥ÀÚ ¹øÈ£
-	private int grtotal;				//±×·ì ÀÎ¿ø¼ö
-	private int grventure;				//±×·ì »ç¾÷ÀÚ À¯¹«
-	private int grrn;					//ÆäÀÌÁö ¹øÈ£
-	private int jointot;				//°¡ÀÔ½ÂÀÎ µî·Ï½Ã ÀÎ¿ø¼ö,À¯ÀúÃß¹æ½Ã ÀÎ¿ø¼ö
+	private List<GroupVo> groupList;	//ê·¸ë£¹ ë°°ì—´íŒŒë¼ë¯¸í„°ì— ì“°ì´ëŠ”ê°’
+	private int grnum;					//ê·¸ë£¹ ë²ˆí˜¸ (pk)
+	private String grname;				//ê·¸ë£¹ ì´ë¦„
+	private String grintro;				//ê·¸ë£¹ ì†Œê°œ
+	private String grphoto;				//ê·¸ë£¹ ì‚¬ì§„s
+	private String graddr;				//ê·¸ë£¹ ì£¼ì†Œ
+	private String httitle1;			//ê·¸ë£¹í•´ì‹œíƒœê·¸1
+	private String httitle2;			//ê·¸ë£¹í•´ì‹œíƒœê·¸2
+	private String httitle3;			//ê·¸ë£¹í•´ì‹œíƒœê·¸3
+	private Date grdate;				//ê·¸ë£¹ ìƒì„±ì¼
+	private int pronum;					//ê·¸ë£¹ ëŒ€í‘œì ë²ˆí˜¸
+	private int grtotal;				//ê·¸ë£¹ ì¸ì›ìˆ˜
+	private int grventure;				//ê·¸ë£¹ ì‚¬ì—…ì ìœ ë¬´
+	private int grrn;					//í˜ì´ì§€ ë²ˆí˜¸
+	private int jointot;				//ê°€ì…ìŠ¹ì¸ ë“±ë¡ì‹œ ì¸ì›ìˆ˜,ìœ ì €ì¶”ë°©ì‹œ ì¸ì›ìˆ˜
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

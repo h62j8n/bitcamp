@@ -47,7 +47,7 @@
 				</h1>
 				<c:if test="${login.proid ne 'admin@festa.com' }">
 					<form class="search_box" action="${root }search/">
-						<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+						<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
 						<button type="submit"><img src="${root }resources/images/ico/btn_search.png" alt="검색"></button>
 					</form>
 					</c:if>
@@ -62,7 +62,7 @@
 					</c:if>
 					<c:if test="${login ne null }">
 						<c:if test="${login.proid ne 'admin@festa.com' }">
-							<li><a href="${root}user/">마이페이지</a></li>
+							<li><a href="${root}user/?pronum=${login.pronum}">마이페이지</a></li>
 						</c:if>
 						<c:if test="${login.proid eq 'admin@festa.com' }">
 							<li><a href="${root}admin/">관리자</a></li>

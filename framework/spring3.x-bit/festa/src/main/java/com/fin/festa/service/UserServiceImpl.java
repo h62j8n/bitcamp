@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -143,19 +144,30 @@ public class UserServiceImpl implements UserService {
 	// 내피드 좋아요등록
 	// 내피드 좋아요등록시 피드좋아요갯수 +1
 	// 내 좋아요목록 갱신
+	@Transactional
 	@Override
 	public void likeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
-
+		userDao.myFeedLikeInsertOne(myGoodVo);
+		MyPostVo post = new MyPostVo();
+		post.setMpnum(myGoodVo.getMpnum());
+		
+		userDao.myFeedLikeOnePlus(post);
+		req.getSession().setAttribute("goodlist", userDao.myGoodRenewal(myGoodVo));
 	}
 
 	// 내피드 좋아요해제
 	// 내피드 좋아요해제시 피드좋아요갯수 -1
 	// 내 좋아요목록 갱신
+	@Transactional
 	@Override
 	public void likeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
-
+		userDao.myFeedLikeDeleteOne(myGoodVo);
+		MyPostVo post = new MyPostVo();
+		post.setMpnum(myGoodVo.getMpnum());
+		
+		userDao.myFeedLikeOneMinus(post);
+		req.getSession().setAttribute("goodlist", userDao.myGoodRenewal(myGoodVo));
+		
 	}
 
 	// 내팔로잉목록에 등록
@@ -163,8 +175,7 @@ public class UserServiceImpl implements UserService {
 	// 내 팔로잉목록 갱신
 	@Override
 	public void followInsertOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	// 내팔로잉목록에 삭제
@@ -172,8 +183,11 @@ public class UserServiceImpl implements UserService {
 	// 내 팔로잉목록 갱신
 	@Override
 	public void followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
-		// TODO Auto-generated method stub
-
+		userDao.myFollowingDeleteOne(myFollowingVo);
+		userDao.yourFollowerDeleteOne(myFollowingVo);
+		
+		HttpSession session = req.getSession();
+		session.setAttribute("followlist", userDao.myFollowingRenewal(myFollowingVo));
 	}
 
 	// 유저신고등록
@@ -287,7 +301,6 @@ public class UserServiceImpl implements UserService {
 	// 그룹 등록
 	@Override
 	public GroupVo groupInsertOne(HttpServletRequest req, GroupVo groupVo) {
-		;
 		HttpSession session = req.getSession();
 		ProfileVo profile = (ProfileVo) session.getAttribute("profile");
 
@@ -362,16 +375,14 @@ public class UserServiceImpl implements UserService {
 
 	// 내 팔로워리스트 출력
 	@Override
-	public void followerList(Model model, ProfileVo profile) {
-		// TODO Auto-generated method stub
-
+	public void followerList(HttpServletRequest req, ProfileVo profile) {
+		req.setAttribute("follower", userDao.myFollowerSelectAll(profile));
 	}
 
 	// 내 팔로잉리스트 출력
 	@Override
-	public void followList(Model model, ProfileVo profile) {
-		// TODO Auto-generated method stub
-
+	public void followList(HttpServletRequest req, ProfileVo profile) {
+		req.setAttribute("following", userDao.myFollowingSelectAll(profile));
 	}
 
 }

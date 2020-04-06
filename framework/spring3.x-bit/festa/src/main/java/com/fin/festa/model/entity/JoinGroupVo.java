@@ -3,14 +3,14 @@ package com.fin.festa.model.entity;
 import java.sql.Date;
 import java.util.List;
 
-public class JoinGroupVo {						//°¡ÀÔ±×·ì¸ñ·Ï 
+public class JoinGroupVo {						//ê°€ì…ê·¸ë£¹ëª©ë¡ 
 	
-	private List<JoinGroupVo> joinGroupList;	//±×·ì ¹è¿­ÆÄ¶ó¹ÌÅÍ¿¡ ¾²ÀÌ´Â°ª
-	private int jgnum;							//±×·ì¹­À½ ¹øÈ£ (pk)
-	private String grname;						//°¡ÀÔ±×·ì ÀÌ¸§
-	private int grnum;							//°¡ÀÔ±×·ì ¹øÈ£
-	private int pronum;							//³» ¹øÈ£
-	private Date jgdate;						//±×·ì°¡ÀÔÀÏ
+	private List<JoinGroupVo> joinGroupList;	//ê·¸ë£¹ ë°°ì—´íŒŒë¼ë¯¸í„°ì— ì“°ì´ëŠ”ê°’
+	private int jgnum;							//ê·¸ë£¹ë¬¶ìŒ ë²ˆí˜¸ (pk)
+	private String grname;						//ê°€ì…ê·¸ë£¹ ì´ë¦„
+	private int grnum;							//ê°€ì…ê·¸ë£¹ ë²ˆí˜¸
+	private int pronum;							//ë‚´ ë²ˆí˜¸
+	private Date jgdate;						//ê·¸ë£¹ê°€ì…ì¼
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

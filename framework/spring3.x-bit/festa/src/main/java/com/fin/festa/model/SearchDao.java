@@ -2,7 +2,10 @@ package com.fin.festa.model;
 
 import java.util.List;
 
+import org.springframework.ui.Model;
+
 import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -18,17 +21,23 @@ public interface SearchDao {
 	
 	List<GroupVo> searchGroupSelectAll(PageSearchVo search);
 	
-	List<MyPostVo> searchMyFeedSelectAll(PageSearchVo search);
+	int searchGroupCount(PageSearchVo search);
 	
-	List<GroupPostVo> searchGroupFeedSelectAll(PageSearchVo search);
+	List<FeedVo> searchMyFeedSelectAll(PageSearchVo search);
 	
-	MyPostVo myFeedDetail(MyPostVo post);
+	List<FeedVo> searchGroupFeedSelectAll(PageSearchVo search);
 	
-	List<MyCommentVo> myFeedCmmtSelectAll(MyPostVo post);
+	FeedVo myFeedDetail(MyPostVo post);
 	
-	GroupPostVo groupFeedDetail(GroupPostVo grouppost);
+	List<MyCommentVo> myFeedCmmtSelectAll(FeedVo feed);
 	
-	List<GroupCommentVo> groupFeedCmmtSelectAll(GroupPostVo grouppost);
+	FeedVo groupFeedDetail(GroupPostVo grouppost);
+	
+	List<GroupCommentVo> groupFeedCmmtSelectAll(FeedVo feed);
+	
+	List<GroupCommentVo> searchGroupCmmt(GroupCommentVo groupCommentVo);
+	
+	List<MyCommentVo> searchMyCmmt(MyCommentVo myCommentVo);
 	
 	int myFeedUpdateOne(MyPostVo post);
 	

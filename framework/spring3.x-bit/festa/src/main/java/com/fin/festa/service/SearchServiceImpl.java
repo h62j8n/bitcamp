@@ -1,14 +1,17 @@
 package com.fin.festa.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fin.festa.model.GroupDaoImpl;
 import com.fin.festa.model.SearchDaoImpl;
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -17,101 +20,198 @@ import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.util.DateCalculate;
+import com.fin.festa.util.UploadPhoto;
 
 @Service
 public class SearchServiceImpl implements SearchService{
 
-	//Äõ¸®¹® ´Ù½Ã ¼Õº¼°Í
-	//µî·Ï,¼öÁ¤,»èÁ¦°¡ ÃÖ¼Ò2°³ÀÌ»ó µé¾î°¡´Â ¸Ş¼Òµå´Â ²À Æ®·£Àè¼Ç Àû¿ëÇÒ°Í!!
+	//ì¿¼ë¦¬ë¬¸ ë‹¤ì‹œ ì†ë³¼ê²ƒ
+	//ë“±ë¡,ìˆ˜ì •,ì‚­ì œê°€ ìµœì†Œ2ê°œì´ìƒ ë“¤ì–´ê°€ëŠ” ë©”ì†Œë“œëŠ” ê¼­ íŠ¸ëœì­ì…˜ ì ìš©í• ê²ƒ!!
 	
 	@Autowired
 	SearchDaoImpl searchDao;
-
-	@Autowired
-	GroupDaoImpl groupDao;
 	
-	//°Ë»öÁ¶°ÇÀ¸·Î Ä·ÇÎÀå, ±×·ì, ÇÇµåÃâ·Â (Á¤·Ä¼ø ÁÁ¾Æ¿ä)
-	//Ä·ÇÎÀå - Ä·ÇÎÀåÀÌ¸§À¸·Î Ãâ·Â
-	//±×·ì - ±×·ì¸íÀ¸·Î Ãâ·Â
-	//ÇÇµå(°³ÀÎ,±×·ì) - ÇØ½ÃÅÂ±×·Î Ãâ·Â
-	@Transactional
+	//ê²€ìƒ‰ì¡°ê±´ìœ¼ë¡œ ìº í•‘ì¥, ê·¸ë£¹, í”¼ë“œì¶œë ¥ (ì •ë ¬ìˆœ ì¢‹ì•„ìš”)
+	//ìº í•‘ì¥ - ìº í•‘ì¥ì´ë¦„ìœ¼ë¡œ ì¶œë ¥
+	//ê·¸ë£¹ - ê·¸ë£¹ëª…ìœ¼ë¡œ ì¶œë ¥
+	//í”¼ë“œ(ê°œì¸,ê·¸ë£¹) - í•´ì‹œíƒœê·¸ë¡œ ì¶œë ¥
 	@Override
-	public void search(Model model, PageSearchVo pageSearchVo) {
+	public void search(HttpServletRequest req, PageSearchVo pageSearchVo) {
+
+		//ê·¸ë£¹ì²«í˜ì´ì§€ê°’ ì €ì¥
+		if(pageSearchVo.getPage3()==0) {
+			pageSearchVo.setPage3(1);
+		}
+		pageSearchVo.setTotalCount3(searchDao.searchGroupCount(pageSearchVo));
 		
-		model.addAttribute("searchCamp", searchDao.searchCampSelectAll(pageSearchVo));
-		model.addAttribute("searchGroup", searchDao.searchGroupSelectAll(pageSearchVo));
-		model.addAttribute("searchGRFeed", searchDao.searchMyFeedSelectAll(pageSearchVo));
-		model.addAttribute("searchFeed", searchDao.searchGroupFeedSelectAll(pageSearchVo));
+		//í”¼ë“œìŠ¤í¬ë¡¤ë”ë³´ê¸° í˜ì´ì§€ê°’ ì €ì¥
+		if(pageSearchVo.getPage5()==0) {
+			pageSearchVo.setPage5(1);
+		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
-		if(pageSearchVo.getPage()==0) {
-			pageSearchVo.setPage(1);
-		}		
-		GroupVo groupVo=new GroupVo();
-		groupVo.setPageSearch(pageSearchVo);		
-		groupVo.getPageSearch().setTotalCount(groupDao.groupUserTotalCount(groupVo));
-		model.addAttribute("userdetail", groupDao.groupUserSearch(groupVo));
-		model.addAttribute("pageSearch", groupVo.getPageSearch());
+		
+		DateCalculate cal=new DateCalculate();
+		List<FeedVo> myFeedList = searchDao.searchMyFeedSelectAll(pageSearchVo);
+		List<FeedVo> groupFeedList = searchDao.searchGroupFeedSelectAll(pageSearchVo);
+		
+		//í”¼ë“œ ë‚ ì§œìˆœ ì •ë ¬
+		req.setAttribute("searchFeed", cal.VoGoodReturn(groupFeedList, myFeedList));
+		
+		System.out.println(pageSearchVo);
+		req.setAttribute("searchCamp", searchDao.searchCampSelectAll(pageSearchVo));
+		req.setAttribute("searchGroup", searchDao.searchGroupSelectAll(pageSearchVo));
+		req.setAttribute("paging", pageSearchVo);
+		
 	}
 
-	//ÇÇµå»ó¼¼ÆäÀÌÁö Ãâ·Â(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸ºĞ) 
+	//ê²€ìƒ‰í”¼ë“œ ìŠ¤í¬ë¡¤ë”ë³´ê¸°
+	@Override
+	public List<FeedVo> searchScroll(HttpServletRequest req, PageSearchVo pageSearchVo) {
+
+		DateCalculate cal=new DateCalculate();
+		List<FeedVo> myFeedList = searchDao.searchMyFeedSelectAll(pageSearchVo);
+		List<FeedVo> groupFeedList = searchDao.searchGroupFeedSelectAll(pageSearchVo);
+		return cal.VoGoodReturn(groupFeedList, myFeedList);
+	}
+
+	//í”¼ë“œìƒì„¸í˜ì´ì§€ ì¶œë ¥(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë¶„) 
 	@Override
 	public void searchFeedDetail(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		// TODO Auto-generated method stub
-		
+
+		//ê²€ìƒ‰í”¼ë“œ ìƒì„¸í˜ì´ì§€ ê·¸ë£¹,ê°œì¸í”¼ë“œ êµ¬ë¶„
+		//ê°œì¸í”¼ë“œì¼ë•Œ
+		FeedVo feed = null;
+		if(groupPostVo.getGpnum()==0) {
+			feed = searchDao.myFeedDetail(myPostVo);
+			model.addAttribute("feedDetail", feed);
+			model.addAttribute("feedCmmt", searchDao.myFeedCmmtSelectAll(feed));
+		//ê·¸ë£¹í”¼ë“œì¼ë•Œ
+		}else {
+			feed = searchDao.groupFeedDetail(groupPostVo);
+			model.addAttribute("feedDetail", feed);
+			model.addAttribute("feedCmmt", searchDao.groupFeedCmmtSelectAll(feed));
+		}
 	}
 
-	//ÇÇµå¼öÁ¤(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<GroupCommentVo> searchGroupCmmt(Model model, GroupCommentVo groupCommentVo) {
+		
+		return searchDao.searchGroupCmmt(groupCommentVo);
+	}
+
+	//ê°œì¸í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<MyCommentVo> searchMyCmmt(Model model, MyCommentVo myCommentVo) {
+		
+		return searchDao.searchMyCmmt(myCommentVo);
+	}
+
+	//í”¼ë“œìˆ˜ì •(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
 	@Override
 	public void searchFeedUpdateOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	//ÇÇµå»èÁ¦(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
+	//í”¼ë“œì‚­ì œ(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
 	@Override
 	public void searchFeedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	//ÇÇµå´ñ±Ûµî·Ï(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
-	@Override
-	public void searchFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	//ÇÇµå´ñ±Û»èÁ¦(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
+	//í”¼ë“œëŒ“ê¸€ì‚­ì œ(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
 	@Override
 	public void searchFeedCmmtDeletetOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	//ÇÇµå½Å°í(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
-	//½Å°í´çÇÑ»ç¶÷ ½Å°í´çÇÑÈ½¼ö +1
+	
+	//í”¼ë“œëŒ“ê¸€ë“±ë¡(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
 	@Override
-	public void searchFeedReport(Model model, ReportListVo reportListVo) {
-		// TODO Auto-generated method stub
-		
+	public void searchFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo) {
+
+		//ê°œì¸í”¼ë“œ ëŒ“ê¸€ë“±ë¡
+		if(groupCommentVo.getGpnum()==0) {
+			searchDao.myFeedCmmtInsertOne(myCommentVo);
+		//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë“±ë¡
+		}else {
+			searchDao.groupFeedCmmtInsertOne(groupCommentVo);
+		}
 	}
 
-	//ÇÇµåÁÁ¾Æ¿äµî·Ï(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
-	//ÇØ´çÇÇµå ÁÁ¾Æ¿ä °¹¼ö +1
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//í”¼ë“œì‹ ê³ (ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
+	//ì‹ ê³ ë‹¹í•œì‚¬ëŒ ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
+	@Transactional
+	@Override
+	public void searchFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
+
+		UploadPhoto up = new UploadPhoto();
+		String rlphoto = up.upload(files, req, reportListVo);
+		reportListVo.setRlphoto(rlphoto);
+		
+		//ê¸°íƒ€ë²„íŠ¼ëˆŒë €ë‹¤ê°€ ë‹¤ë¥¸ê±°ì²´í¬í•˜ê³  ë„˜ì–´ì˜¨ê²½ìš° ë‹¤ë¥¸ê±°ì²´í¬ê°’ìœ¼ë¡œ ëŒ€ì²´
+		String rlreport = reportListVo.getRlreport();
+		String[] report = rlreport.split(",");
+		if(report.length>1) {
+			if(report[0].equals("ê¸°íƒ€")) {
+				rlreport = report[1];
+			}else {
+				rlreport = report[0];
+			}
+		}else {
+			rlreport=rlreport.substring(0, rlreport.length()-1);
+		}
+		reportListVo.setRlreport(rlreport);
+		
+		//ê°œì¸í”¼ë“œì¸ì§€ ê·¸ë£¹í”¼ë“œì¸ì§€ ì²´í¬
+		if(reportListVo.getGpnum()==0) {
+			searchDao.myFeedReportInsertOne(reportListVo);
+		}else {
+			searchDao.groupFeedReportInsertOne(reportListVo);
+		}
+		
+		searchDao.feedUserReportCountUpdate(reportListVo);
+	}
+
+	//í”¼ë“œì¢‹ì•„ìš”ë“±ë¡(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
+	//í•´ë‹¹í”¼ë“œ ì¢‹ì•„ìš” ê°¯ìˆ˜ +1
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
+	@Transactional
 	@Override
 	public void searchFeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
-		
+
+		//ê°œì¸í”¼ë“œì¼ë•Œ
+		if(myGoodVo.getGpnum()==0) {
+			searchDao.myFeedLikeInsertOne(myGoodVo);
+			searchDao.myFeedLikePlusOne(myGoodVo);
+		//ê·¸ë£¹í”¼ë“œì¼ë•Œ
+		}else {
+			searchDao.groupFeedLikeInsertOne(myGoodVo);
+			searchDao.groupFeedLikePlusOne(myGoodVo);
+		}
+		req.getSession().setAttribute("goodlist", searchDao.myGoodRenewal(myGoodVo));
 	}
 
-	//ÇÇµåÁÁ¾Æ¿äÇØÁ¦(³»ÇÇµå,±×·ìÇÇµå ±¸ºĞ)
-	//ÇØ´çÇÇµå ÁÁ¾Æ¿ä °¹¼ö -1
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//í”¼ë“œì¢‹ì•„ìš”í•´ì œ(ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„)
+	//í•´ë‹¹í”¼ë“œ ì¢‹ì•„ìš” ê°¯ìˆ˜ -1
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
+	@Transactional
 	@Override
 	public void searchFeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
-		// TODO Auto-generated method stub
+		
+		//ê°œì¸í”¼ë“œì¼ë•Œ
+		if(myGoodVo.getGpnum()==0) {
+			searchDao.myFeedLikeDeleteOne(myGoodVo);
+			searchDao.myFeedLikeMinusOne(myGoodVo);
+		//ê·¸ë£¹í”¼ë“œì¼ë•Œ
+		}else {
+			searchDao.groupFeedLikeDeleteOne(myGoodVo);
+			searchDao.groupFeedLikeMinusOne(myGoodVo);
+		}
+		req.getSession().setAttribute("goodlist", searchDao.myGoodRenewal(myGoodVo));
 		
 	}
 

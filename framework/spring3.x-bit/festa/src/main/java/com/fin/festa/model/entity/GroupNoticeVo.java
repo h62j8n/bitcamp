@@ -5,17 +5,17 @@ import java.sql.Timestamp;
 
 import com.fin.festa.util.DateCalculate;
 
-public class GroupNoticeVo {	//±×·ì °øÁö»çÇ×
+public class GroupNoticeVo {	//ê·¸ë£¹ ê³µì§€ì‚¬í•­
 
 	DateCalculate cal;
-	private int gnnum;			//°øÁö»çÇ× ¹øÈ£ (pk)
-	private String gnauthor;	//°øÁö»çÇ× ÀÛ¼ºÀÚ ÀÌ¸§
-	private String gnphoto;		//°øÁö»çÇ× µî·Ï »çÁø
-	private String gncontent;	//°øÁö»çÇ× ³»¿ë
+	private int gnnum;			//ê³µì§€ì‚¬í•­ ë²ˆí˜¸ (pk)
+	private String gnauthor;	//ê³µì§€ì‚¬í•­ ì‘ì„±ì ì´ë¦„
+	private String gnphoto;		//ê³µì§€ì‚¬í•­ ë“±ë¡ ì‚¬ì§„
+	private String gncontent;	//ê³µì§€ì‚¬í•­ ë‚´ìš©
 	private String gndate1;
-	private Timestamp gndate;		//°øÁö»çÇ× ÀÛ¼ºÀÏ
-	private int grnum;			//°øÁö»çÇ× ±×·ì ¹øÈ£
-	private int gntotal;		//°øÁö»çÇ×´ñ±Û °¹¼ö
+	private Timestamp gndate;		//ê³µì§€ì‚¬í•­ ì‘ì„±ì¼
+	private int grnum;			//ê³µì§€ì‚¬í•­ ê·¸ë£¹ ë²ˆí˜¸
+	private int gntotal;		//ê³µì§€ì‚¬í•­ëŒ“ê¸€ ê°¯ìˆ˜
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

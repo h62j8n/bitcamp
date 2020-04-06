@@ -1,11 +1,31 @@
 package com.fin.festa.model.entity;
 
-public class MyFollowingVo {	//³» ÆÈ·ÎÀ× 
+import com.fin.festa.model.entity.CampReviewVo;
+import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupCommentVo;
+import com.fin.festa.model.entity.GroupNoticeCommentVo;
+import com.fin.festa.model.entity.GroupNoticeVo;
+import com.fin.festa.model.entity.GroupPostVo;
+import com.fin.festa.model.entity.GroupVo;
+import com.fin.festa.model.entity.JoinGroupVo;
+import com.fin.festa.model.entity.MyAdminVo;
+import com.fin.festa.model.entity.MyBookMarkVo;
+import com.fin.festa.model.entity.MyCommentVo;
+import com.fin.festa.model.entity.MyFollowerVo;
+import com.fin.festa.model.entity.MyGoodVo;
+import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.MyVentureVo;
+import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ProfileVo;
+import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 
-	private int mfgnum;			//³» ÆÈ·ÎÀ× °ü¸® ¹øÈ£ (pk)
-	private String mfgname;		//³» ÆÈ·ÎÀ× ÀÌ¸§
-	private int pronum;			//½ÅÃ»ÇÑ»ç¶÷ ¹øÈ£
-	private int pronum_sync;	//½ÅÃ»¹ŞÀº»ç¶÷ ¹øÈ£
+public class MyFollowingVo {	//ë‚´ íŒ”ë¡œì‰ 
+
+	private int mfgnum;			//ë‚´ íŒ”ë¡œì‰ ê´€ë¦¬ ë²ˆí˜¸ (pk)
+	private String mfgname;		//ë‚´ íŒ”ë¡œì‰ ì´ë¦„
+	private int pronum;			//ì‹ ì²­í•œì‚¬ëŒ ë²ˆí˜¸
+	private int pronum_sync;	//ì‹ ì²­ë°›ì€ì‚¬ëŒ ë²ˆí˜¸
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

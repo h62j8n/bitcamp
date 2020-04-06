@@ -1,14 +1,14 @@
 package com.fin.festa.model.entity;
 
-public class WeekVo {			//Àú¹øÁÖ ½Å±Ô°¡ÀÔÀÚÇöÈ²Vo
+public class WeekVo {			//ì €ë²ˆì£¼ ì‹ ê·œê°€ì…ìí˜„í™©Vo
 
-	private int monday;			//Àú¹øÁÖ ¿ù¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int tuesday;		//Àú¹øÁÖ È­¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int wednesday;		//Àú¹øÁÖ ¼ö¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int thursday;		//Àú¹øÁÖ ¸ñ¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int friday;			//Àú¹øÁÖ ±İ¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int saturday;		//Àú¹øÁÖ Åä¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
-	private int sunday;			//Àú¹øÁÖ ÀÏ¿äÀÏ½Å±Ô°¡ÀÔÀÚ ¼ö
+	private int monday;			//ì €ë²ˆì£¼ ì›”ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int tuesday;		//ì €ë²ˆì£¼ í™”ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int wednesday;		//ì €ë²ˆì£¼ ìˆ˜ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int thursday;		//ì €ë²ˆì£¼ ëª©ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int friday;			//ì €ë²ˆì£¼ ê¸ˆìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int saturday;		//ì €ë²ˆì£¼ í† ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
+	private int sunday;			//ì €ë²ˆì£¼ ì¼ìš”ì¼ì‹ ê·œê°€ì…ì ìˆ˜
 	
 	@Override
 	public String toString() {

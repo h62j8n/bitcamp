@@ -1,5 +1,6 @@
 package com.fin.festa.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,42 +36,42 @@ import com.fin.festa.util.StopUser;
 @Service
 public class AdminServiceImpl implements AdminService{
 
-	//µî·Ï,¼öÁ¤,»èÁ¦°¡ ÃÖ¼Ò2°³ÀÌ»ó µé¾î°¡´Â ¸Ş¼Òµå´Â ²À Æ®·£Àè¼Ç Àû¿ëÇÒ°Í!!
+	//ë“±ë¡,ìˆ˜ì •,ì‚­ì œê°€ ìµœì†Œ2ê°œì´ìƒ ë“¤ì–´ê°€ëŠ” ë©”ì†Œë“œëŠ” ê¼­ íŠ¸ëœì­ì…˜ ì ìš©í• ê²ƒ!!
 	
 	@Autowired
 	AdminDaoImpl adminDao;
 	
-	//´ë½Ãº¸µå ÀüÃ¼»ç¿ëÀÚ,±×·ì,»ç¾÷ÀÚ,Ä·ÇÎÀå¼ö Ãâ·Â (¼± ÀÛ¾÷-ÈÄ ´Ù¿À)
-	//´ë½Ãº¸µå ÀüÃ¼»ç¿ëÀÚ,±×·ì,»ç¾÷ÀÚ,Ä·ÇÎÀå¼ö Ãâ·Â ¾îÁ¦±âÁØ (¼± ÀÛ¾÷-ÈÄ ´Ù¿À)
-	//´ë½Ãº¸µå Àú¹øÁÖ ½Å±ÔÀÌ¿ëÀÚÁ¤º¸ Ãâ·Â (¼± ÀÛ¾÷-ÈÄ ´Ù¿À)
-	//´ë½Ãº¸µå ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ² Ãâ·Â (¼± ÀÛ¾÷-ÈÄ ´Ù¿À)
-	//´ë½Ãº¸µå ÀüÃ¼È¸¿øÀÇ »ı³â¿ùÀÏ Ãâ·Â (È¸¿ø¿¬·ÉºĞÆ÷°ª »ÌÀ»¶§ ¾²ÀÓ)// (¼± ´Ù¿À-ÈÄ ÀÛ¾÷)
-	//´ë½Ãº¸µå ¼±È£°ü½ÉÁö¿ªÁ¤º¸ Ãâ·Â (¼± ÀÛ¾÷-ÈÄ ´Ù¿À)
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´ì‚¬ìš©ì,ê·¸ë£¹,ì‚¬ì—…ì,ìº í•‘ì¥ìˆ˜ ì¶œë ¥ (ì„  ì‘ì—…-í›„ ë‹¤ì˜¤)
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´ì‚¬ìš©ì,ê·¸ë£¹,ì‚¬ì—…ì,ìº í•‘ì¥ìˆ˜ ì¶œë ¥ ì–´ì œê¸°ì¤€ (ì„  ì‘ì—…-í›„ ë‹¤ì˜¤)
+	//ëŒ€ì‹œë³´ë“œ ì €ë²ˆì£¼ ì‹ ê·œì´ìš©ìì •ë³´ ì¶œë ¥ (ì„  ì‘ì—…-í›„ ë‹¤ì˜¤)
+	//ëŒ€ì‹œë³´ë“œ ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™© ì¶œë ¥ (ì„  ì‘ì—…-í›„ ë‹¤ì˜¤)
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´íšŒì›ì˜ ìƒë…„ì›”ì¼ ì¶œë ¥ (íšŒì›ì—°ë ¹ë¶„í¬ê°’ ë½‘ì„ë•Œ ì“°ì„)// (ì„  ë‹¤ì˜¤-í›„ ì‘ì—…)
+	//ëŒ€ì‹œë³´ë“œ ì„ í˜¸ê´€ì‹¬ì§€ì—­ì •ë³´ ì¶œë ¥ (ì„  ì‘ì—…-í›„ ë‹¤ì˜¤)
 	@Override
 	public void adminDashBoard(Model model) {
 		
 		DateCalculate cal=new DateCalculate();
 		AgeCalculate age=new AgeCalculate();
 		
-		model.addAttribute("today", cal.getTime());											//ÇöÀç½Ã°£°ª
-		model.addAttribute("allUser", adminDao.allCount());									//¸ğµç»ç¿ëÀÚ°ª
-		model.addAttribute("yesterday", adminDao.allCount_yesterday(cal.yesterday()));		//¸ğµç»ç¿ëÀÚ°ª ¾îÁ¦±âÁØ
-		model.addAttribute("lastWeek", adminDao.lastWeekNewUser(cal.lastWeekNewUser()));	//Àú¹øÁÖ ½Å±Ô°¡ÀÔÀÚ
-		model.addAttribute("week", adminDao.weekNewUserCount(cal.weekNewUser()));			//ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ²
-		model.addAttribute("prefer", adminDao.preferLocation());							//¼±È£°ü½ÉÁö¿ª
-		model.addAttribute("userAge", age.userAgeDistribution(adminDao.allUserCount()));	//È¸¿ø ¿¬·ÉºĞÆ÷
+		model.addAttribute("today", cal.getTime());											//í˜„ì¬ì‹œê°„ê°’
+		model.addAttribute("allUser", adminDao.allCount());									//ëª¨ë“ ì‚¬ìš©ìê°’
+		model.addAttribute("yesterday", adminDao.allCount_yesterday(cal.yesterday()));		//ëª¨ë“ ì‚¬ìš©ìê°’ ì–´ì œê¸°ì¤€
+		model.addAttribute("lastWeek", adminDao.lastWeekNewUser(cal.lastWeekNewUser()));	//ì €ë²ˆì£¼ ì‹ ê·œê°€ì…ì
+		model.addAttribute("week", adminDao.weekNewUserCount(cal.weekNewUser()));			//ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™©
+		model.addAttribute("prefer", adminDao.preferLocation());							//ì„ í˜¸ê´€ì‹¬ì§€ì—­
+		model.addAttribute("userAge", age.userAgeDistribution(adminDao.allUserCount()));	//íšŒì› ì—°ë ¹ë¶„í¬
 	}
 
-	//±×·ì°ü¸®Á¤º¸Ãâ·Â
+	//ê·¸ë£¹ê´€ë¦¬ì •ë³´ì¶œë ¥
 	@Override
 	public void adminGroupSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 		}
@@ -81,35 +82,48 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("paging", pageSearchVo);
 	}
 
-	//±×·ì»èÁ¦ +@
+	//ê·¸ë£¹ì‚­ì œ +@
 	@Override
 	public void adminGroupDeleteOne(Model model, GroupVo groupVo) {
 
 		adminDao.groupDelete(groupVo);
 	}
 	
-	//±×·ìÁ¤º¸Ãâ·Â
-	//±×·ì°øÁö»çÇ×Ãâ·Â
-	//±×·ìÇÇµåÃâ·Â
-	//±×·ì´ñ±ÛÃâ·Â
+	//ê·¸ë£¹ì •ë³´ì¶œë ¥
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ì¶œë ¥
+	//ê·¸ë£¹í”¼ë“œì¶œë ¥
+	//ê·¸ë£¹ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public void adminGroupDetail(Model model, GroupVo groupVo) {
 
+		PageSearchVo page = new PageSearchVo();
+		page.setPage5(1);
+		groupVo.setPageSearch(page);
+		
 		model.addAttribute("groupinfo", adminDao.groupInfo(groupVo));
 		model.addAttribute("groupnotice", adminDao.groupNoticeInfo(groupVo));
 		model.addAttribute("groupfeed", adminDao.groupFeedInfoSelectAll(groupVo));
 		model.addAttribute("groupcmmt", adminDao.groupFeedCmmtInfoSelectAll(groupVo));
 	}
 
-	//±×·ìÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹í”¼ë“œ ìŠ¤í¬ë¡¤ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<List<?>> adminGroupDetailScroll(Model model, GroupVo groupVo) {
+
+		List<List<?>> list = new ArrayList<>();
+		list.add(adminDao.groupFeedInfoSelectAll(groupVo));
+		list.add(adminDao.groupFeedCmmtInfoSelectAll(groupVo));
+		return list;
+	}
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupCommentVo> adminGroupDetailCmmt(Model model, GroupPostVo grouppost) {
 		
 		return adminDao.adminGroupDetailCmmt(grouppost);
 	}
 
-	//°øÁö»çÇ×»ó¼¼Ãâ·Â
-	//°øÁö»çÇ×´ñ±ÛÃâ·Â
+	//ê³µì§€ì‚¬í•­ìƒì„¸ì¶œë ¥
+	//ê³µì§€ì‚¬í•­ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public void adminGroupDetailNotice(Model model, GroupNoticeVo groupnoticeVo) {
 		
@@ -117,81 +131,81 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("noticecmmt", adminDao.groupNoticeCmmtInfo(groupnoticeVo));
 	}
 
-	//±×·ì°øÁöÇÇµå ´ñ±Û´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹ê³µì§€í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupNoticeCommentVo> adminGroupNoticeCmmt(Model model, GroupNoticeVo groupnotice) {
 		
 		return adminDao.adminGroupNoticeCmmt(groupnotice);
 	}
 	
-	//°øÁö»çÇ×»èÁ¦
+	//ê³µì§€ì‚¬í•­ì‚­ì œ
 	@Override
 	public void adminGroupDetailNoticeDelete(Model model, GroupNoticeVo groupNoticeVo) {
 		
 		adminDao.groupNoticeDelete(groupNoticeVo);
 	}
 	
-	//°øÁö»çÇ×´ñ±Û»èÁ¦
+	//ê³µì§€ì‚¬í•­ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public void adminGroupDetailNoticeCmmtDelete(Model model, GroupNoticeCommentVo groupNoticeCommentVo) {
 
 		adminDao.groupNoticeCmmtDelete(groupNoticeCommentVo);
 	}
 	
-	//±×·ìÇÇµå»èÁ¦
+	//ê·¸ë£¹í”¼ë“œì‚­ì œ
 	@Override
 	public void adminGroupDetailDelete(Model model, GroupPostVo groupPostVo) {
 
 		adminDao.groupFeedDelete(groupPostVo);
 	}
 
-	//±×·ì´ñ±Û»èÁ¦
+	//ê·¸ë£¹ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public void adminGroupDetailCmmtdelete(Model model, GroupCommentVo groupCommentVo) {
 		
 		adminDao.groupFeedCmmtDelete(groupCommentVo);
 	}
 
-	//±×·ì¿ø¸ñ·Ï Ãâ·Â 
+	//ê·¸ë£¹ì›ëª©ë¡ ì¶œë ¥ 
 	@Override
 	public void adminGroupMemberList(HttpServletRequest req, GroupVo groupVo) {
 		
 		req.setAttribute("joingroup", adminDao.adminGroupMemberList(groupVo));
 	}
 
-	//À¯Àú°ü¸®Á¤º¸ Ãâ·Â (ÀüÃ¼,Á¤ÁöÁß Á¶°ÇÃ³¸®)
-	//ÃÑÈ¸¿ø¼ö °ª ±¸ÇÏ±â
+	//ìœ ì €ê´€ë¦¬ì •ë³´ ì¶œë ¥ (ì „ì²´,ì •ì§€ì¤‘ ì¡°ê±´ì²˜ë¦¬)
+	//ì´íšŒì›ìˆ˜ ê°’ êµ¬í•˜ê¸°
 	@Override
 	public void adminUserSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
 		pageSearchVo.setSearch("");
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage2()==0) {
 			pageSearchVo.setPage2(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 		}
 
-		//Ä«Å×°í¸®ÀÇ °ª¿¡µû¶ó Á¤ÁöÁß,ÀüÃ¼ÀÇ °ª ¼³Á¤
+		//ì¹´í…Œê³ ë¦¬ì˜ ê°’ì—ë”°ë¼ ì •ì§€ì¤‘,ì „ì²´ì˜ ê°’ ì„¤ì •
 		if(pageSearchVo.getCategory()==null||pageSearchVo.getCategory().equals("")) {
-			pageSearchVo.setCategory("ÀüÃ¼");
-		}else if(pageSearchVo.getCategory().equals("Á¤Áö Áß")){
+			pageSearchVo.setCategory("ì „ì²´");
+		}else if(pageSearchVo.getCategory().equals("ì •ì§€ ì¤‘")){
 			pageSearchVo.setSearch("2");
 		}
 		
-		//Å°¿öµå°ª¿¡µû¶ó À¯µ¿ÀûÀ¸·Î °Ë»ö°¹¼ö¸¦ ¸®ÅÏ¹Ş¾Æ¼­ ÆäÀÌÁö¿¡ ³Ö¾îÁÜ
+		//í‚¤ì›Œë“œê°’ì—ë”°ë¼ ìœ ë™ì ìœ¼ë¡œ ê²€ìƒ‰ê°¯ìˆ˜ë¥¼ ë¦¬í„´ë°›ì•„ì„œ í˜ì´ì§€ì— ë„£ì–´ì¤Œ
 		pageSearchVo.setTotalCount2(adminDao.adminUserCount(pageSearchVo));
 		
-		//Ä«Å×°í¸®°¡ ÀüÃ¼ÀÏ¶§, Á¤ÁöÁßÀÏ¶§ »Ñ¸®´Â°ª Ã³¸®
-		if(pageSearchVo.getCategory().equals("ÀüÃ¼")) {
+		//ì¹´í…Œê³ ë¦¬ê°€ ì „ì²´ì¼ë•Œ, ì •ì§€ì¤‘ì¼ë•Œ ë¿Œë¦¬ëŠ”ê°’ ì²˜ë¦¬
+		if(pageSearchVo.getCategory().equals("ì „ì²´")) {
 			
 			model.addAttribute("userlist", adminDao.adminUserSelectAll(pageSearchVo));
 			
-		}else if(pageSearchVo.getCategory().equals("Á¤Áö Áß")) {
+		}else if(pageSearchVo.getCategory().equals("ì •ì§€ ì¤‘")) {
 			
 			model.addAttribute("userlist", adminDao.adminUserStopSelectAll(pageSearchVo));
 		}
@@ -200,29 +214,32 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("paging", pageSearchVo);
 	}
 
-	//À¯Àú Á¤ÁöÃ³¸®
+	//ìœ ì € ì •ì§€ì²˜ë¦¬
 	@Override
 	public void adminUserStop(Model model, MyAdminVo myAdminVo) {
 			
 		adminDao.userStop(myAdminVo);
 	}
 
-	//À¯Àú °­ÅğÃ³¸®
+	//ìœ ì € ê°•í‡´ì²˜ë¦¬
 	@Override
 	public void adminUserKick(Model model, MyAdminVo myAdminVo) {
 
 		adminDao.userKick(myAdminVo);
 	}
 
-	//À¯Àú»ó¼¼ÆäÀÌÁö(À¯Àú°ü¸®)
-	//À¯ÀúÆÈ·ÎÀ×¼ö
-	//À¯ÀúÆÈ·Î¿ö¼ö
-	//À¯ÀúÇÇµå¼ö
-	//À¯ÀúÇÇµåÃâ·Â
-	//À¯ÀúÇÇµå´ñ±ÛÃâ·Â
+	//ìœ ì €ìƒì„¸í˜ì´ì§€(ìœ ì €ê´€ë¦¬)
+	//ìœ ì €íŒ”ë¡œì‰ìˆ˜
+	//ìœ ì €íŒ”ë¡œì›Œìˆ˜
+	//ìœ ì €í”¼ë“œìˆ˜
+	//ìœ ì €í”¼ë“œì¶œë ¥
+	//ìœ ì €í”¼ë“œëŒ“ê¸€ì¶œë ¥
 	@Override
 	public void adminUserDetail(HttpServletRequest req, ProfileVo profileVo) {
 		
+		PageSearchVo page = new PageSearchVo();
+		page.setPage5(1);
+		profileVo.setPageSearch(page);
 		
 		req.setAttribute("userdetail", adminDao.userInfo(profileVo));
 		req.setAttribute("userfeed", adminDao.userFeed(profileVo));
@@ -232,28 +249,39 @@ public class AdminServiceImpl implements AdminService{
 		req.setAttribute("userfollower", adminDao.userFollowerCount(profileVo));
 	}
 
-	//À¯ÀúÇÇµå´ñ±Û´õº¸±â ºñµ¿±â
+	//ìœ ì €í”¼ë“œ ìŠ¤í¬ë¡¤ ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<List<?>> adminUserDetailScroll(HttpServletRequest req, ProfileVo profileVo) {
+		
+		List<List<?>> list = new ArrayList<>();
+		list.add(adminDao.userFeed(profileVo));
+		list.add(adminDao.userCmmt(profileVo));
+		
+		return list;
+	}
+
+	//ìœ ì €í”¼ë“œëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<MyCommentVo> adminUserDetailCmmt(Model model, MyPostVo post) {
 		
 		return adminDao.adminUserDetailCmmt(post);
 	}
 
-	//À¯ÀúÇÇµå »èÁ¦
+	//ìœ ì €í”¼ë“œ ì‚­ì œ
 	@Override
 	public void adminUserDelete(Model model, MyPostVo myPostVo) {
 		
 		adminDao.myFeedDelete(myPostVo);
 	}
 	
-	//À¯ÀúÇÇµå´ñ±Û »èÁ¦
+	//ìœ ì €í”¼ë“œëŒ“ê¸€ ì‚­ì œ
 	@Override
 	public void adminUserCmmtdelete(Model model, MyCommentVo myCommentVo) {
 
 		adminDao.myFeedCmmtDelete(myCommentVo);
 	}
 
-	//À¯Àú ÆÈ·Î¿ö¸®½ºÆ®Ãâ·Â 
+	//ìœ ì € íŒ”ë¡œì›Œë¦¬ìŠ¤íŠ¸ì¶œë ¥ 
 	@Override
 	public void adminUserfollowerList(Model model, ProfileVo profile) {
 		
@@ -261,23 +289,23 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("myfollower", adminDao.adminUserfollowerList(profile));
 	}
 
-	//À¯Àú ÆÈ·ÎÀ×¸®½ºÆ®Ãâ·Â 
+	//ìœ ì € íŒ”ë¡œì‰ë¦¬ìŠ¤íŠ¸ì¶œë ¥ 
 	@Override
 	public void adminUserfollowList(Model model, ProfileVo profile) {
 		
 		model.addAttribute("myfollowing", adminDao.adminUserfollowList(profile));
 	}
 
-	//Ä·ÇÎÀåÁ¤º¸Ãâ·Â
+	//ìº í•‘ì¥ì •ë³´ì¶œë ¥
 	@Override
 	public void adminCampSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 		}
@@ -288,22 +316,22 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("paging", pageSearchVo);
 	}
 
-	//Ä·ÇÎÀå »èÁ¦Ã³¸® +@
+	//ìº í•‘ì¥ ì‚­ì œì²˜ë¦¬ +@
 	@Override
 	public void adminCampDeleteOne(Model model, CampVo campVo) {
 		
 		adminDao.campDelete(campVo);
 	}
 	
-	//Ä·ÇÎÀå °ø½Ä±×·ìÀ¯¹«Ã¼Å©
-	//ÇØ´çÄ·ÇÎÀå ±×·ìÁ¤º¸Ãâ·Â
-	//Ä·ÇÎÀåÁ¤º¸Ãâ·Â
-	//Ä·ÇÎÀåÇÑÁÙÆòÃâ·Â
-	//Ä·ÇÎÀåÇÑÁÙÆò°¹¼öÃâ·Â
+	//ìº í•‘ì¥ ê³µì‹ê·¸ë£¹ìœ ë¬´ì²´í¬
+	//í•´ë‹¹ìº í•‘ì¥ ê·¸ë£¹ì •ë³´ì¶œë ¥
+	//ìº í•‘ì¥ì •ë³´ì¶œë ¥
+	//ìº í•‘ì¥í•œì¤„í‰ì¶œë ¥
+	//ìº í•‘ì¥í•œì¤„í‰ê°¯ìˆ˜ì¶œë ¥
 	@Override
 	public void adminCampDetail(Model model, CampVo campVo) {
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(campVo.getPageSearch()==null) {
 			PageSearchVo search = new PageSearchVo();
 			search.setPage2(1);
@@ -313,172 +341,172 @@ public class AdminServiceImpl implements AdminService{
 		int campReviewCount=adminDao.campReviewCount(campVo);
 		int ventureCheck=adminDao.groupVentureCheck(campVo);
 		
-		//ÆäÀÌÁö ÃÑ ·Î¿ì°¹¼ö 
+		//í˜ì´ì§€ ì´ ë¡œìš°ê°¯ìˆ˜ 
 		campVo.getPageSearch().setTotalCount2(campReviewCount);
 		
-		//°ø½Ä±×·ì Á¸Àç½Ã ±×·ìÁ¤º¸¸®ÅÏ
+		//ê³µì‹ê·¸ë£¹ ì¡´ì¬ì‹œ ê·¸ë£¹ì •ë³´ë¦¬í„´
 		if(ventureCheck==1) {
-			model.addAttribute("venturegroup", adminDao.ventureGroup(campVo));		//°ø½Ä±×·ì Á¸Àç½Ã ±×·ìÁ¤º¸¸®ÅÏ
+			model.addAttribute("venturegroup", adminDao.ventureGroup(campVo));		//ê³µì‹ê·¸ë£¹ ì¡´ì¬ì‹œ ê·¸ë£¹ì •ë³´ë¦¬í„´
 		}
 		
-		model.addAttribute("campdetail", adminDao.campInfo(campVo));				//Ä·ÇÎÀåÁ¤º¸ Ãâ·Â
-		model.addAttribute("campreview", adminDao.campReviewInfo(campVo));			//ÇØ´çÄ·ÇÎÀå ÇÑÁÙÆò Ãâ·Â
-		model.addAttribute("reviewcount", campReviewCount);							//ÇØ´çÄ·ÇÎÀå ÇÑÁÙÆò°¹¼ö Ãâ·Â
-		model.addAttribute("venturecheck", ventureCheck);							//ÇØ´çÄ·ÇÎÀå °ø½Ä±×·ìÀ¯¹« Ãâ·Â (0 = x, 1 = o)
+		model.addAttribute("campdetail", adminDao.campInfo(campVo));				//ìº í•‘ì¥ì •ë³´ ì¶œë ¥
+		model.addAttribute("campreview", adminDao.campReviewInfo(campVo));			//í•´ë‹¹ìº í•‘ì¥ í•œì¤„í‰ ì¶œë ¥
+		model.addAttribute("reviewcount", campReviewCount);							//í•´ë‹¹ìº í•‘ì¥ í•œì¤„í‰ê°¯ìˆ˜ ì¶œë ¥
+		model.addAttribute("venturecheck", ventureCheck);							//í•´ë‹¹ìº í•‘ì¥ ê³µì‹ê·¸ë£¹ìœ ë¬´ ì¶œë ¥ (0 = x, 1 = o)
 		model.addAttribute("paging", campVo.getPageSearch());
 	}
 
-	//ÇØ´çÄ·ÇÎÀåÇÑÁÙÆò »èÁ¦
+	//í•´ë‹¹ìº í•‘ì¥í•œì¤„í‰ ì‚­ì œ
 	@Override
 	public void reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
 
 		adminDao.campReviewDeleteOne(campReviewVo);
 	}
 	
-	//»ç¾÷ÀÚÁ¤º¸Ãâ·Â(°Ë»ö°ª »ç¾÷ÀÚ¹øÈ£,Ä·ÇÎÀåÀÌ¸§ Á¶°ÇÃ³¸®)
+	//ì‚¬ì—…ìì •ë³´ì¶œë ¥(ê²€ìƒ‰ê°’ ì‚¬ì—…ìë²ˆí˜¸,ìº í•‘ì¥ì´ë¦„ ì¡°ê±´ì²˜ë¦¬)
 	@Override
 	public void adminVentureSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ Ä«Å×°í¸®°ª ±âº» Ä·ÇÎÀå¸íÀ¸·Î
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ ì¹´í…Œê³ ë¦¬ê°’ ê¸°ë³¸ ìº í•‘ì¥ëª…ìœ¼ë¡œ
 		if(pageSearchVo.getCategory()==null||pageSearchVo.getCategory().equals("")) {
-			pageSearchVo.setCategory("Ä·ÇÎÀå¸í");
+			pageSearchVo.setCategory("ìº í•‘ì¥ëª…");
 		}
 		
 		String category=pageSearchVo.getCategory();
 
-		//Ä«Å×°í¸®¿¡µû¶ó Ãâ·Â¸®½ºÆ®,ÆäÀÌÁö ÅäÅ»Ä«¿îÆ®°ª Ãâ·Â
-		if(category.equals("Ä·ÇÎÀå¸í")) {
+		//ì¹´í…Œê³ ë¦¬ì—ë”°ë¼ ì¶œë ¥ë¦¬ìŠ¤íŠ¸,í˜ì´ì§€ í† íƒˆì¹´ìš´íŠ¸ê°’ ì¶œë ¥
+		if(category.equals("ìº í•‘ì¥ëª…")) {
 			pageSearchVo.setTotalCount(adminDao.adminVentureCount_campName(pageSearchVo));
 			model.addAttribute("venture", adminDao.adminVentureSelectAll_caname(pageSearchVo));
-		}else if(category.equals("»ç¾÷ÀÚµî·Ï¹øÈ£")) {
+		}else if(category.equals("ì‚¬ì—…ìë“±ë¡ë²ˆí˜¸")) {
 			pageSearchVo.setTotalCount(adminDao.adminVentureCount_ventureNumber(pageSearchVo));
 			model.addAttribute("venture", adminDao.adminVentureSelectAll_mvnumber(pageSearchVo));
 		}
 		model.addAttribute("paging", pageSearchVo);
 	}
 
-	//»ç¾÷ÀÚ»èÁ¦Ã³¸® +@
-	//»ç¾÷ÀÚ »èÁ¦Ã³¸®½Ã °ø½Ä±×·ìÀÖ´Â»ç¶÷ ¸®ÅÏ -> ¸®½ºÆ®°ª ¸®ÅÏ¹ŞÀº°ÍÀ» GroupVo¿¡ groupList¿¡´Ù°¡ ´ëÀÔ
-	//°ø½Ä±×·ì Á¸Àç½Ã ÀÏ¹İ±×·ìÀ¸·Î ¾÷µ¥ÀÌÆ®
+	//ì‚¬ì—…ìì‚­ì œì²˜ë¦¬ +@
+	//ì‚¬ì—…ì ì‚­ì œì²˜ë¦¬ì‹œ ê³µì‹ê·¸ë£¹ìˆëŠ”ì‚¬ëŒ ë¦¬í„´ -> ë¦¬ìŠ¤íŠ¸ê°’ ë¦¬í„´ë°›ì€ê²ƒì„ GroupVoì— groupListì—ë‹¤ê°€ ëŒ€ì…
+	//ê³µì‹ê·¸ë£¹ ì¡´ì¬ì‹œ ì¼ë°˜ê·¸ë£¹ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 	@Transactional
 	@Override
 	public void adminVentureDeleteOne(Model model, MyVentureVo myVentureVo) {
 
 		GroupVo group=new GroupVo();
 		
-		//°ø½Ä±×·ìÀÖ´Â»ç¶÷µé ¸®ÅÏ
+		//ê³µì‹ê·¸ë£¹ìˆëŠ”ì‚¬ëŒë“¤ ë¦¬í„´
 		group.setGroupList(adminDao.ventureGroupCheck(myVentureVo));
 		
-		//ÇØ´ç °ø½Ä±×·ìµé ÀÏ¹İ±×·ìÀ¸·Î ¾÷µ¥ÀÌÆ®
+		//í•´ë‹¹ ê³µì‹ê·¸ë£¹ë“¤ ì¼ë°˜ê·¸ë£¹ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 		if(!group.getGroupList().isEmpty()) {
 			adminDao.ventureGroupDelete(group);
 		}
 		
-		//ÇØ´ç »ç¾÷ÀÚµé »èÁ¦
+		//í•´ë‹¹ ì‚¬ì—…ìë“¤ ì‚­ì œ
 		adminDao.ventureDelete(myVentureVo);
 		
 	}
 	
-	//»ç¾÷ÀÚµî·ÏÁõ ÀÌ¹ÌÁöÃâ·Â
+	//ì‚¬ì—…ìë“±ë¡ì¦ ì´ë¯¸ì§€ì¶œë ¥
 	@Override
 	public void AdminVentureImg(Model model, MyVentureVo myVentureVo) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	//»ç¾÷ÀÚµî·ÏÁ¤º¸Ãâ·Â(°Ë»ö°ª »ç¾÷ÀÚ¹øÈ£,Ä·ÇÎÀåÀÌ¸§ Á¶°ÇÃ³¸®)
+	//ì‚¬ì—…ìë“±ë¡ì •ë³´ì¶œë ¥(ê²€ìƒ‰ê°’ ì‚¬ì—…ìë²ˆí˜¸,ìº í•‘ì¥ì´ë¦„ ì¡°ê±´ì²˜ë¦¬)
 	@Override
 	public void adminVentureRequestSelectAll(Model model, PageSearchVo pageSearchVo) {
 
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ Ä«Å×°í¸®°ª ±âº» Ä·ÇÎÀå¸íÀ¸·Î
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ ì¹´í…Œê³ ë¦¬ê°’ ê¸°ë³¸ ìº í•‘ì¥ëª…ìœ¼ë¡œ
 		if(pageSearchVo.getCategory()==null||pageSearchVo.getCategory().equals("")) {
-			pageSearchVo.setCategory("Ä·ÇÎÀå¸í");
+			pageSearchVo.setCategory("ìº í•‘ì¥ëª…");
 		}
 		
 		String category=pageSearchVo.getCategory();
 
-		//Ä«Å×°í¸®¿¡µû¶ó Ãâ·Â¸®½ºÆ®,ÆäÀÌÁö ÅäÅ»Ä«¿îÆ®°ª Ãâ·Â
-		if(category.equals("Ä·ÇÎÀå¸í")) {
+		//ì¹´í…Œê³ ë¦¬ì—ë”°ë¼ ì¶œë ¥ë¦¬ìŠ¤íŠ¸,í˜ì´ì§€ í† íƒˆì¹´ìš´íŠ¸ê°’ ì¶œë ¥
+		if(category.equals("ìº í•‘ì¥ëª…")) {
 			pageSearchVo.setTotalCount(adminDao.adminVentureRequestCount_campName(pageSearchVo));
 			model.addAttribute("ventureRequest", adminDao.adminVentureRequestSelectAll_caname(pageSearchVo));
-		}else if(category.equals("»ç¾÷ÀÚµî·Ï¹øÈ£")) {
+		}else if(category.equals("ì‚¬ì—…ìë“±ë¡ë²ˆí˜¸")) {
 			pageSearchVo.setTotalCount(adminDao.adminVentureRequestCount_ventureNumber(pageSearchVo));
 			model.addAttribute("ventureRequest", adminDao.adminVentureRequestSelectAll_mvnumber(pageSearchVo));
 		}
 		model.addAttribute("paging", pageSearchVo);
 	}
 
-	//»ç¾÷ÀÚµî·Ï½ÂÀÎÃ³¸® +@
-	//½ÂÀÎ´ë±âÅ×ÀÌºí »èÁ¦Ã³¸®
-	//½ÂÀÎ ½Ã¿¡ ±×·ìÀÖ´ÂÀ¯Àú ±×·ìÁ¤º¸¸®ÅÏ -> ¸®½ºÆ®°ª ¸®ÅÏ¹ŞÀº°ÍÀ» GroupVo¿¡ groupList¿¡´Ù°¡ ´ëÀÔ
-	//±×·ì Á¸Àç ½Ã¿¡ °ø½Ä±×·ìÀüÈ¯
+	//ì‚¬ì—…ìë“±ë¡ìŠ¹ì¸ì²˜ë¦¬ +@
+	//ìŠ¹ì¸ëŒ€ê¸°í…Œì´ë¸” ì‚­ì œì²˜ë¦¬
+	//ìŠ¹ì¸ ì‹œì— ê·¸ë£¹ìˆëŠ”ìœ ì € ê·¸ë£¹ì •ë³´ë¦¬í„´ -> ë¦¬ìŠ¤íŠ¸ê°’ ë¦¬í„´ë°›ì€ê²ƒì„ GroupVoì— groupListì—ë‹¤ê°€ ëŒ€ì…
+	//ê·¸ë£¹ ì¡´ì¬ ì‹œì— ê³µì‹ê·¸ë£¹ì „í™˜
 	@Transactional
 	@Override
 	public void adminVentureRequestHello(Model model, UpdateWaitVo updateWaitVo) {
 		
-		//½ÂÀÎµÈ »ç¶÷Áß¿¡ ±×·ìÀÌ Á¸ÀçÇÏ¸é ±×·ì°ª »Ì°í °ø½Ä±×·ìÀ¸·Î ¾÷µ¥ÀÌÆ®
+		//ìŠ¹ì¸ëœ ì‚¬ëŒì¤‘ì— ê·¸ë£¹ì´ ì¡´ì¬í•˜ë©´ ê·¸ë£¹ê°’ ë½‘ê³  ê³µì‹ê·¸ë£¹ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 		GroupVo group=new GroupVo();
 		group.setGroupList(adminDao.groupCheck(updateWaitVo));
 		if(!group.getGroupList().isEmpty()) {
 			adminDao.groupVentureUpdate(group);
 		}
 		
-		//»ç¾÷ÀÚµî·Ï ½ÂÀÎÃ³¸®
+		//ì‚¬ì—…ìë“±ë¡ ìŠ¹ì¸ì²˜ë¦¬
 		adminDao.ventureInsert(updateWaitVo);
 		
-		//½ÂÀÎµÈ»ç¶÷ ½ÂÀÎ´ë±âÅ×ÀÌºí »èÁ¦
+		//ìŠ¹ì¸ëœì‚¬ëŒ ìŠ¹ì¸ëŒ€ê¸°í…Œì´ë¸” ì‚­ì œ
 		adminDao.updateDelete(updateWaitVo);
 	}
 
-	//»ç¾÷ÀÚµî·Ï°ÅÀıÃ³¸® +@
+	//ì‚¬ì—…ìë“±ë¡ê±°ì ˆì²˜ë¦¬ +@
 	@Override
 	public void adminVentureRequestSorry(Model model, UpdateWaitVo updateWaitVo) {
 		
 		adminDao.updateDelete(updateWaitVo);
 	}
 
-	//½Å°í°ü¸®Á¤º¸Ãâ·Â
+	//ì‹ ê³ ê´€ë¦¬ì •ë³´ì¶œë ¥
 	@Override
 	public void adminReportSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
 
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo==null||pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã‹š³ª °Ë»ö¾ÈÇÒ¶§ Ä«Å×°í¸®°ª ±âº» Ä·ÇÎÀå¸íÀ¸·Î
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë–„ë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ ì¹´í…Œê³ ë¦¬ê°’ ê¸°ë³¸ ìº í•‘ì¥ëª…ìœ¼ë¡œ
 		if(pageSearchVo==null||pageSearchVo.getCategory()==null) {
 			pageSearchVo.setCategory("");
 		}
 		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§³ª °Ë»ö¾ÈÇÒ¶§ ¼¿·ºÆ®¹Ú½º°ª ""·Î ¼³Á¤ÇÏ°í
-		//¼¿·ºÆ®¹Ú½º¿¡¼­ ÀüÃ¼/Ã³¸®¿Ï·á/Á¢¼ö ÀÏ‹š °ª¼³Á¤
-		if(pageSearchVo==null||pageSearchVo.getSearch()==null||pageSearchVo.getSearch().equals("ÀüÃ¼")) {
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ ì…€ë ‰íŠ¸ë°•ìŠ¤ê°’ ""ë¡œ ì„¤ì •í•˜ê³ 
+		//ì…€ë ‰íŠ¸ë°•ìŠ¤ì—ì„œ ì „ì²´/ì²˜ë¦¬ì™„ë£Œ/ì ‘ìˆ˜ ì¼ë–„ ê°’ì„¤ì •
+		if(pageSearchVo==null||pageSearchVo.getSearch()==null||pageSearchVo.getSearch().equals("ì „ì²´")) {
 			pageSearchVo.setSearch("");
-		}else if(pageSearchVo.getSearch().equals("Á¢¼ö")) {
+		}else if(pageSearchVo.getSearch().equals("ì ‘ìˆ˜")) {
 			pageSearchVo.setSearch("1");
-		}else if(pageSearchVo.getSearch().equals("Ã³¸®¿Ï·á")) {
+		}else if(pageSearchVo.getSearch().equals("ì²˜ë¦¬ì™„ë£Œ")) {
 			pageSearchVo.setSearch("2");
 		}
 		
@@ -491,36 +519,36 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println(pageSearchVo);
 	}
 	
-	//½Å°íÃ³¸®¿Ï·á·Î ¾÷µ¥ÀÌÆ® +@
+	//ì‹ ê³ ì²˜ë¦¬ì™„ë£Œë¡œ ì—…ë°ì´íŠ¸ +@
 	@Override
 	public void adminReportComplete(Model model, ReportListVo reportListVo) {
 		
 		adminDao.adminReportUpdate(reportListVo);
 	}
 
-	//½Å°í»ó¼¼ÆäÀÌÁöÃâ·Â
+	//ì‹ ê³ ìƒì„¸í˜ì´ì§€ì¶œë ¥
 	@Override
 	public void adminReportSelectOne(Model model, ReportListVo reportListVo) {
 		
 		model.addAttribute("reportdetail", adminDao.adminReportSelectOne(reportListVo));
 	}
 
-	long i;		//¼­¹öÅ³¶§ ÇÑ¹ø µ¿ÀÛÇÏ¹Ç·Î ±×°Å ¸·´Â¿ë
+	long i;		//ì„œë²„í‚¬ë•Œ í•œë²ˆ ë™ì‘í•˜ë¯€ë¡œ ê·¸ê±° ë§‰ëŠ”ìš©
 	
-	//Á¤ÁöÀ¯Àú ³¯Â¥Ä«¿îÆ® -1Ã³¸® (¼­¹ö Å²½Ã°£ ±âÁØÀ¸·Î 24½Ã°£¸¶´Ù Ä«¿îÆÃ)
+	//ì •ì§€ìœ ì € ë‚ ì§œì¹´ìš´íŠ¸ -1ì²˜ë¦¬ (ì„œë²„ í‚¨ì‹œê°„ ê¸°ì¤€ìœ¼ë¡œ 24ì‹œê°„ë§ˆë‹¤ ì¹´ìš´íŒ…)
 	@Scheduled(fixedDelay = 60000*60*24)
 	public void stopUserCheck() {
 		
 		if(i>1) {
 			List<ProfileVo> stopUser = adminDao.stopUserList();
-			//Á¤ÁöÀ¯Àú°¡ Á¸ÀçÇÒ°æ¿ì ½ÇÇà
+			//ì •ì§€ìœ ì €ê°€ ì¡´ì¬í• ê²½ìš° ì‹¤í–‰
 			if(!stopUser.isEmpty()) {
 				StopUser stop = new StopUser();
 				Object[] obj = null;
 				obj = stop.StopUserCount(adminDao.stopUserList());
 				
-				//´Ù¿îÄ³½ºÆÃÀ¸·ÎÀÎÇÑ À§Çèµµ¸¦ °ü¸®¾ÈÇÔÀ¸·Î ¼³Á¤
-				//StopUser Å¬·¡½º¿¡¼­ List<ProfileVo> Å¸ÀÔÀ¸·Î Object[]¿¡ ´ã¾Ò±â¶§¹®¿¡ Çü ¾ÈÁ¤¼ºÀÌ º¸ÀåµÊ
+				//ë‹¤ìš´ìºìŠ¤íŒ…ìœ¼ë¡œì¸í•œ ìœ„í—˜ë„ë¥¼ ê´€ë¦¬ì•ˆí•¨ìœ¼ë¡œ ì„¤ì •
+				//StopUser í´ë˜ìŠ¤ì—ì„œ List<ProfileVo> íƒ€ì…ìœ¼ë¡œ Object[]ì— ë‹´ì•˜ê¸°ë•Œë¬¸ì— í˜• ì•ˆì •ì„±ì´ ë³´ì¥ë¨
 				@SuppressWarnings("unchecked")
 				List<ProfileVo> stop_zero = (List<ProfileVo>) obj[0];
 				@SuppressWarnings("unchecked")
@@ -533,12 +561,12 @@ public class AdminServiceImpl implements AdminService{
 				profile2.setProfileList(stop_over);
 				
 		
-				//Á¤Áö°ªÀÌ 0ÀÏ¶§ Á¤ÁöÇ®±â
+				//ì •ì§€ê°’ì´ 0ì¼ë•Œ ì •ì§€í’€ê¸°
 				if(!profile1.getProfileList().isEmpty()) {
 					adminDao.updateStop_zero(profile1);
 				}
 				
-				//Á¤Áö°ªÀÌ 1ÀÌ»óÀÏ¶§ Á¤Áö°ª ¾÷µ¥ÀÌÆ®
+				//ì •ì§€ê°’ì´ 1ì´ìƒì¼ë•Œ ì •ì§€ê°’ ì—…ë°ì´íŠ¸
 				if(!profile2.getProfileList().isEmpty()) {
 					adminDao.updateStop_over(profile2);
 				}

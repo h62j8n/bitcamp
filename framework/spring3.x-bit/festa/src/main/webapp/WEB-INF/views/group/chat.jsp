@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/" var="root" />
+<c:url value="/resources/upload" var="upload" />
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
@@ -15,16 +16,51 @@
 <link rel="stylesheet" href="${root }resources/css/site.css">
 <link rel="shortcut icon" href="${root }resources/favicon.ico">
 <title>FESTA</title>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var grnum=$('#grnum').val();
+		var pronum=$('#pronum').val();
+		var ws = new WebSocket('ws://localhost:8080/replyEcho');
+
+		ws.onopen = function () {
+		    console.log('Info: connection opened.');
+		    setTimeout( function(){ connect(); }, 1000); // retry connection!!
+		
+		    ws.onmessage = function (event) {
+			    console.log('ReceiveMessage:', event.data+'\n');
+			};
+		};
+
+
+		ws.onclose = function (event) {
+			console.log('Info: connection closed.');
+		};
+		
+		ws.onerror = function(err) {
+			console.log(err);
+		};
+
+		$('.btnSend').on('click', function(evt) {
+			evt.preventDefault();
+			if (socket.readyState !== 1) return;
+				  let msg = $('input#msg').val();
+				  ws.send(msg);
+		});
+	});
+
+</script>
 </head>
 <body>
 	<div id="wrap" class="chat_wrap">
 		<h1 class="snd_only">FESTA</h1>
-		<h2 class="snd_only">입돌아간다 그룹 단체 채팅</h2>
+		<h2 class="snd_only">${detail.grname } 그룹 단체 채팅</h2>
+		<input type="hidden" id="grnum" value="${detail.grnum }" />
+		<input type="hidden" id="pronum" value="${login.pronum }" />
 		<section class="title_area">
 			<ul class="chat_info box">
-				<li class="pf_picture"><img src="http://placehold.it/33x33"
-					alt="입돌아간다 그룹 썸네일"></li>
-				<li class="ch_gpname">입돌아간다</li>
+				<li class="pf_picture"><img src="${upload }/${detail.grphoto }"
+					alt="${detail.grname }  그룹 썸네일"></li>
+				<li class="ch_gpname">${detail.grname } </li>
 				<li><span class="gp_official"></span></li>
 			</ul>
 		</section>
@@ -58,7 +94,7 @@
 				</a>
 				<p class="msg_input">
 					<textarea id="" name="" placeholder="메세지를 입력해주세요"></textarea>
-					<button type="submit" class="btn_send">
+					<button type="button" class="btn_send">
 						<em class="snd_only">전송</em>
 					</button>
 				</p>

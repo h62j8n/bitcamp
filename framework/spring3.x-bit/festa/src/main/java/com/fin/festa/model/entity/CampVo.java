@@ -3,33 +3,34 @@ package com.fin.festa.model.entity;
 import java.sql.Date;
 import java.util.List;
 
-public class CampVo {					//Ä·ÇÎÀå
+public class CampVo {					//ìº í•‘ì¥
 
-	private List<CampVo> campList;		//Ä·ÇÎÀå ¹è¿­ÆÄ¶ó¹ÌÅÍ ³Ñ±æ¶§ ¾²´Â°ª
-	private int canum;					//Ä·ÇÎÀå ¹øÈ£ (pk)
-	private String caname;				//Ä·ÇÎÀå ÀÌ¸§
-	private String caphoto;				//Ä·ÇÎÀå »çÁø
-	private String caaddr;				//Ä·ÇÎÀå ÁÖ¼Ò
-	private String caaddrsuv;			//Ä·ÇÎÀå ÁÖ¼Ò »ó¼¼
-	private String caaddrsel;			//Ä·ÇÎÀå ¼±È£Áö¿ª
-	private String caintro;				//Ä·ÇÎÀå ¼Ò°³
-	private String caintroone;			//Ä·ÇÎÀå ÇÑÁÙ¼Ò°³
-	private String caguide1;			//Ä·ÇÎÀå ÀÌ¿ë¾È³»
-	private String caguide2;			//		¡È
-	private String caguide3;			//		¡È
-	private String caguide4;			//		¡È
-	private String caguide5;			//		¡È
-	private String caguide6;			//		¡È
-	private String caguide7;			//		¡È
-	private String httitle1;			//Ä·ÇÎÀåÇØ½ÃÅÂ±×1
-	private String httitle2;			//Ä·ÇÎÀåÇØ½ÃÅÂ±×2
-	private String httitle3;			//Ä·ÇÎÀåÇØ½ÃÅÂ±×3
-	private Date cadate;				//Ä·ÇÎÀå ¹®¼­ ÀÛ¼ºÀÏ
-	private Date cadateup;				//Ä·ÇÎÀå ¹®¼­ ¼öÁ¤ÀÏ
-	private double caavg;				//Ä·ÇÎÀå º°Á¡ Æò±Õ
-	private int cagood;					//Ä·ÇÎÀå ÁÁ¾Æ¿ä ¼ö
-	private int mvnum;					//Ä·ÇÎÀå »ç¾÷ÀÚ¹øÈ£
-	private int carn;					//ÆäÀÌÁö ¹øÈ£
+	private List<CampVo> campList;		//ìº í•‘ì¥ ë°°ì—´íŒŒë¼ë¯¸í„° ë„˜ê¸¸ë•Œ ì“°ëŠ”ê°’
+	private int canum;					//ìº í•‘ì¥ ë²ˆí˜¸ (pk)
+	private String caname;				//ìº í•‘ì¥ ì´ë¦„
+	private String caphoto;				//ìº í•‘ì¥ ì‚¬ì§„
+	private String caaddr;				//ìº í•‘ì¥ ì£¼ì†Œ
+	private String caaddrsuv;			//ìº í•‘ì¥ ì£¼ì†Œ ìƒì„¸
+	private String caaddrsel;			//ìº í•‘ì¥ ì„ í˜¸ì§€ì—­
+	private String caintro;				//ìº í•‘ì¥ ì†Œê°œ
+	private String caintroone;			//ìº í•‘ì¥ í•œì¤„ì†Œê°œ
+	private String caguide1;			//ìº í•‘ì¥ ì´ìš©ì•ˆë‚´
+	private String caguide2;			//		â€³
+	private String caguide3;			//		â€³
+	private String caguide4;			//		â€³
+	private String caguide5;			//		â€³
+	private String caguide6;			//		â€³
+	private String caguide7;			//		â€³
+	private String httitle1;			//ìº í•‘ì¥í•´ì‹œíƒœê·¸1
+	private String httitle2;			//ìº í•‘ì¥í•´ì‹œíƒœê·¸2
+	private String httitle3;			//ìº í•‘ì¥í•´ì‹œíƒœê·¸3
+	private Date cadate;				//ìº í•‘ì¥ ë¬¸ì„œ ì‘ì„±ì¼
+	private Date cadateup;				//ìº í•‘ì¥ ë¬¸ì„œ ìˆ˜ì •ì¼
+	private double caavg;				//ìº í•‘ì¥ ë³„ì  í‰ê· 
+	private int cagood;					//ìº í•‘ì¥ ì¢‹ì•„ìš” ìˆ˜
+	private int mvnum;					//ìº í•‘ì¥ ì‚¬ì—…ìë²ˆí˜¸
+	private int carn;					//í˜ì´ì§€ ë²ˆí˜¸
+	private int catotal;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;
 	private GroupNoticeCommentVo groupNoticeComment;
@@ -58,7 +59,7 @@ public class CampVo {					//Ä·ÇÎÀå
 				+ ", caguide3=" + caguide3 + ", caguide4=" + caguide4 + ", caguide5=" + caguide5 + ", caguide6="
 				+ caguide6 + ", caguide7=" + caguide7 + ", httitle1=" + httitle1 + ", httitle2=" + httitle2
 				+ ", httitle3=" + httitle3 + ", cadate=" + cadate + ", cadateup=" + cadateup + ", caavg=" + caavg
-				+ ", cagood=" + cagood + ", mvnum=" + mvnum + ", carn=" + carn + ", campReview=" + campReview
+				+ ", cagood=" + cagood + ", mvnum=" + mvnum + ", carn=" + carn + ", catotal=" + catotal + ", campReview=" + campReview
 				+ ", groupComment=" + groupComment + ", groupNoticeComment=" + groupNoticeComment + ", groupNotice="
 				+ groupNotice + ", groupPost=" + groupPost + ", group=" + group + ", joinGroup=" + joinGroup
 				+ ", myAdmin=" + myAdmin + ", myBookMark=" + myBookMark + ", myComment=" + myComment + ", myFollower="
@@ -74,7 +75,7 @@ public class CampVo {					//Ä·ÇÎÀå
 	public CampVo(List<CampVo> campList, int canum, String caname, String caphoto, String caaddr, String caaddrsuv,
 			String caaddrsel, String caintro, String caintroone, String caguide1, String caguide2, String caguide3,
 			String caguide4, String caguide5, String caguide6, String caguide7, String httitle1, String httitle2,
-			String httitle3, Date cadate, Date cadateup, double caavg, int cagood, int mvnum, int carn,
+			String httitle3, Date cadate, Date cadateup, double caavg, int cagood, int mvnum, int carn, int catotal,
 			CampReviewVo campReview, GroupCommentVo groupComment, GroupNoticeCommentVo groupNoticeComment,
 			GroupNoticeVo groupNotice, GroupPostVo groupPost, GroupVo group, JoinGroupVo joinGroup, MyAdminVo myAdmin,
 			MyBookMarkVo myBookMark, MyCommentVo myComment, MyFollowerVo myFollower, MyFollowingVo myFollowing,
@@ -125,6 +126,7 @@ public class CampVo {					//Ä·ÇÎÀå
 		this.profile = profile;
 		this.reportList = reportList;
 		this.updateWait = updateWait;
+		this.catotal = catotal;
 	}
 
 	public List<CampVo> getCampList() {
@@ -477,6 +479,14 @@ public class CampVo {					//Ä·ÇÎÀå
 
 	public void setUpdateWait(UpdateWaitVo updateWait) {
 		this.updateWait = updateWait;
+	}
+
+	public int getCatotal() {
+		return catotal;
+	}
+
+	public void setCatotal(int catotal) {
+		this.catotal = catotal;
 	}
 	
 	

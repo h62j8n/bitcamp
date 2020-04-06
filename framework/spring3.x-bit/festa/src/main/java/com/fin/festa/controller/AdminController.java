@@ -33,27 +33,27 @@ import com.fin.festa.service.AdminService;
 public class AdminController {
 
 //////////////////////////////////////////////////////////////////////
-//////////////////////////////°ü¸®ÀÚ °ü·Ã//////////////////////////////
+//////////////////////////////ê´€ë¦¬ì ê´€ë ¨//////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 	@Autowired
 	private AdminService adminService;
 
-	//¸ŞÀÎ ´ë½Ãº¸µå
+	//ë©”ì¸ ëŒ€ì‹œë³´ë“œ
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String adminDashBoard(Model model) {
 		adminService.adminDashBoard(model);
 		return "admin/index";
 	}
 	
-	//±×·ì °ü¸®
+	//ê·¸ë£¹ ê´€ë¦¬
 	@RequestMapping(value = "group", method = RequestMethod.GET)
 	public String adminGroupSelectAll(Model model, PageSearchVo pageSearchVo) {
 		adminService.adminGroupSelectAll(model, pageSearchVo);
 		return "admin/group/index";
 	}
 
-	//±×·ì »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "group/del", method = RequestMethod.POST)
 	public String adminGroupDeleteOne(Model model, GroupVo groupVo) {
 		
@@ -61,7 +61,7 @@ public class AdminController {
 		return "admin/group/index";
 	}
 	
-	//±×·ì µğÅ×ÀÏ (»õÃ¢)
+	//ê·¸ë£¹ ë””í…Œì¼ (ìƒˆì°½)
 	@RequestMapping(value = "group/detail", method = RequestMethod.GET)
 	public String adminGroupDetail(Model model, GroupVo groupVo) {
 		
@@ -69,14 +69,21 @@ public class AdminController {
 		return "admin/group/detail";
 	}
 	
-	//±×·ìÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹ í”¼ë“œìŠ¤í¬ë¡¤ ë”ë³´ê¸° ë¹„ë™ê¸°
+	@RequestMapping(value = "group/detail/scroll", method = RequestMethod.GET)
+	public @ResponseBody List<List<?>> adminGroupDetailScroll(Model model, GroupVo groupVo) {
+		
+		return adminService.adminGroupDetailScroll(model, groupVo);
+	}
+	
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@RequestMapping(value = "group/detail/cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<GroupCommentVo> adminGroupDetailCmmt(Model model, GroupPostVo grouppost){
 		
 		return adminService.adminGroupDetailCmmt(model, grouppost);
 	}
 		
-	//±×·ì °øÁö»çÇ× »ó¼¼ (»õÃ¢>ÆË¾÷)
+	//ê·¸ë£¹ ê³µì§€ì‚¬í•­ ìƒì„¸ (ìƒˆì°½>íŒì—…)
 	@RequestMapping(value = "group/detail/ntc_feed", method = RequestMethod.GET)
 	public String adminGroupDetailNotice(Model model, GroupNoticeVo grroupnoticeVo) {
 		
@@ -84,14 +91,14 @@ public class AdminController {
 		return "admin/group/feed";		
 	}
 	
-	//±×·ì°øÁöÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹ê³µì§€í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@RequestMapping(value = "group/detail/notice/cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<GroupNoticeCommentVo> adminGroupDetailCmmt(Model model, GroupNoticeVo groupNoticeVo){
 		
 		return adminService.adminGroupNoticeCmmt(model, groupNoticeVo);
 	}
 	
-	//±×·ì °øÁö»çÇ× »èÁ¦ (»õÃ¢>ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ê³µì§€ì‚¬í•­ ì‚­ì œ (ìƒˆì°½>íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "group/detail/ntc_feed/del", method = RequestMethod.POST)
 	public String adminGroupDetailNoticeDelete(Model model, GroupNoticeVo groupNoticeVo) {
 		
@@ -99,7 +106,7 @@ public class AdminController {
 		return "admin/group/detail";
 	}
 	
-	//±×·ì °øÁö»çÇ× ´ñ±Û»èÁ¦ (»õÃ¢>ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì‚­ì œ (ìƒˆì°½>íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "group/detail/ntc_feed/cmmtdel", method = RequestMethod.POST)
 	public String adminGroupDetailNoticeCmmtDelete(Model model, GroupNoticeCommentVo groupNoticeCommentVo) {
 		
@@ -107,7 +114,7 @@ public class AdminController {
 		return "admin/group/detail";
 	}
 	
-	//±×·ì ÇÇµå »èÁ¦ (»õÃ¢>³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ì‚­ì œ (ìƒˆì°½>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "group/detail/del", method = RequestMethod.POST)
 	public String adminGroupDetailDelete(Model model, GroupPostVo groupPostVo) {
 		
@@ -115,7 +122,7 @@ public class AdminController {
 		return "admin/group/detail";
 	}
 	
-	//±×·ì ÇÇµå ´ñ±Û »èÁ¦ (»õÃ¢>³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ (ìƒˆì°½>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "group/detail/cmmtdel", method = RequestMethod.POST)
 	public String adminGroupDetailCmmtdelete(Model model, GroupCommentVo groupCommentVo) {
 		
@@ -123,7 +130,7 @@ public class AdminController {
 		return "admin/group/detail";
 	}
 	
-	//±×·ì¿ø ¸ñ·Ï(»õÃ¢>ÆË¾÷)
+	//ê·¸ë£¹ì› ëª©ë¡(ìƒˆì°½>íŒì—…)
 	@RequestMapping(value = "group/detail/member", method = RequestMethod.GET)
 	public String adminGroupMemberList(HttpServletRequest req, GroupVo groupVo){
 		
@@ -131,7 +138,7 @@ public class AdminController {
 		return "admin/group/member";
 	}
 	
-	//À¯Àú °ü¸®
+	//ìœ ì € ê´€ë¦¬
 	@RequestMapping(value = "user", method = RequestMethod.GET)
 	public String adminUserSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
@@ -139,7 +146,7 @@ public class AdminController {
 		return "admin/user/index";
 	}
 	
-	//À¯Àú Á¤Áö (³»ºÎÆË¾÷ ±â´É)
+	//ìœ ì € ì •ì§€ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "user/stop", method = RequestMethod.POST)
 	public String adminUserStop(Model model, MyAdminVo myAdminVo) {
 		
@@ -147,7 +154,7 @@ public class AdminController {
 		return "admin/user/index";
 	}
 	
-	//À¯Àú Ãß¹æ (³»ºÎÆË¾÷ ±â´É)
+	//ìœ ì € ì¶”ë°© (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "user/kick", method = RequestMethod.POST)
 	public String adminUserKick(Model model, MyAdminVo myAdminVo) {
 		
@@ -155,7 +162,7 @@ public class AdminController {
 		return "admin/user/index";
 	}
 	
-	//À¯Àú ÇÇµå µğÅ×ÀÏ (»õÃ¢)
+	//ìœ ì € í”¼ë“œ ë””í…Œì¼ (ìƒˆì°½)
 	@RequestMapping(value = "user/detail", method = RequestMethod.GET)
 	public String adminUserDetail(HttpServletRequest req, ProfileVo profileVo) {
 		
@@ -163,14 +170,21 @@ public class AdminController {
 		return "admin/user/detail";
 	}
 	
-	//ÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ìœ ì € í”¼ë“œ ìŠ¤í¬ë¡¤ ë”ë³´ê¸° ë¹„ë™ê¸°
+	@RequestMapping(value = "user/detail/scroll", method = RequestMethod.GET)
+	public @ResponseBody List<List<?>> adminUserDetailScroll(HttpServletRequest req, ProfileVo profileVo) {
+		
+		return adminService.adminUserDetailScroll(req, profileVo);
+	}
+	
+	//í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@RequestMapping(value = "user/detail/cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<MyCommentVo> adminUserDetailCmmt(Model model, MyPostVo post){
 		
 		return adminService.adminUserDetailCmmt(model, post);
 	}
 	
-	//À¯Àú ÇÇµå »èÁ¦ (»õÃ¢>³»ºÎÆË¾÷ ±â´É)
+	//ìœ ì € í”¼ë“œ ì‚­ì œ (ìƒˆì°½>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "user/detail/del", method = RequestMethod.POST)
 	public String adminUserDelete(Model model, MyPostVo myPostVo) {
 		
@@ -178,7 +192,7 @@ public class AdminController {
 		return "admin/user/detail";
 	}
 	
-	//À¯Àú ÇÇµå ´ñ±Û »èÁ¦ (»õÃ¢>³»ºÎÆË¾÷ ±â´É)
+	//ìœ ì € í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ (ìƒˆì°½>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "cmmt/del", method = RequestMethod.POST)
 	public String adminUserCmmtdelete(Model model, MyCommentVo myCommentVo) {
 		
@@ -186,7 +200,7 @@ public class AdminController {
 		return "admin/user/detail";
 	}
 	
-	//À¯Àú ÆÈ·Î¿ö ¸®½ºÆ® (»õÃ¢>ÆË¾÷)
+	//ìœ ì € íŒ”ë¡œì›Œ ë¦¬ìŠ¤íŠ¸ (ìƒˆì°½>íŒì—…)
 	@RequestMapping(value = "follower", method = RequestMethod.GET)
 	public String adminUserfollowerList(Model model, ProfileVo profile){
 		
@@ -194,7 +208,7 @@ public class AdminController {
 		return "admin/user/follower";
 	}
 	
-	//À¯Àú ÆÈ·Î¿ì ¸®½ºÆ® (»õÃ¢>ÆË¾÷)
+	//ìœ ì € íŒ”ë¡œìš° ë¦¬ìŠ¤íŠ¸ (ìƒˆì°½>íŒì—…)
 	@RequestMapping(value = "following", method = RequestMethod.GET)
 	public String adminUserfollowList(Model model, ProfileVo profile){
 		
@@ -202,7 +216,7 @@ public class AdminController {
 		return "admin/user/following";
 	}
 	
-	//Ä·ÇÎÀå °ü¸®
+	//ìº í•‘ì¥ ê´€ë¦¬
 	@RequestMapping(value = "camp", method = RequestMethod.GET)
 	public String adminCampSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
@@ -210,7 +224,7 @@ public class AdminController {
 		return "admin/camp/index";
 	}
 	
-	//Ä·ÇÎÀå »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ìº í•‘ì¥ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "camp/del", method = RequestMethod.POST)
 	public String adminCampDeleteOne(Model model, CampVo campVo){
 		
@@ -218,7 +232,7 @@ public class AdminController {
 		return "admin/camp/index";
 	}
 	
-	//Ä·ÇÎÀå µğÅ×ÀÏ (»õÃ¢)
+	//ìº í•‘ì¥ ë””í…Œì¼ (ìƒˆì°½)
 	@RequestMapping(value = "camp/detail", method = RequestMethod.GET)
 	public String adminCampDetail(Model model, CampVo campVo) {
 		
@@ -226,7 +240,7 @@ public class AdminController {
 		return "admin/camp/detail";
 	}
 	
-	//Ä·ÇÎÀå ÇÑÁÙÆò »èÁ¦ (»õÃ¢>³»ºÎÆË¾÷ ±â´É)
+	//ìº í•‘ì¥ í•œì¤„í‰ ì‚­ì œ (ìƒˆì°½>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "camp/detail/revdel", method = RequestMethod.POST)
 	public String reviewDeleteOne(Model model, CampReviewVo campReviewVo) {
 		
@@ -234,7 +248,7 @@ public class AdminController {
 		return "admin/camp/detail";
 	}
 	
-	//»ç¾÷ÀÚ °ü¸®
+	//ì‚¬ì—…ì ê´€ë¦¬
 	@RequestMapping(value = "venture", method = RequestMethod.GET)
 	public String adminVentureSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
@@ -242,7 +256,7 @@ public class AdminController {
 		return "admin/venture/index";
 	}
 	
-	//»ç¾÷ÀÚ »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ì‚¬ì—…ì ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "venture/out", method = RequestMethod.POST)
 	public String adminVentureDeleteOne(Model model, MyVentureVo myVentureVo) {
 		
@@ -250,21 +264,21 @@ public class AdminController {
 		return "admin/venture/index";
 	}
 	
-	//»ç¾÷ÀÚµî·ÏÁõ ÀÌ¹ÌÁö(³»ºÎÆË¾÷ ±â´É)
+	//ì‚¬ì—…ìë“±ë¡ì¦ ì´ë¯¸ì§€(ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value ="venture/img", method = RequestMethod.POST)
 	public String AdminVentureImg(Model model, MyVentureVo myVentureVo, @RequestParam("where") int where) {
 		return "admin/venture/index";
 		//return "admin/venture/req";
 	}
 	
-	//»ç¾÷ÀÚ ½ÅÃ» °ü¸®
+	//ì‚¬ì—…ì ì‹ ì²­ ê´€ë¦¬
 	@RequestMapping(value = "venture/req", method = RequestMethod.GET)
 	public String adminVentureRequestSelectAll(Model model, PageSearchVo pageSearchVo) {
 		adminService.adminVentureRequestSelectAll(model, pageSearchVo);
 		return "admin/venture/req";
 	}
 	
-	//»ç¾÷ÀÚ ½ÅÃ» ½ÂÀÎ (³»ºÎÆË¾÷ ±â´É)
+	//ì‚¬ì—…ì ì‹ ì²­ ìŠ¹ì¸ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "venture/reqhi", method = RequestMethod.POST)
 	public String adminVentureRequestHello(Model model, UpdateWaitVo updateWaitVo) {
 		
@@ -272,7 +286,7 @@ public class AdminController {
 		return "admin/venture/req";
 	}
 	
-	//»ç¾÷ÀÚ ½ÅÃ» °ÅÀı (³»ºÎÆË¾÷ ±â´É)
+	//ì‚¬ì—…ì ì‹ ì²­ ê±°ì ˆ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "venture/reqbye", method = RequestMethod.POST)
 	public String adminVentureRequestSorry(Model model, UpdateWaitVo updateWaitVo) {
 		
@@ -280,7 +294,7 @@ public class AdminController {
 		return "admin/venture/req";
 	}
 	
-	//½Å°í Á¶È¸
+	//ì‹ ê³  ì¡°íšŒ
 	@RequestMapping(value = "report", method = RequestMethod.GET)
 	public String adminReportSelectAll(Model model, PageSearchVo pageSearchVo) {
 		
@@ -288,7 +302,7 @@ public class AdminController {
 		return "admin/report/index";
 	}
 
-	//½Å°í Ã³¸® (³»ºÎÆË¾÷ ±â´É)
+	//ì‹ ê³  ì²˜ë¦¬ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "report/complate", method = RequestMethod.POST)
 	public String adminReportComplate(Model model, ReportListVo reportListVo) {
 		
@@ -296,7 +310,7 @@ public class AdminController {
 		return "admin/report/index";
 	}
 
-	//½Å°í µğÅ×ÀÏ (³»ºÎÆË¾÷ ±â´É)
+	//ì‹ ê³  ë””í…Œì¼ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "report/detail", method = RequestMethod.GET)
 	public String adminReportSelectOne(Model model, ReportListVo reportListVo) {
 		

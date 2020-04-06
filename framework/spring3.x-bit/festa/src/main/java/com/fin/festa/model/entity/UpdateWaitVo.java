@@ -4,21 +4,21 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
 
-public class UpdateWaitVo {						//°¡ÀÔ & ½ÂÀÎ ´ë±â (»ç¾÷ÀÚ, ±×·ì)
+public class UpdateWaitVo {						//ê°€ì… & ìŠ¹ì¸ ëŒ€ê¸° (ì‚¬ì—…ì, ê·¸ë£¹)
 
-	private List<UpdateWaitVo> updateList;		//¾÷µ¥ÀÌÆ®´ë±â ¹è¿­ÆÄ¶ó¹ÌÅÍ¿¡ ¾²ÀÌ´Â°ª
-	private String grname;						//±×·ì ÀÌ¸§
-	private String grsayone;					//½ÅÃ»½Ã ÇÏ°í½ÍÀº¸»
-	private String proname;						//³» ÀÌ¸§
-	private String mvaddr;						//»ç¾÷ÀÚ ÁÖ¼Ò
-	private String mvphoto;						//»ç¾÷ÀÚµî·ÏÁõ »çÁø
-	private String mvaddrsuv;					//»ç¾÷ÀÚ ÁÖ¼Ò »ó¼¼
-	private BigInteger mvnumber;				//»ç¾÷ÀÚ¹øÈ£
-	private int grnum;							//±×·ì ¹øÈ£
-	private int pronum;							//³» ¹øÈ£
-	private int uwrn;							//ÆäÀÌÁö ¹øÈ£
-	private String mvname;						//Ä·ÇÎÀå¸í
-	private Date uwdate;						//½ÅÃ»ÀÏ
+	private List<UpdateWaitVo> updateList;		//ì—…ë°ì´íŠ¸ëŒ€ê¸° ë°°ì—´íŒŒë¼ë¯¸í„°ì— ì“°ì´ëŠ”ê°’
+	private String grname;						//ê·¸ë£¹ ì´ë¦„
+	private String grsayone;					//ì‹ ì²­ì‹œ í•˜ê³ ì‹¶ì€ë§
+	private String proname;						//ë‚´ ì´ë¦„
+	private String mvaddr;						//ì‚¬ì—…ì ì£¼ì†Œ
+	private String mvphoto;						//ì‚¬ì—…ìë“±ë¡ì¦ ì‚¬ì§„
+	private String mvaddrsuv;					//ì‚¬ì—…ì ì£¼ì†Œ ìƒì„¸
+	private BigInteger mvnumber;				//ì‚¬ì—…ìë²ˆí˜¸
+	private int grnum;							//ê·¸ë£¹ ë²ˆí˜¸
+	private int pronum;							//ë‚´ ë²ˆí˜¸
+	private int uwrn;							//í˜ì´ì§€ ë²ˆí˜¸
+	private String mvname;						//ìº í•‘ì¥ëª…
+	private Date uwdate;						//ì‹ ì²­ì¼
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

@@ -1,12 +1,12 @@
 package com.fin.festa.model.entity;
 
-public class WeekCountVo {		//ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ²Ãâ·ÂVo
+public class WeekCountVo {		//ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™©ì¶œë ¥Vo
 
-	private int userCount;		//ÀÌ¹øÁÖ ½Å±Ô°¡ÀÔÀÚ ¼ö  
-	private int groupCount;		//ÀÌ¹øÁÖ ±×·ì»ı¼º ¼ö
-	private int ventureCount;	//ÀÌ¹øÁÖ »ç¾÷ÀÚ½ÅÃ» ¼ö
-	private int campCount;		//ÀÌ¹øÁÖ Ä·ÇÎÀåµî·Ï ¼ö
-	private int reportCount;	//ÀÌ¹øÁÖ ½Å°íµî·Ï ¼ö
+	private int userCount;		//ì´ë²ˆì£¼ ì‹ ê·œê°€ì…ì ìˆ˜  
+	private int groupCount;		//ì´ë²ˆì£¼ ê·¸ë£¹ìƒì„± ìˆ˜
+	private int ventureCount;	//ì´ë²ˆì£¼ ì‚¬ì—…ìì‹ ì²­ ìˆ˜
+	private int campCount;		//ì´ë²ˆì£¼ ìº í•‘ì¥ë“±ë¡ ìˆ˜
+	private int reportCount;	//ì´ë²ˆì£¼ ì‹ ê³ ë“±ë¡ ìˆ˜
 	
 	@Override
 	public String toString() {

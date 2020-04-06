@@ -1,5 +1,7 @@
 package com.fin.festa.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
@@ -22,76 +27,109 @@ import com.fin.festa.service.SearchService;
 public class SearchController {
 	
 //////////////////////////////////////////////////////////////////////
-///////////////////////////////°Ë»ö °ü·Ã///////////////////////////////
+///////////////////////////////ê²€ìƒ‰ ê´€ë ¨///////////////////////////////
 //////////////////////////////////////////////////////////////////////
 	
 	@Autowired
 	private SearchService searchService;
 
-	//°Ë»ö
+	//ê²€ìƒ‰ ê²°ê³¼
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String search(Model model, PageSearchVo pageSearchVo) {
-		searchService.search(model, pageSearchVo);
+	public String search(HttpServletRequest req, PageSearchVo pageSearchVo) {
+		
+		searchService.search(req, pageSearchVo);
 		return "search";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå »ó¼¼(³»ºÎÆË¾÷)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ìƒì„¸(íŒì—…)
 	@RequestMapping(value="feed", method = RequestMethod.GET)
 	public String searchFeedDetail(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search";
+		
+		searchService.searchFeedDetail(model, myPostVo, groupPostVo);
+		return "common/feed";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå ¼öÁ¤(³»ºÎÆË¾÷ ³» ±â´É)
+	@RequestMapping(value = "scroll", method = RequestMethod.GET)
+	public @ResponseBody List<FeedVo> searchScroll(HttpServletRequest req, PageSearchVo pageSearchVo) {
+		
+		return searchService.searchScroll(req, pageSearchVo);
+	}
+	
+	//ê²€ìƒ‰ ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
+	@RequestMapping(value = "feed/group_cmmt", method = RequestMethod.GET)
+	public @ResponseBody List<GroupCommentVo> searchGroupCmmt(Model model, GroupCommentVo groupCommentVo){
+		
+		return searchService.searchGroupCmmt(model, groupCommentVo);
+	}
+	
+	//ê²€ìƒ‰ ê°œì¸í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
+	@RequestMapping(value = "feed/my_cmmt", method = RequestMethod.GET)
+	public @ResponseBody List<MyCommentVo> searchMyCmmt(Model model, MyCommentVo myCommentVo){
+		
+		return searchService.searchMyCmmt(model, myCommentVo);
+	}
+	
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ìˆ˜ì •(íŒì—…>íŒì—…)
 	@RequestMapping(value="feed/maker", method = RequestMethod.GET)
 	public String searchFeedUpdateOne() {
-		return "search";
+		return "search/maker";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå ¼öÁ¤(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ìˆ˜ì •(íŒì—…>íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value="feed/maker", method = RequestMethod.POST)
 	public String searchFeedUpdateOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search";
+		return "search/feed";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå »èÁ¦(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ì‚­ì œ(íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value="feed/del", method = RequestMethod.POST)
 	public String searchFeedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
-		return "search";
+		return "search/index";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå ´ñ±Û µî·Ï(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ëŒ“ê¸€ ë“±ë¡(íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "feed/cmmtadd", method = RequestMethod.POST)
 	public String searchFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
-		return "search";
+		
+		searchService.searchFeedCmmtInsertOne(model, myCommentVo, groupCommentVo);
+		return "common/feed";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå ´ñ±Û »èÁ¦(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ(íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "feed/cmmtdel", method = RequestMethod.POST)
 	public String searchFeedCmmtDeletetOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
-		return "search";
+		return "search/feed";
 	}
 
-	//°Ë»ö °á°ú ÇÇµå ÁÁ¾Æ¿ä(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ì¢‹ì•„ìš”(íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "feed/likeadd", method = RequestMethod.POST)
 	public String searchFeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
-		return "search";
+		
+		searchService.searchFeedLikeInsertOne(req, myGoodVo);
+		return "common/feed";
 	}
 	
-	//°Ë»ö °á°ú ÇÇµå ÁÁ¾Æ¿ä Ãë¼Ò(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ì¢‹ì•„ìš” ì·¨ì†Œ(íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "feed/likedel", method = RequestMethod.POST)
 	public String searchFeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
-		return "search";
+		
+		searchService.searchFeedLikeDeleteOne(req, myGoodVo);
+		return "common/feed";
 	}
 
-	//°Ë»ö °á°ú ÇÇµå ½Å°í(³»ºÎÆË¾÷)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ì‹ ê³ (íŒì—…)
 	@RequestMapping(value="feed/report", method = RequestMethod.GET)
-	public String searchFeedReport() {
-		return "search";
+	public String searchFeedReport(Model model, FeedVo feed) {
+		
+		model.addAttribute("feedReport", feed);
+		return "common/report";
 	}
 
-	//°Ë»ö °á°ú ÇÇµå ½Å°í(³»ºÎÆË¾÷ ³» ±â´É)
+	//ê²€ìƒ‰ ê²°ê³¼ í”¼ë“œ ì‹ ê³ (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value="feed/report", method = RequestMethod.POST)
-	public String searchFeedReport(Model model, ReportListVo reportListVo) {
-		return "search";
+	public String searchFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
+		
+		searchService.searchFeedReport(req, reportListVo, files);
+		return "common/report";
 	}
 }

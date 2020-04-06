@@ -3,27 +3,27 @@ package com.fin.festa.model.entity;
 import java.sql.Date;
 import java.util.List;
 
-public class ReportListVo {					//½Å°í¸®½ºÆ® (ÀüÃ¼) 
+public class ReportListVo {					//ì‹ ê³ ë¦¬ìŠ¤íŠ¸ (ì „ì²´) 
 
-	private List<ReportListVo> reportList;	//½Å°í ¹è¿­ÆÄ¶ó¹ÌÅÍ ³Ñ±æ¶§ ¾²´Â°ª
-	private int rlnum;						//½Å°í ¹øÈ£(pk)
-	private String rlcategory;				//½Å°í Ä«Å×°í¸®
-	private String rlreport;				//½Å°í »çÀ¯
-	private String rlreporter;				//½Å°íÀÚ
-	private String reporterid;				//½Å°íÀÚ ¾ÆÀÌµğ
-	private String rltarget;				//½Å°í´çÇÑ »ç¶÷
-	private String targetid;				//½Å°í´çÇÑ »ç¶÷ ¾ÆÀÌµğ
-	private String rlphoto;					//½Å°í»çÁø
-	private Date rldate;					//½Å°í ³¯Â¥
-	private int rlstatus;					//½Å°í»óÅÂ
-	private int pronum;						//½Å°íÀÚ ¹øÈ£
-	private int pronum_sync;				//½Å°í´çÇÑ »ç¶÷ ¹øÈ£
-	private int grnum;						//½Å°í ±×·ì ¹øÈ£
-	private int gpnum;						//½Å°í ±×·ì °Ô½Ã±Û ¹øÈ£
-	private int gnnum;						//½Å°í ±×·ì °øÁö ¹øÈ£
-	private int canum;						//½Å°í Ä·ÇÎÀå ¹øÈ£
-	private int mpnum;						//½Å°í ÇÇµå ¹øÈ£(°³ÀÎ)
-	private int rlrn;						//ÆäÀÌÁö ¹øÈ£
+	private List<ReportListVo> reportList;	//ì‹ ê³  ë°°ì—´íŒŒë¼ë¯¸í„° ë„˜ê¸¸ë•Œ ì“°ëŠ”ê°’
+	private int rlnum;						//ì‹ ê³  ë²ˆí˜¸(pk)
+	private String rlcategory;				//ì‹ ê³  ì¹´í…Œê³ ë¦¬
+	private String rlreport;				//ì‹ ê³  ì‚¬ìœ 
+	private String rlreporter;				//ì‹ ê³ ì
+	private String reporterid;				//ì‹ ê³ ì ì•„ì´ë””
+	private String rltarget;				//ì‹ ê³ ë‹¹í•œ ì‚¬ëŒ
+	private String targetid;				//ì‹ ê³ ë‹¹í•œ ì‚¬ëŒ ì•„ì´ë””
+	private String rlphoto;					//ì‹ ê³ ì‚¬ì§„
+	private Date rldate;					//ì‹ ê³  ë‚ ì§œ
+	private int rlstatus;					//ì‹ ê³ ìƒíƒœ
+	private int pronum;						//ì‹ ê³ ì ë²ˆí˜¸
+	private int pronum_sync;				//ì‹ ê³ ë‹¹í•œ ì‚¬ëŒ ë²ˆí˜¸
+	private int grnum;						//ì‹ ê³  ê·¸ë£¹ ë²ˆí˜¸
+	private int gpnum;						//ì‹ ê³  ê·¸ë£¹ ê²Œì‹œê¸€ ë²ˆí˜¸
+	private int gnnum;						//ì‹ ê³  ê·¸ë£¹ ê³µì§€ ë²ˆí˜¸
+	private int canum;						//ì‹ ê³  ìº í•‘ì¥ ë²ˆí˜¸
+	private int mpnum;						//ì‹ ê³  í”¼ë“œ ë²ˆí˜¸(ê°œì¸)
+	private int rlrn;						//í˜ì´ì§€ ë²ˆí˜¸
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

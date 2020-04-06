@@ -1,5 +1,6 @@
 package com.fin.festa.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.FeedDaoImpl;
 import com.fin.festa.model.IndexDaoImpl;
+import com.fin.festa.model.MemberDaoImpl;
 import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.util.DateCalculate;
@@ -26,7 +29,7 @@ import com.fin.festa.util.UploadPhoto;
 @Service
 public class FeedServiceImpl implements FeedService{
 
-	//µî·Ï,¼öÁ¤,»èÁ¦°¡ ÃÖ¼Ò2°³ÀÌ»ó µé¾î°¡´Â ¸Ş¼Òµå´Â ²À Æ®·£Àè¼Ç Àû¿ëÇÒ°Í!!
+	//ë“±ë¡,ìˆ˜ì •,ì‚­ì œê°€ ìµœì†Œ2ê°œì´ìƒ ë“¤ì–´ê°€ëŠ” ë©”ì†Œë“œëŠ” ê¼­ íŠ¸ëœì­ì…˜ ì ìš©í• ê²ƒ!!
 	
 	@Autowired
 	FeedDaoImpl feedDao;
@@ -34,25 +37,36 @@ public class FeedServiceImpl implements FeedService{
 	@Autowired 
 	IndexDaoImpl indexDao;
 	
-	//ÀÎ±âÇÇµå Ãâ·Â(±×·ìÇÇµå,°³ÀÎÇÇµå ÇÕÃÄ¼­)
+	@Autowired
+	MemberDaoImpl memberDao;
+	
+	//ì¸ê¸°í”¼ë“œ ì¶œë ¥(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ í•©ì³ì„œ)
 	@Override
 	public void hotFeedSelectAll(HttpServletRequest req) {
-
+		
+		PageSearchVo page = new PageSearchVo();
+		page.setPage5(1);
+		
 		DateCalculate cal=new DateCalculate();
 		FeedVo feed = new FeedVo();
-		List<FeedVo> groupFeedList = feedDao.hotGroupFeedSelectAll();
-		List<FeedVo> myFeedList = feedDao.hotMyFeedSelectAll();
+		List<FeedVo> groupFeedList = feedDao.hotGroupFeedSelectAll(page);
+		List<FeedVo> myFeedList = feedDao.hotMyFeedSelectAll(page);
 		
-		//±×·ìÇÇµå´ñ±Û»ÌÀ½
+		//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ë½‘ìŒ
 		feed.setFeedList(groupFeedList);
 		req.setAttribute("groupFeedCmmt", feedDao.hotGroupCommentSelectAll(feed));
-		//°³ÀÎÇÇµå´ñ±Û»ÌÀ½
+		//ê°œì¸í”¼ë“œëŒ“ê¸€ë½‘ìŒ
 		feed.setFeedList(myFeedList);
 		req.setAttribute("myFeedCmmt", feedDao.hotMyCommentSelectAll(feed));
-		//ÇÇµå ³¯Â¥¼ø Á¤·Ä
-		req.setAttribute("feedList", cal.VoDateReturn(groupFeedList, myFeedList));
+		//í”¼ë“œ ë‚ ì§œìˆœ ì •ë ¬
+		List<FeedVo> sortList = cal.VoDateGoodReturn(groupFeedList, myFeedList);
+		List<FeedVo> feedList = new ArrayList<>();
+		for(int i=page.getStartnum()-1; i<page.getEndnum(); i++) {
+			feedList.add(sortList.get(i));
+		}
+		req.setAttribute("feedList", feedList);
 		
-		//¿ìÃø¿¡¶°´Ù´Ï´Â ÀÎ±âÄ·ÇÎÀå,±×·ì¸ñ·Ï
+		//ìš°ì¸¡ì—ë– ë‹¤ë‹ˆëŠ” ì¸ê¸°ìº í•‘ì¥,ê·¸ë£¹ëª©ë¡
 		if(req.getSession().getAttribute("login")!=null) {
 			req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)req.getSession().getAttribute("login")));
 		}else {
@@ -62,38 +76,67 @@ public class FeedServiceImpl implements FeedService{
 		
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ´ñ±Û´õº¸±â
+	//ì¸ê¸°í”¼ë“œ ìŠ¤í¬ë¡¤ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<List<?>> hotFeedScroll(HttpServletRequest req, PageSearchVo pageSearchVo) {
+		
+		DateCalculate cal=new DateCalculate();
+		FeedVo feed = new FeedVo();
+		List<FeedVo> groupFeedList = feedDao.hotGroupFeedSelectAll(pageSearchVo);
+		List<FeedVo> myFeedList = feedDao.hotMyFeedSelectAll(pageSearchVo);
+		List<List<?>> list = new ArrayList<>();
+		//í”¼ë“œ ë‚ ì§œìˆœ ì •ë ¬
+		List<FeedVo> sortList = cal.VoDateGoodReturn(groupFeedList, myFeedList);
+		List<FeedVo> feedList = new ArrayList<>();
+		for(int i=pageSearchVo.getStartnum()-1; i<pageSearchVo.getEndnum(); i++) {
+			feedList.add(sortList.get(i));
+		}
+		list.add(feedList);
+		//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ë½‘ìŒ
+		feed.setFeedList(groupFeedList);
+		list.add(feedDao.hotGroupCommentSelectAll(feed));
+		//ê°œì¸í”¼ë“œëŒ“ê¸€ë½‘ìŒ
+		feed.setFeedList(myFeedList);
+		list.add(feedDao.hotMyCommentSelectAll(feed));
+		
+		ProfileVo profile = (ProfileVo)req.getSession().getAttribute("login");
+		list.add(memberDao.myGoodSelectAll(profile));
+		
+		return list;
+	}
+
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸°
 	@Override
 	public List<GroupCommentVo> groupFeedCmmtMore(Model model, GroupPostVo groupPostVo) {
 		
 		return feedDao.groupFeedCmmtMore(groupPostVo);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±Û´õº¸±â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸°
 	@Override
 	public List<MyCommentVo> myFeedCmmtMore(Model model, MyPostVo myPostVo) {
 		
 		return feedDao.myFeedCmmtMore(myPostVo);
 	}
 
-	//ÀÎ±âÇÇµå ´ñ±Ûµî·Ï(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ µî·Ï)
+	//ì¸ê¸°í”¼ë“œ ëŒ“ê¸€ë“±ë¡(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ë“±ë¡)
 	@Override
 	public void hotFeedCmmtInsertOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo) {
 
-		//°³ÀÎÇÇµå ´ñ±Ûµî·Ï
+		//ê°œì¸í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 		if(groupCommentVo.getGpnum()==0) {
 			feedDao.myFeedCmmtInsertOne(myCommentVo);
-		//±×·ìÇÇµå ´ñ±Ûµî·Ï
+		//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 		}else {
 			feedDao.groupFeedCmmtInsertOne(groupCommentVo);
 		}
 	}
 
-	//ÀÎ±âÇÇµå ´ñ±Û»èÁ¦(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ »èÁ¦)
+	//ì¸ê¸°í”¼ë“œ ëŒ“ê¸€ì‚­ì œ(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ì‚­ì œ)
 	@Override
 	public void hotFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo) {
 
-		//±×·ìÇÇµå,°³ÀÎÇÇµå ±¸ºĞ
+		//ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë¶„
 		if(groupCommentVo.getGcnum()==0) {
 			feedDao.myFeedCmmtDeleteOne(myCommentVo);
 		}else {
@@ -101,14 +144,14 @@ public class FeedServiceImpl implements FeedService{
 		}
 	}
 
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿äµî·Ï(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ ÁÁ¾Æ¿äµî·Ï)
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿ä°¹¼ö +1
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ì¢‹ì•„ìš”ë“±ë¡)
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš”ê°¯ìˆ˜ +1
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void hotLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
 
-		//°³ÀÎÇÇµåÀÏ¶§
+		//ê°œì¸í”¼ë“œì¼ë•Œ
 		if(myGoodVo.getGpnum()==0) {
 			feedDao.myFeedLikeInsertOne(myGoodVo);
 			
@@ -116,7 +159,7 @@ public class FeedServiceImpl implements FeedService{
 			post.setMpnum(myGoodVo.getMpnum());
 			
 			feedDao.myFeedLikeOnePlus(post);
-		//±×·ìÇÇµåÀÏ¶§
+		//ê·¸ë£¹í”¼ë“œì¼ë•Œ
 		}else {
 			feedDao.groupFeedLikeInsertOne(myGoodVo);
 			
@@ -128,14 +171,14 @@ public class FeedServiceImpl implements FeedService{
 		req.getSession().setAttribute("goodlist", feedDao.myGoodRenewal(myGoodVo));
 	}
 
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿äÇØÁ¦(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ ÁÁ¾Æ¿äÇØÁ¦)
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿ä°¹¼ö -1
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ì¢‹ì•„ìš”í•´ì œ)
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš”ê°¯ìˆ˜ -1
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void hotLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
 
-		//°³ÀÎÇÇµåÀÏ¶§
+		//ê°œì¸í”¼ë“œì¼ë•Œ
 		if(myGoodVo.getGpnum()==0) {
 			feedDao.myFeedLikeDeleteOne(myGoodVo);
 			
@@ -143,7 +186,7 @@ public class FeedServiceImpl implements FeedService{
 			post.setMpnum(myGoodVo.getMpnum());
 			
 			feedDao.myFeedLikeOneMinus(post);
-		//±×·ìÇÇµåÀÏ¶§
+		//ê·¸ë£¹í”¼ë“œì¼ë•Œ
 		}else {
 			feedDao.groupFeedLikeDeleteOne(myGoodVo);
 			
@@ -155,8 +198,8 @@ public class FeedServiceImpl implements FeedService{
 		req.getSession().setAttribute("goodlist", feedDao.myGoodRenewal(myGoodVo));
 	}
 
-	//ÀÎ±âÇÇµå ½Å°íµî·Ï(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ ½Å°íµî·Ï)
-	//ÇØ´ç ½Å°í´çÇÑÀ¯Àú ½Å°í´çÇÑÈ½¼ö +1
+	//ì¸ê¸°í”¼ë“œ ì‹ ê³ ë“±ë¡(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ì‹ ê³ ë“±ë¡)
+	//í•´ë‹¹ ì‹ ê³ ë‹¹í•œìœ ì € ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Transactional
 	@Override
 	public void hotFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
@@ -165,11 +208,11 @@ public class FeedServiceImpl implements FeedService{
 		String rlphoto = up.upload(files, req, reportListVo);
 		reportListVo.setRlphoto(rlphoto);
 		
-		//±âÅ¸¹öÆ°´­·¶´Ù°¡ ´Ù¸¥°ÅÃ¼Å©ÇÏ°í ³Ñ¾î¿Â°æ¿ì ´Ù¸¥°ÅÃ¼Å©°ªÀ¸·Î ´ëÃ¼
+		//ê¸°íƒ€ë²„íŠ¼ëˆŒë €ë‹¤ê°€ ë‹¤ë¥¸ê±°ì²´í¬í•˜ê³  ë„˜ì–´ì˜¨ê²½ìš° ë‹¤ë¥¸ê±°ì²´í¬ê°’ìœ¼ë¡œ ëŒ€ì²´
 		String rlreport = reportListVo.getRlreport();
 		String[] report = rlreport.split(",");
 		if(report.length>1) {
-			if(report[0].equals("±âÅ¸")) {
+			if(report[0].equals("ê¸°íƒ€")) {
 				rlreport = report[1];
 			}else {
 				rlreport = report[0];
@@ -179,7 +222,7 @@ public class FeedServiceImpl implements FeedService{
 		}
 		reportListVo.setRlreport(rlreport);
 		
-		//°³ÀÎÇÇµåÀÎÁö ±×·ìÇÇµåÀÎÁö Ã¼Å©
+		//ê°œì¸í”¼ë“œì¸ì§€ ê·¸ë£¹í”¼ë“œì¸ì§€ ì²´í¬
 		if(reportListVo.getGpnum()==0) {
 			feedDao.myFeedReportInsertOne(reportListVo);
 		}else {
@@ -189,36 +232,36 @@ public class FeedServiceImpl implements FeedService{
 		feedDao.feedReportCountUpdate(reportListVo);
 	}
 
-	//ÀÎ±âÇÇµå ¼öÁ¤(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ ¼öÁ¤)
+	//ì¸ê¸°í”¼ë“œ ìˆ˜ì •(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ìˆ˜ì •)
 	@Override
 	public void hotFeedUpdateOne(HttpServletRequest req, GroupPostVo groupPostVo, MyPostVo myPostVo, MultipartFile[] files) {
 		
 		UploadPhoto up = new UploadPhoto();
-		//°³ÀÎÇÇµåÀÎÁö ±×·ìÇÇµåÀÎÁö Ã¼Å©
+		//ê°œì¸í”¼ë“œì¸ì§€ ê·¸ë£¹í”¼ë“œì¸ì§€ ì²´í¬
 		if(groupPostVo.getGpnum()==0) {
 			String mpphoto = up.upload(files, req, myPostVo);
-			//±âÁ¸¿¡ ÀÖ´ø»çÁøÀÌ Á¸ÀçÇÒ¶§
+			//ê¸°ì¡´ì— ìˆë˜ì‚¬ì§„ì´ ì¡´ì¬í• ë•Œ
 			if(myPostVo.getMpphoto()!=null) {
-				//³Ñ¾î¿Â Ã·ºÎ»çÁøÀÌ Á¸ÀçÇÒ¶§(»çÁøÀ» »õ·Î µî·ÏÇßÀ»¶§)
+				//ë„˜ì–´ì˜¨ ì²¨ë¶€ì‚¬ì§„ì´ ì¡´ì¬í• ë•Œ(ì‚¬ì§„ì„ ìƒˆë¡œ ë“±ë¡í–ˆì„ë•Œ)
 				if(!mpphoto.equals("")) {
 					mpphoto=myPostVo.getMpphoto()+","+mpphoto;
 					myPostVo.setMpphoto(mpphoto);
 				}
-			//±âÁ¸¿¡ ÀÖ´ø»çÁøÀÌ ¾øÀ»¶§
+			//ê¸°ì¡´ì— ìˆë˜ì‚¬ì§„ì´ ì—†ì„ë•Œ
 			}else {
 				myPostVo.setMpphoto(mpphoto);
 			}
 			feedDao.myFeedUpdateOne(myPostVo);
 		}else {
 			String gpphoto = up.upload(files, req, groupPostVo);
-			//±âÁ¸¿¡ ÀÖ´ø»çÁøÀÌ Á¸ÀçÇÒ¶§
+			//ê¸°ì¡´ì— ìˆë˜ì‚¬ì§„ì´ ì¡´ì¬í• ë•Œ
 			if(groupPostVo.getGpphoto()!=null) {
-				//³Ñ¾î¿Â Ã·ºÎ»çÁøÀÌ Á¸ÀçÇÒ¶§(»çÁøÀ» »õ·Î µî·ÏÇßÀ»¶§)
+				//ë„˜ì–´ì˜¨ ì²¨ë¶€ì‚¬ì§„ì´ ì¡´ì¬í• ë•Œ(ì‚¬ì§„ì„ ìƒˆë¡œ ë“±ë¡í–ˆì„ë•Œ)
 				if(!gpphoto.equals("")) {
 					gpphoto=groupPostVo.getGpphoto()+","+gpphoto;
 					groupPostVo.setGpphoto(gpphoto);
 				}
-			//±âÁ¸¿¡ ÀÖ´ø»çÁøÀÌ ¾øÀ»¶§
+			//ê¸°ì¡´ì— ìˆë˜ì‚¬ì§„ì´ ì—†ì„ë•Œ
 			}else {
 				groupPostVo.setGpphoto(gpphoto);
 			}
@@ -226,11 +269,11 @@ public class FeedServiceImpl implements FeedService{
 		}
 	}
 
-	//ÀÎ±âÇÇµå ¼öÁ¤ÆË¾÷ Á¤º¸Ãâ·Â
+	//ì¸ê¸°í”¼ë“œ ìˆ˜ì •íŒì—… ì •ë³´ì¶œë ¥
 	@Override
 	public void hotFeedUpdateOnePop(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
 
-		//°³ÀÎÇÇµå,±×·ìÇÇµå ±¸ºĞ
+		//ê°œì¸í”¼ë“œ,ê·¸ë£¹í”¼ë“œ êµ¬ë¶„
 		if(groupPostVo.getGpnum()==0) {
 			model.addAttribute("feedEdit", feedDao.myFeedSelectOne(myPostVo));
 			System.out.println(feedDao.myFeedSelectOne(myPostVo));
@@ -240,11 +283,11 @@ public class FeedServiceImpl implements FeedService{
 		}
 	}
 
-	//ÀÎ±âÇÇµå »èÁ¦(±×·ìÇÇµå,°³ÀÎÇÇµå ±¸º°ÇØ¼­ »èÁ¦)
+	//ì¸ê¸°í”¼ë“œ ì‚­ì œ(ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë³„í•´ì„œ ì‚­ì œ)
 	@Override
 	public void hotFeedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
 
-		//±×·ìÇÇµå,°³ÀÎÇÇµå ±¸ºĞ
+		//ê·¸ë£¹í”¼ë“œ,ê°œì¸í”¼ë“œ êµ¬ë¶„
 		if(groupPostVo.getGpnum()==0) {
 			feedDao.myFeedDeleteOne(myPostVo);
 		}else {

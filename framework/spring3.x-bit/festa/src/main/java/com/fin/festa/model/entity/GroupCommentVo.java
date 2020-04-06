@@ -5,17 +5,17 @@ import java.sql.Timestamp;
 
 import com.fin.festa.util.DateCalculate;
 
-public class GroupCommentVo {	//±×·ì ´ñ±Û
+public class GroupCommentVo {	//ê·¸ë£¹ ëŒ“ê¸€
 
 	DateCalculate cal;
-	private int gcnum;			//±×·ì ´ñ±Û ¹øÈ£ (pk)
-	private String gccontent;	//±×·ì ´ñ±Û ³»¿ë
-	private String gcauthor;	//±×·ì ´ñ±Û ÀÛ¼ºÀÚ
-	private Timestamp gcdate;	//±×·ì ´ñ±Û ÀÛ¼ºÀÏ
+	private int gcnum;			//ê·¸ë£¹ ëŒ“ê¸€ ë²ˆí˜¸ (pk)
+	private String gccontent;	//ê·¸ë£¹ ëŒ“ê¸€ ë‚´ìš©
+	private String gcauthor;	//ê·¸ë£¹ ëŒ“ê¸€ ì‘ì„±ì
+	private Timestamp gcdate;	//ê·¸ë£¹ ëŒ“ê¸€ ì‘ì„±ì¼
 	private String gcdate1;
-	private int gpnum;			//±×·ì °Ô½Ã±Û ¹øÈ£
-	private int pronum;			//±×·ì ´ñ±Û ÀÛ¼ºÀÚ ¹øÈ£
-	private int grnum;			//ÇØ´ç ±×·ì¹øÈ£
+	private int gpnum;			//ê·¸ë£¹ ê²Œì‹œê¸€ ë²ˆí˜¸
+	private int pronum;			//ê·¸ë£¹ ëŒ“ê¸€ ì‘ì„±ì ë²ˆí˜¸
+	private int grnum;			//í•´ë‹¹ ê·¸ë£¹ë²ˆí˜¸
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupNoticeCommentVo groupNoticeComment;

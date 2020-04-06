@@ -1,8 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
 <c:url value="/resources/upload" var="upload"></c:url>
+<c:if test="${sessionScope.login ne null }">
+	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
+		<c:redirect url="/empty"/>
+	</c:if>
+</c:if>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,258 +18,396 @@
 	<script type="text/javascript" src="${root }resources/js/jquery-1.12.4.js"></script>
 	<script type="text/javascript" src="${root }resources/js/util.js"></script>
 	<script type="text/javascript" src="${root }resources/js/site.js"></script>
+	<script type="text/javascript" src="${root }resources/js/jh.js"></script>
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 	<link rel="stylesheet" href="${root }resources/css/site.css">
 	<link rel="shortcut icon" href="${root }resources/favicon.ico">
 	<title>FESTA</title>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			//스크롤 내렸을때 피드 2개씩 출력
+			$(window).scroll(function(){
+			    var scrolltop = parseInt ( $(window).scrollTop() );
+			    if( scrolltop >= $(document).height() - $(window).height() - 1 ){
+					var scrollTag=$('#footer').siblings('span');
+					var scroll=scrollTag.text();
+					scroll++;
+					scrollTag.text(scroll);
+					console.log(scroll);
+					var keyword = $('.search_box>input').val();
+					$.get('${root}search/scroll','keyword='+keyword+'&page5='+scroll,function(){
+						
+					}).done(function(data){
+						//검색피드 스크롤더보기
+						feedList(data,'search','${login.pronum}','${login.prophoto}','${login.logincheck}');
+					});
+			    }
+			});
+			
+			//그룹 비동기페이지네이션
+			//해당 그룹목록의 리스트
+			var tag = $('.group_list li');
+			//첫화면시 페이징기능 호출,페이지뷰,로우뷰 출력
+			funcLoad(tag);
+			
+			//페이지버튼 눌렀을때 이벤트
+			$(document).on('click','.fstPage a',function(e){
+				ifPage(this);
+				funcLoad(tag);
+				e.preventDefault();
+			});
+			
+		});
+		
+		//페이징에 필요한 필드선언
+		pagenation(6,6,'${paging.totalCount}');
+		
+	
+	</script>
 </head>
 <body>
 <div id="wrap">
 	<div id="header">
-		<div class="scrX">
-			<div class="container">
-				<h1>
-					<a href="${root }"><em class="snd_only">FESTA</em></a>
-				</h1>
-				<form class="search_box">
-					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-					<button type="button" id="search">
-						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
-					</button>
-				</form>
-				<ul id="gnb">
-					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
-					<li><a href="${root}hot/">인기피드</a></li>
-					<li><a href="${root}news/">뉴스피드</a></li>
-					<c:if test="${login eq null }">
-						<%
-							out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
-						%>
-						<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
-					</c:if>
-					<c:if test="${login ne null }">
-						<li><a href="${root}user/">마이페이지</a></li>
-					</c:if>
-				</ul>
-				<c:if test="${login ne null }">
-					<div id="userMenu" class="fstLyr">
-						<button class="btn_menu">
-							<em class="snd_only">나의 메뉴 더보기</em>
+			<div class="scrX">
+				<div class="container">
+					<h1>
+						<a href="${root }"><em class="snd_only">FESTA</em></a>
+					</h1>
+					<form class="search_box">
+						<input type="text" name="keyword" value="${paging.keyword }" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
+						<button type="submit">
+							<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 						</button>
-						<dl class="menu_box" tabindex="0">
-							<dt>
-								<b>${login.proname }님 환영합니다.</b>
-							</dt>
-							<dd>
-								<span class="btn_mylist">나의 그룹</span>
-								<div class="my_list">
-									<ul>
-										<c:forEach items="${joinGroup }" var="joinGroup">
-											<li><a
-												href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
-													<span><img src="${upload }/${joinGroup.group.grphoto}"
-														alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-											</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</dd>
-							<dd>
-								<span class="btn_mylist">나의 채팅</span>
-								<div class="my_list">
-									<ul>
-										<c:forEach items="${joinGroup }" var="joinGroup">
-											<li><a href=""> <span><img
-														src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
-													<b>${joinGroup.group.grname }</b>
-											</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</dd>
-							<dd>
-								<span class="btn_mylist">나의 캠핑장</span>
-								<div class="my_list">
-									<ul>
-										<c:forEach items="${bookMark }" var="bookMark">
-											<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-													<span><img src="${upload }/${image}"
-														alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
-											</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</dd>
-							<dd class="btn_logout">
-								<form>
-									<a href="${root}member/logout" class="btn_pop">로그아웃</a>
-								</form>
-							</dd>
-						</dl>
-					</div>
-				</c:if>
-				<button type="button" id="btnTop">
-					<em class="snd_only">맨 위로</em>
-				</button>
+					</form>
+					<ul id="gnb">
+						<li><a href="${root}camp/">캠핑정보</a></li>
+						<li><a href="${root}hot/">인기피드</a></li>
+						<li><a href="${root}news/">뉴스피드</a></li>
+						<c:if test="${login eq null }">
+							<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
+						</c:if>
+						<c:if test="${login ne null }">
+							<li><a href="${root}user/?pronum=${login.pronum}">마이페이지</a></li>
+						</c:if>
+					</ul>
+					<c:if test="${login ne null }">
+                  <div id="userMenu" class="fstLyr">
+                     <button class="btn_menu">
+                        <em class="snd_only">나의 메뉴 더보기</em>
+                     </button>
+                     <dl class="menu_box" tabindex="0">
+                        <dt>
+                           <b>${login.proname }님 환영합니다.</b>
+                        </dt>
+                        <dd>
+                           <span class="btn_mylist">나의 그룹</span>
+                           <div class="my_list">
+                              <ul>
+                                 <c:forEach items="${joinGroup }" var="joinGroup">
+                                    <c:choose>
+                                       <c:when test="${joinGroup.group.grphoto eq null }">
+                                          <li><a
+                                             href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+                                                <span><img src="${root }resources/upload/thumb/no_profile.png"
+                                                   alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+                                          </a></li>
+                                       </c:when>
+                                       <c:otherwise>
+                                          <li><a
+                                             href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+                                                <span><img src="${upload }/${joinGroup.group.grphoto}"
+                                                   alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+                                          </a></li>
+                                       </c:otherwise>
+                                    </c:choose>
+                                 </c:forEach>
+                              </ul>
+                           </div>
+                        </dd>
+                        <dd>
+                           <span class="btn_mylist">나의 채팅</span>
+                           <div class="my_list">
+                              <ul>
+                                 <c:forEach items="${joinGroup }" var="joinGroup">
+                                    <li><a href=""> <span><img
+                                             src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+                                          <b>${joinGroup.group.grname }</b>
+                                    </a></li>
+                                 </c:forEach>
+                              </ul>
+                           </div>
+                        </dd>
+                        <dd>
+                           <span class="btn_mylist">나의 캠핑장</span>
+                           <div class="my_list">
+                              <ul>
+                                 <c:forEach items="${bookMark }" var="bookMark">
+                                 <c:set var="image" value="${fn:substringBefore(bookMark.camp.caphoto,',') }"/>
+                                    <li><a href="${root }camp/detail?canum=${bookMark.camp.canum}">
+                                          <span><img src="${upload }/${image}"
+                                             alt="${bookMark.camp.caname } 캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
+                                    </a></li>
+                                 </c:forEach>
+                              </ul>
+                           </div>
+                        </dd>
+                        <dd class="btn_logout">
+                           <form>
+                              <a href="${root}member/logout" class="btn_pop">로그아웃</a>
+                           </form>
+                        </dd>
+                     </dl>
+                  </div>
+               </c:if>
+					<button type="button" id="btnTop">
+						<em class="snd_only">맨 위로</em>
+					</button>
+				</div>
 			</div>
 		</div>
-	</div>
 	<!-- #캠핑정보 (리스트) -->
 	<!-- 서브페이지 시작 { -->
 	<div id="container" class="search_wrap">
 		<!-- 컨텐츠영역 시작 { -->
 		<section class="title_area container">
-			<h2 class="comm_tit"><b>경기도</b>(으)로 검색한 결과입니다.</h2>
+			<h2 class="comm_tit"><b>${paging.keyword }</b>(으)로 검색한 결과입니다.</h2>
 		</section>
 		<section class="camp_area">
 			<div class="container">
 				<h3 class="sub_tit">캠핑장</h3>
+				<c:if test="${!empty searchCamp }">
 				<div class="camp_slide">
 					<div>
 						<ul class="camp_list swiper-wrapper">
-							<li class="swiper-slide">
-								<a class="cp_thumb" href="../camp/detail.html">
-									<img src="http://placehold.it/320x180" alt="몽산포 패밀리데이 캠핑장 썸네일">
-									<b class="cp_liked">0</b>
-								</a>
-								<a class="cp_text" href="../camp/detail.html">
-									<b class="cp_name">몽산포 패밀리데이 캠핑장</b>
-									<span>
-										<b class="cp_loc">경기도</b>
-										#낭만캠핑 #바닷가 #가족여행
-									</span>
-								</a>
-							</li>
+							<c:forEach items="${searchCamp }" var="searchCamp">
+								<li class="swiper-slide">
+									<a class="cp_thumb" href="${root }camp/detail?canum=${searchCamp.canum}">
+									<c:set var="image" value="${fn:substringBefore(searchCamp.caphoto,',') }"/>
+										<img src="${upload }/${image}" alt="${searchCamp.caname } 캠핑장 썸네일">
+										<b class="cp_liked">${searchCamp.cagood }</b>
+									</a>
+									<a class="cp_text" href="${root }camp/detail?canum=${searchCamp.canum}">
+										<b class="cp_name">${searchCamp.caname }</b>
+										<span>
+											<b class="cp_loc">${searchCamp.caaddrsel }</b>
+											<c:choose>
+												<c:when
+													test="${empty searchCamp.httitle1 && empty searchCamp.httitle2 && empty searchCamp.httitle3}">
+												</c:when>
+												<c:when
+													test="${empty searchCamp.httitle1 && empty searchCamp.httitle2}">
+													#${searchCamp.httitle3}
+												</c:when>
+												<c:when
+													test="${empty searchCamp.httitle2 && empty searchCamp.httitle3}">
+													#${searchCamp.httitle1}
+												</c:when>
+												<c:when
+													test="${empty searchCamp.httitle1 && empty searchCamp.httitle3}">
+													#${searchCamp.httitle2}
+												</c:when>
+												<c:when test="${empty searchCamp.httitle1}">
+													#${searchCamp.httitle2}
+													#${searchCamp.httitle3}
+												</c:when>
+												<c:when test="${empty searchCamp.httitle2}">
+													#${searchCamp.httitle1}
+													#${searchCamp.httitle3}
+												</c:when>
+												<c:when test="${empty searchCamp.httitle3}">
+													#${searchCamp.httitle1}
+													#${searchCamp.httitle2}
+												</c:when>
+												<c:otherwise>
+													#${searchCamp.httitle1}
+													#${searchCamp.httitle2}
+													#${searchCamp.httitle3}
+												</c:otherwise>
+											</c:choose>
+										</span>
+									</a>
+								</li>
+							</c:forEach>
 						</ul>
 					</div>
 					<button type="button" class="swiper-prev"><em class="snd_only">이전</em></button>
 					<button type="button" class="swiper-next"><em class="snd_only">다음</em></button>
 				</div>
+				</c:if>
+				<c:if test="${empty searchCamp }">
+					<p class="fstEmpty"><i class="xi-error-o"></i>검색한 결과가 없습니다.</p>
+				</c:if>
 			</div>
 		</section>
 		<section class="group_area">
 			<div class="container">
 				<h3 class="sub_tit">그룹</h3>
-				<ul class="group_list">
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="입돌아간다 그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>입돌아간다</strong>
-							<span>안녕하세요 ㅇㅇㅇ입니다. 안녕하세요 ㅇㅇㅇ입니다. 안녕하세요 ㅇㅇㅇ입니다. 안녕하세요 ㅇㅇㅇ입니다.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>그룹</strong>
-							<span>그룹 소개글을 작성해주세요.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>그룹</strong>
-							<span>그룹 소개글을 작성해주세요.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>그룹</strong>
-							<span>그룹 소개글을 작성해주세요.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>그룹</strong>
-							<span>그룹 소개글을 작성해주세요.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-					<li>
-						<a class="gp_thumb" href="">
-							<img src="http://placehold.it/110x110" alt="그룹 썸네일">
-						</a>
-						<a class="gp_text" href="">
-							<strong>그룹</strong>
-							<span>그룹 소개글을 작성해주세요.</span>
-							<b>경기도</b>
-						</a>
-					</li>
-				</ul>
+				<c:if test="${!empty searchGroup }">
+					<ul class="group_list">
+						<c:forEach items="${searchGroup }" var="searchGroup">
+							<li>
+								<c:if test="${login ne null }">
+									<a class="gp_thumb" href="${root }group/?grnum=${searchGroup.grnum}&pronum=${login.pronum}">
+										<img src="${upload }/${searchGroup.grphoto}" alt="${searchGroup.grname } 그룹 썸네일">
+									</a>
+									<a class="gp_text" href="${root }group/?grnum=${searchGroup.grnum}&pronum=${login.pronum}">
+										<strong>${searchGroup.grname }</strong>
+										<span>${searchGroup.grintro }</span>
+										<b>${searchGroup.graddr }</b>
+									</a>
+								</c:if>
+								<c:if test="${login eq null }">
+									<a class="gp_thumb" href="${root }group/?grnum=${searchGroup.grnum}">
+										<img src="${upload }/${searchGroup.grphoto}" alt="${searchGroup.grname } 그룹 썸네일">
+									</a>
+									<a class="gp_text" href="${root }group/?grnum=${searchGroup.grnum}">
+										<strong>${searchGroup.grname }</strong>
+										<span>${searchGroup.grintro }</span>
+										<b>${searchGroup.graddr }</b>
+									</a>
+								</c:if>
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				<c:if test="${empty searchGroup }">
+					<p class="fstEmpty"><i class="xi-error-o"></i>검색한 결과가 없습니다.</p>
+				</c:if>
 				<div class="fstPage">
 					<ul>
-						<li><a class="pg_start off" href=""><em class="snd_only">맨 앞으로</em></a></li>
-						<li><a class="pg_prev off" href=""><em class="snd_only">이전 페이지</em></a></li>
-						<li><b>1</b></li>
-						<li><a href="">2</a></li>
-						<li><a href="">3</a></li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a class="pg_next" href=""><em class="snd_only">다음 페이지</em></a></li>
-						<li><a class="pg_end" href=""><em class="snd_only">맨 끝으로</em></a></li>
+					
 					</ul>
 				</div>
 			</div>
 		</section>
 		<section class="feed_area">
 			<div class="container">
-				<h3 class="sub_tit">피드</b></h3>
+				<h3 class="sub_tit">피드</h3>
 				<ul class="feed_list">
-					<li>
-						<a class="text box btn_pop" href="common/feed">
-							<span class="fd_hashtag">경기도</span>
-							<span class="fd_content">내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요. 내용을 입력해주세요.  내용을</span>
-						</a>
-						<a class="thumb box btn_pop" href="common/feed">
-							<span class="fd_thumb"><img src="http://placehold.it/100x100" alt="피드 썸네일"></span>
-						</a>
-						<p class="info box btn_pop">
-							<a class="pf_picture" href="">
-								<img src="http://placehold.it/30x30" alt="피드 썸네일">
-							</a>
-							<a class="fd_name" href="">조혜진</a>
-							<a class="fd_group" href="">입돌아간다</a>
-							<span class="fd_liked">000</span>
-							<span class="fd_comment">99</span>
-							<span class="fd_date">2020년 01월 01일 12시 59분</span>
-						</p>
-					</li>
-					<li>
-						<a class="text box btn_pop" href="common/feed">
-							<span class="fd_hashtag">경기도</span>
-							<span class="fd_content">내용을 입력해주세요.</span>
-						</a>
-						<p class="info box btn_pop">
-							<a class="pf_picture" href="">
-								<img src="http://placehold.it/30x30" alt="피드 썸네일">
-							</a>
-							<a class="fd_name" href="">조혜진</a>
-							<span class="fd_liked">000</span>
-							<span class="fd_comment">99</span>
-							<span class="fd_date">2020년 01월 01일 12시 59분</span>
-						</p>
-					</li>
+				<c:if test="${!empty searchFeed }">
+					<c:forEach items="${searchFeed }" var="searchFeed">
+						<c:choose>
+							<c:when test="${searchFeed.gpnum eq 0 }">
+								<li>
+									<a class="text box btn_pop" href="${root }search/feed?mpnum=${searchFeed.mpnum}">
+										<c:choose>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle2 && empty searchFeed.httitle3}">
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle2}">
+													<span class="fd_hashtag">${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle2 && empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle1}</span>
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle2}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle1}">
+													<span class="fd_hashtag">${searchFeed.httitle2}&nbsp;#${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle2}">
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle2}</span>
+												</c:when>
+												<c:otherwise>
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle2}&nbsp;#${searchFeed.httitle3}</span>
+												</c:otherwise>
+											</c:choose>
+										<span class="fd_content">${searchFeed.mpcontent }</span>
+									</a>
+									<c:if test="${searchFeed.mpphoto ne '' }">
+										<a class="thumb box btn_pop" href="${root }search/feed?mpnum=${searchFeed.mpnum}">
+										 <c:set var="mpphoto" value="${fn:substringBefore(searchFeed.mpphoto,',') }"/>
+											<span class="fd_thumb"><img src="${upload }/${mpphoto}" alt="피드 썸네일"></span>
+										</a>
+									</c:if>
+									<p class="info box btn_pop">
+										<a class="pf_picture" href="${root }user/?pronum=${searchFeed.pronum}">
+											<img src="${upload }/${searchFeed.profile.prophoto}" alt="피드 썸네일" onload="squareTrim($(this), 30)">
+										</a>
+										<a class="fd_name" href="${root }user/?pronum=${searchFeed.pronum}">${searchFeed.profile.proname }</a>
+										<span class="fd_liked">${searchFeed.good }</span>
+										<span class="fd_comment">${searchFeed.mptotal }</span>
+										<span class="fd_date">${searchFeed.date1 }</span>
+									</p>
+								</li>
+							</c:when>
+							<c:otherwise>
+								<li>
+									<a class="text box btn_pop" href="${root }search/feed?gpnum=${searchFeed.gpnum}">
+										<c:choose>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle2 && empty searchFeed.httitle3}">
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle2}">
+													<span class="fd_hashtag">${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle2 && empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle1}</span>
+												</c:when>
+												<c:when
+													test="${empty searchFeed.httitle1 && empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle2}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle1}">
+													<span class="fd_hashtag">${searchFeed.httitle2}&nbsp;#${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle2}">
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle3}</span>
+												</c:when>
+												<c:when test="${empty searchFeed.httitle3}">
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle2}</span>
+												</c:when>
+												<c:otherwise>
+													<span class="fd_hashtag">${searchFeed.httitle1}&nbsp;#${searchFeed.httitle2}&nbsp;#${searchFeed.httitle3}</span>
+												</c:otherwise>
+											</c:choose>
+										<span class="fd_content">${searchFeed.gpcontent }</span>
+									</a>
+									<c:if test="${searchFeed.gpphoto ne '' }">
+										<a class="thumb box btn_pop" href="${root }search/feed?gpnum=${searchFeed.gpnum}">
+										 <c:set var="gpphoto" value="${fn:substringBefore(searchFeed.gpphoto,',') }"/>
+											<span class="fd_thumb"><img src="${upload }/${gpphoto}" alt="피드 썸네일"></span>
+										</a>
+									</c:if>
+									<p class="info box btn_pop">
+										<a class="pf_picture" href="${root }user/?pronum=${searchFeed.pronum}">
+											<img src="${upload }/${searchFeed.profile.prophoto}" alt="피드 썸네일" onload="squareTrim($(this), 30)">
+										</a>
+										<a class="fd_name" href="${root }user/?pronum=${searchFeed.pronum}">${searchFeed.profile.proname }</a>
+										<span class="fd_liked">${searchFeed.good }</span>
+										<c:if test="${login ne null }">
+											<a class="fd_group" href="${root }group/?grnum=${searchFeed.grnum}&pronum=${login.pronum}">${searchFeed.group.grname }</a>
+										</c:if>
+										<c:if test="${login eq null }">
+											<a class="fd_group" href="${root }group/?grnum=${searchFeed.grnum}">${searchFeed.group.grname }</a>
+										</c:if>
+										<span class="fd_comment">${searchFeed.gptotal }</span>
+										<span class="fd_date">${searchFeed.date1 }</span>
+									</p>
+								</li>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty searchFeed }">
+					<p class="fstEmpty"><i class="xi-error-o"></i>검색한 결과가 없습니다.</p>
+				</c:if>
 				</ul>
 			</div>
 		</section>
 		<!-- } 컨텐츠영역 끝 -->
 	</div>
+	<span class="snd_only">0</span>
 	<!-- } 서브페이지 -->
 	<div id="footer">
 		<div class="container">

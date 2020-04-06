@@ -1,75 +1,84 @@
 package com.fin.festa.model.entity;
 
-public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö 
+public class PageSearchVo {		//ê²€ìƒ‰ & í˜ì´ì§€ 
 
-	private String search;		//Á¶°Ç °Ë»ö
-	private String keyword;		//ÇØ´ç °Ë»ö¾î
-	private String category;	//°ü¸®ÀÚÆäÀÌÁö ½Å°íÂÊ¿¡ ÇÏÀ§¸Ş´º(±×·ì,Ä·ÇÎÀå,³»ÇÇµå,±×·ìÇÇµå,°øÁöÇÇµå,À¯Àú)
-	private int check;			//°ü¸®ÀÚÆäÀÌÁö ½Å°íÂÊ ºĞ·ù(Á¢¼öÁß=1,Ã³¸®¿Ï·á=2)
-	private int startnum;		//ÇÑÆäÀÌÁö °Ô½Ã±Û °³¼ö(½ÃÀÛ)
-	private int endnum;			//ÇÑÆäÀÌÁö °Ô½Ã±Û °³¼ö(³¡)
+	private String search;		//ì¡°ê±´ ê²€ìƒ‰
+	private String keyword;		//í•´ë‹¹ ê²€ìƒ‰ì–´
+	private String category;	//ê´€ë¦¬ìí˜ì´ì§€ ì‹ ê³ ìª½ì— í•˜ìœ„ë©”ë‰´(ê·¸ë£¹,ìº í•‘ì¥,ë‚´í”¼ë“œ,ê·¸ë£¹í”¼ë“œ,ê³µì§€í”¼ë“œ,ìœ ì €)
+	private int check;			//ê´€ë¦¬ìí˜ì´ì§€ ì‹ ê³ ìª½ ë¶„ë¥˜(ì ‘ìˆ˜ì¤‘=1,ì²˜ë¦¬ì™„ë£Œ=2)
+	private int startnum;		//í•œí˜ì´ì§€ ê²Œì‹œê¸€ ê°œìˆ˜(ì‹œì‘)
+	private int endnum;			//í•œí˜ì´ì§€ ê²Œì‹œê¸€ ê°œìˆ˜(ë)
 	
-	private int page;			//ÇöÀç ÆäÀÌÁö µğÆúÆ®1  (10°³ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ÆäÀÌÁö)  
-	private int page2;			//ÇöÀç ÆäÀÌÁö µğÆúÆ®1  (5°³ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ÆäÀÌÁö)
-	private int page3;			//ÇöÀç ÆäÀÌÁö µğÆúÆ®1  (6°³ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ÆäÀÌÁö)
-	private int page4;			//ÇÇµå´ñ±Û Ãâ·ÂÇÒ¶§ ¾²´Â ÆäÀÌÁö
-	private int displayRow=10;	//ÇÑ ÆäÀÌÁö¿¡ row°¹¼ö
-	private int totalCount;		//ÀüÃ¼ °Ô½Ã±Û¼ö
-	private int beginPage;		//ÇÑÈ­¸é¿¡ º¸ÀÌ´Â Ã¹ÆäÀÌÁö
-	private int endPage;		//ÇÑÈ­¸é¿¡ º¸ÀÌ´Â ¸¶Áö¸·ÆäÀÌÁö
-	private int displayRow2=5;	//ÇÑ ÆäÀÌÁö¿¡ row°¹¼ö
-	private int displayRow3=6;	//ÇÑ ÆäÀÌÁö¿¡ row°¹¼ö
-	private int displayPage=5;	//ÇÑÈ­¸é¿¡ º¸ÀÌ´Â ÃÑ ÆäÀÌÁö°¹¼ö
-	boolean prev;				//prev ¹öÆ° È°¼ºÈ­
-	boolean next;				//next ¹öÆ° È°¼ºÈ­
+	private int page;			//í˜„ì¬ í˜ì´ì§€ ë””í´íŠ¸1  (10ê°œ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” í˜ì´ì§€)  
+	private int page2;			//í˜„ì¬ í˜ì´ì§€ ë””í´íŠ¸1  (5ê°œ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” í˜ì´ì§€)
+	private int page3;			//í˜„ì¬ í˜ì´ì§€ ë””í´íŠ¸1  (6ê°œ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” í˜ì´ì§€)
+	private int page4;			//í”¼ë“œëŒ“ê¸€ ì¶œë ¥í• ë•Œ ì“°ëŠ” í˜ì´ì§€
+	private int page5;			//í”¼ë“œìŠ¤í¬ë¡¤ë”ë³´ê¸° ì¶œë ¥í• ë•Œ ì“°ëŠ” í˜ì´ì§€
+	private int displayRow=10;	//í•œ í˜ì´ì§€ì— rowê°¯ìˆ˜
+	private int totalCount;		//ì „ì²´ ê²Œì‹œê¸€ìˆ˜
+	private int beginPage;		//í•œí™”ë©´ì— ë³´ì´ëŠ” ì²«í˜ì´ì§€
+	private int endPage;		//í•œí™”ë©´ì— ë³´ì´ëŠ” ë§ˆì§€ë§‰í˜ì´ì§€
+	private int displayRow2=5;	//í•œ í˜ì´ì§€ì— rowê°¯ìˆ˜
+	private int displayRow3=6;	//í•œ í˜ì´ì§€ì— rowê°¯ìˆ˜
+	private int displayPage=5;	//í•œí™”ë©´ì— ë³´ì´ëŠ” ì´ í˜ì´ì§€ê°¯ìˆ˜
+	private int displayPage2=6;	//í•œí™”ë©´ì— ë³´ì´ëŠ” ì´ í˜ì´ì§€ê°¯ìˆ˜
+	boolean prev;				//prev ë²„íŠ¼ í™œì„±í™”
+	boolean next;				//next ë²„íŠ¼ í™œì„±í™”
 	private int totalPage;
 	
 
 
-	//ÆÄ¶ó¹ÌÅÍ·Î ÆäÀÌÁö°ª °¡Á®¿Ã¶§ ÀÚµ¿ÀûÀ¸·Î ·Î¿ì°¹¼ö ¼³Á¤ 10°³·Î¿ì°Ë»ö
+	//íŒŒë¼ë¯¸í„°ë¡œ í˜ì´ì§€ê°’ ê°€ì ¸ì˜¬ë•Œ ìë™ì ìœ¼ë¡œ ë¡œìš°ê°¯ìˆ˜ ì„¤ì • 10ê°œë¡œìš°ê²€ìƒ‰
 	public void setPage(int page) {
 		this.page = page;
 		startnum=(page-1)*10+1;
 		endnum=page*10;
 	}
 	
-	//ÆÄ¶ó¹ÌÅÍ·Î ÆäÀÌÁö°ª °¡Á®¿Ã¶§ ÀÚµ¿ÀûÀ¸·Î ·Î¿ì°¹¼ö ¼³Á¤ 5°³·Î¿ì°Ë»ö
+	//íŒŒë¼ë¯¸í„°ë¡œ í˜ì´ì§€ê°’ ê°€ì ¸ì˜¬ë•Œ ìë™ì ìœ¼ë¡œ ë¡œìš°ê°¯ìˆ˜ ì„¤ì • 5ê°œë¡œìš°ê²€ìƒ‰
 	public void setPage2(int page2) {
 		this.page2 = page2;
 		startnum=(page2-1)*5+1;
 		endnum=page2*5;
 	}
 	
-	//ÆÄ¶ó¹ÌÅÍ·Î ÆäÀÌÁö°ª °¡Á®¿Ã¶§ ÀÚµ¿ÀûÀ¸·Î ·Î¿ì°¹¼ö ¼³Á¤ 6°³·Î¿ì°Ë»ö
+	//íŒŒë¼ë¯¸í„°ë¡œ í˜ì´ì§€ê°’ ê°€ì ¸ì˜¬ë•Œ ìë™ì ìœ¼ë¡œ ë¡œìš°ê°¯ìˆ˜ ì„¤ì • 6ê°œë¡œìš°ê²€ìƒ‰
 	public void setPage3(int page3) {
 		this.page3 = page3;
-		startnum=(page-1)*6+1;
-		endnum=page*6;
+		startnum=(page3-1)*6+1;
+		endnum=page3*6;
 	}
 
-	//ÆÄ¶ó¹ÌÅÍ·Î ÇÇµå´ñ±Û ÆäÀÌÁö°ª °¡Á®¿Ã¶§ ÀÚµ¿ÀûÀ¸·Î ·Î¿ì°¹¼ö ¼³Á¤(ÇÇµå´ñ±Û´õº¸±â)
+	//íŒŒë¼ë¯¸í„°ë¡œ í”¼ë“œëŒ“ê¸€ í˜ì´ì§€ê°’ ê°€ì ¸ì˜¬ë•Œ ìë™ì ìœ¼ë¡œ ë¡œìš°ê°¯ìˆ˜ ì„¤ì •(í”¼ë“œëŒ“ê¸€ë”ë³´ê¸°)
 	public void setPage4(int page4) {
 		this.page4 = page4;
 		startnum=page4*3-2;
 		endnum=page4*3;
 	}
+
+	//íŒŒë¼ë¯¸í„°ë¡œ í”¼ë“œ í˜ì´ì§€ê°’ ê°€ì ¸ì˜¬ë•Œ ìë™ì ìœ¼ë¡œ ë¡œìš°ê°¯ìˆ˜ ì„¤ì •(í”¼ë“œìŠ¤í¬ë¡¤ë”ë³´ê¸°)
+	public void setPage5(int page5) {
+		this.page5 = page5;
+		startnum=page5*2-1;
+		endnum=page5*2;
+	}
+
 	
-	
-	//Å×ÀÌºí ·Î¿ì°¹¼ö¸¦ ³Ö°í ÆäÀÌÁö±â´É ±¸Çö  (10°³ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ±â´É)
+	//í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ë¥¼ ë„£ê³  í˜ì´ì§€ê¸°ëŠ¥ êµ¬í˜„  (10ê°œ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” ê¸°ëŠ¥)
 	public void setTotalCount(int totalCount){
 		
 		this.totalCount=totalCount;
 		paging();
 	}
 	
-	//Å×ÀÌºí ·Î¿ì°¹¼ö¸¦ ³Ö°í ÆäÀÌÁö±â´É ±¸Çö  (5°³ÀÇ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ±â´É)
+	//í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ë¥¼ ë„£ê³  í˜ì´ì§€ê¸°ëŠ¥ êµ¬í˜„  (5ê°œì˜ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” ê¸°ëŠ¥)
 	public void setTotalCount2(int totalCount){
 		
 		this.totalCount=totalCount;
 		paging2();
 	}
 	
-	//Å×ÀÌºí ·Î¿ì°¹¼ö¸¦ ³Ö°í ÆäÀÌÁö±â´É ±¸Çö  (5°³ÀÇ ·Î¿ì¸¦ Á¶È¸ÇÒ¶§ ¾²´Â ±â´É)
+	//í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ë¥¼ ë„£ê³  í˜ì´ì§€ê¸°ëŠ¥ êµ¬í˜„  (5ê°œì˜ ë¡œìš°ë¥¼ ì¡°íšŒí• ë•Œ ì“°ëŠ” ê¸°ëŠ¥)
 	public void setTotalCount3(int totalCount){
 		
 		this.totalCount=totalCount;
@@ -79,12 +88,12 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 	private void paging(){
 		totalPage=totalCount/displayRow;
 		
-		//¸Æ½ºÆäÀÌÁö °¹¼ö Á¶°Ç
-		System.out.println("´ÙÀ½ÆäÀÌÁö À¯¹Â : "+(totalCount%displayRow!=0));
+		//ë§¥ìŠ¤í˜ì´ì§€ ê°¯ìˆ˜ ì¡°ê±´
+		System.out.println("ë‹¤ìŒí˜ì´ì§€ ìœ ë®¤ : "+(totalCount%displayRow!=0));
 		if(totalCount%displayRow!=0){
 			totalPage+=1;
 		}
-		//prev,next,beginPage,endPage¸¦ °è»ê
+		//prev,next,beginPage,endPageë¥¼ ê³„ì‚°
 		endPage = ((page+(displayPage-1))/displayPage)*displayPage;
 		beginPage = endPage - (displayPage-1);
 		
@@ -110,12 +119,12 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 	private void paging2(){
 		totalPage=totalCount/displayRow2;
 		
-		//¸Æ½ºÆäÀÌÁö °¹¼ö Á¶°Ç
-		System.out.println("´ÙÀ½ÆäÀÌÁö À¯¹Â : "+(totalCount%displayRow2!=0));
+		//ë§¥ìŠ¤í˜ì´ì§€ ê°¯ìˆ˜ ì¡°ê±´
+		System.out.println("ë‹¤ìŒí˜ì´ì§€ ìœ ë®¤ : "+(totalCount%displayRow2!=0));
 		if(totalCount%displayRow2!=0){
 			totalPage+=1;
 		}
-		//prev,next,beginPage,endPage¸¦ °è»ê
+		//prev,next,beginPage,endPageë¥¼ ê³„ì‚°
 		endPage = ((page2+(displayPage-1))/displayPage)*displayPage;
 		beginPage = endPage - (displayPage-1);
 		
@@ -141,14 +150,14 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 	private void paging3(){
 		totalPage=totalCount/displayRow3;
 		
-		//¸Æ½ºÆäÀÌÁö °¹¼ö Á¶°Ç
-		System.out.println("´ÙÀ½ÆäÀÌÁö À¯¹Â : "+(totalCount%displayRow3!=0));
+		//ë§¥ìŠ¤í˜ì´ì§€ ê°¯ìˆ˜ ì¡°ê±´
+		System.out.println("ë‹¤ìŒí˜ì´ì§€ ìœ ë®¤ : "+(totalCount%displayRow3!=0));
 		if(totalCount%displayRow3!=0){
 			totalPage+=1;
 		}
-		//prev,next,beginPage,endPage¸¦ °è»ê
-		endPage = ((page3+(displayPage-1))/displayPage)*displayPage;
-		beginPage = endPage - (displayPage-1);
+		//prev,next,beginPage,endPageë¥¼ ê³„ì‚°
+		endPage = ((page3+(displayPage2-1))/displayPage2)*displayPage2;
+		beginPage = endPage - (displayPage2-1);
 		
 		if(totalPage<endPage&&totalPage==page3){
 			endPage=totalPage;
@@ -172,9 +181,9 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 	@Override
 	public String toString() {
 		return "PageSearchVo [search=" + search + ", keyword=" + keyword + ", startnum=" + startnum + ", endnum="
-				+ endnum + ", page=" + page + ", page2=" + page2 + ", page3=" + page3 + ", page4=" + page4 + ", displayRow=" + displayRow + ", totalCount="
+				+ endnum + ", page=" + page + ", page2=" + page2 + ", page3=" + page3 + ", page4=" + page4 + ", page5=" + page5 + ", displayRow=" + displayRow + ", totalCount="
 				+ totalCount + ", beginPage=" + beginPage + ", endPage=" + endPage + ", displayRow2=" + displayRow2
-				+ ", displayPage=" + displayPage + ", prev=" + prev + ", next=" + next + ", category="+ category + ", check="+ check
+				+ ", displayPage=" + displayPage +", desplayPage2=" + displayPage2 + ", prev=" + prev + ", next=" + next + ", category="+ category + ", check="+ check
 				+ ",totalPage=" + totalPage +"]";
 	}
 	
@@ -184,8 +193,8 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 	
 	
 
-	public PageSearchVo(String search, String keyword, int startnum, int endnum, int page, int page2, int page3, int page4, int displayRow,
-			int totalCount, int beginPage, int endPage, int displayRow2, int displayPage, boolean prev, boolean next, String category,
+	public PageSearchVo(String search, String keyword, int startnum, int endnum, int page, int page2, int page3, int page4, int page5, int displayRow,
+			int totalCount, int beginPage, int endPage, int displayRow2, int displayPage, int displayPage2, boolean prev, boolean next, String category,
 			int check, int totalPage) {
 		super();
 		this.search = search;
@@ -207,6 +216,8 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 		this.totalPage = totalPage;
 		this.page3 = page3;
 		this.page4 = page4;
+		this.displayPage2 = displayPage2;
+		this.page5 = page5;
 	}
 
 	public String getSearch() {
@@ -349,7 +360,18 @@ public class PageSearchVo {		//°Ë»ö & ÆäÀÌÁö
 		return page4;
 	}
 
-	
+	public int getDisplayPage2() {
+		return displayPage2;
+	}
+
+	public void setDisplayPage2(int displayPage2) {
+		this.displayPage2 = displayPage2;
+	}
+
+	public int getPage5() {
+		return page5;
+	}
+
 	
 	
 }

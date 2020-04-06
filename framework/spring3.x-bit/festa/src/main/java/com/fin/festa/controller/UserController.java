@@ -86,37 +86,43 @@ public class UserController {
 	//피드 댓글 삭제 (내부팝업 생성)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String feedCmmtDeleteOne(Model model, MyCommentVo myCommentVo) {
+		userSerivce.feedCmmtDeleteOne(model, myCommentVo);
 		return "user/index";
 	}
 	
 	//피드댓글 더보기 비동기
 	@RequestMapping(value = "cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<MyCommentVo> GroupDetailCmmt(Model model, MyPostVo mypost){
-		System.out.println("접속");
 		return userSerivce.userDetailCmmt(model, mypost);
 	}
 
 	//좋아요 체크
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String likeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
+		System.out.println("더하기");
+		userSerivce.likeInsertOne(req, myGoodVo);
 		return "user/index";
 	}
 
 	//좋아요 취소
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String likeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
+		System.out.println("빼기");
+		userSerivce.likeDeleteOne(req, myGoodVo);
 		return "user/index";
 	}
 
 	//팔로워 목록 (팝업)
 	@RequestMapping(value = "follower", method = RequestMethod.GET)
-	public String followerList(Model model, ProfileVo profile){
+	public String followerList(HttpServletRequest req, ProfileVo profile){
+		userSerivce.followerList(req, profile);
 		return "user/follower";
 	}
 
 	//팔로우 목록 (팝업)
 	@RequestMapping(value = "following", method = RequestMethod.GET)
-	public String followList(Model model, ProfileVo profile){
+	public String followList(HttpServletRequest req, ProfileVo profile){
+		userSerivce.followList(req, profile);
 		return "user/following";
 	}
 	
@@ -128,8 +134,9 @@ public class UserController {
 	}
 	
 	//팔로우 취소 (팝업>팝업 내 기능)
-	@RequestMapping(value = "unfoll", method = RequestMethod.POST)
+	@RequestMapping(value = "unfollow", method = RequestMethod.POST)
 	public String followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
+		userSerivce.followDeleteOne(req, myFollowingVo);
 		//return "user/follower";
 		return "user/follow";
 	}

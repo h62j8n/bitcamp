@@ -37,45 +37,45 @@ public class AdminDaoImpl implements AdminDao{
 	SqlSession sqlSession;
 
 	//////////////////////////////////////////////////////////////
-	/////////////////////´ë½Ãº¸µå È­¸éÃâ·Â////////////////////////
+	/////////////////////ëŒ€ì‹œë³´ë“œ í™”ë©´ì¶œë ¥////////////////////////
 	//////////////////////////////////////////////////////////////
 	
-	//´ë½Ãº¸µå ÀüÃ¼»ç¿ëÀÚ,±×·ì,»ç¾÷ÀÚ,Ä·ÇÎÀå¼ö Ãâ·Â
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´ì‚¬ìš©ì,ê·¸ë£¹,ì‚¬ì—…ì,ìº í•‘ì¥ìˆ˜ ì¶œë ¥
 	@Override
 	public AllCountVo allCount() {
 		
 		return sqlSession.selectOne("admin.allCount");
 	}
 
-	//´ë½Ãº¸µå ÀüÃ¼»ç¿ëÀÚ,±×·ì,»ç¾÷ÀÚ,Ä·ÇÎÀå¼ö Ãâ·Â ¾îÁ¦±âÁØ
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´ì‚¬ìš©ì,ê·¸ë£¹,ì‚¬ì—…ì,ìº í•‘ì¥ìˆ˜ ì¶œë ¥ ì–´ì œê¸°ì¤€
 	@Override
 	public AllCountVo allCount_yesterday(String time) {
 		
 		return sqlSession.selectOne("admin.allCount_yesterday", time);
 	}
 
-	//´ë½Ãº¸µå Àú¹øÁÖ ½Å±ÔÀÌ¿ëÀÚÁ¤º¸ Ãâ·Â
+	//ëŒ€ì‹œë³´ë“œ ì €ë²ˆì£¼ ì‹ ê·œì´ìš©ìì •ë³´ ì¶œë ¥
 	@Override
 	public WeekVo lastWeekNewUser(DateCalculate cal) {
 		
 		return sqlSession.selectOne("admin.lastWeekNewUser", cal);
 	}
 
-	//´ë½Ãº¸µå ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ² Ãâ·Â
+	//ëŒ€ì‹œë³´ë“œ ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™© ì¶œë ¥
 	@Override
 	public WeekCountVo weekNewUserCount(DateCalculate cal) {
 		
 		return sqlSession.selectOne("admin.weekNewUserCount", cal);
 	}
 
-	//´ë½Ãº¸µå ÀüÃ¼È¸¿øÀÇ »ı³â¿ùÀÏ Ãâ·Â (È¸¿ø¿¬·ÉºĞÆ÷°ª »ÌÀ»¶§ ¾²ÀÓ)
+	//ëŒ€ì‹œë³´ë“œ ì „ì²´íšŒì›ì˜ ìƒë…„ì›”ì¼ ì¶œë ¥ (íšŒì›ì—°ë ¹ë¶„í¬ê°’ ë½‘ì„ë•Œ ì“°ì„)
 	@Override
 	public List<ProfileVo> allUserCount() {
 		
 		return sqlSession.selectList("admin.allUserCount");
 	}
 
-	//´ë½Ãº¸µå ¼±È£°ü½ÉÁö¿ªÁ¤º¸ Ãâ·Â
+	//ëŒ€ì‹œë³´ë“œ ì„ í˜¸ê´€ì‹¬ì§€ì—­ì •ë³´ ì¶œë ¥
 	@Override
 	public List<PreferableLocationVo> preferLocation() {
 		
@@ -83,80 +83,80 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	/////////////////////////±×·ì°ü¸®/////////////////////////////
+	/////////////////////////ê·¸ë£¹ê´€ë¦¬/////////////////////////////
 	//////////////////////////////////////////////////////////////
 
-	//±×·ì¿ø ¼ö ÆäÀÌÁö°ª ±¸ÇÏ±â
+	//ê·¸ë£¹ì› ìˆ˜ í˜ì´ì§€ê°’ êµ¬í•˜ê¸°
 	@Override
 	public int adminGroupCount(PageSearchVo search) {
 		
 		return sqlSession.selectOne("admin.adminGroupCount", search);
 	}
 
-	//±×·ì°ü¸®Á¤º¸Ãâ·Â
+	//ê·¸ë£¹ê´€ë¦¬ì •ë³´ì¶œë ¥
 	@Override
 	public List<GroupVo> adminGroupSelectAll(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminGroupSelectAll", search);
 	}
 
-	//±×·ì»èÁ¦ +@
+	//ê·¸ë£¹ì‚­ì œ +@
 	@Override
 	public int groupDelete(GroupVo group) {
 		
 		return sqlSession.delete("admin.groupDelete", group);
 	}
 	
-	//±×·ì»ó¼¼Á¤º¸
+	//ê·¸ë£¹ìƒì„¸ì •ë³´
 	@Override
 	public GroupVo groupInfo(GroupVo group) {
 		
 		return sqlSession.selectOne("admin.groupInfo", group);
 	}
 
-	//±×·ì°øÁö»çÇ×Ãâ·Â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ì¶œë ¥
 	@Override
 	public List<GroupNoticeVo> groupNoticeInfo(GroupVo group) {
 		
 		return sqlSession.selectList("admin.groupNoticeInfo", group);
 	}
 
-	//±×·ì°øÁö»çÇ× »ó¼¼ÆäÀÌÁöÃâ·Â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ìƒì„¸í˜ì´ì§€ì¶œë ¥
 	@Override
 	public GroupNoticeVo groupNoticeDetail(GroupNoticeVo groupnotice) {
 		
 		return sqlSession.selectOne("admin.groupNoticeDetail", groupnotice);
 	}
 
-	//±×·ì°øÁöÇÇµå ´ñ±Û´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹ê³µì§€í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupNoticeCommentVo> adminGroupNoticeCmmt(GroupNoticeVo groupnotice) {
 		
 		return sqlSession.selectList("admin.adminGroupNoticeCmmt", groupnotice);
 	}
 
-	//±×·ì°øÁö»çÇ× ´ñ±ÛÃâ·Â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<GroupNoticeCommentVo> groupNoticeCmmtInfo(GroupNoticeVo groupnotice) {
 		
 		return sqlSession.selectList("admin.groupNoticeCmmtInfo", groupnotice);
 	}
 	
-	//±×·ìÇÇµå Ãâ·Â
+	//ê·¸ë£¹í”¼ë“œ ì¶œë ¥
 	@Override
 	public List<GroupPostVo> groupFeedInfoSelectAll(GroupVo group) {
 		
 		return sqlSession.selectList("admin.groupFeedInfoSelectAll", group);
 	}
 
-	//±×·ìÇÇµå ´ñ±ÛÃâ·Â
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<GroupCommentVo> groupFeedCmmtInfoSelectAll(GroupVo group) {
 		
 		return sqlSession.selectList("admin.groupFeedCmmtInfoSelectAll", group);
 	}
 	
-	//±×·ìÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupCommentVo> adminGroupDetailCmmt(GroupPostVo grouppost) {
 		
@@ -164,35 +164,35 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	
-	//±×·ì¸â¹ö¸®½ºÆ® Ãâ·Â
+	//ê·¸ë£¹ë©¤ë²„ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 	@Override
 	public List<JoinGroupVo> adminGroupMemberList(GroupVo group) {
 		
 		return sqlSession.selectList("admin.adminGroupMemberList", group);
 	}
 
-	//±×·ì°øÁö»çÇ× »èÁ¦Ã³¸®
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ì‚­ì œì²˜ë¦¬
 	@Override
 	public int groupNoticeDelete(GroupNoticeVo groupnotice) {
 		
 		return sqlSession.delete("admin.groupNoticeDelete", groupnotice);
 	}
 
-	//±×·ì°øÁö»çÇ×´ñ±Û »èÁ¦Ã³¸®
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ëŒ“ê¸€ ì‚­ì œì²˜ë¦¬
 	@Override
 	public int groupNoticeCmmtDelete(GroupNoticeCommentVo groupnoticecmmt) {
 		
 		return sqlSession.delete("admin.groupNoticeCmmtDelete", groupnoticecmmt);
 	}
 
-	//±×·ìÇÇµå »èÁ¦Ã³¸®
+	//ê·¸ë£¹í”¼ë“œ ì‚­ì œì²˜ë¦¬
 	@Override
 	public int groupFeedDelete(GroupPostVo grouppost) {
 		
 		return sqlSession.delete("admin.groupFeedDelete", grouppost);
 	}
 
-	//±×·ìÇÇµå ´ñ±Û»èÁ¦Ã³¸®
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì‚­ì œì²˜ë¦¬
 	@Override
 	public int groupFeedCmmtDelete(GroupCommentVo groupcmmt) {
 		
@@ -200,38 +200,38 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	/////////////////////////À¯Àú°ü¸®/////////////////////////////
+	/////////////////////////ìœ ì €ê´€ë¦¬/////////////////////////////
 	//////////////////////////////////////////////////////////////
 	
-	//°Ë»ö°ª Æ÷ÇÔ ÃÑÈ¸¿ø¼ö Ãâ·Â
+	//ê²€ìƒ‰ê°’ í¬í•¨ ì´íšŒì›ìˆ˜ ì¶œë ¥
 	@Override
 	public int adminUserCount(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminUserCount", pageSearchVo);
 	}
 	
-	//À¯Àú°ü¸®Á¤º¸ ÀüÃ¼ Ãâ·Â
+	//ìœ ì €ê´€ë¦¬ì •ë³´ ì „ì²´ ì¶œë ¥
 	@Override
 	public List<ProfileVo> adminUserSelectAll(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminUserSelectAll", search);
 	}
 
-	//À¯Àú°ü¸®Á¤º¸ Á¤Áö´ë»ó¸¸ Ãâ·Â
+	//ìœ ì €ê´€ë¦¬ì •ë³´ ì •ì§€ëŒ€ìƒë§Œ ì¶œë ¥
 	@Override
 	public List<ProfileVo> adminUserStopSelectAll(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminUserStopSelectAll", search);
 	}
 
-	//À¯Àú Á¤Áö
+	//ìœ ì € ì •ì§€
 	@Override
 	public int userStop(MyAdminVo admin) {
 		
 		return sqlSession.update("admin.userStop", admin);
 	}
 
-	//À¯Àú °­Åğ
+	//ìœ ì € ê°•í‡´
 	@Override
 	public int userKick(MyAdminVo admin) {
 		
@@ -239,101 +239,101 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	//////////////////////À¯Àú »ó¼¼ÆäÀÌÁö/////////////////////////
+	//////////////////////ìœ ì € ìƒì„¸í˜ì´ì§€/////////////////////////
 	//////////////////////////////////////////////////////////////
 	
-	//À¯ÀúÁ¤º¸(»ó¼¼ÆäÀÌÁö)
+	//ìœ ì €ì •ë³´(ìƒì„¸í˜ì´ì§€)
 	@Override
 	public ProfileVo userInfo(ProfileVo profile) {
 		
 		return sqlSession.selectOne("admin.userInfo", profile);
 	}
 
-	//À¯ÀúÇÇµåÃâ·Â
+	//ìœ ì €í”¼ë“œì¶œë ¥
 	@Override
 	public List<MyPostVo> userFeed(ProfileVo profile) {
 		
 		return sqlSession.selectList("admin.userFeed", profile);
 	}
 
-	//À¯ÀúÇÇµå ´ñ±ÛÃâ·Â
+	//ìœ ì €í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<MyCommentVo> userCmmt(ProfileVo profile) {
 		
 		return sqlSession.selectList("admin.userCmmt", profile);
 	}
 	
-	//À¯ÀúÇÇµå ´ñ±Û ´õº¸±âÃâ·Â
+	//ìœ ì €í”¼ë“œ ëŒ“ê¸€ ë”ë³´ê¸°ì¶œë ¥
 	@Override
 	public List<MyCommentVo> adminUserDetailCmmt(MyPostVo post) {
 		
 		return sqlSession.selectList("admin.adminUserDetailCmmt", post);
 	}
 	
-	//À¯ÀúÇÇµå°¹¼ö Ãâ·Â
+	//ìœ ì €í”¼ë“œê°¯ìˆ˜ ì¶œë ¥
 	@Override
 	public int userFeedCount(ProfileVo profile) {
 		
 		return sqlSession.selectOne("admin.userFeedCount", profile);
 	}
 
-	//À¯Àú ÆÈ·ÎÀ×¼ö Ãâ·Â
+	//ìœ ì € íŒ”ë¡œì‰ìˆ˜ ì¶œë ¥
 	@Override
 	public int userFollowingCount(ProfileVo profile) {
 		
 		return sqlSession.selectOne("admin.userFollowingCount", profile);
 	}
 
-	//À¯Àú ÆÈ·Î¿ö¼ö Ãâ·Â
+	//ìœ ì € íŒ”ë¡œì›Œìˆ˜ ì¶œë ¥
 	@Override
 	public int userFollowerCount(ProfileVo profile) {
 		
 		return sqlSession.selectOne("admin.userFollowerCount", profile);
 	}
 	
-	//ÇØ´çÀ¯Àú ÆÈ·Î¿ö¸®½ºÆ®
+	//í•´ë‹¹ìœ ì € íŒ”ë¡œì›Œë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<MyFollowerVo> adminUserfollowerList(ProfileVo profile) {
 		
 		return sqlSession.selectList("admin.adminUserfollowerList", profile);
 	}
 
-	//ÇØ´çÀ¯Àú ÆÈ·ÎÀ×¸®½ºÆ®
+	//í•´ë‹¹ìœ ì € íŒ”ë¡œì‰ë¦¬ìŠ¤íŠ¸
 	@Override
 	public List<MyFollowingVo> adminUserfollowList(ProfileVo profile) {
 		
 		return sqlSession.selectList("admin.adminUserfollowList", profile);
 	}
 
-	//³»ÇÇµå »èÁ¦
+	//ë‚´í”¼ë“œ ì‚­ì œ
 	@Override
 	public int myFeedDelete(MyPostVo post) {
 		
 		return sqlSession.delete("admin.myFeedDelete", post);
 	}
 	
-	//³»ÇÇµå´ñ±Û »èÁ¦
+	//ë‚´í”¼ë“œëŒ“ê¸€ ì‚­ì œ
 	@Override
 	public int myFeedCmmtDelete(MyCommentVo cmmt) {
 
 		return sqlSession.delete("admin.myFeedCmmtDelete", cmmt);
 	}
 
-	//Á¤ÁöÀ¯Àú ¸®½ºÆ®°ª »Ì¾Æ¿À±â
+	//ì •ì§€ìœ ì € ë¦¬ìŠ¤íŠ¸ê°’ ë½‘ì•„ì˜¤ê¸°
 	@Override
 	public List<ProfileVo> stopUserList() {
 		
 		return sqlSession.selectList("admin.stopUserList");
 	}
 
-	//Á¤Áö°ªÀÌ 0ÀÏ¶§ Á¤ÁöÇ®±â
+	//ì •ì§€ê°’ì´ 0ì¼ë•Œ ì •ì§€í’€ê¸°
 	@Override
 	public int updateStop_zero(ProfileVo profile) {
 		
 		return sqlSession.update("admin.updateStop_zero", profile);
 	}
 
-	//Á¤Áö°ªÀÌ 1ÀÌ»óÀÏ¶§ Á¤Áö°ª ¾÷µ¥ÀÌÆ®
+	//ì •ì§€ê°’ì´ 1ì´ìƒì¼ë•Œ ì •ì§€ê°’ ì—…ë°ì´íŠ¸
 	@Override
 	public int updateStop_over(ProfileVo profile) {
 		
@@ -341,73 +341,73 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	////////////////////////Ä·ÇÎÀå°ü¸®////////////////////////////
+	////////////////////////ìº í•‘ì¥ê´€ë¦¬////////////////////////////
 	//////////////////////////////////////////////////////////////
 
-	//Ä·ÇÎÀå ÆäÀÌÁö ÅäÅ»Ä«¿îÆ®°¹¼ö ±¸ÇÏ´Â°Í
+	//ìº í•‘ì¥ í˜ì´ì§€ í† íƒˆì¹´ìš´íŠ¸ê°¯ìˆ˜ êµ¬í•˜ëŠ”ê²ƒ
 	@Override
 	public int adminCampCount(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminCampCount", pageSearchVo);
 	}
 
-	//Ä·ÇÎÀå°ü¸®Á¤º¸ Ãâ·Â
+	//ìº í•‘ì¥ê´€ë¦¬ì •ë³´ ì¶œë ¥
 	@Override
 	public List<CampVo> adminCampSelectAll(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminCampSelectAll", search);
 	}
 
-	//Ä·ÇÎÀå»èÁ¦ +@
+	//ìº í•‘ì¥ì‚­ì œ +@
 	@Override
 	public int campDelete(CampVo camp) {
 		
 		return sqlSession.delete("admin.campDelete", camp);
 	}
 	
-	//Ä·ÇÎÀåÁ¤º¸ Ãâ·Â
+	//ìº í•‘ì¥ì •ë³´ ì¶œë ¥
 	@Override
 	public CampVo campInfo(CampVo camp) {
 		
 		return sqlSession.selectOne("admin.campInfo", camp);
 	}
 	
-	//ÇØ´çÄ·ÇÎÀå »èÁ¦Ã³¸®
+	//í•´ë‹¹ìº í•‘ì¥ ì‚­ì œì²˜ë¦¬
 	@Override
 	public int campDeleteOne(CampVo camp) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
-	//ÇØ´çÄ·ÇÎÀå °ø½Ä±×·ìÀ¯¹« Ã¼Å©
+	//í•´ë‹¹ìº í•‘ì¥ ê³µì‹ê·¸ë£¹ìœ ë¬´ ì²´í¬
 	@Override
 	public int groupVentureCheck(CampVo camp) {
 		
 		return sqlSession.selectOne("admin.groupVentureCheck", camp);
 	}
 
-	//Ä·ÇÎÀå ÇÑÁÙÆòÃâ·Â
+	//ìº í•‘ì¥ í•œì¤„í‰ì¶œë ¥
 	@Override
 	public List<CampReviewVo> campReviewInfo(CampVo camp) {
 		
 		return sqlSession.selectList("admin.campReviewInfo", camp);
 	}
 
-	//ÇØ´çÄ·ÇÎÀå ÇÑÁÙÆò°¹¼ö
+	//í•´ë‹¹ìº í•‘ì¥ í•œì¤„í‰ê°¯ìˆ˜
 	@Override
 	public int campReviewCount(CampVo camp) {
 		
 		return sqlSession.selectOne("admin.campReviewCount", camp);
 	}
 	
-	//ÇØ´çÄ·ÇÎÀåÇÑÁÙÆò »èÁ¦Ã³¸®
+	//í•´ë‹¹ìº í•‘ì¥í•œì¤„í‰ ì‚­ì œì²˜ë¦¬
 	@Override
 	public int campReviewDeleteOne(CampReviewVo campreview) {
 		
 		return sqlSession.delete("admin.campReviewDeleteOne", campreview);
 	}
 
-	//°ø½Ä±×·ìÀÖÀ»½Ã °ø½Ä±×·ìÁ¤º¸Ãâ·Â
+	//ê³µì‹ê·¸ë£¹ìˆì„ì‹œ ê³µì‹ê·¸ë£¹ì •ë³´ì¶œë ¥
 	@Override
 	public GroupVo ventureGroup(CampVo camp) {
 		
@@ -415,59 +415,59 @@ public class AdminDaoImpl implements AdminDao{
 	}
 	
 	//////////////////////////////////////////////////////////////
-	////////////////////////»ç¾÷ÀÚ°ü¸®////////////////////////////
+	////////////////////////ì‚¬ì—…ìê´€ë¦¬////////////////////////////
 	//////////////////////////////////////////////////////////////
 	
-	//»ç¾÷ÀÚ°ü¸®Á¤º¸ Ãâ·Â(°Ë»ö°ª-»ç¾÷ÀÚ¹øÈ£)
+	//ì‚¬ì—…ìê´€ë¦¬ì •ë³´ ì¶œë ¥(ê²€ìƒ‰ê°’-ì‚¬ì—…ìë²ˆí˜¸)
 	@Override
 	public List<MyAdminVo> adminVentureSelectAll_mvnumber(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminVentureSelectAll_mvnumber", search);
 	}
 
-	//»ç¾÷ÀÚ°ü¸®Á¤º¸ Ãâ·Â(°Ë»ö°ª-Ä·ÇÎÀåÀÌ¸§)
+	//ì‚¬ì—…ìê´€ë¦¬ì •ë³´ ì¶œë ¥(ê²€ìƒ‰ê°’-ìº í•‘ì¥ì´ë¦„)
 	@Override
 	public List<MyAdminVo> adminVentureSelectAll_caname(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminVentureSelectAll_caname", search);
 	}
 
-	//»ç¾÷ÀÚ°ü¸®Á¤º¸ ·Î¿ì°¹¼ö(°Ë»ö°ª-»ç¾÷ÀÚ¹øÈ£)
+	//ì‚¬ì—…ìê´€ë¦¬ì •ë³´ ë¡œìš°ê°¯ìˆ˜(ê²€ìƒ‰ê°’-ì‚¬ì—…ìë²ˆí˜¸)
 	@Override
 	public int adminVentureCount_ventureNumber(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminVentureCount_ventureNumber", pageSearchVo);
 	}
 
-	//»ç¾÷ÀÚ°ü¸®Á¤º¸ ·Î¿ì°¹¼ö(°Ë»ö°ª-Ä·ÇÎÀåÀÌ¸§)
+	//ì‚¬ì—…ìê´€ë¦¬ì •ë³´ ë¡œìš°ê°¯ìˆ˜(ê²€ìƒ‰ê°’-ìº í•‘ì¥ì´ë¦„)
 	@Override
 	public int adminVentureCount_campName(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminVentureCount_campName", pageSearchVo);
 	}
 	
-	//ÇØ´ç »ç¾÷ÀÚ»çÁøÃâ·Â
+	//í•´ë‹¹ ì‚¬ì—…ìì‚¬ì§„ì¶œë ¥
 	@Override
 	public MyVentureVo AdminVentureImg(MyVentureVo myVentureVo) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	//»ç¾÷ÀÚ »èÁ¦Ã³¸® +@
+	//ì‚¬ì—…ì ì‚­ì œì²˜ë¦¬ +@
 	@Override
 	public int ventureDelete(MyVentureVo venture) {
 		
 		return sqlSession.delete("admin.ventureDelete", venture);
 	}
 	
-	//»ç¾÷ÀÚ »èÁ¦½Ã °ø½Ä±×·ì ÀÖ´Â»ç¶÷ ¸®ÅÏ
+	//ì‚¬ì—…ì ì‚­ì œì‹œ ê³µì‹ê·¸ë£¹ ìˆëŠ”ì‚¬ëŒ ë¦¬í„´
 	@Override
 	public List<GroupVo> ventureGroupCheck(MyVentureVo venture) {
 		
 		return sqlSession.selectList("admin.ventureGroupCheck", venture);
 	}
 
-	//°ø½Ä±×·ì Á¸Àç½Ã ÀÏ¹İ±×·ìÀ¸·Î ¾÷µ¥ÀÌÆ®
+	//ê³µì‹ê·¸ë£¹ ì¡´ì¬ì‹œ ì¼ë°˜ê·¸ë£¹ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 	@Override
 	public int ventureGroupDelete(GroupVo group) {
 		
@@ -475,59 +475,59 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	//////////////////////»ç¾÷ÀÚµî·Ï°ü¸®//////////////////////////
+	//////////////////////ì‚¬ì—…ìë“±ë¡ê´€ë¦¬//////////////////////////
 	//////////////////////////////////////////////////////////////
 
-	//»ç¾÷ÀÚµî·Ï½ÅÃ»Á¤º¸ ·Î¿ì°¹¼ö(Ä·ÇÎÀå¸í)
+	//ì‚¬ì—…ìë“±ë¡ì‹ ì²­ì •ë³´ ë¡œìš°ê°¯ìˆ˜(ìº í•‘ì¥ëª…)
 	@Override
 	public int adminVentureRequestCount_campName(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminVentureRequestCount_campName", pageSearchVo);
 	}
 
-	//»ç¾÷ÀÚµî·Ï½ÅÃ»Á¤º¸ ·Î¿ì°¹¼ö(»ç¾÷ÀÚ¹øÈ£)
+	//ì‚¬ì—…ìë“±ë¡ì‹ ì²­ì •ë³´ ë¡œìš°ê°¯ìˆ˜(ì‚¬ì—…ìë²ˆí˜¸)
 	@Override
 	public int adminVentureRequestCount_ventureNumber(PageSearchVo pageSearchVo) {
 		
 		return sqlSession.selectOne("admin.adminVentureRequestCount_ventureNumber", pageSearchVo);
 	}
 
-	//»ç¾÷ÀÚµî·Ï½ÅÃ»Á¤º¸ Ãâ·Â(°Ë»ö°ª-»ç¾÷ÀÚ¹øÈ£)
+	//ì‚¬ì—…ìë“±ë¡ì‹ ì²­ì •ë³´ ì¶œë ¥(ê²€ìƒ‰ê°’-ì‚¬ì—…ìë²ˆí˜¸)
 	@Override
 	public List<UpdateWaitVo> adminVentureRequestSelectAll_mvnumber(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminVentureRequestSelectAll_mvnumber", search);
 	}
 
-	//»ç¾÷ÀÚµî·Ï½ÅÃ»Á¤º¸ Ãâ·Â(°Ë»ö°ª-Ä·ÇÎÀåÀÌ¸§)
+	//ì‚¬ì—…ìë“±ë¡ì‹ ì²­ì •ë³´ ì¶œë ¥(ê²€ìƒ‰ê°’-ìº í•‘ì¥ì´ë¦„)
 	@Override
 	public List<UpdateWaitVo> adminVentureRequestSelectAll_caname(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminVentureRequestSelectAll_caname", search);
 	}
 
-	//»ç¾÷ÀÚµî·Ï½ÂÀÎ Ã³¸® +@
+	//ì‚¬ì—…ìë“±ë¡ìŠ¹ì¸ ì²˜ë¦¬ +@
 	@Override
 	public void ventureInsert(UpdateWaitVo wait) {
 		
 		sqlSession.insert("admin.ventureInsert", wait);
 	}
 
-	//½ÂÀÎ´ë±âÅ×ÀÌºí Á¤º¸»èÁ¦ or »ç¾÷ÀÚµî·Ï °ÅÀıÃ³¸® +@ (µÑ´Ù ¾²ÀÓ)
+	//ìŠ¹ì¸ëŒ€ê¸°í…Œì´ë¸” ì •ë³´ì‚­ì œ or ì‚¬ì—…ìë“±ë¡ ê±°ì ˆì²˜ë¦¬ +@ (ë‘˜ë‹¤ ì“°ì„)
 	@Override
 	public int updateDelete(UpdateWaitVo wait) {
 		
 		return sqlSession.delete("admin.updateDelete", wait);
 	}
 
-	//»ç¾÷ÀÚµî·ÏÃ³¸® ½Ã ±×·ìÀÖ´Â À¯ÀúÀÇ ±×·ìÁ¤º¸¸®ÅÏ
+	//ì‚¬ì—…ìë“±ë¡ì²˜ë¦¬ ì‹œ ê·¸ë£¹ìˆëŠ” ìœ ì €ì˜ ê·¸ë£¹ì •ë³´ë¦¬í„´
 	@Override
 	public List<GroupVo> groupCheck(UpdateWaitVo wait) {
 		
 		return sqlSession.selectList("admin.groupCheck", wait);
 	}
 
-	//»ç¾÷ÀÚµî·ÏÃ³¸® ½Ã ±×·ìÁ¸ÀçÇÏ¸é °ø½Ä±×·ìÀ¸·Î ¾÷µ¥ÀÌÆ®
+	//ì‚¬ì—…ìë“±ë¡ì²˜ë¦¬ ì‹œ ê·¸ë£¹ì¡´ì¬í•˜ë©´ ê³µì‹ê·¸ë£¹ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 	@Override
 	public int groupVentureUpdate(GroupVo group) {
 		
@@ -535,31 +535,31 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	//////////////////////////////////////////////////////////////
-	/////////////////////////½Å°í°ü¸®/////////////////////////////
+	/////////////////////////ì‹ ê³ ê´€ë¦¬/////////////////////////////
 	//////////////////////////////////////////////////////////////
 
-	//½Å°í°ü¸®Á¤º¸ ·Î¿ì°¹¼ö
+	//ì‹ ê³ ê´€ë¦¬ì •ë³´ ë¡œìš°ê°¯ìˆ˜
 	@Override
 	public int adminReportCount(PageSearchVo search) {
 		
 		return sqlSession.selectOne("admin.adminReportCount", search);
 	}
 
-	//½Å°í°ü¸®Á¤º¸ Ãâ·Â 
+	//ì‹ ê³ ê´€ë¦¬ì •ë³´ ì¶œë ¥ 
 	@Override
 	public List<ReportListVo> adminReportSelectAll(PageSearchVo search) {
 		
 		return sqlSession.selectList("admin.adminReportSelectAll", search);
 	}
 
-	//½Å°í Ã³¸®¿Ï·á¾÷µ¥ÀÌÆ®
+	//ì‹ ê³  ì²˜ë¦¬ì™„ë£Œì—…ë°ì´íŠ¸
 	@Override
 	public int adminReportUpdate(ReportListVo report) {
 		
 		return sqlSession.update("admin.adminReportUpdate", report);
 	}
 
-	//½Å°í»ó¼¼ÆäÀÌÁöÃâ·Â
+	//ì‹ ê³ ìƒì„¸í˜ì´ì§€ì¶œë ¥
 	@Override
 	public ReportListVo adminReportSelectOne(ReportListVo reportListVo) {
 		

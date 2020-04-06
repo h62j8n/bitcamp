@@ -97,9 +97,17 @@ public class MemberServiceImpl implements MemberService {
 			String proidnum = profileVo.getProidnum();
 			StringBuffer sb = new StringBuffer(proidnum);
 			
+			sb.insert(4,"³â");
+			sb.insert(7, "¿ù");
+			proidnum = sb.toString();
+			proidnum +="ÀÏ";
+			
+			profileVo.setProidnum(proidnum);
+			
 			memberDao.memberInsert_nomal(profileVo);
 			profileVo = memberDao.find_pronum(profileVo);
 			memberDao.myadminInsert(profileVo);
+			model.addAttribute("join",profileVo);
 		}else {
 			memberDao.memberInsert_social(profileVo);
 			profileVo = memberDao.find_pronum(profileVo);

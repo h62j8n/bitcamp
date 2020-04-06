@@ -1,10 +1,29 @@
 package com.fin.festa.model.entity;
 
+import com.fin.festa.model.entity.CampReviewVo;
+import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupCommentVo;
+import com.fin.festa.model.entity.GroupNoticeCommentVo;
+import com.fin.festa.model.entity.GroupNoticeVo;
+import com.fin.festa.model.entity.GroupPostVo;
+import com.fin.festa.model.entity.GroupVo;
+import com.fin.festa.model.entity.JoinGroupVo;
+import com.fin.festa.model.entity.MyAdminVo;
+import com.fin.festa.model.entity.MyCommentVo;
+import com.fin.festa.model.entity.MyFollowerVo;
+import com.fin.festa.model.entity.MyFollowingVo;
+import com.fin.festa.model.entity.MyGoodVo;
+import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.MyVentureVo;
+import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ProfileVo;
+import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 
-public class MyBookMarkVo {	//³» Ä·ÇÎÀå ºÏ¸¶Å© 
+public class MyBookMarkVo {	//ë‚´ ìº í•‘ì¥ ë¶ë§ˆí¬ 
 
-	private int pronum;		//³» ¹øÈ£
-	private int canum;		//Ä·ÇÎÀå ¹øÈ£
+	private int pronum;		//ë‚´ ë²ˆí˜¸
+	private int canum;		//ìº í•‘ì¥ ë²ˆí˜¸
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

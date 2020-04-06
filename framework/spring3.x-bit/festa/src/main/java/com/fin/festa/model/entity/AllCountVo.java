@@ -1,11 +1,11 @@
 package com.fin.festa.model.entity;
 
-public class AllCountVo {		//´ë½Ãº¸µå-ÀüÃ¼ÀÌ¿ëÀÚ¼öVo
+public class AllCountVo {		//ëŒ€ì‹œë³´ë“œ-ì „ì²´ì´ìš©ììˆ˜Vo
 
-	private int profile;		//ÀüÃ¼»ç¿ëÀÚ ¼ö
-	private int group1;			//ÀüÃ¼±×·ì ¼ö
-	private int myventure;		//ÀüÃ¼»ç¾÷ÀÚ ¼ö
-	private int camp;			//ÀüÃ¼Ä·ÇÎÀå ¼ö
+	private int profile;		//ì „ì²´ì‚¬ìš©ì ìˆ˜
+	private int group1;			//ì „ì²´ê·¸ë£¹ ìˆ˜
+	private int myventure;		//ì „ì²´ì‚¬ì—…ì ìˆ˜
+	private int camp;			//ì „ì²´ìº í•‘ì¥ ìˆ˜
 	
 	@Override
 	public String toString() {

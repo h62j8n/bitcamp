@@ -27,92 +27,92 @@ public class GroupDaoImpl implements GroupDao{
 	SqlSession sqlSession;
 
 	////////////////////////////////////////////////////////////////
-	/////////////////////±×·ìÈ­¸éÃâ·Â Àü Ã¼Å©///////////////////////
+	/////////////////////ê·¸ë£¹í™”ë©´ì¶œë ¥ ì „ ì²´í¬///////////////////////
 	////////////////////////////////////////////////////////////////
 	
-	//°ø½Ä±×·ì À¯¹« Ã¼Å©
+	//ê³µì‹ê·¸ë£¹ ìœ ë¬´ ì²´í¬
 	@Override
 	public int groupVentureCheck(GroupVo group) {
 		return sqlSession.selectOne("group.groupVentureCheck", group);
 	}
 
-	//°¡ÀÔµÈ ±×·ìÀÎÁö Ã¼Å©
+	//ê°€ì…ëœ ê·¸ë£¹ì¸ì§€ ì²´í¬
 	@Override
 	public int joinGroupCheck(UpdateWaitVo wait) {
 		return sqlSession.selectOne("group.joinGroupCheck", wait);
 	}
 
-	//½ÂÀÎ´ë±â Ã¼Å©
+	//ìŠ¹ì¸ëŒ€ê¸° ì²´í¬
 	public int updateGroupCheck(UpdateWaitVo wait) {
 		return sqlSession.selectOne("group.updateGroupCheck", wait);
 	}
 	
-	//±×·ì °¡ÀÔ½ÅÃ»
+	//ê·¸ë£¹ ê°€ì…ì‹ ì²­
 	@Override
 	public void joinGroupRequest(UpdateWaitVo wait) {
 		sqlSession.insert("group.joinGroupRequest", wait);
 	}
 	
 	////////////////////////////////////////////////////////////////
-	///////////////////////////È­¸éÃâ·Â/////////////////////////////
+	///////////////////////////í™”ë©´ì¶œë ¥/////////////////////////////
 	////////////////////////////////////////////////////////////////
 	
-	//¸ŞÀÎÈ­¸é ±×·ìÁ¤º¸Ãâ·Â
+	//ë©”ì¸í™”ë©´ ê·¸ë£¹ì •ë³´ì¶œë ¥
 	@Override
 	public GroupVo groupSelectOne(GroupVo group) {
 		return sqlSession.selectOne("group.groupSelectOne", group);
 	}
 	
-	//±×·ì°øÁö»çÇ× Ãâ·Â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ì¶œë ¥
 	@Override
 	public List<GroupNoticeVo> groupNoticeSelectAll(GroupVo group) {
 		return sqlSession.selectList("group.groupNotice", group);
 	}
 
-	//±×·ì°øÁö»çÇ× »ó¼¼
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ìƒì„¸
 	@Override
 	public GroupNoticeVo groupNoticeSelectOne(GroupNoticeVo notice) {
 		return sqlSession.selectOne("group.groupNoticeDetail", notice);
 	}
 
-	//±×·ì°øÁö»çÇ× ´ñ±ÛÃâ·Â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<GroupNoticeCommentVo> groupNoticeCmmtSelectAll(GroupNoticeVo notice) {
 		return sqlSession.selectList("group.groupNoticeCmmt", notice);
 	}
 	
-	//±×·ìÇÇµå ´ñ±Û ´õº¸±â
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ ë”ë³´ê¸°
 	public List<GroupCommentVo> groupDetailCmmt(GroupPostVo grouppost) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("group.groupDetailCmmt", grouppost);
 	}
 
-	//±×·ì°øÁö»çÇ× ´ñ±Û ´õº¸±â
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ëŒ“ê¸€ ë”ë³´ê¸°
 	public List<GroupNoticeCommentVo> groupNoticeDetailCmmt(GroupNoticeVo groupnotice) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("group.groupNoticeDetailCmmt", groupnotice);
 	}
 
 	
-	//±×·ìÇÇµå Ãâ·Â
+	//ê·¸ë£¹í”¼ë“œ ì¶œë ¥
 	@Override
 	public List<GroupPostVo> groupFeedSelectAll(GroupVo group) {
 		return sqlSession.selectList("group.groupFeed", group);
 	}
 
-	//±×·ìÇÇµå ´ñ±ÛÃâ·Â
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<GroupCommentVo> groupFeedCmmtSelectAll(GroupVo group) {
 		return sqlSession.selectList("group.groupFeedCmmt", group);
 	}
 	
-	//±×·ìÀÎ¿øÁ¤º¸Ãâ·Â
+	//ê·¸ë£¹ì¸ì›ì •ë³´ì¶œë ¥
 	@Override
 	public List<JoinGroupVo> groupUserInfo(GroupVo group) {
 		return sqlSession.selectList("group.groupUserInfo", group);
 	}
 
-	//°¡ÀÔµÈ±×·ì Å»Åğ
+	//ê°€ì…ëœê·¸ë£¹ íƒˆí‡´
 	@Override
 	public int groupOut(JoinGroupVo joinGroup) {
 		return sqlSession.delete("group.groupOut", joinGroup);
@@ -120,65 +120,65 @@ public class GroupDaoImpl implements GroupDao{
 
 	
 	////////////////////////////////////////////////////////////////
-	//////////////±×·ì ÇÇµå,°øÁö,´ñ±Û µî·Ï,¼öÁ¤,»èÁ¦////////////////
+	//////////////ê·¸ë£¹ í”¼ë“œ,ê³µì§€,ëŒ“ê¸€ ë“±ë¡,ìˆ˜ì •,ì‚­ì œ////////////////
 	////////////////////////////////////////////////////////////////
 	
-	//±×·ì°øÁö»çÇ× µî·Ï
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ë“±ë¡
 	@Override
 	public void groupNoticeInsert(GroupNoticeVo notice) {
 		sqlSession.insert("group.groupNoticeInsert", notice);
 	}
 
-	//±×·ìÇÇµå µî·Ï
+	//ê·¸ë£¹í”¼ë“œ ë“±ë¡
 	@Override
 	public void groupFeedInsert(GroupPostVo post) {
 		sqlSession.insert("group.groupFeedInsert", post);
 	}
 
-	//±×·ì ÇÇµå´ñ±Û µî·Ï
+	//ê·¸ë£¹ í”¼ë“œëŒ“ê¸€ ë“±ë¡
 	@Override
 	public void groupFeedCmmtInsert(GroupCommentVo cmmt) {
 		sqlSession.insert("group.groupFeedCmmtInsert", cmmt);
 	}
 
-	//±×·ì ÇÇµå´ñ±Û »èÁ¦
+	//ê·¸ë£¹ í”¼ë“œëŒ“ê¸€ ì‚­ì œ
 	@Override
 	public int groupFeedCmmtDelete(GroupCommentVo cmmt) {
 		return sqlSession.delete("group.groupFeedCmmtDelete", cmmt);
 	}
 	
-	//±×·ì°øÁö»çÇ× ´ñ±Ûµî·Ï
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void groupNoticeCmmtInsert(GroupNoticeCommentVo groupnoticecmmt) {
 		sqlSession.insert("group.groupNoticeCmmtInsert", groupnoticecmmt);
 	}
 
-	//±×·ì°øÁö»çÇ× ´ñ±Û»èÁ¦
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public void groupNoticeCmmtDelete(GroupNoticeCommentVo groupnoticecmmt) {
 		sqlSession.delete("group.groupNoticeCmmtDelete", groupnoticecmmt);
 	}
 	
-	//±×·ìÇÇµå ¼öÁ¤
+	//ê·¸ë£¹í”¼ë“œ ìˆ˜ì •
 	@Override
 	public int groupFeedUpdate(GroupPostVo post) {
 		return sqlSession.update("group.groupFeedUpdate", post);
 	}
 
-	//±×·ì °øÁö»çÇ× ¼öÁ¤
+	//ê·¸ë£¹ ê³µì§€ì‚¬í•­ ìˆ˜ì •
 	@Override
 	public int groupNoticeUpdate(GroupNoticeVo notice) {
 		return sqlSession.update("group.groupNoticeUpdate", notice);
 	}
 
-	//±×·ì ÇÇµå »èÁ¦
+	//ê·¸ë£¹ í”¼ë“œ ì‚­ì œ
 	@Override
 	public int groupFeedDelete(GroupPostVo post) {
 		return sqlSession.delete("group.groupFeedDelete", post);
 	}
 
 
-	//±×·ì °øÁö»çÇ× »èÁ¦
+	//ê·¸ë£¹ ê³µì§€ì‚¬í•­ ì‚­ì œ
 	@Override
 	public int groupNoticeDelete(GroupNoticeVo notice) {
 		// TODO Auto-generated method stub
@@ -186,96 +186,96 @@ public class GroupDaoImpl implements GroupDao{
 	}
 
 	////////////////////////////////////////////////////////////////
-	/////////////////////±×·ì,ÇÇµå,°øÁö ½Å°í////////////////////////
+	/////////////////////ê·¸ë£¹,í”¼ë“œ,ê³µì§€ ì‹ ê³ ////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ì ½Å°íµî·Ï
+	//ê·¸ë£¹ ì‹ ê³ ë“±ë¡
 	@Override
 	public void groupReportInsert(ReportListVo report) {
 		sqlSession.insert("group.groupReportInsert", report);
 	}
 
-	//±×·ìÇÇµå ½Å°íµî·Ï
+	//ê·¸ë£¹í”¼ë“œ ì‹ ê³ ë“±ë¡
 	@Override
 	public void groupFeedReportInsert(ReportListVo report) {
 		sqlSession.insert("group.groupFeedReportInsert", report);
 	}
 
-	//±×·ì°øÁö»çÇ× ½Å°íµî·Ï
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ ì‹ ê³ ë“±ë¡
 	@Override
 	public void groupNoticeReportInsert(ReportListVo report) {
 		sqlSession.insert("group.groupNoticeReportInsert", report);
 	}
 
-	//½Å°í´çÇÑ À¯Àú ½Å°í´çÇÑÈ½¼ö +1
+	//ì‹ ê³ ë‹¹í•œ ìœ ì € ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Override
 	public int groupReportCountUpdate(ReportListVo report) {
 		return sqlSession.update("group.groupReportCountUpdate", report);
 	}
 
 	////////////////////////////////////////////////////////////////
-	/////////////////////ÇÇµåÁÁ¾Æ¿ä µî·Ï,ÇØÁ¦///////////////////////
+	/////////////////////í”¼ë“œì¢‹ì•„ìš” ë“±ë¡,í•´ì œ///////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//ÇÇµåÁÁ¾Æ¿äµî·Ï
+	//í”¼ë“œì¢‹ì•„ìš”ë“±ë¡
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
 		sqlSession.insert("group.groupFeedLikeInsert", good);
 	}
 
-	//ÇÇµåÁÁ¾Æ¿äÇØÁ¦
+	//í”¼ë“œì¢‹ì•„ìš”í•´ì œ
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
 		return sqlSession.delete("group.groupFeedLikeDelete", good);
 	}
 
-	//ÇÇµå ÁÁ¾Æ¿ä µî·Ï½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö +1
+	//í”¼ë“œ ì¢‹ì•„ìš” ë“±ë¡ì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜ +1
 	@Override
 	public int groupFeedLikeOnePlus(GroupPostVo post) {
 		return sqlSession.update("group.groupFeedLikeOnePlus", post);
 	}
 
-	//ÇÇµå ÁÁ¾Æ¿ä ÇØÁ¦½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö -1
+	//í”¼ë“œ ì¢‹ì•„ìš” í•´ì œì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜ -1
 	@Override
 	public int groupFeedLikeOneMinus(GroupPostVo post) {
 		return sqlSession.update("group.groupFeedLikeOneMinus", post);
 	}
 
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
 		return sqlSession.selectList("group.myGoodRenewal", good);
 	}
 
 	////////////////////////////////////////////////////////////////
-	////////////////////ÆÈ·ÎÀ×,ÆÈ·Î¿öµî·Ï,ÇØÁ¦//////////////////////
+	////////////////////íŒ”ë¡œì‰,íŒ”ë¡œì›Œë“±ë¡,í•´ì œ//////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//³»ÆÈ·ÎÀ× µî·Ï
+	//ë‚´íŒ”ë¡œì‰ ë“±ë¡
 	@Override
 	public void myFollowingInsertOne(MyFollowingVo following) {
 		sqlSession.insert("group.myFollowingInsert", following);
 	}
 
-	// »ó´ëÆÈ·Î¿ö µî·Ï
+	// ìƒëŒ€íŒ”ë¡œì›Œ ë“±ë¡
 	@Override
 	public void yourFollowerInsertOne(MyFollowingVo following) {
 		sqlSession.insert("group.yourFollowerInsert", following);
 	}
 
-	// ³»ÆÈ·ÎÀ× ÇØÁ¦
+	// ë‚´íŒ”ë¡œì‰ í•´ì œ
 	@Override
 	public int myFollowingDeleteOne(MyFollowingVo following) {
 		return sqlSession.delete("group.myFollowingDelete", following);
 	}
 
-	// »ó´ëÆÈ·Î¿ö ÇØÁ¦
+	// ìƒëŒ€íŒ”ë¡œì›Œ í•´ì œ
 	@Override
 	public int yourFollowerDeleteOne(MyFollowingVo following) {
 		return sqlSession.delete("group.yourFollowerDelete", following);
 	}
 
-	// ³» ÆÈ·ÎÀ×¸ñ·Ï °»½Å
+	// ë‚´ íŒ”ë¡œì‰ëª©ë¡ ê°±ì‹ 
 	@Override
 	public List<MyFollowingVo> myFollowingRenewal(MyFollowingVo following) {
 		return sqlSession.selectList("group.myFollowingRenewal", following);
@@ -283,106 +283,106 @@ public class GroupDaoImpl implements GroupDao{
 
 
 	////////////////////////////////////////////////////////////////
-	///////////////////////////±×·ì°ü¸®/////////////////////////////
+	///////////////////////////ê·¸ë£¹ê´€ë¦¬/////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ìÁ¤º¸ ¼öÁ¤
+	//ê·¸ë£¹ì •ë³´ ìˆ˜ì •
 	@Override
 	public int groupInfoUpdate(GroupVo group) {
 		return sqlSession.update("group.groupInfoUpdate", group);
 	}
 
 	////////////////////////////////////////////////////////////////
-	//////////////////////////±×·ì¿ø°ü¸®////////////////////////////
-	//////////////////////////È­¸éÃâ·Â//////////////////////////////
+	//////////////////////////ê·¸ë£¹ì›ê´€ë¦¬////////////////////////////
+	//////////////////////////í™”ë©´ì¶œë ¥//////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ì¿¡ °¡ÀÔµÈÀ¯ÀúÁ¤º¸ Ãâ·Â
+	//ê·¸ë£¹ì— ê°€ì…ëœìœ ì €ì •ë³´ ì¶œë ¥
 	@Override
 	public List<ProfileVo> groupUserSelectAll(GroupVo group) {
 		return sqlSession.selectList("group.groupUserSelectAll", group);
 	}
 
-	//±×·ì¿¡ °¡ÀÔµÈÀ¯ÀúÁ¤º¸ °Ë»ö°ª¸¸ Ãâ·Â
+	//ê·¸ë£¹ì— ê°€ì…ëœìœ ì €ì •ë³´ ê²€ìƒ‰ê°’ë§Œ ì¶œë ¥
 	@Override
 	public List<ProfileVo> groupUserSearch(GroupVo group) {
 		return sqlSession.selectList("group.groupUserSearch", group);
 	}
 
-	//°¡ÀÔÀ¯ÀúÁ¶È¸ Å×ÀÌºí ·Î¿ì°¹¼ö »Ì±â
+	//ê°€ì…ìœ ì €ì¡°íšŒ í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ ë½‘ê¸°
 	@Override
 	public int groupUserTotalCount(GroupVo group) {
 		return sqlSession.selectOne("group.groupUserTotalCount", group);
 	}
 
 	////////////////////////////////////////////////////////////////
-	//////////////////////////±×·ì¿ø°ü¸®////////////////////////////
-	//////////////////////////È¸¿øÃß¹æ//////////////////////////////
+	//////////////////////////ê·¸ë£¹ì›ê´€ë¦¬////////////////////////////
+	//////////////////////////íšŒì›ì¶”ë°©//////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ìÀ¯Àú Ãß¹æ
+	//ê·¸ë£¹ìœ ì € ì¶”ë°©
 	@Override
 	public int groupUserKick(JoinGroupVo join) {
 		return sqlSession.delete("group.groupUserKick", join);
 	}
 	
-	//±×·ìÀ¯Àú Ãß¹æ ½Ã ±×·ìÃÑ¿ø°¨¼Ò -@
+	//ê·¸ë£¹ìœ ì € ì¶”ë°© ì‹œ ê·¸ë£¹ì´ì›ê°ì†Œ -@
 	@Override
 	public int groupTotalMinus(GroupVo group) {
 		return sqlSession.update("group.groupTotalMinus", group);
 	}
 
-	//±×·ìÀ¯Àú ¸ğµÎÃß¹æ (±×·ìÀå Á¦¿Ü)
+	//ê·¸ë£¹ìœ ì € ëª¨ë‘ì¶”ë°© (ê·¸ë£¹ì¥ ì œì™¸)
 	@Override
 	public int groupUserAllKick(GroupVo group) {
 		return sqlSession.delete("group.groupUserAllKick", group);
 	}
 
 	////////////////////////////////////////////////////////////////
-	////////////////////////°¡ÀÔ½ÅÃ»Á¶È¸////////////////////////////
-	//////////////////////////È­¸éÃâ·Â//////////////////////////////
+	////////////////////////ê°€ì…ì‹ ì²­ì¡°íšŒ////////////////////////////
+	//////////////////////////í™”ë©´ì¶œë ¥//////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ì °¡ÀÔ½ÅÃ»ÇÑ À¯Àú Ãâ·Â
+	//ê·¸ë£¹ ê°€ì…ì‹ ì²­í•œ ìœ ì € ì¶œë ¥
 	@Override
 	public List<UpdateWaitVo> groupRequestSelectAll(GroupVo group) {
 		return sqlSession.selectList("group.groupRequestSelectAll", group);
 	}
 
-	//°¡ÀÔ½ÅÃ»Á¶È¸ Å×ÀÌºí ·Î¿ì°¹¼ö »Ì±â
+	//ê°€ì…ì‹ ì²­ì¡°íšŒ í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ ë½‘ê¸°
 	@Override
 	public int groupRequestTotalCount(GroupVo group) {
 		return sqlSession.selectOne("group.groupRequestTotalCount", group);
 	}
 
 	////////////////////////////////////////////////////////////////
-	////////////////////////°¡ÀÔ½ÅÃ»Á¶È¸////////////////////////////
-	////////////////////////½ÅÃ»½ÂÀÎ,°ÅÀı///////////////////////////
+	////////////////////////ê°€ì…ì‹ ì²­ì¡°íšŒ////////////////////////////
+	////////////////////////ì‹ ì²­ìŠ¹ì¸,ê±°ì ˆ///////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//°¡ÀÔ½ÅÃ» ½ÂÀÎ
+	//ê°€ì…ì‹ ì²­ ìŠ¹ì¸
 	@Override
 	public void groupRequestHello(UpdateWaitVo wait) {
 		sqlSession.update("group.groupRequestHello", wait);
 	}
 
-	//°¡ÀÔ½ÅÃ» ½ÂÀÎ ½Ã ±×·ìÃÑ¿øÁõ°¡ +@
+	//ê°€ì…ì‹ ì²­ ìŠ¹ì¸ ì‹œ ê·¸ë£¹ì´ì›ì¦ê°€ +@
 	@Override
 	public int groupTotalPlus(GroupVo group) {
 		return sqlSession.update("group.groupTotalPlus", group);
 	}
 
-	//°¡ÀÔ½ÅÃ» °ÅÀı
+	//ê°€ì…ì‹ ì²­ ê±°ì ˆ
 	@Override
 	public int groupRequestSorry(UpdateWaitVo wait) {
 		return sqlSession.delete("group.groupRequestSorry", wait);
 	}
 
 	////////////////////////////////////////////////////////////////
-	//////////////////////////±×·ì»èÁ¦//////////////////////////////
+	//////////////////////////ê·¸ë£¹ì‚­ì œ//////////////////////////////
 	////////////////////////////////////////////////////////////////
 
-	//±×·ì »èÁ¦
+	//ê·¸ë£¹ ì‚­ì œ
 	@Override
 	public int groupDelete(GroupVo group) {
 		return sqlSession.delete("group.groupDelete", group);

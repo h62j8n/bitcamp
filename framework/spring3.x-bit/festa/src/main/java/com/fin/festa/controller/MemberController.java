@@ -75,9 +75,7 @@ public class MemberController {
 	@RequestMapping(value = "join/idcheck", method = RequestMethod.POST)
 	@ResponseBody
 	public int idCheck(Model model, LoginVo loginVo) {
-		System.out.println("접속");
 		int result = memberService.idCheck(model, loginVo);
-		System.out.println(result);
 		return result;
 	}
 
@@ -88,11 +86,12 @@ public class MemberController {
 		return "member/success";
 	}
 
-	// 회원가입 성공
-	@RequestMapping(value = "success", method = RequestMethod.POST)
-	public String memberInsertSuccess() {
-		return "member/success";
-	}
+	/*
+	 * // 회원가입 성공
+	 * 
+	 * @RequestMapping(value = "success", method = RequestMethod.POST) public String
+	 * memberInsertSuccess() { return "member/success"; }
+	 */
 
 	// ID찾기 화면 (팝업)
 	@RequestMapping(value = "find_id", method = RequestMethod.GET)

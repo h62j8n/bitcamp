@@ -1,11 +1,31 @@
 package com.fin.festa.model.entity;
 
-public class MyGoodVo {		//ÁÁ¾Æ¿ä (ÀüÃ¼) 
+import com.fin.festa.model.entity.CampReviewVo;
+import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.GroupCommentVo;
+import com.fin.festa.model.entity.GroupNoticeCommentVo;
+import com.fin.festa.model.entity.GroupNoticeVo;
+import com.fin.festa.model.entity.GroupPostVo;
+import com.fin.festa.model.entity.GroupVo;
+import com.fin.festa.model.entity.JoinGroupVo;
+import com.fin.festa.model.entity.MyAdminVo;
+import com.fin.festa.model.entity.MyBookMarkVo;
+import com.fin.festa.model.entity.MyCommentVo;
+import com.fin.festa.model.entity.MyFollowerVo;
+import com.fin.festa.model.entity.MyFollowingVo;
+import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.MyVentureVo;
+import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ProfileVo;
+import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.model.entity.UpdateWaitVo;
 
-	private int pronum;		//³» ¹øÈ£
-	private int canum;		//Ä·ÇÎÀå ¹øÈ£
-	private int gpnum;		//±×·ì ÇÇµå ¹øÈ£
-	private int mpnum;		//³» ÇÇµå ¹øÈ£
+public class MyGoodVo {		//ì¢‹ì•„ìš” (ì „ì²´) 
+
+	private int pronum;		//ë‚´ ë²ˆí˜¸
+	private int canum;		//ìº í•‘ìž¥ ë²ˆí˜¸
+	private int gpnum;		//ê·¸ë£¹ í”¼ë“œ ë²ˆí˜¸
+	private int mpnum;		//ë‚´ í”¼ë“œ ë²ˆí˜¸
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

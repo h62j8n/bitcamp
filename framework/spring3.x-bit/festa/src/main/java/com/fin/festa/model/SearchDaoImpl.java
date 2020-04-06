@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fin.festa.model.entity.CampVo;
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.GroupVo;
@@ -23,192 +24,241 @@ public class SearchDaoImpl implements SearchDao{
 	SqlSession sqlSession;
 
 	/////////////////////////////////////////////////////////
-	///////////////////°Ë»öÆäÀÌÁö Ãâ·Â///////////////////////
+	///////////////////ê²€ìƒ‰í˜ì´ì§€ ì¶œë ¥///////////////////////
 	/////////////////////////////////////////////////////////
 	
-	//°Ë»öÇßÀ»½Ã Ä·ÇÎÀåÁ¤º¸ Ãâ·Â
+	//ê²€ìƒ‰í–ˆì„ì‹œ ìº í•‘ì¥ì •ë³´ ì¶œë ¥
 	@Override
 	public List<CampVo> searchCampSelectAll(PageSearchVo search) {
+		
 		return sqlSession.selectList("search.searchCampSelectAll", search);
 	}
 
-	//°Ë»öÇßÀ»½Ã ±×·ìÁ¤º¸ Ãâ·Â
+	//ê²€ìƒ‰í–ˆì„ì‹œ ê·¸ë£¹ì •ë³´ ì¶œë ¥
 	@Override
 	public List<GroupVo> searchGroupSelectAll(PageSearchVo search) {
+		
 		return sqlSession.selectList("search.searchGroupSelectAll", search);
 	}
 
-	//°Ë»öÇßÀ»½Ã ³»ÇÇµåÁ¤º¸ Ãâ·Â
+	//ê²€ìƒ‰ê·¸ë£¹ì •ë³´ì˜ í† íƒˆì¹´ìš´íŠ¸ê°¯ìˆ˜
 	@Override
-	public List<MyPostVo> searchMyFeedSelectAll(PageSearchVo search) {
+	public int searchGroupCount(PageSearchVo search) {
+		
+		return sqlSession.selectOne("search.searchGroupCount", search);
+	}
+
+	//ê²€ìƒ‰í–ˆì„ì‹œ ë‚´í”¼ë“œì •ë³´ ì¶œë ¥
+	@Override
+	public List<FeedVo> searchMyFeedSelectAll(PageSearchVo search) {
+		
 		return sqlSession.selectList("search.searchMyFeedSelectAll", search);
 	}
 
-	//°Ë»öÇßÀ»½Ã ±×·ìÇÇµåÁ¤º¸ Ãâ·Â
+	//ê²€ìƒ‰í–ˆì„ì‹œ ê·¸ë£¹í”¼ë“œì •ë³´ ì¶œë ¥
 	@Override
-	public List<GroupPostVo> searchGroupFeedSelectAll(PageSearchVo search) {
+	public List<FeedVo> searchGroupFeedSelectAll(PageSearchVo search) {
+		
 		return sqlSession.selectList("search.searchGroupFeedSelectAll", search);
 	}
 
 	/////////////////////////////////////////////////////////
-	/////////////////ÇÇµå»ó¼¼ÆäÀÌÁö Ãâ·Â/////////////////////
+	/////////////////í”¼ë“œìƒì„¸í˜ì´ì§€ ì¶œë ¥/////////////////////
 	/////////////////////////////////////////////////////////
 	
-	//°³ÀÎÇÇµå »ó¼¼ÆäÀÌÁö
+	//ê°œì¸í”¼ë“œ ìƒì„¸í˜ì´ì§€
 	@Override
-	public MyPostVo myFeedDetail(MyPostVo post) {
+	public FeedVo myFeedDetail(MyPostVo post) {
+		
 		return sqlSession.selectOne("search.myFeedDetail", post);
 	}
 
-	//±×·ìÇÇµå »ó¼¼ÆäÀÌÁö
+	//ê·¸ë£¹í”¼ë“œ ìƒì„¸í˜ì´ì§€
 	@Override
-	public GroupPostVo groupFeedDetail(GroupPostVo grouppost) {
+	public FeedVo groupFeedDetail(GroupPostVo grouppost) {
+		
 		return sqlSession.selectOne("search.groupFeedDetail", grouppost);
 	}
 
-	//³»ÇÇµå ´ñ±ÛÃâ·Â
+	//ë‚´í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
-	public List<MyCommentVo> myFeedCmmtSelectAll(MyPostVo post) {
-		return sqlSession.selectList("search.myFeedCmmtSelectAll", post);
+	public List<MyCommentVo> myFeedCmmtSelectAll(FeedVo feed) {
+		
+		return sqlSession.selectList("search.myFeedCmmtSelectAll", feed);
 	}
 
-	//±×·ìÇÇµå ´ñ±ÛÃâ·Â
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
-	public List<GroupCommentVo> groupFeedCmmtSelectAll(GroupPostVo grouppost) {
-		return sqlSession.selectList("search.groupFeedCmmtSelectAll", grouppost);
+	public List<GroupCommentVo> groupFeedCmmtSelectAll(FeedVo feed) {
+		
+		return sqlSession.selectList("search.groupFeedCmmtSelectAll", feed);
 	}
+
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<GroupCommentVo> searchGroupCmmt(GroupCommentVo groupCommentVo) {
+		
+		return sqlSession.selectList("search.searchGroupCmmt", groupCommentVo);
+	}
+
+	//ê°œì¸í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸° ë¹„ë™ê¸°
+	@Override
+	public List<MyCommentVo> searchMyCmmt(MyCommentVo myCommentVo) {
+		
+		return sqlSession.selectList("search.searchMyCmmt", myCommentVo);
+	}
+
 
 	/////////////////////////////////////////////////////////
-	///////////////ÇÇµå,´ñ±Û µî·Ï,¼öÁ¤,»èÁ¦//////////////////
+	///////////////í”¼ë“œ,ëŒ“ê¸€ ë“±ë¡,ìˆ˜ì •,ì‚­ì œ//////////////////
 	/////////////////////////////////////////////////////////
 	
-	//³»ÇÇµå¼öÁ¤
-	@Override
-	public int myFeedUpdateOne(MyPostVo post) {
-		return sqlSession.update("search.myFeedUpdateOne", post);
-	}
-
-	//±×·ìÇÇµå¼öÁ¤
-	@Override
-	public int groupFeedUpdateOne(GroupPostVo grouppost) {
-		return sqlSession.update("search.groupFeedUpdateOne", grouppost);
-	}
-
-	//³»ÇÇµå»èÁ¦
-	@Override
-	public int myFeedDeleteOne(MyPostVo post) {
-		return sqlSession.delete("search.myFeedDeleteOne", post);
-	}
-
-	//±×·ìÇÇµå»èÁ¦
-	@Override
-	public int groupFeedDeleteOne(GroupPostVo grouppost) {
-		return sqlSession.delete("search.groupFeedDeleteOne", grouppost);
-	}
-
-	//³»ÇÇµå ´ñ±Ûµî·Ï
+	//ë‚´í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void myFeedCmmtInsertOne(MyCommentVo cmmt) {
+
 		sqlSession.insert("search.myFeedCmmtInsertOne", cmmt);
 	}
-
-	//±×·ìÇÇµå ´ñ±Ûµî·Ï
+	
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void groupFeedCmmtInsertOne(GroupCommentVo groupcmmt) {
+
 		sqlSession.insert("search.groupFeedCmmtInsertOne", groupcmmt);
 	}
+	
+	//ë‚´í”¼ë“œìˆ˜ì •
+	@Override
+	public int myFeedUpdateOne(MyPostVo post) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-	//³»ÇÇµå ´ñ±Û»èÁ¦
+	//ê·¸ë£¹í”¼ë“œìˆ˜ì •
+	@Override
+	public int groupFeedUpdateOne(GroupPostVo grouppost) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//ë‚´í”¼ë“œì‚­ì œ
+	@Override
+	public int myFeedDeleteOne(MyPostVo post) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//ê·¸ë£¹í”¼ë“œì‚­ì œ
+	@Override
+	public int groupFeedDeleteOne(GroupPostVo grouppost) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//ë‚´í”¼ë“œ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int myFeedCmmtDeleteOne(MyCommentVo cmmt) {
-		return sqlSession.delete("search.myFeedCmmtDeleteOne", cmmt);
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-	//±×·ìÇÇµå ´ñ±Û»èÁ¦
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int groupFeedCmmtDeleteOne(GroupCommentVo groupcmmt) {
-		return sqlSession.delete("search.groupFeedCmmtDeleteOne", groupcmmt);
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/////////////////////////////////////////////////////////
-	/////////////////ÇÇµå ÁÁ¾Æ¿äµî·Ï,ÇØÁ¦////////////////////
+	/////////////////í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡,í•´ì œ////////////////////
 	/////////////////////////////////////////////////////////
 	
-	//³»ÇÇµå ÁÁ¾Æ¿äµî·Ï
+	//ë‚´í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡
 	@Override
 	public void myFeedLikeInsertOne(MyGoodVo good) {
+		
 		sqlSession.insert("search.myFeedLikeInsertOne", good);
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äµî·Ï
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
+		
 		sqlSession.insert("search.groupFeedLikeInsertOne", good);
 	}
 
-	//³»ÇÇµå ÁÁ¾Æ¿äÇØÁ¦
+	//ë‚´í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ
 	@Override
 	public int myFeedLikeDeleteOne(MyGoodVo good) {
+		
 		return sqlSession.delete("search.myFeedLikeDeleteOne", good);
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äÇØÁ¦
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
+		
 		return sqlSession.delete("search.groupFeedLikeDeleteOne", good);
 	}
 
-	//³»ÇÇµå ÁÁ¾Æ¿äµî·Ï½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö+1
+	//ë‚´í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡ì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜+1
 	@Override
 	public int myFeedLikePlusOne(MyGoodVo good) {
+		
 		return sqlSession.update("search.myFeedLikePlusOne", good);
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äµî·Ï½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö+1
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡ì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜+1
 	@Override
 	public int groupFeedLikePlusOne(MyGoodVo good) {
+		
 		return sqlSession.update("search.groupFeedLikePlusOne", good);
 	}
 
-	//³»ÇÇµå ÁÁ¾Æ¿äÇØÁ¦½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö-1
+	//ë‚´í”¼ë“œ ì¢‹ì•„ìš”í•´ì œì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜-1
 	@Override
 	public int myFeedLikeMinusOne(MyGoodVo good) {
+		
 		return sqlSession.update("search.myFeedLikeMinusOne", good);
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äÇØÁ¦½Ã ÇÇµåÁÁ¾Æ¿ä °¹¼ö-1
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”í•´ì œì‹œ í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜-1
 	@Override
 	public int groupFeedLikeMinusOne(MyGoodVo good) {
+		
 		return sqlSession.update("search.groupFeedLikeMinusOne", good);
 	}
 
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
+		
 		return sqlSession.selectList("search.myGoodRenewal", good);
 	}
 
 	/////////////////////////////////////////////////////////
-	////////////////////ÇÇµå ½Å°íµî·Ï////////////////////////
+	////////////////////í”¼ë“œ ì‹ ê³ ë“±ë¡////////////////////////
 	/////////////////////////////////////////////////////////
 	
-	//³»ÇÇµå½Å°íµî·Ï
+	//ë‚´í”¼ë“œì‹ ê³ ë“±ë¡
 	@Override
 	public void myFeedReportInsertOne(ReportListVo report) {
+
 		sqlSession.insert("search.myFeedReportInsertOne", report);
 	}
 
-	//±×·ìÇÇµå½Å°íµî·Ï
+	//ê·¸ë£¹í”¼ë“œì‹ ê³ ë“±ë¡
 	@Override
 	public void groupFeedReportInsertOne(ReportListVo report) {
+
 		sqlSession.insert("search.groupFeedReportInsertOne", report);
 	}
 	
-	//ÇÇµå½Å°íµî·Ï½Ã ½Å°í´çÇÑ»ç¶÷ ½Å°í´çÇÑÈ½¼ö +1
+	//í”¼ë“œì‹ ê³ ë“±ë¡ì‹œ ì‹ ê³ ë‹¹í•œì‚¬ëŒ ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Override
 	public int feedUserReportCountUpdate(ReportListVo report) {
+		
 		return sqlSession.update("search.feedUserReportCountUpdate", report);
 	}
-
 
 }

@@ -7,14 +7,14 @@ import java.util.List;
 import com.fin.festa.model.entity.AgeCountVo;
 import com.fin.festa.model.entity.ProfileVo;
 
-//È¸¿ø¿¬·ÉºĞÆ÷°è»ê
+//íšŒì›ì—°ë ¹ë¶„í¬ê³„ì‚°
 public class AgeCalculate {
 
 	public AgeCalculate() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//¿¬·É´ë °è»ê
+	//ì—°ë ¹ëŒ€ ê³„ì‚°
 	public AgeCountVo userAgeDistribution(List<ProfileVo> list) {
 		
 		Date today=new Date();

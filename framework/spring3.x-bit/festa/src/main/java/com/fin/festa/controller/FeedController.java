@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +18,7 @@ import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.service.FeedService;
 
@@ -27,21 +27,28 @@ import com.fin.festa.service.FeedService;
 public class FeedController {
 
 //////////////////////////////////////////////////////////////////////
-//////////////////////////////  ÀÎ±âÇÇµå  /////////////////////////////
+//////////////////////////////  ì¸ê¸°í”¼ë“œ  /////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 	@Autowired
 	private FeedService feedService;
 
-	//ÀÎ±âÇÇµå Á¶È¸
+	//ì¸ê¸°í”¼ë“œ ì¡°íšŒ
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String hotFeedSelectAll(HttpServletRequest req) {
 		
 		feedService.hotFeedSelectAll(req);
 		return "hot/index";
 	}
+	
+	//ì¸ê¸°í”¼ë“œ ì¡°íšŒ
+	@RequestMapping(value = "scroll", method = RequestMethod.GET)
+	public @ResponseBody List<List<?>> hotFeedScroll(HttpServletRequest req, PageSearchVo pagesearchVo) {
+		
+		return feedService.hotFeedScroll(req, pagesearchVo);
+	}
 
-	//³» ÀÎ±âÇÇµå ¼öÁ¤ (ÆË¾÷)
+	//ë‚´ ì¸ê¸°í”¼ë“œ ìˆ˜ì • (íŒì—…)
 	@RequestMapping(value = "maker", method = RequestMethod.GET)
 	public String feedUpdateOnePop(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		
@@ -49,7 +56,7 @@ public class FeedController {
 		return "hot/maker";
 	}
 	
-	//³» ÀÎ±âÇÇµå ¼öÁ¤ (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ë‚´ ì¸ê¸°í”¼ë“œ ìˆ˜ì • (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "maker", method = RequestMethod.POST)
 	public String feedUpdateOne(HttpServletRequest req, MyPostVo myPostVo, GroupPostVo groupPostVo, MultipartFile[] files) {
 		
@@ -58,7 +65,7 @@ public class FeedController {
 		return "hot/index";
 	}
 
-	//³» ÀÎ±âÇÇµå »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ë‚´ ì¸ê¸°í”¼ë“œ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
 	public String feedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		
@@ -66,21 +73,21 @@ public class FeedController {
 		return "hot/index";
 	}
 	
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±Û ´õº¸±â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ ë”ë³´ê¸°
 	@RequestMapping(value = "myfeed/cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<MyCommentVo> myFeedCmmtMore(Model model, MyPostVo myPostVo){
 		
 		return feedService.myFeedCmmtMore(model, myPostVo);
 	}
 	
-	//ÀÎ±â±×·ìÇÇµå ´ñ±Û ´õº¸±â
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ ë”ë³´ê¸°
 	@RequestMapping(value = "groupfeed/cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<GroupCommentVo> groupFeedCmmtMore(Model model, GroupPostVo groupPostVo){
 		
 		return feedService.groupFeedCmmtMore(model, groupPostVo);
 	}
 	
-	//ÀÎ±âÇÇµå ´ñ±Û µî·Ï
+	//ì¸ê¸°í”¼ë“œ ëŒ“ê¸€ ë“±ë¡
 	@RequestMapping(value = "cmmtadd", method = RequestMethod.POST)
 	public String hotFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
 		
@@ -88,7 +95,7 @@ public class FeedController {
 		return "hot/index";
 	}
 	
-	//ÀÎ±âÇÇµå ´ñ±Û »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ì¸ê¸°í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String hotFeedCmmtDeleteOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
 		
@@ -96,7 +103,7 @@ public class FeedController {
 		return "hot/index";
 	}
 	
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿ä
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš”
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String hotLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		
@@ -104,7 +111,7 @@ public class FeedController {
 		return "hot/index";
 	}
 	
-	//ÀÎ±âÇÇµå ÁÁ¾Æ¿ä ÇØÁ¦
+	//ì¸ê¸°í”¼ë“œ ì¢‹ì•„ìš” í•´ì œ
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String hotLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		
@@ -112,7 +119,7 @@ public class FeedController {
 		return "hot/index";
 	}
 
-	//ÀÎ±âÇÇµå ½Å°í (ÆË¾÷)
+	//ì¸ê¸°í”¼ë“œ ì‹ ê³  (íŒì—…)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
 	public String hotFeedReport(Model model, FeedVo feedVo){
 		
@@ -120,7 +127,7 @@ public class FeedController {
 		return "hot/report";
 	}
 	
-	//ÀÎ±âÇÇµå ½Å°í (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ì¸ê¸°í”¼ë“œ ì‹ ê³  (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "report", method = RequestMethod.POST)
 	public String hotFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
 		

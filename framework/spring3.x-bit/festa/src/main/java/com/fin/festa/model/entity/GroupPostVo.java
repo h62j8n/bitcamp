@@ -6,22 +6,22 @@ import java.text.SimpleDateFormat;
 
 import com.fin.festa.util.DateCalculate;
 
-public class GroupPostVo {		//±×·ì °Ô½Ã±Û
+public class GroupPostVo {		//ê·¸ë£¹ ê²Œì‹œê¸€
 
 	DateCalculate cal;
-	private int gpnum;			//°Ô½Ã±Û ¹øÈ£
-	private String gpauthor;	//°Ô½Ã±Û ÀÛ¼ºÀÚ ÀÌ¸§
-	private String gpphoto;		//°Ô½Ã±Û ³»¿ë »çÁø
-	private String gpcontent;	//°Ô½Ã±Û ³»¿ë
-	private String httitle1;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×1
-	private String httitle2;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×2
-	private String httitle3;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×3
-	private Timestamp gpdate;		//°Ô½Ã±Û ÀÛ¼ºÀÏ
+	private int gpnum;			//ê²Œì‹œê¸€ ë²ˆí˜¸
+	private String gpauthor;	//ê²Œì‹œê¸€ ì‘ì„±ì ì´ë¦„
+	private String gpphoto;		//ê²Œì‹œê¸€ ë‚´ìš© ì‚¬ì§„
+	private String gpcontent;	//ê²Œì‹œê¸€ ë‚´ìš©
+	private String httitle1;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸1
+	private String httitle2;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸2
+	private String httitle3;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸3
+	private Timestamp gpdate;		//ê²Œì‹œê¸€ ì‘ì„±ì¼
 	private String gpdate1;
-	private int gpgood;			//°Ô½Ã±Û ÁÁ¾Æ¿ä ¼ö
-	private int grnum;			//°Ô½Ã±Û ±×·ì ¹øÈ£
-	private int pronum;			//°Ô½Ã±Û ÀÛ¼ºÀÚ ¹øÈ£
-	private int gptotal;		//°Ô½Ã±ÛÀÇ ´ñ±Û¼ö
+	private int gpgood;			//ê²Œì‹œê¸€ ì¢‹ì•„ìš” ìˆ˜
+	private int grnum;			//ê²Œì‹œê¸€ ê·¸ë£¹ ë²ˆí˜¸
+	private int pronum;			//ê²Œì‹œê¸€ ì‘ì„±ì ë²ˆí˜¸
+	private int gptotal;		//ê²Œì‹œê¸€ì˜ ëŒ“ê¸€ìˆ˜
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

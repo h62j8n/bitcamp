@@ -13,21 +13,21 @@ import com.fin.festa.model.entity.ProfileVo;
 @Service
 public class IndexServiceImpl implements IndexService{
 
-	//µî·Ï,¼öÁ¤,»èÁ¦°¡ ÃÖ¼Ò2°³ÀÌ»ó µé¾î°¡´Â ¸Ş¼Òµå´Â ²À Æ®·£Àè¼Ç Àû¿ëÇÒ°Í!!
+	//ë“±ë¡,ìˆ˜ì •,ì‚­ì œê°€ ìµœì†Œ2ê°œì´ìƒ ë“¤ì–´ê°€ëŠ” ë©”ì†Œë“œëŠ” ê¼­ íŠ¸ëœì­ì…˜ ì ìš©í• ê²ƒ!!
 	
 	@Autowired
 	IndexDaoImpl indexDao;
 	
-	//¸ŞÀÎÈ­¸éÃâ·Â ÀÎ¿ø¼ö¸¹Àº¼ø ±×·ì¸®½ºÆ®-ºñ·Î±×ÀÎ
-	//°¡ÀÔÇÏÁö¾ÊÀº ¼±È£Áö¿ª±â¹İ ±×·ì¸®½ºÆ®-·Î±×ÀÎ Ãâ·Â 
-	//ÁÁ¾Æ¿ä¸¹Àº¼ø Ä·ÇÎÀå¸®½ºÆ® Ãâ·Â
+	//ë©”ì¸í™”ë©´ì¶œë ¥ ì¸ì›ìˆ˜ë§ì€ìˆœ ê·¸ë£¹ë¦¬ìŠ¤íŠ¸-ë¹„ë¡œê·¸ì¸
+	//ê°€ì…í•˜ì§€ì•Šì€ ì„ í˜¸ì§€ì—­ê¸°ë°˜ ê·¸ë£¹ë¦¬ìŠ¤íŠ¸-ë¡œê·¸ì¸ ì¶œë ¥ 
+	//ì¢‹ì•„ìš”ë§ì€ìˆœ ìº í•‘ì¥ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 	@Override
 	public void index(HttpServletRequest req) {
 		
-		//·Î±×ÀÎ»óÅÂÀÏ¶§ °¡ÀÔÇÏÁö¾Ê´Â ±×·ìÁß ³» ¼±È£Áö¿ª±â¹İ Ãâ·Â
+		//ë¡œê·¸ì¸ìƒíƒœì¼ë•Œ ê°€ì…í•˜ì§€ì•ŠëŠ” ê·¸ë£¹ì¤‘ ë‚´ ì„ í˜¸ì§€ì—­ê¸°ë°˜ ì¶œë ¥
 		if(req.getSession().getAttribute("login")!=null) {
 			req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)req.getSession().getAttribute("login")));
-		//·Î±×ÀÎ»óÅÂ°¡¾Æ´Ò¶§ °¡ÀÔÀÎ¿ø¸¹Àº ±×·ì Ãâ·Â
+		//ë¡œê·¸ì¸ìƒíƒœê°€ì•„ë‹ë•Œ ê°€ì…ì¸ì›ë§ì€ ê·¸ë£¹ ì¶œë ¥
 		}else {
 			req.setAttribute("grouplist", indexDao.totalGroupSelectAll());
 		}

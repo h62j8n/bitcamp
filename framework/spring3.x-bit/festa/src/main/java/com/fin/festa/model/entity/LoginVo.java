@@ -1,11 +1,11 @@
 package com.fin.festa.model.entity;
 
-public class LoginVo {			//·Î±×ÀÎ °ü·Ã 
+public class LoginVo {			//ë¡œê·¸ì¸ ê´€ë ¨ 
 
-	private String id;			//·Î±×ÀÎ ID Ã¼Å©
-	private String pw;			//·Î±×ÀÎ PW Ã¼Å©
-	private String proname;		//ID Ã£±â¿¡ »ç¿ë
-	private String proidnum;	//PW Ã£±â¿¡ »ç¿ë
+	private String id;			//ë¡œê·¸ì¸ ID ì²´í¬
+	private String pw;			//ë¡œê·¸ì¸ PW ì²´í¬
+	private String proname;		//ID ì°¾ê¸°ì— ì‚¬ìš©
+	private String proidnum;	//PW ì°¾ê¸°ì— ì‚¬ìš©
 	
 	@Override
 	public String toString() {

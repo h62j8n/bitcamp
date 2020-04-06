@@ -12,6 +12,7 @@ import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
 
 @Repository
@@ -21,59 +22,59 @@ public class FeedDaoImpl implements FeedDao{
 	SqlSession sqlSession;
 	
 	//////////////////////////////////////////////////////////////////////
-	///////////////////////////È­¸éÃâ·Â///////////////////////////////////
+	///////////////////////////í™”ë©´ì¶œë ¥///////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	
-	//ÀÎ±â±×·ìÇÇµå Ãâ·Â
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì¶œë ¥
 	@Override
-	public List<FeedVo> hotGroupFeedSelectAll() {
+	public List<FeedVo> hotGroupFeedSelectAll(PageSearchVo page) {
 		
-		return sqlSession.selectList("feed.hotGroupFeedList");
+		return sqlSession.selectList("feed.hotGroupFeedList", page);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ´ñ±ÛÃâ·Â
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<GroupCommentVo> hotGroupCommentSelectAll(FeedVo feed) {
 
 		return sqlSession.selectList("feed.hotGroupCommentList", feed);
 	}
 	
-	//ÀÎ±â°³ÀÎÇÇµå Ãâ·Â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì¶œë ¥
 	@Override
-	public List<FeedVo> hotMyFeedSelectAll() {
+	public List<FeedVo> hotMyFeedSelectAll(PageSearchVo page) {
 		
-		return sqlSession.selectList("feed.hotMyFeedList");
+		return sqlSession.selectList("feed.hotMyFeedList", page);
 	}
 	
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±ÛÃâ·Â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public List<MyCommentVo> hotMyCommentSelectAll(FeedVo feed) {
 		
 		return sqlSession.selectList("feed.hotMyCommentList", feed);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ´ñ±Û´õº¸±â
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸°
 	@Override
 	public List<GroupCommentVo> groupFeedCmmtMore(GroupPostVo grouppost) {
 		
 		return sqlSession.selectList("feed.groupFeedCmmtMore", grouppost);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±Û´õº¸±â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ë”ë³´ê¸°
 	@Override
 	public List<MyCommentVo> myFeedCmmtMore(MyPostVo mypost) {
 		
 		return sqlSession.selectList("feed.myFeedCmmtMore", mypost);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ¼öÁ¤ÆË¾÷ »ó¼¼Ãâ·Â
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ìˆ˜ì •íŒì—… ìƒì„¸ì¶œë ¥
 	@Override
 	public FeedVo groupFeedSelectOne(GroupPostVo grouppost) {
 
 		return sqlSession.selectOne("feed.groupFeedSelectOne", grouppost);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ¼öÁ¤ÆË¾÷ »ó¼¼Ãâ·Â
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ìˆ˜ì •íŒì—… ìƒì„¸ì¶œë ¥
 	@Override
 	public FeedVo myFeedSelectOne(MyPostVo mypost) {
 
@@ -81,59 +82,59 @@ public class FeedDaoImpl implements FeedDao{
 	}
 
 	//////////////////////////////////////////////////////////////////////
-	/////////////////////ÇÇµå,´ñ±Û ¼öÁ¤,µî·Ï,»èÁ¦/////////////////////////
+	/////////////////////í”¼ë“œ,ëŒ“ê¸€ ìˆ˜ì •,ë“±ë¡,ì‚­ì œ/////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±Ûµî·Ï
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void myFeedCmmtInsertOne(MyCommentVo cmmt) {
 
 		sqlSession.insert("feed.myFeedCmmtInsert", cmmt);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ´ñ±Ûµî·Ï
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void groupFeedCmmtInsertOne(GroupCommentVo groupcmmt) {
 
 		sqlSession.insert("feed.groupFeedCmmtInsert", groupcmmt);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ´ñ±Û»èÁ¦
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int myFeedCmmtDeleteOne(MyCommentVo cmmt) {
 		
 		return sqlSession.delete("feed.myFeedCmmtDelete", cmmt);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ´ñ±Û»èÁ¦
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public int groupFeedCmmtDeleteOne(GroupCommentVo groupcmmt) {
 		
 		return sqlSession.delete("feed.groupFeedCmmtDelete", groupcmmt);
 	}
 	
-	//ÀÎ±â°³ÀÎÇÇµå »èÁ¦
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì‚­ì œ
 	@Override
 	public int myFeedDeleteOne(MyPostVo post) {
 		
 		return sqlSession.delete("feed.myFeedDelete", post);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå »èÁ¦
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì‚­ì œ
 	@Override
 	public int GroupFeedDeleteOne(GroupPostVo grouppost) {
 		
 		return sqlSession.delete("feed.groupFeedDelete", grouppost);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ¼öÁ¤
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ìˆ˜ì •
 	@Override
 	public int myFeedUpdateOne(MyPostVo post) {
 		
 		return sqlSession.update("feed.myFeedUpdate", post);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ¼öÁ¤
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ìˆ˜ì •
 	@Override
 	public int groupFeedUpdateOne(GroupPostVo grouppost) {
 		
@@ -141,66 +142,66 @@ public class FeedDaoImpl implements FeedDao{
 	}
 
 	//////////////////////////////////////////////////////////////////////
-	/////////////////////ÇÇµå,´ñ±Û ÁÁ¾Æ¿äµî·Ï,ÇØÁ¦////////////////////////
+	/////////////////////í”¼ë“œ,ëŒ“ê¸€ ì¢‹ì•„ìš”ë“±ë¡,í•´ì œ////////////////////////
 	//////////////////////////////////////////////////////////////////////
 
-	//ÀÎ±â°³ÀÎÇÇµå ÁÁ¾Æ¿äµî·Ï
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡
 	@Override
 	public void myFeedLikeInsertOne(MyGoodVo good) {
 
 		sqlSession.insert("feed.myFeedLikeInsert", good);
 	}
 	
-	//ÀÎ±â±×·ìÇÇµå ÁÁ¾Æ¿äµî·Ï
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡
 	@Override
 	public void groupFeedLikeInsertOne(MyGoodVo good) {
 
 		sqlSession.insert("feed.groupFeedLikeInsert", good);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ÁÁ¾Æ¿äÇØÁ¦
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ
 	@Override
 	public int myFeedLikeDeleteOne(MyGoodVo good) {
 		
 		return sqlSession.delete("feed.myFeedLikeDelete", good);
 	}
 	
-	//ÀÎ±â±×·ìÇÇµå ÁÁ¾Æ¿äÇØÁ¦
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ
 	@Override
 	public int groupFeedLikeDeleteOne(MyGoodVo good) {
 		
 		return sqlSession.delete("feed.groupFeedLikeDelete", good);
 	}
 	
-	//ÀÎ±â°³ÀÎÇÇµå ÁÁ¾Æ¿äµî·Ï½Ã °³ÀÎÇÇµåÁÁ¾Æ¿ä °¹¼ö +1
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡ì‹œ ê°œì¸í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜ +1
 	@Override
 	public int myFeedLikeOnePlus(MyPostVo post) {
 
 		return sqlSession.update("feed.myFeedLikeOnePlus", post);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ÁÁ¾Æ¿äµî·Ï½Ã ±×·ìÇÇµåÁÁ¾Æ¿ä °¹¼ö+1
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡ì‹œ ê·¸ë£¹í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜+1
 	@Override
 	public int groupFeedLikeOnePlus(GroupPostVo grouppost) {
 		
 		return sqlSession.update("feed.groupFeedLikeOnePlus", grouppost);
 	}
 
-	//ÀÎ±â°³ÀÎÇÇµå ÁÁ¾Æ¿äÇØÁ¦½Ã °³ÀÎÇÇµåÁÁ¾Æ¿ä °¹¼ö -1
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì¢‹ì•„ìš”í•´ì œì‹œ ê°œì¸í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜ -1
 	@Override
 	public int myFeedLikeOneMinus(MyPostVo post) {
 		
 		return sqlSession.update("feed.myFeedLikeOneMinus", post);
 	}
 
-	//ÀÎ±â±×·ìÇÇµå ÁÁ¾Æ¿äÇØÁ¦½Ã ±×·ìÇÇµåÁÁ¾Æ¿ä °¹¼ö -1
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”í•´ì œì‹œ ê·¸ë£¹í”¼ë“œì¢‹ì•„ìš” ê°¯ìˆ˜ -1
 	@Override
 	public int groupFeedLikeOneMinus(GroupPostVo grouppost) {
 		
 		return sqlSession.update("feed.groupFeedLikeOneMinus", grouppost);
 	}
 
-	//³» ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ë‚´ ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Override
 	public List<MyGoodVo> myGoodRenewal(MyGoodVo good) {
 		
@@ -208,24 +209,24 @@ public class FeedDaoImpl implements FeedDao{
 	}
 	
 	//////////////////////////////////////////////////////////////////////
-	/////////////////////ÇÇµå,´ñ±Û ½Å°íµî·Ï///////////////////////////////
+	/////////////////////í”¼ë“œ,ëŒ“ê¸€ ì‹ ê³ ë“±ë¡///////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	
-	//ÀÎ±â°³ÀÎÇÇµå ½Å°íµî·Ï
+	//ì¸ê¸°ê°œì¸í”¼ë“œ ì‹ ê³ ë“±ë¡
 	@Override
 	public void myFeedReportInsertOne(ReportListVo report) {
 
 		sqlSession.insert("feed.myFeedReportInsert", report);
 	}
 	
-	//ÀÎ±â±×·ìÇÇµå ½Å°íµî·Ï
+	//ì¸ê¸°ê·¸ë£¹í”¼ë“œ ì‹ ê³ ë“±ë¡
 	@Override
 	public void groupFeedReportInsertOne(ReportListVo report) {
 
 		sqlSession.insert("feed.groupFeedReportInsert", report);
 	}
 
-	//ÇØ´ç ½Å°í´çÇÑÀ¯Àú ½Å°í´çÇÑÈ½¼ö +1
+	//í•´ë‹¹ ì‹ ê³ ë‹¹í•œìœ ì € ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Override
 	public int feedReportCountUpdate(ReportListVo report) {
 

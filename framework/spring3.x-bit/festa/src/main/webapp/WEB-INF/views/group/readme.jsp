@@ -7,7 +7,7 @@
 	</c:if>
 </c:if>
 <c:url value="/" var="root" />
-<c:url value="/upload" var="upload"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>

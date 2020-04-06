@@ -13,260 +13,260 @@ import com.fin.festa.model.entity.GroupVo;
 import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.ReportListVo;
 
-//ÆÄÀÏ¾÷·Îµå±â´É ÀÎÀÚ°ªÀ¸·Î MultipartFile, HttpServletRequest ÇÊ¿ä 
-//ÆÄÀÏ¾÷·Îµå ¹è¿­°ªÀ¸·Î ¹Ş¾Æ¼­ DB¿¡ , ±âÁØÀ¸·Î ³Ö¾îÁÙ¼öÀÖ°Ô °¡°øÇØÁÜ
+//íŒŒì¼ì—…ë¡œë“œê¸°ëŠ¥ ì¸ìê°’ìœ¼ë¡œ MultipartFile, HttpServletRequest í•„ìš” 
+//íŒŒì¼ì—…ë¡œë“œ ë°°ì—´ê°’ìœ¼ë¡œ ë°›ì•„ì„œ DBì— , ê¸°ì¤€ìœ¼ë¡œ ë„£ì–´ì¤„ìˆ˜ìˆê²Œ ê°€ê³µí•´ì¤Œ
 public class UploadPhoto {
-	
-	String path="festa0324\\festa0324\\src\\main\\webapp\\resources\\upload\\";
-	
-	//ÆÄÀÏ¾÷·Îµå ÇØÁÖ´Â¸Ş¼Òµå
-	public String upload(MultipartFile[] files,HttpServletRequest req, MyPostVo mypost) {
-		
-		//ÇöÀç ÀÛ¾÷ÀÚÀÇ ÇÁ·ÎÁ§Æ®°æ·Î ¾Ë¾Æ³»¼­ ±×°æ·ÎÀÇ resources¾È¿¡ uploadÆÄÀÏÀ» Àâ¾ÆÁÜ
-		String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
-		String[] path1=realPath.split("\\.metadata");
-		
-		path=path1[0]+path;
-		//ÆÄÀÏÀ» °ø¹é°ª Àâ¾ÆÁÖ°í ,±âÁØÀ¸·Î ´õÇØÁÖ°í ioÀÛ¾÷
-		int i=0;
-		String photoName= "";
-		for(MultipartFile multi : files) {
-			if(multi.getOriginalFilename().isEmpty()) {
-				i++;
-				continue;
-			}
-			String filenames =multi.getOriginalFilename();
-			String rename=System.currentTimeMillis()+"_"+filenames;
-			
-			if(i!=files.length-1) {
-				photoName+=rename+",";
-			}else {
-				photoName+=rename;
-			}
-			File file = new File(realPath+"\\"+rename);
-			System.out.println(file.toString());
-			try {
-				multi.transferTo(file);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			i++;
-		}
-		
-		//¸¶Áö¸· ,°ª Ã³¸®
-		String[] photo=photoName.split("\\,");
-		String photos="";
-		for(int j=0; j<photo.length; j++) {
-			if(j!=photo.length-1) {
-				photos+=photo[j]+",";
-			}else {
-				photos+=photo[j];
-			}
-		}
-		
-		return photos;
-	}
-	
-	//ÆÄÀÏ¾÷·Îµå ÇØÁÖ´Â¸Ş¼Òµå
-	public String upload(MultipartFile[] files,HttpServletRequest req, GroupPostVo groupPostVo) {
-		
-		//ÇöÀç ÀÛ¾÷ÀÚÀÇ ÇÁ·ÎÁ§Æ®°æ·Î ¾Ë¾Æ³»¼­ ±×°æ·ÎÀÇ resources¾È¿¡ uploadÆÄÀÏÀ» Àâ¾ÆÁÜ
-		String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
-		String[] path1=realPath.split("\\.metadata");
-		
-		path=path1[0]+path;
-		//ÆÄÀÏÀ» °ø¹é°ª Àâ¾ÆÁÖ°í ,±âÁØÀ¸·Î ´õÇØÁÖ°í ioÀÛ¾÷
-		int i=0;
-		String photoName= "";
-		for(MultipartFile multi : files) {
-			if(multi.getOriginalFilename().isEmpty()) {
-				i++;
-				continue;
-			}
-			String filenames =multi.getOriginalFilename();
-			String rename=System.currentTimeMillis()+"_"+filenames;
-			
-			if(i!=files.length-1) {
-				photoName+=rename+",";
-			}else {
-				photoName+=rename;
-			}
-			File file = new File(realPath+"\\"+rename);
-			System.out.println(file.toString());
-			try {
-				multi.transferTo(file);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			i++;
-		}
-		
-		//¸¶Áö¸· ,°ª Ã³¸®
-		String[] photo=photoName.split("\\,");
-		String photos="";
-		for(int j=0; j<photo.length; j++) {
-			if(j!=photo.length-1) {
-				photos+=photo[j]+",";
-			}else {
-				photos+=photo[j];
-			}
-		}
-		
-		return photos;
-	}
-	
-	//ÆÄÀÏ¾÷·Îµå ÇØÁÖ´Â¸Ş¼Òµå
-	public String upload(MultipartFile[] files,HttpServletRequest req, GroupNoticeVo groupNoticeVo) {
-		
-		//ÇöÀç ÀÛ¾÷ÀÚÀÇ ÇÁ·ÎÁ§Æ®°æ·Î ¾Ë¾Æ³»¼­ ±×°æ·ÎÀÇ resources¾È¿¡ uploadÆÄÀÏÀ» Àâ¾ÆÁÜ
-		String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
-		String[] path1=realPath.split("\\.metadata");
-		
-		path=path1[0]+path;
-		//ÆÄÀÏÀ» °ø¹é°ª Àâ¾ÆÁÖ°í ,±âÁØÀ¸·Î ´õÇØÁÖ°í ioÀÛ¾÷
-		int i=0;
-		String photoName= "";
-		for(MultipartFile multi : files) {
-			if(multi.getOriginalFilename().isEmpty()) {
-				i++;
-				continue;
-			}
-			String filenames =multi.getOriginalFilename();
-			String rename=System.currentTimeMillis()+"_"+filenames;
-			
-			if(i!=files.length-1) {
-				photoName+=rename+",";
-			}else {
-				photoName+=rename;
-			}
-			File file = new File(realPath+"\\"+rename);
-			System.out.println(file.toString());
-			try {
-				multi.transferTo(file);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			i++;
-		}
-		
-		//¸¶Áö¸· ,°ª Ã³¸®
-		String[] photo=photoName.split("\\,");
-		String photos="";
-		for(int j=0; j<photo.length; j++) {
-			if(j!=photo.length-1) {
-				photos+=photo[j]+",";
-			}else {
-				photos+=photo[j];
-			}
-		}
-		
-		return photos;
-	}
-	
-	//ÆÄÀÏ¾÷·Îµå ÇØÁÖ´Â¸Ş¼Òµå
-	public String upload(MultipartFile[] files,HttpServletRequest req, ReportListVo reportListVo) {
-		
-		//ÇöÀç ÀÛ¾÷ÀÚÀÇ ÇÁ·ÎÁ§Æ®°æ·Î ¾Ë¾Æ³»¼­ ±×°æ·ÎÀÇ resources¾È¿¡ uploadÆÄÀÏÀ» Àâ¾ÆÁÜ
-		String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
-		String[] path1=realPath.split("\\.metadata");
-		
-		path=path1[0]+path;
-		//ÆÄÀÏÀ» °ø¹é°ª Àâ¾ÆÁÖ°í ,±âÁØÀ¸·Î ´õÇØÁÖ°í ioÀÛ¾÷
-		int i=0;
-		String photoName= "";
-		for(MultipartFile multi : files) {
-			if(multi.getOriginalFilename().isEmpty()) {
-				i++;
-				continue;
-			}
-			String filenames =multi.getOriginalFilename();
-			String rename=System.currentTimeMillis()+"_"+filenames;
-			
-			if(i!=files.length-1) {
-				photoName+=rename+",";
-			}else {
-				photoName+=rename;
-			}
-			File file = new File(realPath+"\\"+rename);
-			System.out.println(file.toString());
-			try {
-				multi.transferTo(file);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			i++;
-		}
-		
-		//¸¶Áö¸· ,°ª Ã³¸®
-		String[] photo=photoName.split("\\,");
-		String photos="";
-		for(int j=0; j<photo.length; j++) {
-			if(j!=photo.length-1) {
-				photos+=photo[j]+",";
-			}else {
-				photos+=photo[j];
-			}
-		}
-		
-		return photos;
-	}
+   
+   String path="festa0324\\festa0324\\src\\main\\webapp\\resources\\upload\\";
+   
+   //íŒŒì¼ì—…ë¡œë“œ í•´ì£¼ëŠ”ë©”ì†Œë“œ
+   public String upload(MultipartFile[] files,HttpServletRequest req, MyPostVo mypost) {
+      
+      //í˜„ì¬ ì‘ì—…ìì˜ í”„ë¡œì íŠ¸ê²½ë¡œ ì•Œì•„ë‚´ì„œ ê·¸ê²½ë¡œì˜ resourcesì•ˆì— uploadíŒŒì¼ì„ ì¡ì•„ì¤Œ
+      String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
+      String[] path1=realPath.split("\\.metadata");
+      
+      path=path1[0]+path;
+      //íŒŒì¼ì„ ê³µë°±ê°’ ì¡ì•„ì£¼ê³  ,ê¸°ì¤€ìœ¼ë¡œ ë”í•´ì£¼ê³  ioì‘ì—…
+      int i=0;
+      String photoName= "";
+      for(MultipartFile multi : files) {
+         if(multi.getOriginalFilename().isEmpty()) {
+            i++;
+            continue;
+         }
+         String filenames =multi.getOriginalFilename();
+         String rename=System.currentTimeMillis()+"_"+filenames;
+         
+         if(i!=files.length-1) {
+            photoName+=rename+",";
+         }else {
+            photoName+=rename;
+         }
+         File file = new File(realPath+"\\"+rename);
+         System.out.println(file.toString());
+         try {
+            multi.transferTo(file);
+         } catch (IllegalStateException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         i++;
+      }
+      
+      //ë§ˆì§€ë§‰ ,ê°’ ì²˜ë¦¬
+      String[] photo=photoName.split("\\,");
+      String photos="";
+      for(int j=0; j<photo.length; j++) {
+         if(j!=photo.length-1) {
+            photos+=photo[j]+",";
+         }else {
+            photos+=photo[j];
+         }
+      }
+      
+      return photos;
+   }
+   
+   //íŒŒì¼ì—…ë¡œë“œ í•´ì£¼ëŠ”ë©”ì†Œë“œ
+   public String upload(MultipartFile[] files,HttpServletRequest req, GroupPostVo groupPostVo) {
+      
+      //í˜„ì¬ ì‘ì—…ìì˜ í”„ë¡œì íŠ¸ê²½ë¡œ ì•Œì•„ë‚´ì„œ ê·¸ê²½ë¡œì˜ resourcesì•ˆì— uploadíŒŒì¼ì„ ì¡ì•„ì¤Œ
+      String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
+      String[] path1=realPath.split("\\.metadata");
+      
+      path=path1[0]+path;
+      //íŒŒì¼ì„ ê³µë°±ê°’ ì¡ì•„ì£¼ê³  ,ê¸°ì¤€ìœ¼ë¡œ ë”í•´ì£¼ê³  ioì‘ì—…
+      int i=0;
+      String photoName= "";
+      for(MultipartFile multi : files) {
+         if(multi.getOriginalFilename().isEmpty()) {
+            i++;
+            continue;
+         }
+         String filenames =multi.getOriginalFilename();
+         String rename=System.currentTimeMillis()+"_"+filenames;
+         
+         if(i!=files.length-1) {
+            photoName+=rename+",";
+         }else {
+            photoName+=rename;
+         }
+         File file = new File(realPath+"\\"+rename);
+         System.out.println(file.toString());
+         try {
+            multi.transferTo(file);
+         } catch (IllegalStateException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         i++;
+      }
+      
+      //ë§ˆì§€ë§‰ ,ê°’ ì²˜ë¦¬
+      String[] photo=photoName.split("\\,");
+      String photos="";
+      for(int j=0; j<photo.length; j++) {
+         if(j!=photo.length-1) {
+            photos+=photo[j]+",";
+         }else {
+            photos+=photo[j];
+         }
+      }
+      
+      return photos;
+   }
+   
+   //íŒŒì¼ì—…ë¡œë“œ í•´ì£¼ëŠ”ë©”ì†Œë“œ
+   public String upload(MultipartFile[] files,HttpServletRequest req, GroupNoticeVo groupNoticeVo) {
+      
+      //í˜„ì¬ ì‘ì—…ìì˜ í”„ë¡œì íŠ¸ê²½ë¡œ ì•Œì•„ë‚´ì„œ ê·¸ê²½ë¡œì˜ resourcesì•ˆì— uploadíŒŒì¼ì„ ì¡ì•„ì¤Œ
+      String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
+      String[] path1=realPath.split("\\.metadata");
+      
+      path=path1[0]+path;
+      //íŒŒì¼ì„ ê³µë°±ê°’ ì¡ì•„ì£¼ê³  ,ê¸°ì¤€ìœ¼ë¡œ ë”í•´ì£¼ê³  ioì‘ì—…
+      int i=0;
+      String photoName= "";
+      for(MultipartFile multi : files) {
+         if(multi.getOriginalFilename().isEmpty()) {
+            i++;
+            continue;
+         }
+         String filenames =multi.getOriginalFilename();
+         String rename=System.currentTimeMillis()+"_"+filenames;
+         
+         if(i!=files.length-1) {
+            photoName+=rename+",";
+         }else {
+            photoName+=rename;
+         }
+         File file = new File(realPath+"\\"+rename);
+         System.out.println(file.toString());
+         try {
+            multi.transferTo(file);
+         } catch (IllegalStateException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         i++;
+      }
+      
+      //ë§ˆì§€ë§‰ ,ê°’ ì²˜ë¦¬
+      String[] photo=photoName.split("\\,");
+      String photos="";
+      for(int j=0; j<photo.length; j++) {
+         if(j!=photo.length-1) {
+            photos+=photo[j]+",";
+         }else {
+            photos+=photo[j];
+         }
+      }
+      
+      return photos;
+   }
+   
+   //íŒŒì¼ì—…ë¡œë“œ í•´ì£¼ëŠ”ë©”ì†Œë“œ
+   public String upload(MultipartFile[] files,HttpServletRequest req, ReportListVo reportListVo) {
+      
+      //í˜„ì¬ ì‘ì—…ìì˜ í”„ë¡œì íŠ¸ê²½ë¡œ ì•Œì•„ë‚´ì„œ ê·¸ê²½ë¡œì˜ resourcesì•ˆì— uploadíŒŒì¼ì„ ì¡ì•„ì¤Œ
+      String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
+      String[] path1=realPath.split("\\.metadata");
+      
+      path=path1[0]+path;
+      //íŒŒì¼ì„ ê³µë°±ê°’ ì¡ì•„ì£¼ê³  ,ê¸°ì¤€ìœ¼ë¡œ ë”í•´ì£¼ê³  ioì‘ì—…
+      int i=0;
+      String photoName= "";
+      for(MultipartFile multi : files) {
+         if(multi.getOriginalFilename().isEmpty()) {
+            i++;
+            continue;
+         }
+         String filenames =multi.getOriginalFilename();
+         String rename=System.currentTimeMillis()+"_"+filenames;
+         
+         if(i!=files.length-1) {
+            photoName+=rename+",";
+         }else {
+            photoName+=rename;
+         }
+         File file = new File(realPath+"\\"+rename);
+         System.out.println(file.toString());
+         try {
+            multi.transferTo(file);
+         } catch (IllegalStateException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         i++;
+      }
+      
+      //ë§ˆì§€ë§‰ ,ê°’ ì²˜ë¦¬
+      String[] photo=photoName.split("\\,");
+      String photos="";
+      for(int j=0; j<photo.length; j++) {
+         if(j!=photo.length-1) {
+            photos+=photo[j]+",";
+         }else {
+            photos+=photo[j];
+         }
+      }
+      
+      return photos;
+   }
 
-	
-	//ÆÄÀÏ¾÷·Îµå ÇØÁÖ´Â¸Ş¼Òµå
-	public String upload(MultipartFile[] files,HttpServletRequest req, GroupVo groupVo) {
-		
-		//ÇöÀç ÀÛ¾÷ÀÚÀÇ ÇÁ·ÎÁ§Æ®°æ·Î ¾Ë¾Æ³»¼­ ±×°æ·ÎÀÇ resources¾È¿¡ uploadÆÄÀÏÀ» Àâ¾ÆÁÜ
-		String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
-		String[] path1=realPath.split("\\.metadata");
-		
-		path=path1[0]+path;
-		//ÆÄÀÏÀ» °ø¹é°ª Àâ¾ÆÁÖ°í ,±âÁØÀ¸·Î ´õÇØÁÖ°í ioÀÛ¾÷
-		int i=0;
-		String photoName= "";
-		for(MultipartFile multi : files) {
-			if(multi.getOriginalFilename().isEmpty()) {
-				i++;
-				continue;
-			}
-			String filenames =multi.getOriginalFilename();
-			String rename=System.currentTimeMillis()+"_"+filenames;
-			
-			if(i!=files.length-1) {
-				photoName+=rename+",";
-			}else {
-				photoName+=rename;
-			}
-			File file = new File(realPath+"\\"+rename);
-			System.out.println(file.toString());
-			try {
-				multi.transferTo(file);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			i++;
-		}
-		
-		//¸¶Áö¸· ,°ª Ã³¸®
-		String[] photo=photoName.split("\\,");
-		String photos="";
-		for(int j=0; j<photo.length; j++) {
-			if(j!=photo.length-1) {
-				photos+=photo[j]+",";
-			}else {
-				photos+=photo[j];
-			}
-		}
-		
-		return photos;
-	}
+   
+   //íŒŒì¼ì—…ë¡œë“œ í•´ì£¼ëŠ”ë©”ì†Œë“œ
+   public String upload(MultipartFile[] files,HttpServletRequest req, GroupVo groupVo) {
+      
+      //í˜„ì¬ ì‘ì—…ìì˜ í”„ë¡œì íŠ¸ê²½ë¡œ ì•Œì•„ë‚´ì„œ ê·¸ê²½ë¡œì˜ resourcesì•ˆì— uploadíŒŒì¼ì„ ì¡ì•„ì¤Œ
+      String realPath=req.getSession().getServletContext().getRealPath("\\resources\\upload\\");
+      String[] path1=realPath.split("\\.metadata");
+      
+      path=path1[0]+path;
+      //íŒŒì¼ì„ ê³µë°±ê°’ ì¡ì•„ì£¼ê³  ,ê¸°ì¤€ìœ¼ë¡œ ë”í•´ì£¼ê³  ioì‘ì—…
+      int i=0;
+      String photoName= "";
+      for(MultipartFile multi : files) {
+         if(multi.getOriginalFilename().isEmpty()) {
+            i++;
+            continue;
+         }
+         String filenames =multi.getOriginalFilename();
+         String rename=System.currentTimeMillis()+"_"+filenames;
+         
+         if(i!=files.length-1) {
+            photoName+=rename+",";
+         }else {
+            photoName+=rename;
+         }
+         File file = new File(realPath+"\\"+rename);
+         System.out.println(file.toString());
+         try {
+            multi.transferTo(file);
+         } catch (IllegalStateException e) {
+            e.printStackTrace();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         i++;
+      }
+      
+      //ë§ˆì§€ë§‰ ,ê°’ ì²˜ë¦¬
+      String[] photo=photoName.split("\\,");
+      String photos="";
+      for(int j=0; j<photo.length; j++) {
+         if(j!=photo.length-1) {
+            photos+=photo[j]+",";
+         }else {
+            photos+=photo[j];
+         }
+      }
+      
+      return photos;
+   }
 }

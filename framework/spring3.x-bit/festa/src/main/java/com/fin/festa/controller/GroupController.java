@@ -36,7 +36,7 @@ import com.fin.festa.service.GroupService;
 public class GroupController {
 
 //////////////////////////////////////////////////////////////////////
-///////////////////////////////±×·ì °ü·Ã///////////////////////////////
+///////////////////////////////ê·¸ë£¹ ê´€ë ¨///////////////////////////////
 //////////////////////////////////////////////////////////////////////
 	
 	@Autowired
@@ -44,7 +44,7 @@ public class GroupController {
 	
 	int result=0;
 	
-	//±×·ì ÇÇµå (°¡ÀÔ½ÅÃ», °¡ÀÔ´ë±â, ±×·ì¿ø 3°¡Áö)
+	//ê·¸ë£¹ í”¼ë“œ (ê°€ì…ì‹ ì²­, ê°€ì…ëŒ€ê¸°, ê·¸ë£¹ì› 3ê°€ì§€)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String groupSelectOne(HttpServletRequest req, UpdateWaitVo updateWaitVo){
 		
@@ -62,7 +62,7 @@ public class GroupController {
 		return "group/index";
 	}
 
-	//±×·ì °¡ÀÔ ¾È³»
+	//ê·¸ë£¹ ê°€ì… ì•ˆë‚´
 	@RequestMapping(value = "readme", method = RequestMethod.GET)
 	public String readme(HttpServletRequest req) {
 		GroupVo groupVo=new GroupVo();
@@ -71,7 +71,7 @@ public class GroupController {
 		return "group/readme";
 	}
 	
-	//±×·ì °¡ÀÔ ½ÅÃ» ´ë±â
+	//ê·¸ë£¹ ê°€ì… ì‹ ì²­ ëŒ€ê¸°
 	@RequestMapping(value = "standby", method = RequestMethod.GET)
 	public String standby(HttpServletRequest req) {
 		GroupVo groupVo=new GroupVo();
@@ -88,13 +88,13 @@ public class GroupController {
 		return "group/standby";
 	}
 	
-	//±×·ì °¡ÀÔ ½ÅÃ» (ÆË¾÷)
+	//ê·¸ë£¹ ê°€ì… ì‹ ì²­ (íŒì—…)
 	@RequestMapping(value = "join", method = RequestMethod.GET)
 	public String joinGroup() {
 		return "group/join";
 	}
 	
-	//±×·ì °¡ÀÔ ½ÅÃ» ¿Ï·á (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ ê°€ì… ì‹ ì²­ ì™„ë£Œ (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "join", method = RequestMethod.POST)
 	public String joinGroup(Model model, UpdateWaitVo updateWaitVo) {
 		groupService.groupAdmission(model, updateWaitVo);
@@ -102,41 +102,41 @@ public class GroupController {
 		return "redirect:/group/standby?grnum="+updateWaitVo.getGrnum();
 	}
 	
-	//±×·ì¿ø ¸ñ·Ï (ÆË¾÷)
+	//ê·¸ë£¹ì› ëª©ë¡ (íŒì—…)
 	@RequestMapping(value = "member", method = RequestMethod.GET)
 	public String groupMemberList(HttpServletRequest req, GroupVo groupVo){
 		groupService.groupMemberList(req, groupVo);
 		return "group/member";
 	}
 	
-	//±×·ì¿ø ¸®½ºÆ® ÆÈ·Î¿ì (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ì› ë¦¬ìŠ¤íŠ¸ íŒ”ë¡œìš° (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "follow", method = RequestMethod.POST)
 	public String followInsertOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
 		groupService.followInsertOne(req, myFollowingVo);
 		return "group/member";
 	}
 
-	//±×·ì¿ø ¸®½ºÆ® ÆÈ·Î¿ì Ãë¼Ò (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ì› ë¦¬ìŠ¤íŠ¸ íŒ”ë¡œìš° ì·¨ì†Œ (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "unfollow", method = RequestMethod.POST)
 	public String followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowingVo) {
 		groupService.followDeleteOne(req, myFollowingVo);
 		return "group/member";
 	}
 	
-	//±×·ì ½Å°í (ÆË¾÷)
+	//ê·¸ë£¹ ì‹ ê³  (íŒì—…)
 	@RequestMapping(value = "gp_report", method = RequestMethod.GET)
 	public String groupReport(){
 		return "group/report";
 	}
 		
-	//±×·ì ½Å°í (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ ì‹ ê³  (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "gr_report", method = RequestMethod.POST)
 	public String groupReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
 		groupService.groupReport(req, reportListVo, files);
 		return "group/index";
 	}
 	
-	//±×·ì Å»Åğ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ íƒˆí‡´ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "out", method = RequestMethod.POST)
 	public String groupOut(HttpServletRequest req, JoinGroupVo joinGroupVo, GroupVo groupVo){
 		groupService.groupOut(req, joinGroupVo, groupVo);
@@ -144,62 +144,62 @@ public class GroupController {
 		return "group/index";
 	}
 	
-	//°øÁö»çÇ× µğÅ×ÀÏ (ÆË¾÷)
+	//ê³µì§€ì‚¬í•­ ë””í…Œì¼ (íŒì—…)
 	@RequestMapping(value = "ntc_feed", method = RequestMethod.GET)
 	public String noticeSelectOne(HttpServletRequest req, GroupNoticeVo groupNoticeVo){
 		groupService.noticeSelectOne(req, groupNoticeVo);
 		return "group/ntc_feed";
 	}
 	
-	//°øÁö»çÇ× ¼öÁ¤ (ÆË¾÷>ÆË¾÷)
+	//ê³µì§€ì‚¬í•­ ìˆ˜ì • (íŒì—…>íŒì—…)
 	@RequestMapping(value = "ntc_maker", method = RequestMethod.GET)
 	public String noticeUpdateOne(){
 		return "group/ntc_maker";
 	}
 	
-	//°øÁö»çÇ× ¼öÁ¤ ¿Ï·á (ÆË¾÷>ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê³µì§€ì‚¬í•­ ìˆ˜ì • ì™„ë£Œ (íŒì—…>íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "ntc_maker", method = RequestMethod.POST)
 	public String noticeUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupNoticeVo groupNoticeVo){
 		groupService.noticeUpdateOne(req, filess, groupNoticeVo);
 		return "group/ntc_feed";
 	}
 	
-	//°øÁö»çÇ× »èÁ¦ (ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ê³µì§€ì‚¬í•­ ì‚­ì œ (íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "ntc_feed/del", method = RequestMethod.POST)
 	public String noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo){
 		groupService.noticeDeleteOne(model, groupNoticeVo);
 		return "group/index";
 	}
 	
-	//°øÁö»çÇ× ´ñ±Û µî·Ï (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê³µì§€ì‚¬í•­ ëŒ“ê¸€ ë“±ë¡ (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "ntc_feed/cmmtadd", method = RequestMethod.POST)
 	public String noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo){
 		groupService.noticeCmmtInsertOne(req, groupNoticeCommentVo);
 		return "group/ntc_feed";
 	}
 	
-	//°øÁö»çÇ× ´ñ±Û »èÁ¦ (ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ê³µì§€ì‚¬í•­ ëŒ“ê¸€ ì‚­ì œ (íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "ntc_feed/cmmtdel", method = RequestMethod.POST)
 	public String noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo){
 		groupService.noticeCmmtDeleteOne(req, groupNoticeCommentVo);
 		return "group/ntc_feed";
 	}
 	
-	//°øÁö»çÇ× ½Å°í (ÆË¾÷>ÆË¾÷)
+	//ê³µì§€ì‚¬í•­ ì‹ ê³  (íŒì—…>íŒì—…)
 	@RequestMapping(value = "ntc_report", method = RequestMethod.GET)
 	public String noticeReport(Model model, GroupNoticeVo groupNoticeVo){
 		model.addAttribute("groupNotice", groupNoticeVo);
 		return "group/ntc_report";
 	}
 	
-	//°øÁö»çÇ× ½Å°í (ÆË¾÷>ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê³µì§€ì‚¬í•­ ì‹ ê³  (íŒì—…>íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "ntc_report", method = RequestMethod.POST)
 	public String noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
 		groupService.noticeReport(req, reportListVo, files);
 		return "group/ntc_feed";
 	}
 
-	//°øÁö»çÇ× ÀÔ·Â
+	//ê³µì§€ì‚¬í•­ ì…ë ¥
 	@RequestMapping(value = "noticeadd", method = RequestMethod.POST)
 	public String noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo, GroupVo groupVo){
 		groupService.noticeInsertOne(req, files, groupNoticeVo);
@@ -208,7 +208,7 @@ public class GroupController {
 		return "redirect:/group/?grnum="+groupVo.getGrnum()+"&pronum="+groupVo.getPronum();
 	}
 	
-	//±×·ì ÇÇµå ÀÔ·Â
+	//ê·¸ë£¹ í”¼ë“œ ì…ë ¥
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	public String groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo){
 		groupService.groupFeedInsertOne(req, files, groupPostVo);
@@ -218,88 +218,89 @@ public class GroupController {
 		return "redirect:/group/?grnum="+group.getGrnum()+"&pronum="+groupPostVo.getPronum();
 	}
 	
-	//±×·ì ÇÇµå ¼öÁ¤ (ÆË¾÷)
+	//ê·¸ë£¹ í”¼ë“œ ìˆ˜ì • (íŒì—…)
 	@RequestMapping(value = "maker", method = RequestMethod.GET)
 	public String groupFeedDetailOne(Model model, GroupPostVo groupPostVo){
 		groupService.groupFeedDetail(model, groupPostVo);
 		return "group/maker";
 	}
 	
-	//±×·ì ÇÇµå ¼öÁ¤ ¿Ï·á (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ìˆ˜ì • ì™„ë£Œ (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "maker", method = RequestMethod.POST)
 	public String groupFeedUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupPostVo groupPostVo){
 		groupService.groupFeedUpdateOne(req, filess, groupPostVo);
 		return "group/index";
 	}
 
-	//±×·ì ÇÇµå »èÁ¦ (ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ì‚­ì œ (íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
 	public String groupFeedDeleteOne(Model model, GroupPostVo groupPostVo){
 		groupService.groupFeedDeleteOne(model, groupPostVo);
 		return "group/index";
 	}
 	
-	//±×·ì ÇÇµå ´ñ±Û ÀÔ·Â
+	//ê·¸ë£¹ í”¼ë“œ ëŒ“ê¸€ ì…ë ¥
 	@RequestMapping(value = "cmmtadd", method = RequestMethod.POST)
 	public String groupFeedCmmtInsertOne(HttpServletRequest req, GroupCommentVo groupCommentVo){
 		groupService.groupFeedCmmtInsertOne(req, groupCommentVo);
 		return "group/index";
 	}
 	
-	//±×·ì ÇÇµå ´ñ±Û »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String groupFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo){
 		groupService.groupFeedCmmtDeleteOne(model, groupCommentVo);
 		return "group/index";
 	}
 	
-	//±×·ìÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@RequestMapping(value = "cmmt", method = RequestMethod.GET)
 	public @ResponseBody List<GroupCommentVo> GroupDetailCmmt(Model model, GroupPostVo grouppost){
 		return groupService.groupDetailCmmt(model, grouppost);
 	}
 
-	//±×·ì°øÁö´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹ê³µì§€ëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@RequestMapping(value = "ntc_feed/ntccmmt", method = RequestMethod.GET)
 	public @ResponseBody List<GroupNoticeCommentVo> GroupNoticeDetailCmmt(Model model, GroupNoticeVo groupnotice){
 		return groupService.groupNoticeDetailCmmt(model, groupnotice);
 	}
 	
-	//±×·ì ÇÇµå ÁÁ¾Æ¿ä
+	//ê·¸ë£¹ í”¼ë“œ ì¢‹ì•„ìš”
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String FeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		groupService.FeedLikeInsertOne(req, myGoodVo);
 		return "group/index";
 	}
 	
-	//±×·ì ÇÇµå ÁÁ¾Æ¿ä ÇØÁ¦
+	//ê·¸ë£¹ í”¼ë“œ ì¢‹ì•„ìš” í•´ì œ
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String FeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		groupService.FeedLikeDeleteOne(req, myGoodVo);
 		return "group/index";
 	}
 	
-	//±×·ì ÇÇµå ½Å°í (ÆË¾÷)
+	//ê·¸ë£¹ í”¼ë“œ ì‹ ê³  (íŒì—…)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
 	public String groupFeedReport(Model model, GroupPostVo groupPostVo){
 		model.addAttribute("groupFeed", groupPostVo);
 		return "group/gp_report";
 	}
 
-	//±×·ì ÇÇµå ½Å°í (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ê·¸ë£¹ í”¼ë“œ ì‹ ê³  (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "report", method = RequestMethod.POST)
 	public String groupFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
 		groupService.groupFeedReport(req, reportListVo, files);
 		return "group/gp_report";
 	}
 
-	//±×·ì Ã¤ÆÃ (»õÃ¢ & ¾ÆÁ÷ ÀÛ¾÷º¸·ù)
+	//ê·¸ë£¹ ì±„íŒ… (ìƒˆì°½ & ì•„ì§ ì‘ì—…ë³´ë¥˜)
 	@RequestMapping(value = "chat", method = RequestMethod.GET)
-	public String groupChat(){
+	public String groupChat(HttpServletRequest req, GroupVo groupVo){
+		groupService.groupSelectOne(req, groupVo);
 		return "group/chat";
 	}
 	
-	//±×·ì Ã¤ÆÃ (»õÃ¢ & ¾ÆÁ÷ ÀÛ¾÷º¸·ù)
+	//ê·¸ë£¹ ì±„íŒ… (ìƒˆì°½ & ì•„ì§ ì‘ì—…ë³´ë¥˜)
 	@RequestMapping(value = "chat/chatSubmitServlet", method = RequestMethod.POST)
 	public String doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
 		request.setCharacterEncoding("utf-8");
@@ -320,17 +321,17 @@ public class GroupController {
 	}
 
 //////////////////////////////////////////////////////////////////////
-///////////////////////////////±×·ì ¼¼ÆÃ///////////////////////////////
+///////////////////////////////ê·¸ë£¹ ì„¸íŒ…///////////////////////////////
 //////////////////////////////////////////////////////////////////////
 	
-	//±×·ì °ü¸®
+	//ê·¸ë£¹ ê´€ë¦¬
 	@RequestMapping(value = "profile", method = RequestMethod.GET)
 	public String groupAdminSelectOne(HttpServletRequest req, GroupVo groupVo){
 		groupService.groupSelectOne(req, groupVo);
 		return "group/profile";
 	}
 	
-	//±×·ì ¼öÁ¤
+	//ê·¸ë£¹ ìˆ˜ì •
 	@RequestMapping(value = "profile/edit", method = RequestMethod.POST)
 	public String groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo, MultipartFile[] files){
 		groupService.groupAdminUpdateOne(req, groupVo, files);
@@ -338,7 +339,7 @@ public class GroupController {
 		return "redirect:/group/profile?grnum="+groupVo.getGrnum();
 	}
 	
-	//±×·ì¿ø °ü¸®
+	//ê·¸ë£¹ì› ê´€ë¦¬
 	@RequestMapping(value = "user", method = RequestMethod.GET)
 	public String groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo , PageSearchVo pageSearchVo){
 		groupService.groupSelectOne(req, groupVo);
@@ -346,21 +347,21 @@ public class GroupController {
 		return "group/user";
 	}
 	
-	//±×·ì¿ø Ãß¹æ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ì› ì¶”ë°© (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "user/kick", method = RequestMethod.POST)
 	public String groupUserKick(HttpServletRequest req, JoinGroupVo joinGroupVo, GroupVo groupVo){
 		groupService.groupUserKick(req, groupVo, joinGroupVo);
 		return "group/user";
 	}
 	
-	//±×·ì¿ø ÀüÃ¼ Ãß¹æ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ì› ì „ì²´ ì¶”ë°© (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "user/allkick", method = RequestMethod.POST)
 	public String groupUserAllKick(HttpServletRequest req, GroupVo groupVo){
 		groupService.groupUserAllKick(req, groupVo);
 		return "group/user";
 	}
 	
-	//±×·ì ½ÅÃ» ¸ñ·Ï
+	//ê·¸ë£¹ ì‹ ì²­ ëª©ë¡
 	@RequestMapping(value = "req", method = RequestMethod.GET)
 	public String groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo){
 		groupService.groupSelectOne(req, groupVo);
@@ -368,21 +369,21 @@ public class GroupController {
 		return "group/req";
 	}
 	
-	//±×·ì ½ÅÃ» ½ÂÀÎ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ì‹ ì²­ ìŠ¹ì¸ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "req/hello", method = RequestMethod.POST)
 	public String groupRequestHello(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo){
 		groupService.groupRequestHello(req, updateWaitVo, groupVo);
 		return "group/req";
 	}
 	
-	//±×·ì ½ÅÃ» °ÅÀı (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ì‹ ì²­ ê±°ì ˆ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "req/sorry", method = RequestMethod.POST)
 	public String groupRequestSorry(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo){
 		groupService.groupRequestSorry(req, updateWaitVo, groupVo);
 		return "group/req";
 	}
 	
-	//±×·ì »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ê·¸ë£¹ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "profile/del", method = RequestMethod.POST)
 	public String groupDeleteOne(HttpServletRequest req, GroupVo groupVo){
 		groupService.groupDeleteOne(req, groupVo);

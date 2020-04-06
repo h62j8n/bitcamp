@@ -2,16 +2,16 @@ package com.fin.festa.model.entity;
 
 import java.util.List;
 
-public class MyAdminVo {					//³» Á¤º¸ (Á¤Áö, °­Åğ´çÇßÀ» ¶§) 
+public class MyAdminVo {					//ë‚´ ì •ë³´ (ì •ì§€, ê°•í‡´ë‹¹í–ˆì„ ë•Œ) 
 	
-	private int pronum;						//³» ¹øÈ£ (pk)
-	private String stopresult;				//Á¤Áö&°­Åğ »çÀ¯
-	private int propublic;					//°èÁ¤ ºñÈ°¼ºÈ­ & È°¼ºÈ­
-	private int prostop;					//°ü¸®ÀÚ Á¤ÁöÀ¯¹«
-	private int prokick;					//°ü¸®ÀÚ °­ÅğÀ¯¹«
-	private int stoptotal;					//Á¤Áö´çÇÑ È½¼ö
-	private int reporttotal;				//½Å°í´çÇÑ È½¼ö
-	private int stoplv;						//Á¤Áö ±â°£
+	private int pronum;						//ë‚´ ë²ˆí˜¸ (pk)
+	private String stopresult;				//ì •ì§€&ê°•í‡´ ì‚¬ìœ 
+	private int propublic;					//ê³„ì • ë¹„í™œì„±í™” & í™œì„±í™”
+	private int prostop;					//ê´€ë¦¬ì ì •ì§€ìœ ë¬´
+	private int prokick;					//ê´€ë¦¬ì ê°•í‡´ìœ ë¬´
+	private int stoptotal;					//ì •ì§€ë‹¹í•œ íšŸìˆ˜
+	private int reporttotal;				//ì‹ ê³ ë‹¹í•œ íšŸìˆ˜
+	private int stoplv;						//ì •ì§€ ê¸°ê°„
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

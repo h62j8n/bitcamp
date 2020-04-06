@@ -4,11 +4,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root"></c:url>
 <c:url value="/resources/upload" var="upload"></c:url>
-<c:if test="${sessionScope.login ne null }">
-	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
-		<c:redirect url="/empty"/>
-	</c:if>
-</c:if>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,19 +13,13 @@
 	<script type="text/javascript" src="${root}resources/js/jquery-1.12.4.js"></script>
 	<script type="text/javascript" src="${root}resources/js/util.js"></script>
 	<script type="text/javascript" src="${root}resources/js/site.js"></script>
+	<script type="text/javascript" src="${root }resources/js/jh.js"></script>
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 	<link rel="stylesheet" href="${root}resources/css/site.css">
 	<link rel="shortcut icon" href="${root}resources/favicon.ico">
 	<title>FESTA</title>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			
-			 //첫화면때 2개만 피드출력
-			$('.feed_viewer').each(function(index){
-				if(index>1){
-					$('.feed_viewer').eq(index).hide();
-				}
-			}); 
 			
 			//스크롤 내렸을때 피드 2개씩 출력
 			$(window).scroll(function(){
@@ -41,11 +30,12 @@
 					scroll++;
 					scrollTag.text(scroll);
 					console.log(scroll);
-					var curfeedcnt=$('.feed_viewer').length;
-					var myfeedcnt=$('.cnt_list li b').eq(0).text();
-					myfeedcnt=Number(myfeedcnt);
-					$('.feed_viewer').eq(scroll*2).show();
-					$('.feed_viewer').eq(scroll*2+1).show();
+					$.get('${root}hot/scroll','page5='+scroll,function(){
+						
+					}).done(function(data){
+						//인기피드 스크롤더보기
+						feedList(data,'hot','${login.pronum}','${login.prophoto}','${login.logincheck}');
+					});
 			    }
 			});
 			
@@ -95,10 +85,6 @@
 			    for(var i = 0; i< goodSize; i++){
 			    	if($('.content_area>.feed_viewer .feed_options').eq(i).find('.btn_liked').hasClass('act')==false){
 			         	$('.content_area>.feed_viewer .feed_options').eq(i).prepend('<li><button class="btn_liked"><em class="snd_only">하트</em></button></li>');
-			        	 /* var userNum = $('.content_area>.feed_viewer .feed_inform').eq(i).find('input[type=hidden]').eq(0).val();
-			        	 var myNum = $('#wrap>input[type=hidden]').eq(0).val();
-			        	 if(userNum!=myNum){
-			        	 } */
 			        }
 			    }
 			}
@@ -183,31 +169,31 @@
 				var gpnum = feed.find('input[type=hidden]').eq(1).val();
 				console.log(gpnum);
 				$.get('${root}hot/groupfeed/cmmt','gpnum='+gpnum+'&pageSearch.page4='+myPage,function(data){
-				$(data).each(function(index){
-					if(index==3){
-						 return false;
-					}else if(data.length<4){
-						btn.hide();
-					}
-					var delbtn;
-					if('${login.pronum}'==''){
-						delbtn = '';
-					}else if('${login.pronum}'!=data[index].pronum){
-						delbtn = '';
-					}else{
-						delbtn = '<button class="btn_pop btn_delete btn_cmmt" data-layer="delete_cmmt" data-value="'+data[index].gcnum+'"><em class="snd_only">삭제하기</em></button></p>';
-					}
-					comments.append('<li>'+
-							'<a href="${root }user/?pronum='+data[index].pronum+'" class="pf_picture">'+
-								'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일" onload="squareTrim($(this), 30)">'+
-							'</a><p class="cmt_content">'+
-								'<a href="${root }user/?pronum='+data[index].pronum+'" class="cmt_name">'+data[index].gcauthor+'</a>'+
-								data[index].gccontent+
-								'<span class="cmt_date">'+data[index].gcdate1+'</span>'+
-								delbtn+
-						'</li>');
-				});//each문 end  
-			});//ajax통신 end
+					$(data).each(function(index){
+						if(index==3){
+							 return false;
+						}else if(data.length<4){
+							btn.hide();
+						}
+						var delbtn;
+						if('${login.pronum}'==''){
+							delbtn = '';
+						}else if('${login.pronum}'!=data[index].pronum){
+							delbtn = '';
+						}else{
+							delbtn = '<button class="btn_pop btn_delete btn_cmmt" data-layer="delete_cmmt" data-value="'+data[index].gcnum+'"><em class="snd_only">삭제하기</em></button></p>';
+						}
+						comments.append('<li>'+
+								'<a href="${root }user/?pronum='+data[index].pronum+'" class="pf_picture">'+
+									'<img src="${upload}/'+data[index].profile.prophoto+'" alt="'+data[index].profile.proname+'님의 프로필 썸네일" onload="squareTrim($(this), 30)">'+
+								'</a><p class="cmt_content">'+
+									'<a href="${root }user/?pronum='+data[index].pronum+'" class="cmt_name">'+data[index].gcauthor+'</a>&nbsp;'+
+									data[index].gccontent+
+									'<span class="cmt_date">'+data[index].gcdate1+'</span>'+
+									delbtn+
+							'</li>');
+					});//each문 end  
+				});//ajax통신 end
 			});//댓글더보기 end
 			
 			//개인피드댓글 더보기버튼
@@ -293,7 +279,7 @@
 					<a href="${root}"><em class="snd_only">FESTA</em></a>
 				</h1>
 				<form class="search_box" action="${root }search/">
-					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
 					<button type="submit"><img src="${root}resources/images/ico/btn_search.png" alt="검색"></button>
 				</form>
 				<ul id="gnb">
@@ -500,7 +486,7 @@
 								</div>
 								<c:if test="${login ne null }">
 									<form class="message_form">
-										<a class="pf_picture" href="">
+										<a class="pf_picture" href="${root }user/?pronum=${login.pronum}">
 											<img src="${upload }/${login.prophoto}" alt="나의 프로필 썸네일">
 										</a>
 										<p class="msg_input">
@@ -652,7 +638,7 @@
 								</div>
 								<c:if test="${login ne null }">
 									<form class="message_form">
-										<a class="pf_picture" href="">
+										<a class="pf_picture" href="${root }user/?pronum=${login.pronum}">
 											<img src="${upload }/${login.prophoto}" alt="나의 프로필 썸네일">
 										</a>
 										<p class="msg_input">
@@ -739,7 +725,7 @@
 			<!-- } 우측 사이드영역 끝 -->
 		</div>
 	</div>
-	<span class="snd_only">0</span>
+	<span class="snd_only">1</span>
 	<!-- } 서브페이지 -->
 	<div id="footer">
 		<div class="container">

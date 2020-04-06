@@ -17,25 +17,25 @@ public class IndexDaoImpl implements IndexDao{
 	SqlSession sqlSession;
 	
 	//////////////////////////////////////////////////////////////////////
-	//////////////////////////¸ŞÀÎÈ­¸é Ãâ·Â///////////////////////////////
+	//////////////////////////ë©”ì¸í™”ë©´ ì¶œë ¥///////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	
 	
-	//³» °¡ÀÔÀÎ¿ø¸¹Àº¼ø ±×·ìÃâ·Â -ºñ·Î±×ÀÎ
+	//ë‚´ ê°€ì…ì¸ì›ë§ì€ìˆœ ê·¸ë£¹ì¶œë ¥ -ë¹„ë¡œê·¸ì¸
 	@Override
 	public List<GroupVo> totalGroupSelectAll() {
 		
 		return sqlSession.selectList("index.totalGroupList");
 	}
 	
-	//°¡ÀÔÇÏÁö¾ÊÀº ¼±È£Áö¿ª±â¹İ ±×·ìÃâ·Â -·Î±×ÀÎ
+	//ê°€ì…í•˜ì§€ì•Šì€ ì„ í˜¸ì§€ì—­ê¸°ë°˜ ê·¸ë£¹ì¶œë ¥ -ë¡œê·¸ì¸
 	@Override
 	public List<GroupVo> addrGroupSelectAll(ProfileVo profile) {
 		
 		return sqlSession.selectList("index.addrGroupList",profile);
 	}
 	
-	//ÁÁ¾Æ¿ä ¸¹Àº Ä·ÇÎÀåÃâ·Â
+	//ì¢‹ì•„ìš” ë§ì€ ìº í•‘ì¥ì¶œë ¥
 	@Override
 	public List<CampVo> veryHotCampSelectAll() {
 		

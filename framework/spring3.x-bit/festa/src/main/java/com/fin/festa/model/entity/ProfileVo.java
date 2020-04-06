@@ -3,23 +3,23 @@ package com.fin.festa.model.entity;
 import java.sql.Date;
 import java.util.List;
 
-public class ProfileVo {					//³» Á¤º¸ (ÇÁ·ÎÇÊ) 
+public class ProfileVo {					//ë‚´ ì •ë³´ (í”„ë¡œí•„) 
 
-	private List<ProfileVo> profileList;	//Á¤Áö°ª Ã³¸®ÇÒ¶§ ¾²ÀÓ
-	private int pronum;						//³» ¹øÈ£ (pk)
-	private String proname;					//³» ÀÌ¸§
-	private String proid;					//³» ¾ÆÀÌµğ
-	private String propw;					//³» ºñ¹Ğ¹øÈ£
-	private String proaddr;					//³» °ü½ÉÁö¿ª
-	private String projob;					//³» Á÷¾÷
-	private String projender;				//³» ¼ºº°
-	private String proidnum;				//³» »ı³â¿ùÀÏ
-	private String prophoto;				//³» »çÁø
-	private String prointro;				//³» ¼Ò°³
+	private List<ProfileVo> profileList;	//ì •ì§€ê°’ ì²˜ë¦¬í• ë•Œ ì“°ì„
+	private int pronum;						//ë‚´ ë²ˆí˜¸ (pk)
+	private String proname;					//ë‚´ ì´ë¦„
+	private String proid;					//ë‚´ ì•„ì´ë””
+	private String propw;					//ë‚´ ë¹„ë°€ë²ˆí˜¸
+	private String proaddr;					//ë‚´ ê´€ì‹¬ì§€ì—­
+	private String projob;					//ë‚´ ì§ì—…
+	private String projender;				//ë‚´ ì„±ë³„
+	private String proidnum;				//ë‚´ ìƒë…„ì›”ì¼
+	private String prophoto;				//ë‚´ ì‚¬ì§„
+	private String prointro;				//ë‚´ ì†Œê°œ
 	private Date prodate;
-	private int prorn;			//ÆäÀÌÁö ¹øÈ£
-	private int logincheck;		//·Î±×ÀÎ»óÅÂÃ¼Å©
-	private int proprovide;		//¼Ò¼È·Î±×ÀÎÃ¼Å©
+	private int prorn;			//í˜ì´ì§€ ë²ˆí˜¸
+	private int logincheck;		//ë¡œê·¸ì¸ìƒíƒœì²´í¬
+	private int proprovide;		//ì†Œì…œë¡œê·¸ì¸ì²´í¬
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

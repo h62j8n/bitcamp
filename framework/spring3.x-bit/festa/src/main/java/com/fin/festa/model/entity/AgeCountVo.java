@@ -1,12 +1,12 @@
 package com.fin.festa.model.entity;
 
-public class AgeCountVo {		//´ë½Ãº¸µå-È¸¿ø ¿¬·ÉºĞÆ÷Vo
+public class AgeCountVo {		//ëŒ€ì‹œë³´ë“œ-íšŒì› ì—°ë ¹ë¶„í¬Vo
 
-	private int age10;		//È¸¿ø¿¬·É´ë 10´ë ÆÛ¼¾Æ®
-	private int age20;		//È¸¿ø¿¬·É´ë 20´ë ÆÛ¼¾Æ®
-	private int age30;		//È¸¿ø¿¬·É´ë 30´ë ÆÛ¼¾Æ®
-	private int age40;		//È¸¿ø¿¬·É´ë 40´ë ÆÛ¼¾Æ®
-	private int age50;		//È¸¿ø¿¬·É´ë ±âÅ¸(50ÀÌ»ó)
+	private int age10;		//íšŒì›ì—°ë ¹ëŒ€ 10ëŒ€ í¼ì„¼íŠ¸
+	private int age20;		//íšŒì›ì—°ë ¹ëŒ€ 20ëŒ€ í¼ì„¼íŠ¸
+	private int age30;		//íšŒì›ì—°ë ¹ëŒ€ 30ëŒ€ í¼ì„¼íŠ¸
+	private int age40;		//íšŒì›ì—°ë ¹ëŒ€ 40ëŒ€ í¼ì„¼íŠ¸
+	private int age50;		//íšŒì›ì—°ë ¹ëŒ€ ê¸°íƒ€(50ì´ìƒ)
 	
 	@Override
 	public String toString() {

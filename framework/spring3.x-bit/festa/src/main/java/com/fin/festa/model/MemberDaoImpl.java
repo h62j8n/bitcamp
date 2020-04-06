@@ -23,126 +23,126 @@ public class MemberDaoImpl implements MemberDao{
 	SqlSession sqlSession;
 	
 	////////////////////////////////////////////////////////////
-	///////////////////////·Î±×ÀÎÃ³¸®///////////////////////////
-	//////////////////·Î±×ÀÎ ½Ã ´ãÀ» µ¥ÀÌÅÍ/////////////////////
+	///////////////////////ë¡œê·¸ì¸ì²˜ë¦¬///////////////////////////
+	//////////////////ë¡œê·¸ì¸ ì‹œ ë‹´ì„ ë°ì´í„°/////////////////////
 	////////////////////////////////////////////////////////////
 	
-	//·Î±×ÀÎÃ³¸® ¹× ÇØ´ç È¸¿øÁ¤º¸Ãâ·Â
+	//ë¡œê·¸ì¸ì²˜ë¦¬ ë° í•´ë‹¹ íšŒì›ì •ë³´ì¶œë ¥
 	@Override
 	public ProfileVo login(LoginVo login) {
 		return sqlSession.selectOne("member.login",login);
 	}
 
-	//·Î±×ÀÎ°ú µ¿½ÃÀÛ¾÷  °èÁ¤ ºñÈ°¼ºÈ­ÇØÁ¦ ¾÷µ¥ÀÌÆ®(1=È°¼ºÈ­, 2=ºñÈ°¼ºÈ­)
+	//ë¡œê·¸ì¸ê³¼ ë™ì‹œì‘ì—…  ê³„ì • ë¹„í™œì„±í™”í•´ì œ ì—…ë°ì´íŠ¸(1=í™œì„±í™”, 2=ë¹„í™œì„±í™”)
 	@Override
 	public void inactiveUpdate(ProfileVo profile) {
 		sqlSession.update("member.inactive",profile);
 	}
 	
-	//·Î±×ÀÎ°ú µ¿½ÃÀÛ¾÷  Á¤Áö,Ãß¹æ°èÁ¤,°ü¸®ÀÚÀÎÁö Ã¼Å©
+	//ë¡œê·¸ì¸ê³¼ ë™ì‹œì‘ì—…  ì •ì§€,ì¶”ë°©ê³„ì •,ê´€ë¦¬ìì¸ì§€ ì²´í¬
 	@Override
 	public MyAdminVo stopAndKickMember(ProfileVo profile) {
 		return sqlSession.selectOne("member.stopAndKick",profile) ;
 	}
 	
 	
-	//±×·ìÇØÃ¼½Ã ¼¼¼Ç°»½Å
+	//ê·¸ë£¹í•´ì²´ì‹œ ì„¸ì…˜ê°±ì‹ 
 	@Override
 	public List<JoinGroupVo> myJoinGroupSelectAll(int pronum) {
 		return sqlSession.selectList("member.myJoinGroupList", pronum);
 	}
 	
-	//·Î±×ÀÎ°ú µ¿½ÃÀÛ¾÷(·Î±×ÀÎ¿Ï·á µÇ¸é)  ÇØ´çÈ¸¿øÀÇ °¡ÀÔ±×·ì¸ñ·ÏÃâ·Â
+	//ë¡œê·¸ì¸ê³¼ ë™ì‹œì‘ì—…(ë¡œê·¸ì¸ì™„ë£Œ ë˜ë©´)  í•´ë‹¹íšŒì›ì˜ ê°€ì…ê·¸ë£¹ëª©ë¡ì¶œë ¥
 	@Override
 	public List<JoinGroupVo> myJoinGroupSelectAll(ProfileVo profile) {
 		return sqlSession.selectList("member.myJoinGroupList", profile);
 	}
 	
-	//·Î±×ÀÎ°ú µ¿½ÃÀÛ¾÷(·Î±×ÀÎ¿Ï·á µÇ¸é)  ÇØ´çÈ¸¿øÀÇ ºÏ¸¶Å©¸ñ·ÏÃâ·Â
+	//ë¡œê·¸ì¸ê³¼ ë™ì‹œì‘ì—…(ë¡œê·¸ì¸ì™„ë£Œ ë˜ë©´)  í•´ë‹¹íšŒì›ì˜ ë¶ë§ˆí¬ëª©ë¡ì¶œë ¥
 	@Override
 	public List<MyBookMarkVo> myBookMarkSelectAll(ProfileVo profile) {
 		return sqlSession.selectList("member.myBookMarkList",profile);
 	}
 
-	//ÃßÃµ±×·ì¸®½ºÆ® Ãâ·Â
+	//ì¶”ì²œê·¸ë£¹ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 	@Override
 	public List<GroupVo> goodGroupSelectAll() {
 		return sqlSession.selectList("member.groupList");
 	}
 
-	//ÃßÃµÄ·ÇÎÀå¸®½ºÆ® Ãâ·Â
+	//ì¶”ì²œìº í•‘ì¥ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 	@Override
 	public List<CampVo> goodCampSelectAll() {
 		return sqlSession.selectList("member.campList");
 	}
 
-	//³»ÁÁ¾Æ¿ä¸ñ·Ï Ãâ·Â
+	//ë‚´ì¢‹ì•„ìš”ëª©ë¡ ì¶œë ¥
 	@Override
 	public List<MyGoodVo> myGoodSelectAll(ProfileVo profile) {
 		return sqlSession.selectList("member.myGoodSelectAll",profile);
 	}
 
-	//³» ÆÈ·ÎÀ×¸®½ºÆ® Ãâ·Â(¼¼¼Ç¿¡ °ª¸¸ °¡Áö°íÀÖ±â)
+	//ë‚´ íŒ”ë¡œì‰ë¦¬ìŠ¤íŠ¸ ì¶œë ¥(ì„¸ì…˜ì— ê°’ë§Œ ê°€ì§€ê³ ìˆê¸°)
 	@Override
 	public List<MyFollowingVo> myFollowingList(ProfileVo profile) {
 		return sqlSession.selectList("member.myFollowing",profile);
 	}
 	
 	////////////////////////////////////////////////////////////
-	/////////////////////È¸¿ø°¡ÀÔÃ³¸®///////////////////////////
+	/////////////////////íšŒì›ê°€ì…ì²˜ë¦¬///////////////////////////
 	////////////////////////////////////////////////////////////
 	
-	//È¸¿ø°¡ÀÔ ¾ÆÀÌµğÁßº¹Ã³¸®
+	//íšŒì›ê°€ì… ì•„ì´ë””ì¤‘ë³µì²˜ë¦¬
 	@Override
 	public int idDuplicate(LoginVo login) {
 		return sqlSession.selectOne("member.idDuplicate",login);
 	}
 	
-	//È¸¿ø°¡ÀÔµî·ÏÃ³¸® - ÀÏ¹İ
+	//íšŒì›ê°€ì…ë“±ë¡ì²˜ë¦¬ - ì¼ë°˜
 	@Override
 	public void memberInsert_nomal(ProfileVo profile) {
 		sqlSession.insert("member.memberInsert_nomal",profile);
 	}
 
-	//È¸¿ø°¡ÀÔµî·ÏÃ³¸® - ¼Ò¼È
+	//íšŒì›ê°€ì…ë“±ë¡ì²˜ë¦¬ - ì†Œì…œ
 	@Override
 	public void memberInsert_social(ProfileVo profile) {
 		sqlSession.insert("member.memberInsert_social",profile);
 	}
 
-	//È¸¿ø°¡ÀÔÇÑ À¯Àú pronum¹Ş±â
+	//íšŒì›ê°€ì…í•œ ìœ ì € pronumë°›ê¸°
 	@Override
 	public ProfileVo find_pronum(ProfileVo profile) {
 		return sqlSession.selectOne("member.find_pronum",profile);
 	}
 	
-	//È¸¿ø°¡ÀÔ ¼º°ø½Ã ³»°ü¸®Å×ÀÌºí »ı¼º
+	//íšŒì›ê°€ì… ì„±ê³µì‹œ ë‚´ê´€ë¦¬í…Œì´ë¸” ìƒì„±
 	@Override
 	public void myadminInsert(ProfileVo profile) {
 		sqlSession.insert("member.myadminInsert",profile);
 	}
 	
 	////////////////////////////////////////////////////////////
-	///////////////////////¾ÆÀÌµğÃ£±â///////////////////////////
+	///////////////////////ì•„ì´ë””ì°¾ê¸°///////////////////////////
 	////////////////////////////////////////////////////////////
 	
-	//¾ÆÀÌµğÃ£±â
+	//ì•„ì´ë””ì°¾ê¸°
 	@Override
 	public ProfileVo findId(LoginVo login) {
 		return sqlSession.selectOne("member.findId",login);
 	}
 	
 	////////////////////////////////////////////////////////////
-	/////////////////////////ºñ¹øÃ£±â///////////////////////////
+	/////////////////////////ë¹„ë²ˆì°¾ê¸°///////////////////////////
 	////////////////////////////////////////////////////////////
 	
-	//ºñ¹Ğ¹øÈ£Ã£±â
+	//ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°
 	@Override
 	public ProfileVo findPw(LoginVo login) {
 		return sqlSession.selectOne("member.findPw",login);
 	}
 
-	//ºñ¹øÃ£±â ÈÄ ºñ¹ø¼³Á¤
+	//ë¹„ë²ˆì°¾ê¸° í›„ ë¹„ë²ˆì„¤ì •
 	@Override
 	public int pwUpdate(ProfileVo profile) {
 		return sqlSession.update("member.pwUpdate",profile);

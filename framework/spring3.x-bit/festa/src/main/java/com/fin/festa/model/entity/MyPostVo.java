@@ -5,21 +5,21 @@ import java.sql.Timestamp;
 
 import com.fin.festa.util.DateCalculate;
 
-public class MyPostVo {			//³» ÇÇµå °Ô½Ã±Û 
+public class MyPostVo {			//ë‚´ í”¼ë“œ ê²Œì‹œê¸€ 
 
 	DateCalculate cal;
-	private int mpnum;			//³» °Ô½Ã±Û ¹øÈ£ (pk)
-	private String mpauthor;	//³» ÀÌ¸§
-	private String mpphoto;		//°Ô½Ã±Û »çÁø
-	private String mpcontent;	//°Ô½Ã±Û ³»¿ë
-	private String httitle1;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×1
-	private String httitle2;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×1
-	private String httitle3;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×1
+	private int mpnum;			//ë‚´ ê²Œì‹œê¸€ ë²ˆí˜¸ (pk)
+	private String mpauthor;	//ë‚´ ì´ë¦„
+	private String mpphoto;		//ê²Œì‹œê¸€ ì‚¬ì§„
+	private String mpcontent;	//ê²Œì‹œê¸€ ë‚´ìš©
+	private String httitle1;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸1
+	private String httitle2;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸1
+	private String httitle3;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸1
 	private String mpdate1;
-	private Timestamp mpdate;	//ÀÛ¼ºÀÏ
-	private int mpgood;			//³» °Ô½Ã±Û ÁÁ¾Æ¿ä
-	private int pronum;			//³» ¹øÈ£
-	private int mptotal;		//³»°Ô½Ã±ÛÀÇ ´ñ±Û¼ö
+	private Timestamp mpdate;	//ì‘ì„±ì¼
+	private int mpgood;			//ë‚´ ê²Œì‹œê¸€ ì¢‹ì•„ìš”
+	private int pronum;			//ë‚´ ë²ˆí˜¸
+	private int mptotal;		//ë‚´ê²Œì‹œê¸€ì˜ ëŒ“ê¸€ìˆ˜
 	private CampVo camp;
 	private CampReviewVo campReview;
 	private GroupCommentVo groupComment;

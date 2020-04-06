@@ -15,13 +15,13 @@ import com.fin.festa.service.IndexService;
 public class IndexController {
 
 //////////////////////////////////////////////////////////////////////
-////////////////////////////////È¨ °ü·Ã////////////////////////////////
+////////////////////////////////í™ˆ ê´€ë ¨////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 	@Autowired
 	private IndexService indexService;
 	
-	//¸ŞÀÎ Ãâ·Â
+	//ë©”ì¸ ì¶œë ¥
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String index(HttpServletRequest req) {
 		
@@ -29,7 +29,7 @@ public class IndexController {
 		return "index";
 	}
 	
-	//404È­¸é Ãâ·Â
+	//404í™”ë©´ ì¶œë ¥
 	@RequestMapping(value ="empty", method = RequestMethod.GET)
 	public String notFound() {
 		return "empty";

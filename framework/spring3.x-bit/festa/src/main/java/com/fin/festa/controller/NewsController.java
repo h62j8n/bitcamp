@@ -22,68 +22,68 @@ import com.fin.festa.service.NewsService;
 public class NewsController {
 
 //////////////////////////////////////////////////////////////////////
-//////////////////////////////  ´º½ºÇÇµå  /////////////////////////////
+//////////////////////////////  ë‰´ìŠ¤í”¼ë“œ  /////////////////////////////
 //////////////////////////////////////////////////////////////////////
 	
 	@Autowired
 	private NewsService newsService;
 	
-	//´º½ºÇÇµå Á¶È¸
+	//ë‰´ìŠ¤í”¼ë“œ ì¡°íšŒ
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String newsFeedSelectAll(Model model, MyFollowingVo myFollowingVo){
 		newsService.newsFeedSelectAll(model, myFollowingVo);
 		return "news/index";
 	}
 	
-	//³» ÇÇµå ¼öÁ¤ (ÆË¾÷)
+	//ë‚´ í”¼ë“œ ìˆ˜ì • (íŒì—…)
 	@RequestMapping(value = "edit", method = RequestMethod.GET)
 	public String feedUpdateOne() {
 		return "news/maker";
 	}
 	
-	//³» ÇÇµå ¼öÁ¤ (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ë‚´ í”¼ë“œ ìˆ˜ì • (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "edit", method = RequestMethod.POST)
 	public String feedUpdateOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		return "news/index";
 	}
 
-	//³» ÇÇµå »èÁ¦ (ÆË¾÷>³»ºÎÆË¾÷ ±â´É)
+	//ë‚´ í”¼ë“œ ì‚­ì œ (íŒì—…>ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
 	public String feedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
 		return "news/index";
 	}
 	
-	//´º½ºÇÇµå ´ñ±Û µî·Ï
+	//ë‰´ìŠ¤í”¼ë“œ ëŒ“ê¸€ ë“±ë¡
 	@RequestMapping(value = "cmmtadd", method = RequestMethod.POST)
 	public String newsFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo) {
 		return "news/index";
 	}
 	
-	//´º½ºÇÇµå ´ñ±Û »èÁ¦ (³»ºÎÆË¾÷ ±â´É)
+	//ë‰´ìŠ¤í”¼ë“œ ëŒ“ê¸€ ì‚­ì œ (ë‚´ë¶€íŒì—… ê¸°ëŠ¥)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
 	public String newsFeedCmmtDeleteOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
 		return "news/index";
 	}
 	
-	//´º½ºÇÇµå ÁÁ¾Æ¿ä
+	//ë‰´ìŠ¤í”¼ë“œ ì¢‹ì•„ìš”
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String newsLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		return "news/index";
 	}
 	
-	//´º½ºÇÇµå ÁÁ¾Æ¿ä ÇØÁ¦
+	//ë‰´ìŠ¤í”¼ë“œ ì¢‹ì•„ìš” í•´ì œ
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String newsLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
 		return "news/index";
 	}
 
-	//´º½ºÇÇµå ½Å°í (ÆË¾÷)
+	//ë‰´ìŠ¤í”¼ë“œ ì‹ ê³  (íŒì—…)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
 	public String newsFeedReport(){
 		return "news/report";
 	}
 	
-	//´º½ºÇÇµå ½Å°í (ÆË¾÷>ÆË¾÷ ³» ±â´É)
+	//ë‰´ìŠ¤í”¼ë“œ ì‹ ê³  (íŒì—…>íŒì—… ë‚´ ê¸°ëŠ¥)
 	@RequestMapping(value = "report", method = RequestMethod.POST)
 	public String newsFeedReport(Model model, ReportListVo reportListVo){
 		return "news/index";

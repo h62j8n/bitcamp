@@ -2,13 +2,13 @@ package com.fin.festa.model.entity;
 
 import java.sql.Date;
 
-public class GroupChatVo {		//Ã¤ÆÃ
+public class GroupChatVo {		//ì±„íŒ…
 
-	private int grnum;			//±×·ì¹øÈ£
-	private int pronum;			//È¸¿ø¹øÈ£
-	private int joinstatus;		//Á¢¼Ó»óÅÂ
-	private String mymsg;		//³» ¸Ş¼¼Áö
-	private Date msgdate;		//¸Ş¼¼Áöµî·ÏÀÏ
+	private int grnum;			//ê·¸ë£¹ë²ˆí˜¸
+	private int pronum;			//íšŒì›ë²ˆí˜¸
+	private int joinstatus;		//ì ‘ì†ìƒíƒœ
+	private String mymsg;		//ë‚´ ë©”ì„¸ì§€
+	private Date msgdate;		//ë©”ì„¸ì§€ë“±ë¡ì¼
 	
 	@Override
 	public String toString() {

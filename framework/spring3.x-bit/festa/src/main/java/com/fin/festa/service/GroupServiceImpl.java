@@ -35,7 +35,7 @@ import com.fin.festa.util.UploadPhoto;
 @Service
 public class GroupServiceImpl implements GroupService{
 
-	//µî·Ï,¼öÁ¤,»èÁ¦°¡ ÃÖ¼Ò2°³ÀÌ»ó µé¾î°¡´Â ¸Ş¼Òµå´Â ²À Æ®·£Àè¼Ç Àû¿ëÇÒ°Í!!
+	//ë“±ë¡,ìˆ˜ì •,ì‚­ì œê°€ ìµœì†Œ2ê°œì´ìƒ ë“¤ì–´ê°€ëŠ” ë©”ì†Œë“œëŠ” ê¼­ íŠ¸ëœì­ì…˜ ì ìš©í• ê²ƒ!!
 
 	@Autowired
 	GroupDaoImpl groupDao;
@@ -48,18 +48,18 @@ public class GroupServiceImpl implements GroupService{
 	
 	int check;
 	
-	//°¡ÀÔµÈ ±×·ìÀÎÁö Ã¼Å©
+	//ê°€ì…ëœ ê·¸ë£¹ì¸ì§€ ì²´í¬
 	@Override
 	public int joinGroup(HttpServletRequest req, UpdateWaitVo updateWaitVo) {
 		int result=groupDao.joinGroupCheck(updateWaitVo);
 		int result2=groupDao.updateGroupCheck(updateWaitVo);
-		if(result == 0 && result2 ==0) {				//°¡ÀÔµÈ ±×·ìÀÌ ¾Æ´Ô
+		if(result == 0 && result2 ==0) {				//ê°€ì…ëœ ê·¸ë£¹ì´ ì•„ë‹˜
 			check=0;
 			return check;
-		} else if (result == 0 && result2 == 1){		//½ÂÀÎ ´ë±âÁß
+		} else if (result == 0 && result2 == 1){		//ìŠ¹ì¸ ëŒ€ê¸°ì¤‘
 			check=1;
 			return check;
-		} else {										//±×·ì¿ø
+		} else {										//ê·¸ë£¹ì›
 			check=2;
 			ProfileVo profileVo=new ProfileVo();
 			profileVo.setPronum(updateWaitVo.getPronum());
@@ -72,17 +72,17 @@ public class GroupServiceImpl implements GroupService{
 		
 	}
 
-	//±×·ì °¡ÀÔ
+	//ê·¸ë£¹ ê°€ì…
 	@Override
 	public void groupAdmission(Model model, UpdateWaitVo updateWaitVo) {
 		groupDao.joinGroupRequest(updateWaitVo);
 	}
 	
-	//°ø½Ä±×·ìÀÎÁö Ã¼Å©
-	//±×·ìÁ¤º¸Ãâ·Â
-	//±×·ìÇÇµåÃâ·Â
-	//±×·ì°øÁö»çÇ×Ãâ·Â
-	//±×·ìÇÇµå´ñ±ÛÃâ·Â
+	//ê³µì‹ê·¸ë£¹ì¸ì§€ ì²´í¬
+	//ê·¸ë£¹ì •ë³´ì¶œë ¥
+	//ê·¸ë£¹í”¼ë“œì¶œë ¥
+	//ê·¸ë£¹ê³µì§€ì‚¬í•­ì¶œë ¥
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ì¶œë ¥
 	@Override
 	public void groupSelectOne(HttpServletRequest req, GroupVo groupVo) {
 		req.setAttribute("check", groupDao.groupVentureCheck(groupVo));
@@ -99,26 +99,26 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("camplist", indexDao.veryHotCampSelectAll());
 	}
 	
-	//°øÁö»çÇ×´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê³µì§€ì‚¬í•­ëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupNoticeCommentVo> groupNoticeDetailCmmt(Model model, GroupNoticeVo groupnotice) {
 		return groupDao.groupNoticeDetailCmmt(groupnotice);
 	}
 
-	//±×·ìÇÇµå´ñ±Û ´õº¸±â ºñµ¿±â
+	//ê·¸ë£¹í”¼ë“œëŒ“ê¸€ ë”ë³´ê¸° ë¹„ë™ê¸°
 	@Override
 	public List<GroupCommentVo> groupDetailCmmt(Model model, GroupPostVo grouppost) {
 		return groupDao.groupDetailCmmt(grouppost);
 	}
 	
-	//±×·ìÀÎ¿øÁ¤º¸ Ãâ·Â
+	//ê·¸ë£¹ì¸ì›ì •ë³´ ì¶œë ¥
 	@Override
 	public void groupMemberList(HttpServletRequest req, GroupVo groupVo) {
 		req.setAttribute("member", groupDao.groupUserInfo(groupVo));
 	}
 	
-	//±×·ì ½Å°íµî·Ï
-	//½Å°í´çÇÑÀ¯Àú ½Å°í´çÇÑÈ½¼ö +1
+	//ê·¸ë£¹ ì‹ ê³ ë“±ë¡
+	//ì‹ ê³ ë‹¹í•œìœ ì € ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Transactional
 	@Override
 	public void groupReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
@@ -127,11 +127,11 @@ public class GroupServiceImpl implements GroupService{
 		String rlphoto = up.upload(files, req, reportListVo);
 		reportListVo.setRlphoto(rlphoto);
 		
-		//±âÅ¸¹öÆ°´­·¶´Ù°¡ ´Ù¸¥°ÅÃ¼Å©ÇÏ°í ³Ñ¾î¿Â°æ¿ì ´Ù¸¥°ÅÃ¼Å©°ªÀ¸·Î ´ëÃ¼
+		//ê¸°íƒ€ë²„íŠ¼ëˆŒë €ë‹¤ê°€ ë‹¤ë¥¸ê±°ì²´í¬í•˜ê³  ë„˜ì–´ì˜¨ê²½ìš° ë‹¤ë¥¸ê±°ì²´í¬ê°’ìœ¼ë¡œ ëŒ€ì²´
 		String rlreport = reportListVo.getRlreport();
 		String[] report = rlreport.split("\\,");
 		if(report.length>1) {
-			if(report[0].equals("±âÅ¸")) {
+			if(report[0].equals("ê¸°íƒ€")) {
 				rlreport = report[1];
 			}else {
 				rlreport = report[0];
@@ -145,7 +145,7 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
-	//°øÁö»çÇ× µî·Ï
+	//ê³µì§€ì‚¬í•­ ë“±ë¡
 	@Override
 	public void noticeInsertOne(HttpServletRequest req, MultipartFile[] files, GroupNoticeVo groupNoticeVo) {
 		UploadPhoto up = new UploadPhoto();
@@ -154,8 +154,8 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupNoticeInsert(groupNoticeVo);
 	}
 
-	//°øÁö»çÇ× »ó¼¼Á¤º¸Ãâ·Â
-	//°øÁö»çÇ× ´ñ±ÛÃâ·Â
+	//ê³µì§€ì‚¬í•­ ìƒì„¸ì •ë³´ì¶œë ¥
+	//ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì¶œë ¥
 	@Override
 	public void noticeSelectOne(HttpServletRequest req, GroupNoticeVo groupNoticeVo) {
 		GroupVo group=new GroupVo();
@@ -167,7 +167,7 @@ public class GroupServiceImpl implements GroupService{
 	}
 	
 
-	//°øÁö»çÇ× ¼öÁ¤
+	//ê³µì§€ì‚¬í•­ ìˆ˜ì •
 	@Override
 	public void noticeUpdateOne(HttpServletRequest req, MultipartFile[] filess, GroupNoticeVo groupNoticeVo) {
 		UploadPhoto up = new UploadPhoto();
@@ -183,27 +183,27 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupNoticeUpdate(groupNoticeVo);
 	}
 
-	//°øÁö»çÇ× »èÁ¦
+	//ê³µì§€ì‚¬í•­ ì‚­ì œ
 	@Override
 	public void noticeDeleteOne(Model model, GroupNoticeVo groupNoticeVo) {
 		groupDao.groupNoticeDelete(groupNoticeVo);
 	}
 
-	//°øÁö»çÇ× ´ñ±Ûµî·Ï
+	//ê³µì§€ì‚¬í•­ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void noticeCmmtInsertOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo) {
 		groupDao.groupNoticeCmmtInsert(groupNoticeCommentVo);
 	}
 
-	//°øÁö»çÇ× ´ñ±Û»èÁ¦
+	//ê³µì§€ì‚¬í•­ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public void noticeCmmtDeleteOne(HttpServletRequest req, GroupNoticeCommentVo groupNoticeCommentVo) {
 		groupDao.groupNoticeCmmtDelete(groupNoticeCommentVo);
 	}
 
 
-	//°øÁö»çÇ× ½Å°íµî·Ï
-	//ÇØ´çÀ¯Àú ½Å°íÈ½¼ö +1
+	//ê³µì§€ì‚¬í•­ ì‹ ê³ ë“±ë¡
+	//í•´ë‹¹ìœ ì € ì‹ ê³ íšŸìˆ˜ +1
 	@Override
 	public void noticeReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
 		
@@ -211,11 +211,11 @@ public class GroupServiceImpl implements GroupService{
 		String rlphoto = up.upload(files, req, reportListVo);
 		reportListVo.setRlphoto(rlphoto);
 		
-		//±âÅ¸¹öÆ°´­·¶´Ù°¡ ´Ù¸¥°ÅÃ¼Å©ÇÏ°í ³Ñ¾î¿Â°æ¿ì ´Ù¸¥°ÅÃ¼Å©°ªÀ¸·Î ´ëÃ¼
+		//ê¸°íƒ€ë²„íŠ¼ëˆŒë €ë‹¤ê°€ ë‹¤ë¥¸ê±°ì²´í¬í•˜ê³  ë„˜ì–´ì˜¨ê²½ìš° ë‹¤ë¥¸ê±°ì²´í¬ê°’ìœ¼ë¡œ ëŒ€ì²´
 		String rlreport = reportListVo.getRlreport();
 		String[] report = rlreport.split("\\,");
 		if(report.length>1) {
-			if(report[0].equals("±âÅ¸")) {
+			if(report[0].equals("ê¸°íƒ€")) {
 				rlreport = report[1];
 			}else {
 				rlreport = report[0];
@@ -229,7 +229,7 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
-	//±×·ìÇÇµå µî·Ï
+	//ê·¸ë£¹í”¼ë“œ ë“±ë¡
 	@Override
 	public void groupFeedInsertOne(HttpServletRequest req, MultipartFile[] files, GroupPostVo groupPostVo) {
 		UploadPhoto up = new UploadPhoto();
@@ -238,13 +238,13 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupFeedInsert(groupPostVo);
 	}
 
-	//±×·ìÇÇµå ¼öÁ¤ Àü Ãâ·Â
+	//ê·¸ë£¹í”¼ë“œ ìˆ˜ì • ì „ ì¶œë ¥
 	@Override
 	public void groupFeedDetail(Model model, GroupPostVo groupPostVo) {
 		model.addAttribute("feedDetail", groupDao.groupFeedDetailOne(groupPostVo));
 	}
 	
-	//±×·ìÇÇµå ¼öÁ¤
+	//ê·¸ë£¹í”¼ë“œ ìˆ˜ì •
 	@Override
 	public void groupFeedUpdateOne(HttpServletRequest req, MultipartFile[] filess ,GroupPostVo groupPostVo) {
 		UploadPhoto up = new UploadPhoto();
@@ -260,27 +260,27 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupFeedUpdate(groupPostVo);
 	}
 
-	//±×·ìÇÇµå »èÁ¦
+	//ê·¸ë£¹í”¼ë“œ ì‚­ì œ
 	@Override
 	public void groupFeedDeleteOne(Model model, GroupPostVo groupPostVo) {
 		groupDao.groupFeedDelete(groupPostVo);
 	}
 
-	//±×·ìÇÇµå ´ñ±Ûµî·Ï
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ë“±ë¡
 	@Override
 	public void groupFeedCmmtInsertOne(HttpServletRequest req, GroupCommentVo groupCommentVo) {
 		groupDao.groupFeedCmmtInsert(groupCommentVo);
 	}
 
-	//±×·ìÇÇµå ´ñ±Û»èÁ¦
+	//ê·¸ë£¹í”¼ë“œ ëŒ“ê¸€ì‚­ì œ
 	@Override
 	public void groupFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo) {
 		groupDao.groupFeedCmmtDelete(groupCommentVo);
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äµî·Ï
-	//ÇÇµå ÁÁ¾Æ¿ä °¹¼ö +1
-	//ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”ë“±ë¡
+	//í”¼ë“œ ì¢‹ì•„ìš” ê°¯ìˆ˜ +1
+	//ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void FeedLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo) {
@@ -295,9 +295,9 @@ public class GroupServiceImpl implements GroupService{
 		req.getSession().setAttribute("goodlist", groupDao.myGoodRenewal(myGoodVo));
 	}
 
-	//±×·ìÇÇµå ÁÁ¾Æ¿äÇØÁ¦
-	//ÇÇµå ÁÁ¾Æ¿ä °¹¼ö -1
-	//ÁÁ¾Æ¿ä¸ñ·Ï °»½Å
+	//ê·¸ë£¹í”¼ë“œ ì¢‹ì•„ìš”í•´ì œ
+	//í”¼ë“œ ì¢‹ì•„ìš” ê°¯ìˆ˜ -1
+	//ì¢‹ì•„ìš”ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void FeedLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo) {
@@ -312,8 +312,8 @@ public class GroupServiceImpl implements GroupService{
 		req.getSession().setAttribute("goodlist", groupDao.myGoodRenewal(myGoodVo));
 	}
 
-	//±×·ìÇÇµå ½Å°íµî·Ï
-	//½Å°í´çÇÑÀ¯Àú ½Å°í´çÇÑÈ½¼ö +1
+	//ê·¸ë£¹í”¼ë“œ ì‹ ê³ ë“±ë¡
+	//ì‹ ê³ ë‹¹í•œìœ ì € ì‹ ê³ ë‹¹í•œíšŸìˆ˜ +1
 	@Override
 	public void groupFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files) {
 
@@ -321,11 +321,11 @@ public class GroupServiceImpl implements GroupService{
 		String rlphoto = up.upload(files, req, reportListVo);
 		reportListVo.setRlphoto(rlphoto);
 		
-		//±âÅ¸¹öÆ°´­·¶´Ù°¡ ´Ù¸¥°ÅÃ¼Å©ÇÏ°í ³Ñ¾î¿Â°æ¿ì ´Ù¸¥°ÅÃ¼Å©°ªÀ¸·Î ´ëÃ¼
+		//ê¸°íƒ€ë²„íŠ¼ëˆŒë €ë‹¤ê°€ ë‹¤ë¥¸ê±°ì²´í¬í•˜ê³  ë„˜ì–´ì˜¨ê²½ìš° ë‹¤ë¥¸ê±°ì²´í¬ê°’ìœ¼ë¡œ ëŒ€ì²´
 		String rlreport = reportListVo.getRlreport();
 		String[] report = rlreport.split("\\,");
 		if(report.length>1) {
-			if(report[0].equals("±âÅ¸")) {
+			if(report[0].equals("ê¸°íƒ€")) {
 				rlreport = report[1];
 			}else {
 				rlreport = report[0];
@@ -339,24 +339,24 @@ public class GroupServiceImpl implements GroupService{
 		groupDao.groupReportCountUpdate(reportListVo);
 	}
 
-	//Ã¤ÆÃ ¾ÆÁ÷ ¹Ì±¸Çö..
+	//ì±„íŒ… ì•„ì§ ë¯¸êµ¬í˜„..
 	@Override
 	public void groupChat(Model model) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	//±×·ì°ü¸®Á¤º¸Ãâ·Â
+	//ê·¸ë£¹ê´€ë¦¬ì •ë³´ì¶œë ¥
 
 	
-	//±×·ìÃÑ¿øÃâ·Â
+	//ê·¸ë£¹ì´ì›ì¶œë ¥
 	@Override
 	public void groupAdminSelectOne(Model model, GroupVo groupVo) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	//±×·ì°ü¸® ¼öÁ¤
+	//ê·¸ë£¹ê´€ë¦¬ ìˆ˜ì •
 	@Override
 	public void groupAdminUpdateOne(HttpServletRequest req, GroupVo groupVo, MultipartFile[] files) {	
 		UploadPhoto up = new UploadPhoto();
@@ -377,17 +377,17 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//°¡ÀÔµÈ À¯ÀúÁ¤º¸ Ãâ·Â
-	//ÆäÀÌÁö ÇÑÆäÀÌÁö¿¡ 10°³ ·Î¿ì
-	//°Ë»öÀ¸·Î °ªÀÌ ³Ñ¾î¿Ã°æ¿ì °Ë»öÁ¶°Ç À¯ÀúÁ¤º¸ Ãâ·Â(keyword!=null)
-	//ÆäÀÌÁö±â´ÉÀ» À§ÇÑ °¡ÀÔÀ¯ÀúÁ¶È¸ Å×ÀÌºí ·Î¿ì°¹¼ö »Ì±â
+	//ê°€ì…ëœ ìœ ì €ì •ë³´ ì¶œë ¥
+	//í˜ì´ì§€ í•œí˜ì´ì§€ì— 10ê°œ ë¡œìš°
+	//ê²€ìƒ‰ìœ¼ë¡œ ê°’ì´ ë„˜ì–´ì˜¬ê²½ìš° ê²€ìƒ‰ì¡°ê±´ ìœ ì €ì •ë³´ ì¶œë ¥(keyword!=null)
+	//í˜ì´ì§€ê¸°ëŠ¥ì„ ìœ„í•œ ê°€ì…ìœ ì €ì¡°íšŒ í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ ë½‘ê¸°
 	@Override
 	public void groupUserAdminSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo) {
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage()==0) {
 			pageSearchVo.setPage(1);
 		}		
-		//Ã¹È­¸éºÒ·¯¿Ã¶§³ª °Ë»ö¾ÈÇÒ¶§ nullÀÌ µé¾î°¡¹Ç·Î mysqlÀº nullÇÏ°í ""ÇÏ°í °ªÀÌ ´Ù¸£±â¶§¹®¿¡ ""·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œë‚˜ ê²€ìƒ‰ì•ˆí• ë•Œ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ mysqlì€ nullí•˜ê³  ""í•˜ê³  ê°’ì´ ë‹¤ë¥´ê¸°ë•Œë¬¸ì— ""ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getKeyword()==null) {
 			pageSearchVo.setKeyword("");
 			groupVo.setPageSearch(pageSearchVo);		
@@ -402,8 +402,8 @@ public class GroupServiceImpl implements GroupService{
 		}
 	}
 
-	//°¡ÀÔµÈ À¯Àú °­Åğ
-	//±×·ì °¡ÀÔÃÑ¿ø -@
+	//ê°€ì…ëœ ìœ ì € ê°•í‡´
+	//ê·¸ë£¹ ê°€ì…ì´ì› -@
 	@Transactional
 	@Override
 	public void groupUserKick(HttpServletRequest req, GroupVo groupVo, JoinGroupVo joinGroupVo) {
@@ -417,8 +417,8 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//°¡ÀÔµÈ À¯Àú ÀüºÎ°­Åğ (±×·ìÀå Á¦¿Ü)
-	//±×·ì °¡ÀÔÃÑ¿ø -@
+	//ê°€ì…ëœ ìœ ì € ì „ë¶€ê°•í‡´ (ê·¸ë£¹ì¥ ì œì™¸)
+	//ê·¸ë£¹ ê°€ì…ì´ì› -@
 	@Transactional
 	@Override
 	public void groupUserAllKick(HttpServletRequest req, GroupVo groupVo) {
@@ -432,12 +432,12 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//°¡ÀÔ½ÅÃ» À¯ÀúÁ¤º¸ Ãâ·Â
-	//ÆäÀÌÁö ÇÑÆäÀÌÁö¿¡ 5°³ ·Î¿ì
-	//ÆäÀÌÁö±â´ÉÀ» À§ÇÑ °¡ÀÔ½ÅÃ»Á¶È¸ Å×ÀÌºí ·Î¿ì°¹¼ö »Ì±â
+	//ê°€ì…ì‹ ì²­ ìœ ì €ì •ë³´ ì¶œë ¥
+	//í˜ì´ì§€ í•œí˜ì´ì§€ì— 5ê°œ ë¡œìš°
+	//í˜ì´ì§€ê¸°ëŠ¥ì„ ìœ„í•œ ê°€ì…ì‹ ì²­ì¡°íšŒ í…Œì´ë¸” ë¡œìš°ê°¯ìˆ˜ ë½‘ê¸°
 	@Override
 	public void groupRequestSelectAll(HttpServletRequest req, GroupVo groupVo, PageSearchVo pageSearchVo) {
-		//Ã¹È­¸éºÒ·¯¿Ã¶§ ÆäÀÌÁö³Ñ¹ö°¡ 0ÀÌ´Ï±î 1·Î ¸ÂÃçÁÜ
+		//ì²«í™”ë©´ë¶ˆëŸ¬ì˜¬ë•Œ í˜ì´ì§€ë„˜ë²„ê°€ 0ì´ë‹ˆê¹Œ 1ë¡œ ë§ì¶°ì¤Œ
 		if(pageSearchVo.getPage2()==0) {
 			pageSearchVo.setPage2(1);
 		}
@@ -447,9 +447,9 @@ public class GroupServiceImpl implements GroupService{
 		req.setAttribute("pageSearch", groupVo.getPageSearch());
 	}
 
-	//°¡ÀÔ½ÅÃ» À¯Àúµî·Ï
-	//±×·ì °¡ÀÔÃÑ¿ø +@
-	//¾÷µ¥ÀÌÆ®Å×ÀÌºí µ¥ÀÌÅÍ»èÁ¦(°¡ÀÔ½ÅÃ» °ÅÀı ¸Ş¼Òµå »ç¿ë)
+	//ê°€ì…ì‹ ì²­ ìœ ì €ë“±ë¡
+	//ê·¸ë£¹ ê°€ì…ì´ì› +@
+	//ì—…ë°ì´íŠ¸í…Œì´ë¸” ë°ì´í„°ì‚­ì œ(ê°€ì…ì‹ ì²­ ê±°ì ˆ ë©”ì†Œë“œ ì‚¬ìš©)
 	@Transactional
 	@Override
 	public void groupRequestHello(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo) {
@@ -466,7 +466,7 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//°¡ÀÔ½ÅÃ» °ÅÀı
+	//ê°€ì…ì‹ ì²­ ê±°ì ˆ
 	@Override
 	public void groupRequestSorry(HttpServletRequest req, UpdateWaitVo updateWaitVo, GroupVo groupVo) {
 		groupDao.groupRequestSorry(updateWaitVo);
@@ -479,7 +479,7 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//±×·ì »èÁ¦
+	//ê·¸ë£¹ ì‚­ì œ
 	@Override
 	public void groupDeleteOne(HttpServletRequest req, GroupVo groupVo) {
 		groupDao.groupDelete(groupVo);
@@ -492,8 +492,8 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup);
 	}
 
-	//°¡ÀÔµÈ±×·ì Å»Åğ
-	//±×·ì °¡ÀÔÃÑ¿ø -@
+	//ê°€ì…ëœê·¸ë£¹ íƒˆí‡´
+	//ê·¸ë£¹ ê°€ì…ì´ì› -@
 	@Transactional
 	@Override
 	public void groupOut(HttpServletRequest req, JoinGroupVo joinGroup, GroupVo groupVo) {
@@ -509,32 +509,32 @@ public class GroupServiceImpl implements GroupService{
 		session.setAttribute("joinGroup", joinGroup1);
 	}
 
-	// È¸¿ø ÆÈ·ÎÀ×µî·Ï
-	// »ó´ë ÆÈ·Î¿öµî·Ï
-	// ³» ÆÈ·ÎÀ×¸ñ·Ï °»½Å
+	// íšŒì› íŒ”ë¡œì‰ë“±ë¡
+	// ìƒëŒ€ íŒ”ë¡œì›Œë“±ë¡
+	// ë‚´ íŒ”ë¡œì‰ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void followInsertOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-		System.out.println("ÆÄ¶ó¹ÌÅÍ : " + myFollowing);
+		System.out.println("íŒŒë¼ë¯¸í„° : " + myFollowing);
 		groupDao.myFollowingInsertOne(myFollowing);
 		groupDao.yourFollowerInsertOne(myFollowing);
 		HttpSession session = req.getSession();
 		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
-		System.out.println("µî·Ï : " + req.getSession().getAttribute("followlist"));
+		System.out.println("ë“±ë¡ : " + req.getSession().getAttribute("followlist"));
 	}
 
-	// È¸¿ø ÆÈ·ÎÀ×ÇØÁ¦
-	// »ó´ë ÆÈ·Î¿öÇØÁ¦
-	// ³» ÆÈ·ÎÀ×¸ñ·Ï °»½Å
+	// íšŒì› íŒ”ë¡œì‰í•´ì œ
+	// ìƒëŒ€ íŒ”ë¡œì›Œí•´ì œ
+	// ë‚´ íŒ”ë¡œì‰ëª©ë¡ ê°±ì‹ 
 	@Transactional
 	@Override
 	public void followDeleteOne(HttpServletRequest req, MyFollowingVo myFollowing) {
-		System.out.println("ÆÄ¶ó¹ÌÅÍ : " + myFollowing);
+		System.out.println("íŒŒë¼ë¯¸í„° : " + myFollowing);
 		groupDao.myFollowingDeleteOne(myFollowing);
 		groupDao.yourFollowerDeleteOne(myFollowing);
 		HttpSession session = req.getSession();
 		session.setAttribute("followlist", groupDao.myFollowingRenewal(myFollowing));
-		System.out.println("ÇØÁ¦ : " + req.getSession().getAttribute("followlist"));
+		System.out.println("í•´ì œ : " + req.getSession().getAttribute("followlist"));
 	}
 
 

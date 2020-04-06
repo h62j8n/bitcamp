@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url value="/" var="root" />
-<c:url value="/upload" var="upload"></c:url>
+<c:url value="/resources/upload" var="upload"></c:url>
 <c:if test="${sessionScope.login ne null }">
 	<c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
 		<c:redirect url="/empty" />

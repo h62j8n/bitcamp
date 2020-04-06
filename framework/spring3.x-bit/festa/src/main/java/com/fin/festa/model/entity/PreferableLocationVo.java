@@ -1,10 +1,10 @@
 package com.fin.festa.model.entity;
 
-public class PreferableLocationVo {		//´ë½Ãº¸µå-¼±È£°ü½ÉÁö¿ªVo
+public class PreferableLocationVo {		//ëŒ€ì‹œë³´ë“œ-ì„ í˜¸ê´€ì‹¬ì§€ì—­Vo
 
-	private int addrcnt;		//¼±È£Áö¿ª ÀÎ¿ø¼ö
-	private String proaddr;		//¼±È£Áö¿ª ¸í
-	private int rn;				//Ãâ·Â·Î¿ì³Ñ¹ö
+	private int addrcnt;		//ì„ í˜¸ì§€ì—­ ì¸ì›ìˆ˜
+	private String proaddr;		//ì„ í˜¸ì§€ì—­ ëª…
+	private int rn;				//ì¶œë ¥ë¡œìš°ë„˜ë²„
 	
 	@Override
 	public String toString() {

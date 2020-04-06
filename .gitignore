@@ -25,3 +25,5 @@ web/*.txt
 db/
 project2/
 project3/
+
+*.DS_Store

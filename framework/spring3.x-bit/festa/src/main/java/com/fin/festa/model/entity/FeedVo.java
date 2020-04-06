@@ -5,29 +5,29 @@ import java.util.List;
 
 import com.fin.festa.util.DateCalculate;
 
-public class FeedVo implements Comparable<FeedVo>{
+public class FeedVo {
 	
 	DateCalculate cal;
 	private List<FeedVo> feedList;
-	private int gpnum;			//°Ô½Ã±Û ¹øÈ£
-	private String gpauthor;	//°Ô½Ã±Û ÀÛ¼ºÀÚ ÀÌ¸§
-	private String gpphoto;		//°Ô½Ã±Û ³»¿ë »çÁø
-	private String gpcontent;	//°Ô½Ã±Û ³»¿ë
-	private String httitle1;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×1
-	private String httitle2;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×2
-	private String httitle3;	//°Ô½Ã±Û ÇØ½ÃÅÂ±×3
-	private int grnum;			//°Ô½Ã±Û ±×·ì ¹øÈ£
-	private int pronum;			//°Ô½Ã±Û ÀÛ¼ºÀÚ ¹øÈ£
-	private int gptotal;		//°Ô½Ã±ÛÀÇ ´ñ±Û¼ö
+	private int gpnum;			//ê²Œì‹œê¸€ ë²ˆí˜¸
+	private String gpauthor;	//ê²Œì‹œê¸€ ì‘ì„±ì ì´ë¦„
+	private String gpphoto;		//ê²Œì‹œê¸€ ë‚´ìš© ì‚¬ì§„
+	private String gpcontent;	//ê²Œì‹œê¸€ ë‚´ìš©
+	private String httitle1;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸1
+	private String httitle2;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸2
+	private String httitle3;	//ê²Œì‹œê¸€ í•´ì‹œíƒœê·¸3
+	private int grnum;			//ê²Œì‹œê¸€ ê·¸ë£¹ ë²ˆí˜¸
+	private int pronum;			//ê²Œì‹œê¸€ ì‘ì„±ì ë²ˆí˜¸
+	private int gptotal;		//ê²Œì‹œê¸€ì˜ ëŒ“ê¸€ìˆ˜
 	
-	private int mpnum;			//³» °Ô½Ã±Û ¹øÈ£ (pk)
-	private String mpauthor;	//³» ÀÌ¸§
-	private String mpphoto;		//°Ô½Ã±Û »çÁø
-	private String mpcontent;	//°Ô½Ã±Û ³»¿ë
+	private int mpnum;			//ë‚´ ê²Œì‹œê¸€ ë²ˆí˜¸ (pk)
+	private String mpauthor;	//ë‚´ ì´ë¦„
+	private String mpphoto;		//ê²Œì‹œê¸€ ì‚¬ì§„
+	private String mpcontent;	//ê²Œì‹œê¸€ ë‚´ìš©
 	private Timestamp date;	
 	private String date1;
-	private int good;			//³» °Ô½Ã±Û ÁÁ¾Æ¿ä
-	private int mptotal;		//³»°Ô½Ã±ÛÀÇ ´ñ±Û¼ö
+	private int good;			//ë‚´ ê²Œì‹œê¸€ ì¢‹ì•„ìš”
+	private int mptotal;		//ë‚´ê²Œì‹œê¸€ì˜ ëŒ“ê¸€ìˆ˜
 	
 	private CampVo camp;
 	private CampReviewVo campReview;
@@ -421,13 +421,6 @@ public class FeedVo implements Comparable<FeedVo>{
 
 	public void setFeedList(List<FeedVo> feedList) {
 		this.feedList = feedList;
-	}
-
-	@Override
-	public int compareTo(FeedVo o) {
-		Integer tmp = new Integer(o.good);
-		o.date.compareTo(this.date);
-		return tmp.compareTo(this.good);
 	}
 
 	

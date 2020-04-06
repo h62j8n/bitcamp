@@ -34,7 +34,7 @@
 						<a href="${root }"><em class="snd_only">FESTA</em></a>
 					</h1>
 					<form class="search_box" action="${root }search/">
-						<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+						<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
 						<button type="submit">
 							<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 						</button>
@@ -47,7 +47,7 @@
 							<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 						</c:if>
 						<c:if test="${login ne null }">
-							<li><a href="${root}user/">마이페이지</a></li>
+							<li><a href="${root}user/?pronum=${login.pronum}">마이페이지</a></li>
 						</c:if>
 					</ul>
 					<c:if test="${login ne null }">
@@ -123,7 +123,7 @@
 								alt="솔직한 리뷰, 믿을 수 있는 캠핑! FESTA">
 						</div>
 						<form class="search_box" action="${root }search/">
-							<input type="text" name="keyword" placeholder="캠핑장 또는 그룹">
+							<input type="text" name="keyword" placeholder="캠핑장 또는 그룹" required="required">
 							<button type="submit">검색</button>
 						</form>
 					</div>
