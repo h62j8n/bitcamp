@@ -11,444 +11,470 @@ import java.util.List;
 
 import com.fin.festa.model.entity.FeedVo;
 
-//ë‚ ì§œê´€ë ¨ ê³„ì‚°
+//³¯Â¥°ü·Ã °è»ê
 public class DateCalculate {
 
-	//ê³µìš©
-	private Date today;			//ì‹œê°„ ë°ì´í„°ì— ì“°ì´ëŠ”í•„ë“œê°’
-	
-	//í˜„ì¬ì‹œê° ë½‘ëŠ”ë°ì´í„°
-	private String time1;		//í˜„ì¬ ë‚ ì§œ
-	
-	//ì €ë²ˆì£¼ ì‹ ê·œì´ìš©ìì •ë³´ì¶œë ¥ ë½‘ëŠ”ë°ì´í„°
-	private String time2;		//ì €ë²ˆì£¼ ë‚ ì§œ
-	private String monday;		//ì €ë²ˆì£¼ê¸°ì¤€ ì›”ìš”ì¼ ë‚ ì§œ
-	private String tuesday;		//ì €ë²ˆì£¼ê¸°ì¤€ í™”ìš”ì¼ ë‚ ì§œ
-	private String wednesday;	//ì €ë²ˆì£¼ê¸°ì¤€ ìˆ˜ìš”ì¼ ë‚ ì§œ
-	private String thursday;	//ì €ë²ˆì£¼ê¸°ì¤€ ëª©ìš”ì¼ ë‚ ì§œ
-	private String friday;		//ì €ë²ˆì£¼ê¸°ì¤€ ê¸ˆìš”ì¼ ë‚ ì§œ
-	private String saturday;	//ì €ë²ˆì£¼ê¸°ì¤€ í† ìš”ì¼ ë‚ ì§œ
-	private String sunday;		//ì €ë²ˆì£¼ê¸°ì¤€ ì¼ìš”ì¼ ë‚ ì§œ
-	
-	//ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™©ì •ë³´ì¶œë ¥ ë½‘ëŠ”ë°ì´í„°
-	private String startday;	//ì´ë²ˆì£¼ê¸°ì¤€ ì›”ìš”ì¼ ë‚ ì§œ
-	private String endday;		//ì´ë²ˆì£¼ê¸°ì¤€ ì¼ìš”ì¼ ë‚ ì§œ
-	
-	
-	
-	public DateCalculate() {
-		
-	}
-	
-	//ê·¸ë£¹,ê°œì¸í”¼ë“œ ë³‘í•©í•´ì„œ ë‚ ì§œ 2ìˆœìœ„,ì¢‹ì•„ìš” 1ìˆœìœ„ ì •ë ¬(ì¸ê¸°í”¼ë“œì¶œë ¥ì— ì“°ì„)
-	public List<FeedVo> VoDateGoodReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
-		
-		List<FeedVo> list= new ArrayList<>();
-		for(int i=0; i<groupFeedList.size(); i++) {
-			list.add(groupFeedList.get(i));
-		}
-		
-		for(int i=0; i<feedList.size(); i++) {
-			list.add(feedList.get(i));
-		}
-		
-		Collections.sort(list,new Comparator<FeedVo>() {
+   //°ø¿ë
+   private Date today;         //½Ã°£ µ¥ÀÌÅÍ¿¡ ¾²ÀÌ´ÂÇÊµå°ª
+   
+   //ÇöÀç½Ã°¢ »Ì´Âµ¥ÀÌÅÍ
+   private String time1;      //ÇöÀç ³¯Â¥
+   
+   //Àú¹øÁÖ ½Å±ÔÀÌ¿ëÀÚÁ¤º¸Ãâ·Â »Ì´Âµ¥ÀÌÅÍ
+   private String time2;      //Àú¹øÁÖ ³¯Â¥
+   private String monday;      //Àú¹øÁÖ±âÁØ ¿ù¿äÀÏ ³¯Â¥
+   private String tuesday;      //Àú¹øÁÖ±âÁØ È­¿äÀÏ ³¯Â¥
+   private String wednesday;   //Àú¹øÁÖ±âÁØ ¼ö¿äÀÏ ³¯Â¥
+   private String thursday;   //Àú¹øÁÖ±âÁØ ¸ñ¿äÀÏ ³¯Â¥
+   private String friday;      //Àú¹øÁÖ±âÁØ ±İ¿äÀÏ ³¯Â¥
+   private String saturday;   //Àú¹øÁÖ±âÁØ Åä¿äÀÏ ³¯Â¥
+   private String sunday;      //Àú¹øÁÖ±âÁØ ÀÏ¿äÀÏ ³¯Â¥
+   
+   //ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ²Á¤º¸Ãâ·Â »Ì´Âµ¥ÀÌÅÍ
+   private String startday;   //ÀÌ¹øÁÖ±âÁØ ¿ù¿äÀÏ ³¯Â¥
+   private String endday;      //ÀÌ¹øÁÖ±âÁØ ÀÏ¿äÀÏ ³¯Â¥
+   
+   
+   
+   public DateCalculate() {
+      
+   }
+   
+   //±×·ì,°³ÀÎÇÇµå º´ÇÕÇØ¼­ ³¯Â¥ 2¼øÀ§,ÁÁ¾Æ¿ä 1¼øÀ§ Á¤·Ä(ÀÎ±âÇÇµåÃâ·Â¿¡ ¾²ÀÓ)
+   public List<FeedVo> VoDateReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
+      
+      List<FeedVo> list= new ArrayList<>();
+      for(int i=0; i<groupFeedList.size(); i++) {
+         list.add(groupFeedList.get(i));
+      }
+      
+      for(int i=0; i<feedList.size(); i++) {
+         list.add(feedList.get(i));
+      }
+      
+      Collections.sort(list,new Comparator<FeedVo>() {
+         
+         @Override
+         public int compare(FeedVo o1, FeedVo o2) {
+            Timestamp v1 = o1.getDate();
+            Timestamp v2 = o2.getDate();
+            
+            return v2.compareTo(v1);
+         }
+      });
+      
+      return list;
+   }
+   
+   //±×·ì,°³ÀÎÇÇµå º´ÇÕÇØ¼­ ³¯Â¥ Á¤·Ä(´º½ºÇÇµåÃâ·Â¿¡ ¾²ÀÓ)
+   public List<FeedVo> VoDateGoodReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
+      
+      List<FeedVo> list= new ArrayList<>();
+      for(int i=0; i<groupFeedList.size(); i++) {
+         list.add(groupFeedList.get(i));
+      }
+      
+      for(int i=0; i<feedList.size(); i++) {
+         list.add(feedList.get(i));
+      }
+      
+      Collections.sort(list,new Comparator<FeedVo>() {
 
-			@Override
-			public int compare(FeedVo o1, FeedVo o2) {
-				Timestamp v1 = o1.getDate();
-				Timestamp v2 = o2.getDate();
-				v2.compareTo(v1);
-				Integer g1 = new Integer(o1.getGood());
-				Integer g2 = new Integer(o2.getGood());
-				
-				return g2.compareTo(g1);
-			}
-		});
-		
-		return list;
-	}
-	
-	//ê·¸ë£¹,ê°œì¸í”¼ë“œ ë³‘í•©í•´ì„œ ì¢‹ì•„ìš” ì •ë ¬(ê²€ìƒ‰ê²°ê³¼ì¶œë ¥ì— ì“°ì„)
-	public List<FeedVo> VoGoodReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
-		
-		List<FeedVo> list= new ArrayList<>();
-		for(int i=0; i<groupFeedList.size(); i++) {
-			list.add(groupFeedList.get(i));
-		}
-		
-		for(int i=0; i<feedList.size(); i++) {
-			list.add(feedList.get(i));
-		}
-		
-		Collections.sort(list,new Comparator<FeedVo>() {
-			
-			@Override
-			public int compare(FeedVo o1, FeedVo o2) {
-				Integer g1 = new Integer(o1.getGood());
-				Integer g2 = new Integer(o2.getGood());
-				
-				return g2.compareTo(g1);
-			}
-		});
-		
-		return list;
-	}
-	
-	
-	//ë‚ ì§œ í¬ë§·íŒ…
-	public String dateFormat(Timestamp date) {
-		time1=this.getTime();
-		int today1=Integer.parseInt(time1);
-		
-		SimpleDateFormat fomat=null;
-		fomat=new SimpleDateFormat("yyyyMMdd");
-		time1=fomat.format(date);
-		int thisDay=Integer.parseInt(time1);
-		
-		if(today1==thisDay) {
-			fomat=new SimpleDateFormat("a hhì‹œ mmë¶„ ssì´ˆ");
-			time1=fomat.format(date);
-		}else {
-			fomat=new SimpleDateFormat("yyyyë…„ MMì›” ddì¼ hhì‹œ mmë¶„");
-			time1=fomat.format(date);
-		}
-		return time1;
-	}
-	
-	//í˜„ì¬ì‹œê° ë¦¬í„´
-	public String getTime(){
-		
-		today=new Date();
-		time1=new SimpleDateFormat("yyyyMMdd").format(today);
-		
-		return time1;
-	}
-	
-	//ì–´ì œì‹œê° ë¦¬í„´
-	public String yesterday() {
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		today=calendar.getTime();
-		time2=new SimpleDateFormat("yyyy-MM-dd").format(today);
-		
-		return time2;
-	}
-	
-	//ê³µìš©ìœ¼ë¡œ ì“°ì´ëŠ”ë©”ì†Œë“œ
-	public String returnTime(Calendar calendar) {
-		
-		today=calendar.getTime();
-		time2=new SimpleDateFormat("yyyy-MM-dd").format(today);
-		return time2;
-	}
-	
-	//ì €ë²ˆì£¼ ì‹ ê·œì´ìš©ìì •ë³´ì¶œë ¥
-	public DateCalculate lastWeekNewUser() {
-		
-		Calendar calendar = Calendar.getInstance();
-		int yoil=calendar.get(Calendar.DAY_OF_WEEK);
-		
-		if(yoil==1) {				//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ ì¼ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -13);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==2) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ ì›”ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -7);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==3) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ í™”ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -8);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==4) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ ìˆ˜ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -9);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==5) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ ëª©ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -10);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==6) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ ê¸ˆìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -11);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}else if(yoil==7) {			//ì˜¤ëŠ˜ê¸°ì¤€ -7ì´ í† ìš”ì¼ì¼ë•Œ
-			//ì›”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -12);
-			monday=returnTime(calendar);
-			//í™”ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			tuesday=returnTime(calendar);
-			//ìˆ˜ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			wednesday=returnTime(calendar);
-			//ëª©ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			thursday=returnTime(calendar);
-			//ê¸ˆìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			friday=returnTime(calendar);
-			//í† ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			saturday=returnTime(calendar);
-			//ì¼ìš”ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			sunday=returnTime(calendar);
-		}
-		return this;
-		
-	}
-	
-	//ì´ë²ˆì£¼ ì‹ ê·œì§„í–‰í˜„í™©ì •ë³´ ì¶œë ¥
-	public DateCalculate weekNewUser() {
-		
-		Calendar calendar = Calendar.getInstance();
-		int yoil=calendar.get(Calendar.DAY_OF_WEEK);
-		
-		
-		//ë§ˆì§€ë§‰ë‚  ê°’ì´ í•´ë‹¹ì¼ 00ì‹œ00ë¶„ê¸°ì¤€ìœ¼ë¡œ ì¸¡ì •ë˜ë¯€ë¡œ ê·¸ë‹¤ìŒë‚  00ì‹œ00ë¶„ìœ¼ë¡œ ì²˜ë¦¬
-		if(yoil==1) {				//ì˜¤ëŠ˜ì´ ì¼ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -6);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==2) {			//ì˜¤ëŠ˜ì´ ì›”ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 0);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==3) {			//ì˜¤ëŠ˜ì´ í™”ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -1);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==4) {			//ì˜¤ëŠ˜ì´ ìˆ˜ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -2);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==5) {			//ì˜¤ëŠ˜ì´ ëª©ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -3);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==6) {			//ì˜¤ëŠ˜ì´ ê¸ˆìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -4);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}else if(yoil==7) {			//ì˜¤ëŠ˜ì´ í† ìš”ì¼ì¼ë•Œ
-			//ì´ë²ˆì£¼ ì‹œì‘ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, -5);
-			startday=returnTime(calendar);
-			//ì´ë²ˆì£¼ ë§ˆì§€ë§‰ì¼
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-			endday=returnTime(calendar);
-		}
-		
-		return this;
-	}
-	
-	@Override
-	public String toString() {
-		return "DateCalculate [monday=" + monday + ", tuesday=" + tuesday + ", wednesday=" + wednesday + ", thursday="
-				+ thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday=" + sunday + ", startday="
-				+ startday + ", endday=" + endday + "]";
-	}
+         @Override
+         public int compare(FeedVo o1, FeedVo o2) {
+            Timestamp v1 = o1.getDate();
+            Timestamp v2 = o2.getDate();
+            v2.compareTo(v1);
+            Integer g1 = new Integer(o1.getGood());
+            Integer g2 = new Integer(o2.getGood());
+            
+            return g2.compareTo(g1);
+         }
+      });
+      
+      return list;
+   }
+   
+   //±×·ì,°³ÀÎÇÇµå º´ÇÕÇØ¼­ ÁÁ¾Æ¿ä Á¤·Ä(°Ë»ö°á°úÃâ·Â¿¡ ¾²ÀÓ)
+   public List<FeedVo> VoGoodReturn(List<FeedVo> groupFeedList, List<FeedVo> feedList) {
+      
+      List<FeedVo> list= new ArrayList<>();
+      for(int i=0; i<groupFeedList.size(); i++) {
+         list.add(groupFeedList.get(i));
+      }
+      
+      for(int i=0; i<feedList.size(); i++) {
+         list.add(feedList.get(i));
+      }
+      
+      Collections.sort(list,new Comparator<FeedVo>() {
+         
+         @Override
+         public int compare(FeedVo o1, FeedVo o2) {
+            Integer g1 = new Integer(o1.getGood());
+            Integer g2 = new Integer(o2.getGood());
+            
+            return g2.compareTo(g1);
+         }
+      });
+      
+      return list;
+   }
+   
+   
+   //³¯Â¥ Æ÷¸ËÆÃ
+   public String dateFormat(Timestamp date) {
+      time1=this.getTime();
+      int today1=Integer.parseInt(time1);
+      
+      SimpleDateFormat fomat=null;
+      fomat=new SimpleDateFormat("yyyyMMdd");
+      time1=fomat.format(date);
+      int thisDay=Integer.parseInt(time1);
+      
+      if(today1==thisDay) {
+         fomat=new SimpleDateFormat("a hh½Ã mmºĞ ssÃÊ");
+         time1=fomat.format(date);
+      }else {
+         fomat=new SimpleDateFormat("yyyy³â MM¿ù ddÀÏ hh½Ã mmºĞ");
+         time1=fomat.format(date);
+      }
+      return time1;
+   }
+   
+   //ÇöÀç½Ã°¢ ¸®ÅÏ
+   public String getTime(){
+      
+      today=new Date();
+      time1=new SimpleDateFormat("yyyyMMdd").format(today);
+      
+      return time1;
+   }
+   
+   //¾îÁ¦½Ã°¢ ¸®ÅÏ
+   public String yesterday() {
+      
+      Calendar calendar = Calendar.getInstance();
+      calendar.add(Calendar.DAY_OF_MONTH, -1);
+      today=calendar.getTime();
+      time2=new SimpleDateFormat("yyyy-MM-dd").format(today);
+      
+      return time2;
+   }
+   
+   //°ø¿ëÀ¸·Î ¾²ÀÌ´Â¸Ş¼Òµå
+   public String returnTime(Calendar calendar) {
+      
+      today=calendar.getTime();
+      time2=new SimpleDateFormat("yyyy-MM-dd").format(today);
+      return time2;
+   }
+   
+   //Àú¹øÁÖ ½Å±ÔÀÌ¿ëÀÚÁ¤º¸Ãâ·Â
+   public DateCalculate lastWeekNewUser() {
+      
+      Calendar calendar = Calendar.getInstance();
+      int yoil=calendar.get(Calendar.DAY_OF_WEEK);
+      
+      if(yoil==1) {            //¿À´Ã±âÁØ -7ÀÌ ÀÏ¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -13);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==2) {         //¿À´Ã±âÁØ -7ÀÌ ¿ù¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -7);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==3) {         //¿À´Ã±âÁØ -7ÀÌ È­¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -8);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==4) {         //¿À´Ã±âÁØ -7ÀÌ ¼ö¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -9);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==5) {         //¿À´Ã±âÁØ -7ÀÌ ¸ñ¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -10);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==6) {         //¿À´Ã±âÁØ -7ÀÌ ±İ¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -11);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }else if(yoil==7) {         //¿À´Ã±âÁØ -7ÀÌ Åä¿äÀÏÀÏ¶§
+         //¿ù¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -12);
+         monday=returnTime(calendar);
+         //È­¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         tuesday=returnTime(calendar);
+         //¼ö¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         wednesday=returnTime(calendar);
+         //¸ñ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         thursday=returnTime(calendar);
+         //±İ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         friday=returnTime(calendar);
+         //Åä¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         saturday=returnTime(calendar);
+         //ÀÏ¿äÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 1);
+         sunday=returnTime(calendar);
+      }
+      return this;
+      
+   }
+   
+   //ÀÌ¹øÁÖ ½Å±ÔÁøÇàÇöÈ²Á¤º¸ Ãâ·Â
+   public DateCalculate weekNewUser() {
+      
+      Calendar calendar = Calendar.getInstance();
+      int yoil=calendar.get(Calendar.DAY_OF_WEEK);
+      
+      
+      //¸¶Áö¸·³¯ °ªÀÌ ÇØ´çÀÏ 00½Ã00ºĞ±âÁØÀ¸·Î ÃøÁ¤µÇ¹Ç·Î ±×´ÙÀ½³¯ 00½Ã00ºĞÀ¸·Î Ã³¸®
+      if(yoil==1) {            //¿À´ÃÀÌ ÀÏ¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -6);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==2) {         //¿À´ÃÀÌ ¿ù¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 0);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==3) {         //¿À´ÃÀÌ È­¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -1);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==4) {         //¿À´ÃÀÌ ¼ö¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -2);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==5) {         //¿À´ÃÀÌ ¸ñ¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -3);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==6) {         //¿À´ÃÀÌ ±İ¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -4);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }else if(yoil==7) {         //¿À´ÃÀÌ Åä¿äÀÏÀÏ¶§
+         //ÀÌ¹øÁÖ ½ÃÀÛÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, -5);
+         startday=returnTime(calendar);
+         //ÀÌ¹øÁÖ ¸¶Áö¸·ÀÏ
+         calendar.add(Calendar.DAY_OF_MONTH, 7);
+         endday=returnTime(calendar);
+      }
+      
+      return this;
+   }
+   
+   @Override
+   public String toString() {
+      return "DateCalculate [monday=" + monday + ", tuesday=" + tuesday + ", wednesday=" + wednesday + ", thursday="
+            + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday=" + sunday + ", startday="
+            + startday + ", endday=" + endday + "]";
+   }
 
-	public String getMonday() {
-		return monday;
-	}
+   public String getMonday() {
+      return monday;
+   }
 
-	public void setMonday(String monday) {
-		this.monday = monday;
-	}
+   public void setMonday(String monday) {
+      this.monday = monday;
+   }
 
-	public String getTuesday() {
-		return tuesday;
-	}
+   public String getTuesday() {
+      return tuesday;
+   }
 
-	public void setTuesday(String tuesday) {
-		this.tuesday = tuesday;
-	}
+   public void setTuesday(String tuesday) {
+      this.tuesday = tuesday;
+   }
 
-	public String getWednesday() {
-		return wednesday;
-	}
+   public String getWednesday() {
+      return wednesday;
+   }
 
-	public void setWednesday(String wednesday) {
-		this.wednesday = wednesday;
-	}
+   public void setWednesday(String wednesday) {
+      this.wednesday = wednesday;
+   }
 
-	public String getThursday() {
-		return thursday;
-	}
+   public String getThursday() {
+      return thursday;
+   }
 
-	public void setThursday(String thursday) {
-		this.thursday = thursday;
-	}
+   public void setThursday(String thursday) {
+      this.thursday = thursday;
+   }
 
-	public String getFriday() {
-		return friday;
-	}
+   public String getFriday() {
+      return friday;
+   }
 
-	public void setFriday(String friday) {
-		this.friday = friday;
-	}
+   public void setFriday(String friday) {
+      this.friday = friday;
+   }
 
-	public String getSaturday() {
-		return saturday;
-	}
+   public String getSaturday() {
+      return saturday;
+   }
 
-	public void setSaturday(String saturday) {
-		this.saturday = saturday;
-	}
+   public void setSaturday(String saturday) {
+      this.saturday = saturday;
+   }
 
-	public String getSunday() {
-		return sunday;
-	}
+   public String getSunday() {
+      return sunday;
+   }
 
-	public void setSunday(String sunday) {
-		this.sunday = sunday;
-	}
+   public void setSunday(String sunday) {
+      this.sunday = sunday;
+   }
 
-	public String getStartday() {
-		return startday;
-	}
+   public String getStartday() {
+      return startday;
+   }
 
-	public void setStartday(String startday) {
-		this.startday = startday;
-	}
+   public void setStartday(String startday) {
+      this.startday = startday;
+   }
 
-	public String getEndday() {
-		return endday;
-	}
+   public String getEndday() {
+      return endday;
+   }
 
-	public void setEndday(String endday) {
-		this.endday = endday;
-	}
-	
-	
+   public void setEndday(String endday) {
+      this.endday = endday;
+   }
+   
+   
 }

@@ -20,12 +20,21 @@
 	<script type="text/javascript">
 	$(function() {
 		var login = '${login ne null}';
-		var goBtn = $('.btn_go a');
-		goBtn.on('click', function(e) {
-			if (login == 'false') {
-				openLayer(e, '${root}member/login');
+		if (login == 'false') {
+			$('.btn_go a').on('click', function(e) {openLayer(e, '${root}member/login')});
+		} else if (login == 'true') {
+			var btnContainer = $('.cp_options li'),
+				likedBtn = '<button class="btn_liked" onclick="liked($(this))"><em class="snd_only">하트</em></button>',
+				bookmarkBtn = '<button class="btn_bookmark" onclick="liked($(this))"><em class="snd_only">저장하기</em></button>';
+			if ($('.btn_liked').length < 1) {
+				btnContainer.eq(0).append(likedBtn);
 			}
-		});
+			if ($('.btn_bookmark').length < 1) {
+				console.log('접근');
+				btnContainer.eq(1).append(bookmarkBtn);
+			}
+		}
+		
 		$('.btn_report').on('click', function(e) {
 			openLayer(e, '${root}camp/detail/report?canum=${camp.canum}&profile.pronum=${camp.profile.pronum}&profile.proname=${camp.profile.proname}&profile.proid=${camp.profile.proid}');
 		});
@@ -80,35 +89,36 @@
 				}
 			});
 		});
-		
-		if (login == 'true' && $('.btn_liked').length == 0) {
-			var tag = '<button class="btn_liked"><em class="snd_only">하트</em></button>';
-			var container = $('.cp_options li:first-child');
-			container.append(tag);
-		}
-		$(document).on('click', '.btn_liked', function() {
-			var cntTag = $(this).siblings('.cp_liked'),
-				cnt = Number(cntTag.text());
-			var addLike = $(this).hasClass('act');
-			var likedParam = {
-				'pronum': '${login.pronum}',
-				'canum': '${camp.canum}',
-			};
-			if (addLike) {
-				$.post('${root}camp/detail/likeadd', likedParam)
-					.done(function() {
-						console.log(cntTag);
-						cntTag.text(cnt+1);
-					});
-			} else {
-				$.post('${root}camp/detail/likedel', likedParam)
-					.done(function() {
-						console.log("del ok");
-						cntTag.text(cnt-1);
-					});
-			}
-		});
 	});
+	function liked(button) {
+		var liked = button.hasClass('btn_liked'),
+			bookmark = button.hasClass('btn_bookmark');
+		var cntTag = button.siblings('.cp_liked'),
+			cnt = Number(cntTag.text());
+		var plus = !button.hasClass('act');
+		
+		var url = '${root}camp/detail/',
+			param = {
+			'pronum': '${login.pronum}',
+			'canum': '${camp.canum}',
+		};
+		if (liked && plus) {
+			$.post('${root}camp/detail/likeadd', param)
+				.done(function() {
+					cntTag.text(cnt+1);
+				});
+		} else if (liked && !plus) {
+			$.post('${root}camp/detail/likedel', param)
+				.done(function() {
+					cntTag.text(cnt-1);
+				});
+		}
+		if (bookmark && plus) {
+			$.post('${root}camp/detail/bookadd', param)
+		} else if (bookmark && !plus) {
+			$.post('${root}camp/detail/bookdel', param)
+		}
+	}
 	</script>
 </head>
 <body>
@@ -193,10 +203,18 @@
 							<span class="btn_mylist">나의 캠핑장</span>
 							<div class="my_list">
 								<ul>
-								<c:forEach items="${bookMark }" var="bookMark">
-									<li><a href="${root }camp?canum=${bookMark.camp.canum}"> <span><img
-												src="http://placehold.it/45x45" alt="캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
-									</a></li>
+								<c:forEach items="${bookMark}" var="bookMark">
+									<li>
+										<a href="${root}camp?canum=${bookMark.camp.canum}">
+											<span>
+												<c:set var="image" value="${fn:substringBefore(bookMark.camp.caphoto,',')}"></c:set>
+												<c:if test="${!empty bookMark.camp.caphoto && empty image}"><img src="${upload}/${bookMark.camp.caphoto}" alt="${bookMark.camp.caname}"></c:if>
+												<c:if test="${!empty bookMark.camp.caphoto && !empty image}"><img src="${upload}/${image}" alt="${bookMark.camp.caname}"></c:if>
+												<c:if test="${empty bookMark.camp.caphoto && empty image}"><img src="${root}resources/images/thumb/no_profile.png" alt="${bookMark.camp.caname}"></c:if>
+											</span>
+											<b>${bookMark.camp.caname}</b>
+										</a>
+									</li>
 								</c:forEach>
 								</ul>
 							</div>
@@ -236,24 +254,19 @@
 								<b class="cp_liked">${camp.cagood}</b>
 								<c:choose>
 									<c:when test="${login ne null}">
-										<c:forEach items="${goodlist}" var="good">
-											<c:if test="${good.canum eq camp.canum}"><button class="btn_liked act"><em class="snd_only">하트</em></button></c:if>
-										</c:forEach>
+										<c:forEach items="${goodlist}" var="good"><c:if test="${camp.canum eq good.canum}"><button class="btn_liked act" onclick="liked($(this))"><em class="snd_only">하트</em></button></c:if></c:forEach>
 									</c:when>
 									<c:otherwise><a class="btn_liked2 btn_pop" href="${root}member/login"><em class="snd_only">하트</em></a></c:otherwise>
 								</c:choose>
 							</li>
-							<c:choose>
-							<c:when test="${login ne null}">
-								<li>
-								<c:forEach items="${bookMark}" var="book">
-								${book}
-								</c:forEach>
-									<button class="btn_bookmark2"><em class="snd_only">저장하기</em></button>
-								</li>
-							</c:when>
-							<c:otherwise><li><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></li></c:otherwise>
-							</c:choose>
+							<li>
+								<c:choose>
+									<c:when test="${login ne null}">
+										<c:forEach items="${bookMark}" var="book"><c:out value="${book.camp.canum }"/><c:if test="${camp.canum eq book.camp.canum}"><button class="btn_bookmark act" onclick="liked($(this))"><em class="snd_only">저장하기</em></button></c:if></c:forEach>
+									</c:when>
+									<c:otherwise><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></c:otherwise>
+								</c:choose>
+							</li>
 							<c:if test="${login ne null}">
 							<li><a href="${root}camp/detail/report" class="btn_report"><em class="snd_only">신고하기</em></a></li>
 							</c:if>
@@ -420,11 +433,10 @@
 							<li class="swiper-slide" data-canum="${same.canum}">
 								<a class="cp_thumb" href="${root}camp/detail?canum=${same.canum}&caaddrsel=${same.caaddrsel}">
 								<c:set var="image" value="${fn:substringBefore(same.caphoto,',')}"></c:set>
-								<c:choose>
-									<c:when test="${!empty image}"><img src="${upload}/${image}" alt="${same.caname}"></c:when>
-									<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${same.caname}"></c:otherwise>
-								</c:choose>
-									<b class="cp_liked">${same.cagood}</b>
+								<c:if test="${!empty same.caphoto && empty image}"><img src="${upload}/${same.caphoto}" alt="${same.caname}"></c:if>
+								<c:if test="${!empty same.caphoto && !empty image}"><img src="${upload}/${image}" alt="${same.caname}"></c:if>
+								<c:if test="${empty same.caphoto && empty image}"><img src="${root}resources/images/thumb/no_profile.png" alt="${same.caname}"></c:if>
+								<b class="cp_liked">${same.cagood}</b>
 								</a>
 								<a class="cp_text" href="${root}camp/detail?canum=${same.canum}&caaddrsel=${same.caaddrsel}">
 									<b class="cp_name">${same.caname}</b>
