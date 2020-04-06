@@ -1,6 +1,8 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:url value="/" var="root"></c:url>
+<c:url value="/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -24,20 +26,20 @@
 					<a href="${root}"><em class="snd_only">FESTA</em></a>
 				</h1>
 				<form class="search_box" action="${root }search">
-					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
 					<button type="submit">
 						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 					</button>
 				</form>
 				<ul id="gnb">
-					<li><a href="${root}camp/?caaddrsel=">캠핑정보</a></li>
+					<li><a href="${root}camp/">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
 					<li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 					<c:if test="${login eq null }">
 					<li><a href="${root}member/login" class="btn_pop">로그인</a></li>
 					</c:if>
 					<c:if test="${login ne null }">
-					<li><a href="${root}user/">마이페이지</a></li>
+					<li><a href="${root}user/?pronum=${login.pronum}">마이페이지</a></li>
 					</c:if>
 				</ul>
 				<c:if test="${login ne null }">
@@ -53,11 +55,26 @@
 							<span class="btn_mylist">나의 그룹</span>
 							<div class="my_list">
 								<ul>
-								<c:forEach items="${joinGroup }" var="joinGroup">
-									<li><a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}"> <span><img
-												src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
-									</a></li>
-								</c:forEach>
+									<c:forEach items="${joinGroup }" var="joinGroup">
+									<c:choose>
+										<c:when test="${joinGroup.group.grphoto eq null }">
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${root }resources/upload/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:when>
+										<c:otherwise>
+										<li>
+											<a href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+												<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+												<b>${joinGroup.group.grname }</b>
+											</a>
+										</li>
+										</c:otherwise>
+									</c:choose>
+									</c:forEach>
 								</ul>
 							</div>
 						</dd>
