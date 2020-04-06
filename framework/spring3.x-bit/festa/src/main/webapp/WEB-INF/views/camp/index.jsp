@@ -57,7 +57,7 @@
 <body>
 <c:if test="${sessionScope.login ne null }">
    <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
-      <c:redirect url="/empty"/>
+      <c:redirect url="${root}empty"/>
    </c:if>
 </c:if>
 <div id="wrap">

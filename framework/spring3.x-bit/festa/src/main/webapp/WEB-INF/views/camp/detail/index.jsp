@@ -124,7 +124,7 @@
 <body>
 <c:if test="${sessionScope.login ne null }">
    <c:if test="${sessionScope.login.proid eq 'admin@festa.com' }">
-      <c:redirect url="/empty"/>
+      <c:redirect url="${root}empty"/>
    </c:if>
 </c:if>
 <div id="wrap">
@@ -245,9 +245,9 @@
 						<h3><span>${camp.caaddrsel}</span> ${camp.caname}</h3>
 						<p class="cp_subtit">${camp.caintroone}</p>
 						<ul class="cp_hashtag">
-							<c:if test="${!empty camp.httitle1}"><li><a href="">${camp.httitle1}</a></li></c:if>
-							<c:if test="${!empty camp.httitle2}"><li><a href="">${camp.httitle2}</a></li></c:if>
-							<c:if test="${!empty camp.httitle3}"><li><a href="">${camp.httitle3}</a></li></c:if>
+							<c:if test="${!empty camp.httitle1}"><li><a href="${root}search/?keyword=${camp.httitle1}">${camp.httitle1}</a></li></c:if>
+							<c:if test="${!empty camp.httitle2}"><li><a href="${root}search/?keyword=${camp.httitle2}">${camp.httitle2}</a></li></c:if>
+							<c:if test="${!empty camp.httitle3}"><li><a href="${root}search/?keyword=${camp.httitle3}">${camp.httitle3}</a></li></c:if>
 						</ul>
 						<ul class="cp_options">
 							<li>
@@ -342,14 +342,14 @@
 					<c:when test="${campReviewCount ne null}">
 						<c:forEach items="${campReviewList}" var="review">
 						<li>
-							<a class="pf_picture" href="">
+							<a class="pf_picture" href="${root}user/?pronum=${login.pronum}">
 							<c:choose>
 								<c:when test="${!empty review.profile.prophoto}"><img src="${upload}/${review.profile.prophoto}" alt="${review.crauthor}"></c:when>
 								<c:otherwise><img src="${root}resources/images/thumb/no_profile.png" alt="${camp.caname}"></c:otherwise>
 							</c:choose>
 							</a>
 							<p class="rt_user">
-								<a class="rt_name" href="">
+								<a class="rt_name" href="${root}user/?pronum=${login.pronum}">
 									<b>${review.crauthor}</b>
 								</a>
 								<c:if test="${review.crgood eq 1.0}"><span class="rt_star"><img src="${root}resources/images/ico/shp_star1.png" alt="별 1개"></span></c:if>
