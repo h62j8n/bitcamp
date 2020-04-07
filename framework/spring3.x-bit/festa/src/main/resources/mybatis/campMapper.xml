@@ -40,6 +40,7 @@
 	
 	<!-- 내 북마크목록 조인 시에 참조되는데이터 -->
 	<resultMap type="MyBookMarkVo" id="mybookmark">
+		<id column="dummy_column_for_unique"/>
 		<result column="pronum16" property="pronum"/>
 		<association property="camp" resultMap="camp1"/>
 	</resultMap>
@@ -206,12 +207,12 @@
 	
 	<!-- 캠핑장 북마크등록 -->
 	<insert id="campBookMarkInsert" parameterType="MyBookMarkVo">
-		insert into mybookmark values (#{pronum},#{camp.canum})
+		insert into mybookmark values (#{pronum},#{canum})
 	</insert>
 	
 	<!-- 캠핑장 북마크해제 -->
 	<delete id="campBookMarkDelete" parameterType="MyBookMarkVo">
-		delete from mybookmark where pronum16=#{pronum} and canum5=#{camp.canum}
+		delete from mybookmark where pronum16=#{pronum} and canum5=#{canum}
 	</delete>
 	
 	<!-- 내 북마크목록 갱신 -->

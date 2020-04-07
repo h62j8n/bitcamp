@@ -19,6 +19,7 @@
 	<title>FESTA</title>
 	<script type="text/javascript">
 	$(function() {
+		// 로그인 유무에 따른 버튼 처리
 		var login = '${login ne null}';
 		if (login == 'false') {
 			$('.btn_go a').on('click', function(e) {openLayer(e, '${root}member/login')});
@@ -30,11 +31,11 @@
 				btnContainer.eq(0).append(likedBtn);
 			}
 			if ($('.btn_bookmark').length < 1) {
-				console.log('접근');
 				btnContainer.eq(1).append(bookmarkBtn);
 			}
 		}
 		
+		// 신고하기
 		$('.btn_report').on('click', function(e) {
 			openLayer(e, '${root}camp/detail/report?canum=${camp.canum}&profile.pronum=${camp.profile.pronum}&profile.proname=${camp.profile.proname}&profile.proid=${camp.profile.proid}');
 		});
@@ -90,6 +91,8 @@
 			});
 		});
 	});
+	
+	// 좋아요/북마크
 	function liked(button) {
 		var liked = button.hasClass('btn_liked'),
 			bookmark = button.hasClass('btn_bookmark');
@@ -99,24 +102,24 @@
 		
 		var url = '${root}camp/detail/',
 			param = {
-			'pronum': '${login.pronum}',
-			'canum': '${camp.canum}',
-		};
+				'pronum': '${login.pronum}',
+				'canum': '${camp.canum}',
+			};
 		if (liked && plus) {
-			$.post('${root}camp/detail/likeadd', param)
+			$.post(url+'likeadd', param)
 				.done(function() {
 					cntTag.text(cnt+1);
 				});
 		} else if (liked && !plus) {
-			$.post('${root}camp/detail/likedel', param)
+			$.post(url+'likedel', param)
 				.done(function() {
 					cntTag.text(cnt-1);
 				});
 		}
 		if (bookmark && plus) {
-			$.post('${root}camp/detail/bookadd', param)
+			$.post(url+'bookadd', param).done(refresh);
 		} else if (bookmark && !plus) {
-			$.post('${root}camp/detail/bookdel', param)
+			$.post(url+'bookdel', param).done(refresh);
 		}
 	}
 	</script>
@@ -205,7 +208,7 @@
 								<ul>
 								<c:forEach items="${bookMark}" var="bookMark">
 									<li>
-										<a href="${root}camp?canum=${bookMark.camp.canum}">
+										<a href="${root}camp/detail?canum=${bookMark.camp.canum}&caaddrsel=${bookMark.camp.caaddrsel}">
 											<span>
 												<c:set var="image" value="${fn:substringBefore(bookMark.camp.caphoto,',')}"></c:set>
 												<c:if test="${!empty bookMark.camp.caphoto && empty image}"><img src="${upload}/${bookMark.camp.caphoto}" alt="${bookMark.camp.caname}"></c:if>
@@ -262,7 +265,10 @@
 							<li>
 								<c:choose>
 									<c:when test="${login ne null}">
-										<c:forEach items="${bookMark}" var="book"><c:out value="${book.camp.canum }"/><c:if test="${camp.canum eq book.camp.canum}"><button class="btn_bookmark act" onclick="liked($(this))"><em class="snd_only">저장하기</em></button></c:if></c:forEach>
+										<c:forEach items="${bookMark}" var="book">
+											<c:if test="${book.camp.canum eq camp.canum}"><button class="btn_bookmark act" onclick="liked($(this))"><em class="snd_only">저장하기</em></button></c:if>
+											<c:if test="${book.camp.canum ne camp.canum && book.camp.canum eq 1}">test</c:if>
+										</c:forEach>
 									</c:when>
 									<c:otherwise><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></c:otherwise>
 								</c:choose>
@@ -486,7 +492,7 @@
 	<div class="confirm_wrap pop_wrap">
 		<h4 class="pop_tit"></h4>
 		<ul class="comm_buttons">
-			<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
+			<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
 			<li><button type="button" id="deleteBtn" class="comm_btn cfm">확인</button></li>
 			<li><button type="button" id="confirmBtn" class="btn_close comm_btn cfm">확인</button></li>
 		</ul>
