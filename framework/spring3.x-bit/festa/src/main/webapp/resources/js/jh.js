@@ -171,19 +171,24 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			var thums;
 			var photos;
 			var parameter;
+			var tag;
+			var feedLi;
 				//개인피드일때
 				if(data[index].gpnum==0){
 					//개인피드값 주입
 					num=data[index].mpnum;
 					content=data[index].mpcontent;
 					total=data[index].mptotal;
+					tag='<a class="text box btn_pop" href="/festa/search/feed?mpnum='+num+'">';
 					//사진이 ''이 아닐때 사진추가
 					if(data[index].mpphoto!=''){
 						photo=data[index].mpphoto;
 						photos=photo.split(',');
 						photo=photos[0];
-						thums='<a class="thumb box btn_pop" href="${root }search/feed?mpnum='+num+'"><span class="fd_thumb"><img src="/festa/resources/upload/'+photo+'" alt="피드 썸네일" onload="squareTrim($(this), 100)"></span></a>';
+						feedLi = '<li class="half">';
+						thums='<a class="thumb box btn_pop" href="/festa/search/feed?mpnum='+num+'"><span class="fd_thumb"><img src="/festa/resources/upload/'+photo+'" alt="피드 썸네일" onload="squareTrim($(this), 100)"></span></a>';
 					}else{
+						feedLi = '<li>';
 						thums='';
 					}
 					//개인피드일때 그룹파라미터값 없으니 ''
@@ -195,13 +200,16 @@ function feedList(data,view,pronum,prophoto,logincheck){
 					num=data[index].gpnum;
 					content=data[index].gpcontent;
 					total=data[index].gptotal;
+					tag='<a class="text box btn_pop" href="/festa/search/feed?gpnum='+num+'">'
 					//사진이 ''이 아닐때 사진추가
 					if(data[index].gpphoto!=''){
 						photo=data[index].gpphoto;
 						photos=photo.split(',');
 						photo=photos[0];
+						feedLi = '<li class="half">';
 						thums='<a class="thumb box btn_pop" href="/festa/search/feed?gpnum='+num+'"><span class="fd_thumb"><img src="/festa/resources/upload/'+photo+'" alt="피드 썸네일" onload="squareTrim($(this), 100)"></span></a>';
 					}else{
+						feedLi = '<li>';
 						thums='';
 					}
 					//그룹피드일때 그룹파라미터값 있으니 로그인일떄 아닐때 조건처리
@@ -212,8 +220,8 @@ function feedList(data,view,pronum,prophoto,logincheck){
 					}
 				}
 				//json데이터 append 부분
-				$('.feed_list').append('<li>'
-				+'<a class="text box btn_pop" href="/festa/search/feed?mpnum='+num+'">'
+				$('.feed_list').append(feedLi
+				+tag
 				+'<span class="fd_hashtag">'+hashtag+'</span><span class="fd_content">'+content
 				+'</span></a>'
 				+thums
@@ -413,7 +421,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				//로그인상태일때 댓글작성태그 생성
 				msgForm='<form class="message_form">'
 						+'<a class="pf_picture" href="/festa/user/?pronum='+pronum+'">'
-						+'<img src="/festa/resources/upload/'+prophoto+'" alt="나의 프로필 썸네일">'
+						+'<img src="/festa/resources/upload/'+prophoto+'" alt="나의 프로필 썸네일" onload="squareTrim($(this), 30)">'
 						+'</a>'
 						+'<p class="msg_input">'
 						+'<textarea id="" name="gccontent" placeholder="메세지를 입력해주세요"></textarea>'
@@ -430,12 +438,12 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			//해당피드사진이 존재할때 사진등록
 			if(photo!=''){
 				feedView='<div class="feed_viewer half">';
-				thums='<div class="img box"><div class="thumb_slide"><div class="swiper-wrapper"><div class="swiper-slide">';
+				thums='<div class="img box"><div class="thumb_slide" onload="sliderLoad($(this))"><div class="swiper-wrapper">';
 				photos=photo.split(',');
 				for(var i=0; i<photos.length; i++){
-					thums+='<img src="/festa/resources/upload/'+photos[i]+'" alt="" onload="squareTrim($(this), 290)">';
+					thums+='<div class="swiper-slide"><img src="/festa/resources/upload/'+photos[i]+'" alt="" onload="squareTrim($(this), 290)"></div>';
 				}
-				thums+='</div></div><div class="swiper-pagination"></div></div></div>';
+				thums+='</div><div class="swiper-pagination"></div></div></div>';
 			//사진이 존재하지않을때 사진삭제
 			}else{
 				feedView='<div class="feed_viewer">';
@@ -484,6 +492,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			+'<input type="hidden" value="'+photo+'">'
 			+thums
 			+'</div>');
+			scrBar();
 		});
 	}else if(view=='news'){
 		
@@ -537,12 +546,12 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			if(data[0][index].gpphoto!=''){
 				gpphoto=data[0][index].gpphoto;
 				feedView='<div class="feed_viewer half">';
-				thums='<div class="img box"><div class="thumb_slide"><div class="swiper-wrapper"><div class="swiper-slide">';
+				thums='<div class="img box"><div class="thumb_slide" onload="sliderLoad($(this))"><div class="swiper-wrapper">';
 				gpphotos=gpphoto.split(',');
 				for(var i=0; i<gpphotos.length; i++){
-					thums+='<img src="/festa/resources/upload/'+gpphotos[i]+'" alt="" onload="squareTrim($(this), 290)">';
+					thums+='<div class="swiper-slide"><img src="/festa/resources/upload/'+gpphotos[i]+'" alt="" onload="squareTrim($(this), 290)"></div>';
 				}
-				thums+='</div></div><div class="swiper-pagination"></div></div></div>';
+				thums+='</div><div class="swiper-pagination"></div></div></div>';
 			//사진이 존재하지않을때 사진삭제
 			}else{
 				feedView='<div class="feed_viewer">';
@@ -607,8 +616,9 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			+moreBtn
 			+'</div>'
 			+'</div>'
-			+'</div>'
-			+thums);
+			+thums
+			+'</div>');
+			scrBar();
 		});
 	}else if(view=='admin/user'){
 		$(data[0]).each(function(index){
@@ -658,12 +668,12 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			if(data[0][index].mpphoto!=''){
 				mpphoto=data[0][index].mpphoto;
 				feedView='<div class="feed_viewer half">';
-				thums='<div class="img box"><div class="thumb_slide"><div class="swiper-wrapper"><div class="swiper-slide">';
+				thums='<div class="img box"><div class="thumb_slide"><div class="swiper-wrapper">';
 				mpphotos=mpphoto.split(',');
 				for(var i=0; i<mpphotos.length; i++){
-					thums+='<img src="/festa/resources/upload/'+mpphotos[i]+'" alt="" onload="squareTrim($(this), 290)">';
+					thums+='<div class="swiper-slide"><img src="/festa/resources/upload/'+mpphotos[i]+'" alt="" onload="squareTrim($(this), 290)"></div>';
 				}
-				thums+='</div></div><div class="swiper-pagination"></div></div></div>';
+				thums+='</div><div class="swiper-pagination"></div></div></div>';
 			//사진이 존재하지않을때 사진삭제
 			}else{
 				feedView='<div class="feed_viewer">';
@@ -727,8 +737,9 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			+moreBtn
 			+'</div>'
 			+'</div>'
-			+'</div>'
-			+thums);
+			+thums
+			+'</div>');
+			scrBar();
 		});
 	}
 }
