@@ -193,7 +193,7 @@
 												value="${fn:substringBefore(camplist.caphoto,',') }" />
 										</c:if>
 										<c:if test="${fn:length(image1) eq 1 }">
-											<c:set var="image" value="${camplist.caphoto.caphoto }" />
+											<c:set var="image" value="${camplist.caphoto }" />
 										</c:if>
 										<span><img src="${upload }/${image}"
 											alt="${camplist.caname } 썸네일"></span>
