@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.entity.GroupCommentVo;
@@ -34,6 +35,13 @@ public class NewsController {
 	public String newsFeedSelectAll(HttpServletRequest req, MyFollowingVo myFollowingVo){
 		newsService.newsFeedSelectAll(req, myFollowingVo);
 		return "news/index";
+	}
+	
+	//뉴스피드 조회
+	@RequestMapping(value = "more", method = RequestMethod.GET)
+	public @ResponseBody String newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo){
+		newsService.newsFeedSelectAll(req, myFollowingVo);
+		return "news/more";
 	}
 	
 	//내 피드 수정 (팝업)

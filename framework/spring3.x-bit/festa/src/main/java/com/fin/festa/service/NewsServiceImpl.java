@@ -1,5 +1,8 @@
 package com.fin.festa.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fin.festa.model.NewsDaoImpl;
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
+import com.fin.festa.model.entity.PageSearchVo;
 import com.fin.festa.model.entity.ReportListVo;
+import com.fin.festa.util.DateCalculate;
 
 @Service
 public class NewsServiceImpl implements NewsService{
@@ -27,7 +33,25 @@ public class NewsServiceImpl implements NewsService{
 	//뉴스피드 출력(그룹피드,개인피드 합쳐서)
 	@Override
 	public void newsFeedSelectAll(HttpServletRequest req, MyFollowingVo myFollowingVo) {
+		PageSearchVo page = new PageSearchVo();
+		page.setPage5(1);
 		
+		FeedVo feed = new FeedVo();
+		List<FeedVo> followFeed = newsDao.followFeedSelectAll(myFollowingVo);
+		List<FeedVo> groupFeed = newsDao.joinGroupFeedSelectAll(myFollowingVo);
+		
+		// 그룹/개인피드 (날짜순 정렬)
+		DateCalculate cal = new DateCalculate();
+		List<FeedVo> sortList = cal.VoDateGoodReturn(followFeed, groupFeed);
+		req.setAttribute("feedList", sortList);
+		
+		// 팔로우피드 댓글
+		feed.setFeedList(followFeed);
+		req.setAttribute("followComment", newsDao.followFeedSelectAll(myFollowingVo));
+		
+		// 그룹피드 댓글
+		feed.setFeedList(groupFeed);
+		req.setAttribute("groupComment", newsDao.joinGroupFeedSelectAll(myFollowingVo));
 	}
 
 	//뉴스피드 댓글등록(그룹피드,개인피드 구별해서 등록)
