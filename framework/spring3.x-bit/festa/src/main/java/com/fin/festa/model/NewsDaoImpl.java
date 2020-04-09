@@ -6,13 +6,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
 import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
-import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 
 @Repository
@@ -27,26 +27,26 @@ public class NewsDaoImpl implements NewsDao{
 	
 	//내팔로우의 피드글출력
 	@Override
-	public List<MyPostVo> followFeedSelectAll(MyFollowingVo following) {
-		return sqlSession.selectList("news.followingFeed", following);
+	public List<FeedVo> followFeedSelectAll(MyFollowingVo following) {
+		return null;
 	}
 	
 	//내팔로우의 피드글댓글출력
 	@Override
-	public List<MyCommentVo> followCommentSelectAll(MyFollowingVo following) {
-		return sqlSession.selectList("news.followingCmmt", following);
+	public List<MyCommentVo> followCommentSelectAll(FeedVo feed) {
+		return null;
 	}
 
 	//내가입그룹의 피드글출력
 	@Override
-	public List<GroupPostVo> joinGroupFeedSelectAll(MyFollowingVo following) {
-		return sqlSession.selectList("news.joingroupFeed", following);
+	public List<FeedVo> joinGroupFeedSelectAll(MyFollowingVo following) {
+		return null;
 	}
 
 	//내가입그룹의 피드글댓글출력
 	@Override
-	public List<GroupCommentVo> joinGroupCommentSelectAll(MyFollowingVo following) {
-		return sqlSession.selectList("news.joingroupCmmt", following);
+	public List<GroupCommentVo> joinGroupCommentSelectAll(FeedVo feed) {
+		return null;
 	}
 	
 	//////////////////////////////////////////////////////////////////////
