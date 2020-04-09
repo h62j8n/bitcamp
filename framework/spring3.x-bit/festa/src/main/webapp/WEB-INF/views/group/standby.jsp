@@ -11,16 +11,41 @@
 <c:url value="/resources/upload" var="upload"></c:url>
 <!DOCTYPE html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta property="og:image" content="${root }resources/images/ico/logo.png">
-	<script type="text/javascript" src="${root }resources/js/jquery-1.12.4.js"></script>
-	<script type="text/javascript" src="${root }resources/js/util.js"></script>
-	<script type="text/javascript" src="${root }resources/js/site.js"></script>
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
-	<link rel="stylesheet" href="${root }resources/css/site.css">
-	<link rel="shortcut icon" href="${root }resources/favicon.ico">
-	<title>FESTA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="${root }resources/images/ico/logo.png">
+<script type="text/javascript" src="${root }resources/js/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="${root }resources/js/util.js"></script>
+<script type="text/javascript" src="${root }resources/js/site.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+<link rel="stylesheet" href="${root }resources/css/site.css">
+<link rel="shortcut icon" href="${root }resources/favicon.ico">
+<title>FESTA</title>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var login = '${login}';
+		var cookie = '${cookie.loginCookie.value}';
+		if(cookie!=''&&login==''&&loginValue==true){
+		   openPop('loginCookie');
+		}
+		
+		$('#btnCookie').on('click',function(){
+		   $.post('${root}member/loginCookie','id='+cookie,function(data){
+		      if (data.prorn == '0') {
+		         location.href = "${root}user/?pronum="+data.pronum;
+		      } else if (data.prorn == '1') {
+		         location.href = "${root}member/stop";
+		      } else if (data.prorn == '2') {
+		         location.href = "${root}member/kick";
+		      } else if (data.prorn == '3') {
+		         location.href = "${root}admin/";
+		      } else if (data.prorn == '4') {
+		         location.href = "${root}";
+		      }
+		   });
+		});
+	});
+</script>
 </head>
 <body>
 <div id="wrap">
@@ -30,16 +55,16 @@
 				<h1>
 					<a href="${root }"><em class="snd_only">FESTA</em></a>
 				</h1>
-				<form class="search_box">
-					<input type="text" placeholder="캠핑장 또는 그룹을 검색해보세요!">
-					<button type="button" id="search">
+				<form class="search_box" action="${root }search/">
+					<input type="text" name="keyword" placeholder="캠핑장 또는 그룹을 검색해보세요!" required="required">
+					<button type="submit">
 						<img src="${root }resources/images/ico/btn_search.png" alt="검색">
 					</button>
 				</form>
 				<ul id="gnb">
 					<li><a href="${root}camp/">캠핑정보</a></li>
 					<li><a href="${root}hot/">인기피드</a></li>
-					<li><a href="${root}news/">뉴스피드</a></li>
+					li><a href="${root}news/?pronum=${login.pronum}">뉴스피드</a></li>
 					<c:if test="${login eq null }">
 						<%
 							out.println("<script>alert('로그인 후 이용이 가능합니다.')</script>");
@@ -89,10 +114,24 @@
 								<div class="my_list">
 									<ul>
 										<c:forEach items="${joinGroup }" var="joinGroup">
-											<li><a href=""> <span><img
-														src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
-													<b>${joinGroup.group.grname }</b>
-											</a></li>
+											<c:choose>
+												<c:when test="${joinGroup.group.grphoto eq null }"> 
+													<li>
+														<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+															<span><img src="${root}resources/images/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+															<b>${joinGroup.group.grname }</b>
+														</a>
+													</li>
+												</c:when>
+												<c:otherwise>
+													<li>
+														<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+															<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+															<b>${joinGroup.group.grname }</b>
+														</a>
+													</li>
+												</c:otherwise>
+											</c:choose>
 										</c:forEach>
 									</ul>
 								</div>
@@ -161,17 +200,25 @@
 									test="${empty detail.httitle1 && empty detail.httitle2 && empty detail.httitle3}">
 								</c:when>
 								<c:when
+									test="${empty detail.httitle1 && empty detail.httitle3}">
+									<a href="${root }search/?keyword=${detail.httitle2}">${detail.httitle2}</a>
+								</c:when>
+								<c:when
+									test="${empty detail.httitle2 && empty detail.httitle3}">
+									<a href="${root }search/?keyword=${detail.httitle1}">${detail.httitle1}</a>
+								</c:when>
+								<c:when
 									test="${empty detail.httitle1 && empty detail.httitle2}">
-									<a href="">${detail.httitle3}</a>
+									<a href="${root }search/?keyword=${detail.httitle3}">${detail.httitle3}</a>
 								</c:when>
 								<c:when test="${empty detail.httitle1}">
-									<a href="">${detail.httitle2}</a>
-									<a href="">${detail.httitle3}</a>
+									<a href="${root }search/?keyword=${detail.httitle2}">${detail.httitle2}</a>
+									<a href="${root }search/?keyword=${detail.httitle3}">${detail.httitle3}</a>
 								</c:when>
 								<c:otherwise>
-									<a href="">${detail.httitle1}</a>
-									<a href="">${detail.httitle2}</a>
-									<a href="">${detail.httitle3}</a>
+									<a href="${root }search/?keyword=${detail.httitle1}">${detail.httitle1}</a>
+									<a href="${root }search/?keyword=${detail.httitle2}">${detail.httitle2}</a>
+									<a href="${root }search/?keyword=${detail.httitle3}">${detail.httitle3}</a>
 								</c:otherwise>
 							</c:choose>
 						</dd>
@@ -311,5 +358,17 @@
 	</div>
 </div>
 <!-- } #팝업 그룹 가입신청 -->
+
+	<!-- #팝업 처리완료 { -->
+	<div id="loginCookie" class="fstPop">
+		<div class="confirm_wrap pop_wrap">
+			<p class="pop_tit">로그인을 유지 시키겠습니까?</p>
+			<ul class="comm_buttons">
+				<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
+				<li><button type="button" id="btnCookie"
+						class="ok comm_btn cfm">로그인</button></li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>

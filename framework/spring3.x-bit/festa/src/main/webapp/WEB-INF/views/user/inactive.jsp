@@ -2,12 +2,35 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:url value="/" var="root"></c:url>
-<c:url value="/upload" var="upload"></c:url>
+<c:url value="/" var="root" />
+<c:url value="/resources/upload" var="upload" />
 <!DOCTYPE html>
 <head>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var cookie = '${cookie.loginCookie.value}';
+	      var login = '${login}';
+	      
+	      if(cookie!=''&&login==''&&loginValue==true){
+	         openPop('loginCookie');
+	      }
+	      
+	      $('#btnCookie').on('click',function(){
+	         $.post('${root}member/loginCookie','id='+cookie,function(data){
+	            if (data.prorn == '0') {
+	               location.href = "${root}user/?pronum="+data.pronum;
+	            } else if (data.prorn == '1') {
+	               location.href = "${root}member/stop";
+	            } else if (data.prorn == '2') {
+	               location.href = "${root}member/kick";
+	            } else if (data.prorn == '3') {
+	               location.href = "${root}admin/";
+	            } else if (data.prorn == '4') {
+	               location.href = "${root}";
+	            }
+	         });
+	      });
+		
 		$('#btn_inactive').on('click',function(){
 			var pronum = "${profile.pronum}";
 			$.post('${root}user/inactive','pronum='+pronum,function(data){
