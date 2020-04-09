@@ -49,17 +49,10 @@
 		var login = '${login ne null}';
 		if (login == 'false') {
 			$('.btn_go a').on('click', function(e) {openLayer(e, '${root}member/login')});
-		} else if (login == 'true') {
-			var btnContainer = $('.cp_options li'),
-				likedBtn = '<button class="btn_liked" onclick="liked($(this))"><em class="snd_only">하트</em></button>',
-				bookmarkBtn = '<button class="btn_bookmark" onclick="liked($(this))"><em class="snd_only">저장하기</em></button>';
-			if ($('.btn_liked').length < 1) {
-				btnContainer.eq(0).append(likedBtn);
-			}
-			if ($('.btn_bookmark').length < 1) {
-				btnContainer.eq(1).append(bookmarkBtn);
-			}
 		}
+		
+		// 좋아요/북마크
+		$('.btn_liked, .btn_bookmark').on('click', liked($(this)));
 		
 		// 신고하기
 		$('.btn_report').on('click', function(e) {
@@ -281,23 +274,16 @@
 						<ul class="cp_options">
 							<li>
 								<b class="cp_liked">${camp.cagood}</b>
-								<c:choose>
-									<c:when test="${login ne null}">
-										<c:forEach items="${goodlist}" var="good"><c:if test="${camp.canum eq good.canum}"><button class="btn_liked act" onclick="liked($(this))"><em class="snd_only">하트</em></button></c:if></c:forEach>
-									</c:when>
-									<c:otherwise><a class="btn_liked2 btn_pop" href="${root}member/login"><em class="snd_only">하트</em></a></c:otherwise>
-								</c:choose>
+							<c:choose>
+								<c:when test="${login ne null}"><button class="btn_liked<c:forEach items="${goodlist}" var="good"><c:if test="${camp.canum eq good.canum}"> act</c:if></c:forEach>"><em class="snd_only">하트</em></button></c:when>
+								<c:otherwise><a class="btn_liked2 btn_pop" href="${root}member/login"><em class="snd_only">하트</em></a></c:otherwise>
+							</c:choose>
 							</li>
 							<li>
-								<c:choose>
-									<c:when test="${login ne null}">
-										<c:forEach items="${bookMark}" var="book">
-											<c:if test="${book.camp.canum eq camp.canum}"><button class="btn_bookmark act" onclick="liked($(this))"><em class="snd_only">저장하기</em></button></c:if>
-											<c:if test="${book.camp.canum ne camp.canum && book.camp.canum eq 1}">test</c:if>
-										</c:forEach>
-									</c:when>
-									<c:otherwise><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></c:otherwise>
-								</c:choose>
+							<c:choose>
+								<c:when test="${login ne null}"><button class="btn_bookmark<c:forEach items="${bookMark}" var="book"><c:if test="${book.camp.canum eq camp.canum}"> act</c:if></c:forEach>"><em class="snd_only">저장하기</em></button></c:when>
+								<c:otherwise><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></c:otherwise>
+							</c:choose>
 							</li>
 							<c:if test="${login ne null}">
 							<li><a href="${root}camp/detail/report" class="btn_report"><em class="snd_only">신고하기</em></a></li>

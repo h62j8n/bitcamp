@@ -220,14 +220,16 @@
 					<c:when test="${!group}">
 						<c:set var="feedContent" value="${feed.mpcontent}" />
 						<c:set var="feedImages" value="${feed.mpphoto}" />
+						<c:set var="feedNum" value="${feed.mpnum}" />
 					</c:when>
 					<c:otherwise>
 						<c:set var="feedContent" value="${feed.gpcontent}" />
 						<c:set var="feedImages" value="${feed.gpphoto}" />
+						<c:set var="feedNum" value="${feed.gpnum}" />
 					</c:otherwise>
 				</c:choose>
 				<div class="feed_viewer<c:if test="${!empty feedImages}"> half</c:if>">
-					<div class="tit box">
+					<div class="tit box ${feedNum}">
 						<dl class="feed_inform">
 							<dt>
 								<a href="${root}user/?pronum=${feed.pronum}">
@@ -249,10 +251,18 @@
 							</dd>
 						</dl>
 						<ul class="feed_options">
-							<li><button class="btn_liked act"><em class="snd_only">하트</em></button></li>
-							<li><a href="/common/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
-							<li><a href="/common/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
-							<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
+							<li>
+								<button class="btn_liked<c:forEach items="${goodlist}" var="good"><c:if test="${good.mpnum eq feedNum || good.gpnum eq feedNum}"> act</c:if></c:forEach>"><em class="snd_only">하트</em></button>
+							</li>
+							<c:choose>
+								<c:when test="${login.pronum eq feed.pronum}">
+									<li><a href="${root}news/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+									<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
+								</c:when>
+								<c:otherwise>
+									<li><a href="${root}news/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+								</c:otherwise>
+							</c:choose>
 						</ul>
 					</div>
 					<div class="text box">
