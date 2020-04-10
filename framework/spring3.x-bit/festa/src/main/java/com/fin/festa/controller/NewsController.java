@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
 import com.fin.festa.model.entity.GroupPostVo;
 import com.fin.festa.model.entity.MyCommentVo;
@@ -37,7 +38,7 @@ public class NewsController {
 		return "news/index";
 	}
 	
-	//뉴스피드 조회
+	//뉴스피드 조회 (더보기)
 	@RequestMapping(value = "more", method = RequestMethod.GET)
 	public @ResponseBody String newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo){
 		newsService.newsFeedSelectAll(req, myFollowingVo);
@@ -46,13 +47,15 @@ public class NewsController {
 	
 	//내 피드 수정 (팝업)
 	@RequestMapping(value = "edit", method = RequestMethod.GET)
-	public String feedUpdateOne() {
+	public String feedUpdateOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
+		newsService.newsFeedSelectOne(model, groupPostVo, myPostVo);
 		return "news/maker";
 	}
 	
 	//내 피드 수정 (팝업>팝업 내 기능)
 	@RequestMapping(value = "edit", method = RequestMethod.POST)
 	public String feedUpdateOne(HttpServletRequest req, MyPostVo myPostVo, GroupPostVo groupPostVo, MultipartFile[] files) {
+		newsService.newsFeedUpdateOne(req, groupPostVo, myPostVo, files);
 		return "news/index";
 	}
 
@@ -77,24 +80,28 @@ public class NewsController {
 	//뉴스피드 좋아요
 	@RequestMapping(value = "likeadd", method = RequestMethod.POST)
 	public String newsLikeInsertOne(HttpServletRequest req, MyGoodVo myGoodVo){
+		newsService.newsLikeInsertOne(req, myGoodVo);
 		return "news/index";
 	}
 	
 	//뉴스피드 좋아요 해제
 	@RequestMapping(value = "likedel", method = RequestMethod.POST)
 	public String newsLikeDeleteOne(HttpServletRequest req, MyGoodVo myGoodVo){
+		newsService.newsLikeDeleteOne(req, myGoodVo);
 		return "news/index";
 	}
 
 	//뉴스피드 신고 (팝업)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
-	public String newsFeedReport(){
+	public String newsFeedReport(Model model, FeedVo feedVo){
+		model.addAttribute("feedReport", feedVo);
 		return "news/report";
 	}
 	
 	//뉴스피드 신고 (팝업>팝업 내 기능)
 	@RequestMapping(value = "report", method = RequestMethod.POST)
-	public String newsFeedReport(HttpServletRequest req, ReportListVo reportListVo, MultipartFile[] files){
+	public String newsFeedReport(HttpServletRequest req, MultipartFile[] files, ReportListVo reportListVo){
+		newsService.newsFeedReport(req, files, reportListVo);
 		return "news/index";
 	}
 }

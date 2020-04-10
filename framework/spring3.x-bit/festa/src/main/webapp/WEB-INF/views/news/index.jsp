@@ -19,14 +19,13 @@
 	<script type="text/javascript">
 	$(function(){
 		var login = '${login ne null}';
-		/*
 		if (login == 'false') {
 			location.href='${root}empty';
 		}
 		var cookie = '${cookie.loginCookie.value}';
 		var login = '${login}';
 	    
-		if(cookie!=''&&login==''&&loginValue==true){
+		if(cookie!=''&&login==''){
 			openPop('loginCookie');
 		}
 	    
@@ -45,13 +44,20 @@
 				}
 			});
 		});
-		*/
 		
-		var test = '<c:set var="test" value="${login.pronum}" />';
-		
+		/* var test = '<c:set var="test" value="${login.pronum}" />';
 		$('.feed_viewer').on('click', function() {
 			console.log('test');
 			send();
+		}); */
+		
+		$('.btn_report').on('click', function(e) {
+			var url = report($(this));
+			openLayer(e, url);
+		});
+		$('.btn_edit').on('click', function(e) {
+			var url = edit($(this));
+			openLayer(e, url);
 		});
 	});
 	function send() {
@@ -63,6 +69,87 @@
 				container.append(data);
 				console.log(data);
 			});
+	}
+	// 그룹/개인
+	function feedSeparate(tag) {
+		var group = tag.find('.fd_group');
+		var mpnum, gpnum;
+		if (!group.length > 0) {
+			// 개인피드
+			mpnum = tag.data('num');
+			gpnum = 0;
+		} else {
+			// 그룹피드
+			mpnum = 0;
+			gpnum = tag.data('num');
+		}
+		return {
+			mpnum: mpnum,
+			gpnum: gpnum,
+		}
+	}
+	// 좋아요
+	function liked(button) {
+		var plus = !button.hasClass('act');
+		var container = button.parents('.feed_viewer'),
+			cntTag = container.find('.fd_liked'),
+			cnt = Number(cntTag.text());
+		var feed = feedSeparate(container);
+		var url = '${root}news/',
+			param = {
+				pronum: '${login.pronum}',
+				mpnum: feed.mpnum,
+				gpnum: feed.gpnum,
+			};
+		
+		if (plus) {
+			$.post(url+'likeadd', param)
+				.done(function() {
+					cntTag.text(cnt+1);
+				});
+		} else {
+			$.post(url+'likedel', param)
+				.done(function() {
+					cntTag.text(cnt-1);
+				});
+		}
+	}
+	// 신고하기
+	function report(button) {
+		var container = button.parents('.feed_viewer');
+		var feed = feedSeparate(container);
+		var url = button.attr('href');
+		var param = {
+			mpnum: feed.mpnum,
+			gpnum: feed.gpnum,
+			'profile.pronum': container.find('input[name=pronum]').val(),
+			'profile.proname': container.find('input[name=proname]').val(),
+			'profile.proid': container.find('input[name=proid]').val(),
+		};
+		var keys = Object.keys(param),
+			values = Object.values(param);
+		for (var i=0; i<keys.length; i++) {
+			(i == 0) ? url += '?' : url += '&';
+			url += keys[i] + '=' + values[i];
+		}
+		return url;
+	}
+	// 수정하기
+	function edit(button) {
+		var container = button.parents('.feed_viewer');
+		var feed = feedSeparate(container);
+		var url = button.attr('href');
+		var param = {
+			mpnum: feed.mpnum,
+			gpnum: feed.gpnum,
+		};
+		var keys = Object.keys(param),
+			values = Object.values(param);
+		for (var i=0; i<keys.length; i++) {
+			(i == 0) ? url += '?' : url += '&';
+			url += keys[i] + '=' + values[i];
+		}
+		return url;
 	}
 	function fn_ajax_more_video(start, end, sca){
 		var container = $('.content_area');
@@ -162,12 +249,24 @@
 							<div class="my_list">
 								<ul>
 									<c:forEach items="${joinGroup }" var="joinGroup">
-									<li>
-										<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
-										<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
-										<b>${joinGroup.group.grname }</b>
-										</a>
-									</li>
+										<c:choose>
+											<c:when test="${joinGroup.group.grphoto eq null }"> 
+												<li>
+													<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+														<span><img src="${root}resources/images/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+														<b>${joinGroup.group.grname }</b>
+													</a>
+												</li>
+											</c:when>
+											<c:otherwise>
+												<li>
+													<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+														<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+														<b>${joinGroup.group.grname }</b>
+													</a>
+												</li>
+											</c:otherwise>
+										</c:choose>
 									</c:forEach>
 								</ul>
 							</div>
@@ -206,10 +305,10 @@
 			</div>
 		</div>
 	</div>
-	<!-- #인기피드 -->
+	<!-- #뉴스피드 -->
 	<!-- 서브페이지 시작 { -->
 	<div id="container" class="feed_wrap">
-		<h2 class="snd_only">인기피드</h2>
+		<h2 class="snd_only">뉴스피드</h2>
 		<div class="container">
 			<!-- 컨텐츠영역 시작 { -->
 			<section class="content_area">
@@ -228,8 +327,11 @@
 						<c:set var="feedNum" value="${feed.gpnum}" />
 					</c:otherwise>
 				</c:choose>
-				<div class="feed_viewer<c:if test="${!empty feedImages}"> half</c:if>">
-					<div class="tit box ${feedNum}">
+				<div class="feed_viewer<c:if test="${!empty feedImages}"> half</c:if>" data-num="${feedNum}">
+					<div class="tit box">
+						<input type="hidden" name="pronum" value="${feed.pronum}">
+						<input type="hidden" name="proname" value="${feed.profile.proname}">
+						<input type="hidden" name="proid" value="${feed.profile.proid}">
 						<dl class="feed_inform">
 							<dt>
 								<a href="${root}user/?pronum=${feed.pronum}">
@@ -252,15 +354,15 @@
 						</dl>
 						<ul class="feed_options">
 							<li>
-								<button class="btn_liked<c:forEach items="${goodlist}" var="good"><c:if test="${good.mpnum eq feedNum || good.gpnum eq feedNum}"> act</c:if></c:forEach>"><em class="snd_only">하트</em></button>
+								<button class="btn_liked<c:forEach items="${goodlist}" var="good"><c:if test="${good.mpnum eq feedNum || good.gpnum eq feedNum}"> act</c:if></c:forEach>" onclick="liked($(this))"><em class="snd_only">하트</em></button>
 							</li>
 							<c:choose>
 								<c:when test="${login.pronum eq feed.pronum}">
-									<li><a href="${root}news/maker" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>
+									<li><a href="${root}news/edit" class="btn_edit"><em class="snd_only">수정하기</em></a></li>
 									<li><button class="btn_delete"><em class="snd_only">삭제하기</em></button></li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="${root}news/report" class="btn_pop btn_report"><em class="snd_only">신고하기</em></a></li>
+									<li><a href="${root}news/report" class="btn_report"><em class="snd_only">신고하기</em></a></li>
 								</c:otherwise>
 							</c:choose>
 						</ul>
