@@ -105,7 +105,6 @@ public class NewsServiceImpl implements NewsService{
 			newsDao.myFeedCmmtInsertOne(myCommentVo);
 		} else {
 			newsDao.groupFeedCmmtInsertOne(groupCommentVo);
-			System.out.println(groupCommentVo);
 		}
 	}
 

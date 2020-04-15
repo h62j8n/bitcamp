@@ -40,7 +40,6 @@
 	</c:choose>
 	<div class="feed_viewer<c:if test="${!empty feedImages}"> half</c:if>" data-num="${feedNum}">
 		<div class="tit box">
-			<input type="hidden" name="pronum" value="${feed.pronum}">
 			<dl class="feed_inform">
 				<dt>
 					<a href="${root}user/?pronum=${feed.pronum}">
@@ -131,7 +130,7 @@
 					<button class="cmt_btn_more"><span class="snd_only">1</span>3개의 댓글 더 보기</button>
 				</c:if>
 			</div>
-			<form class="message_form">
+			<form class="message_form" method="POST" action="${root}news/cmmtadd">
 			<c:choose>
 				<c:when test="${!groupFeed}">
 					<c:set var="number" value="mpnum" />

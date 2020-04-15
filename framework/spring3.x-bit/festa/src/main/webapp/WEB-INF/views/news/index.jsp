@@ -103,7 +103,7 @@
 				openPop('alert', none, refresh);
 			}
 		} else {
-			success = refresh();
+			success = refresh;
 		}
 		$.ajax({
 			type: type,
