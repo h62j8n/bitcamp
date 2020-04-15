@@ -40,14 +40,15 @@
 <div class="report_wrap pop_wrap">
 	<h4 class="pop_tit">정말 신고하시겠습니까?</h4>
 	<form id="reportForm" class="comm_form" method="POST" action="${root}news/report" enctype="multipart/form-data">
+		<c:set var="group" value="${feed.gpnum ne 0}" />
+		<c:if test="${!group}"><input type="hidden" name="mpnum" value="${feed.mpnum}"></c:if>
+		<c:if test="${group}"><input type="hidden" name="gpnum" value="${feed.gpnum}"></c:if>
 		<input type="hidden" name="pronum" value="${login.pronum}">
 		<input type="hidden" name="rlreporter" value="${login.proname}">
 		<input type="hidden" name="reporterid" value="${login.proid}">
-		<input type="hidden" name="mpnum" value="${feedReport.mpnum}">
-		<input type="hidden" name="gpnum" value="${feedReport.gpnum}">
-		<input type="hidden" name="pronum_sync" value="${feedReport.profile.pronum}">
-		<input type="hidden" name="rltarget" value="${feedReport.profile.proname}">
-		<input type="hidden" name="targetid" value="${feedReport.profile.proid}">
+		<input type="hidden" name="pronum_sync" value="${feed.pronum}">
+		<input type="hidden" name="rltarget" value="${feed.profile.proname}">
+		<input type="hidden" name="targetid" value="${feed.profile.proid}">
 		<div class="file_box">
 			<p class="txt_hf plc_holder"><span>(필수)</span> 신고 자료를 캡쳐하여 첨부해주세요</p>
 			<input type="file" class="fl_name" id="festa1" name="files" accept="image/*">

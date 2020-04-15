@@ -66,43 +66,37 @@ public class NewsDaoImpl implements NewsDao{
 	//뉴스피드(유저피드) 댓글등록
 	@Override
 	public void myFeedCmmtInsertOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("news.myFeedCmmtInsert", cmmt);
 	}
 
 	//뉴스피드(그룹피드) 댓글등록
 	@Override
 	public void groupFeedCmmtInsertOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.insert("news.groupFeedCmmtInsert", groupcmmt);
 	}
 
 	//뉴스피드(유저피드) 댓글삭제
 	@Override
 	public int myFeedCmmtDeleteOne(MyCommentVo cmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("news.myFeedCmmtDelete", cmmt);
 	}
 
 	//뉴스피드(그룹피드) 댓글삭제
 	@Override
 	public int groupFeedCmmtDeleteOne(GroupCommentVo groupcmmt) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("news.groupFeedCmmtDelete", groupcmmt);
 	}
 	
 	//뉴스피드(유저피드) 삭제
 	@Override
 	public int myFeedDeleteOne(MyPostVo post) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("news.myFeedDelete", post);
 	}
 
 	//뉴스피드(그룹피드) 삭제
 	@Override
 	public int groupFeedDeleteOne(GroupPostVo grouppost) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.delete("news.groupFeedDelete", grouppost);
 	}
 	
 	//뉴스피드(유저피드) 수정
@@ -110,8 +104,8 @@ public class NewsDaoImpl implements NewsDao{
 	public int myFeedUpdateOne(MyPostVo post) {
 		return sqlSession.update("news.myFeedUpdate", post);
 	}
-
-	//뉴스피드(그룹피드) 삭제
+	
+	//뉴스피드(그룹피드) 수정
 	@Override
 	public int groupFeedUpdateOne(GroupPostVo grouppost) {
 		return sqlSession.update("news.groupFeedUpdate", grouppost);

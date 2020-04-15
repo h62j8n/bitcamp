@@ -1,5 +1,7 @@
 package com.fin.festa.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
@@ -33,4 +35,6 @@ public interface NewsService {
 	void newsFeedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
 
 	void newsFeedSelectOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo);
+	
+	void newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo);
 }

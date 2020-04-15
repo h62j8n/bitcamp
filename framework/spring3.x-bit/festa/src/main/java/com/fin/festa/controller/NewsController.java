@@ -39,9 +39,9 @@ public class NewsController {
 	}
 	
 	//뉴스피드 조회 (더보기)
-	@RequestMapping(value = "more", method = RequestMethod.GET)
-	public @ResponseBody String newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo){
-		newsService.newsFeedSelectAll(req, myFollowingVo);
+	@RequestMapping(value = "more", method = RequestMethod.POST)
+	public String newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo){
+		newsService.newsFeedMore(req, myFollowingVo);
 		return "news/more";
 	}
 	
@@ -61,19 +61,22 @@ public class NewsController {
 
 	//내 피드 삭제 (팝업>내부팝업 기능)
 	@RequestMapping(value = "del", method = RequestMethod.POST)
-	public String feedDeleteOne(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo) {
+	public String feedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
+		newsService.newsFeedDeleteOne(model, groupPostVo, myPostVo);
 		return "news/index";
 	}
 	
 	//뉴스피드 댓글 등록
 	@RequestMapping(value = "cmmtadd", method = RequestMethod.POST)
 	public String newsFeedCmmtInsertOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo) {
+		newsService.newsFeedCmmtInsertOne(model, groupCommentVo, myCommentVo);
 		return "news/index";
 	}
 	
 	//뉴스피드 댓글 삭제 (내부팝업 기능)
 	@RequestMapping(value = "cmmtdel", method = RequestMethod.POST)
-	public String newsFeedCmmtDeleteOne(Model model, MyCommentVo myCommentVo, GroupCommentVo groupCommentVo){
+	public String newsFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo){
+		newsService.newsFeedCmmtDeleteOne(model, groupCommentVo, myCommentVo);
 		return "news/index";
 	}
 	
@@ -93,8 +96,8 @@ public class NewsController {
 
 	//뉴스피드 신고 (팝업)
 	@RequestMapping(value = "report", method = RequestMethod.GET)
-	public String newsFeedReport(Model model, FeedVo feedVo){
-		model.addAttribute("feedReport", feedVo);
+	public String newsFeedReport(Model model, MyPostVo myPostVo, GroupPostVo groupPostVo){
+		newsService.newsFeedSelectOne(model, groupPostVo, myPostVo);
 		return "news/report";
 	}
 	

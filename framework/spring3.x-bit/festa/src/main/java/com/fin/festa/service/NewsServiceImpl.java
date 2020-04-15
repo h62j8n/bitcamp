@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fin.festa.model.IndexDaoImpl;
 import com.fin.festa.model.NewsDaoImpl;
 import com.fin.festa.model.entity.FeedVo;
 import com.fin.festa.model.entity.GroupCommentVo;
@@ -20,6 +21,7 @@ import com.fin.festa.model.entity.MyFollowingVo;
 import com.fin.festa.model.entity.MyGoodVo;
 import com.fin.festa.model.entity.MyPostVo;
 import com.fin.festa.model.entity.PageSearchVo;
+import com.fin.festa.model.entity.ProfileVo;
 import com.fin.festa.model.entity.ReportListVo;
 import com.fin.festa.util.DateCalculate;
 import com.fin.festa.util.UploadPhoto;
@@ -32,6 +34,9 @@ public class NewsServiceImpl implements NewsService{
 	@Autowired
 	NewsDaoImpl newsDao;
 	
+	@Autowired 
+	IndexDaoImpl indexDao;
+	
 	//뉴스피드 출력(그룹피드,개인피드 합쳐서)
 	@Override
 	public void newsFeedSelectAll(HttpServletRequest req, MyFollowingVo myFollowingVo) {
@@ -41,33 +46,77 @@ public class NewsServiceImpl implements NewsService{
 		FeedVo feed = new FeedVo();
 		List<FeedVo> followFeed = newsDao.followFeedSelectAll(myFollowingVo);
 		List<FeedVo> groupFeed = newsDao.joinGroupFeedSelectAll(myFollowingVo);
+		List<FeedVo> feedList = new ArrayList<>();
 		
 		// 그룹/개인피드 (날짜순 정렬)
 		DateCalculate cal = new DateCalculate();
 		List<FeedVo> sortList = cal.VoDateReturn(followFeed, groupFeed);
-		req.setAttribute("feedList", sortList);
+		
+		for(int i=page.getStartnum()-1; i<page.getEndnum(); i++) {
+			feedList.add(sortList.get(i));
+		}
+		req.setAttribute("feedList", feedList);
 		
 		// 팔로우피드 댓글
 		feed.setFeedList(followFeed);
-		req.setAttribute("followComment", newsDao.followFeedSelectAll(myFollowingVo));
+		req.setAttribute("followComment", newsDao.followCommentSelectAll(feed));
 		
 		// 그룹피드 댓글
 		feed.setFeedList(groupFeed);
-		req.setAttribute("groupComment", newsDao.joinGroupFeedSelectAll(myFollowingVo));
+		req.setAttribute("groupComment", newsDao.joinGroupCommentSelectAll(feed));
+		
+		// 우측사이드바 (추천그룹, 추천캠핑장)
+		req.setAttribute("grouplist", indexDao.addrGroupSelectAll((ProfileVo)req.getSession().getAttribute("login")));
+		req.setAttribute("camplist", indexDao.veryHotCampSelectAll());
+	}
+	
+	// 뉴스피드 출력 (더보기)
+	@Override
+	public void newsFeedMore(HttpServletRequest req, MyFollowingVo myFollowingVo) {
+		FeedVo feed = new FeedVo();
+		List<FeedVo> followFeed = newsDao.followFeedSelectAll(myFollowingVo);
+		List<FeedVo> groupFeed = newsDao.joinGroupFeedSelectAll(myFollowingVo);
+		List<FeedVo> feedList = new ArrayList<>();
+		
+		// 그룹/개인피드 (날짜순 정렬)
+		DateCalculate cal = new DateCalculate();
+		List<FeedVo> sortList = cal.VoDateReturn(followFeed, groupFeed);
+		
+		PageSearchVo page = myFollowingVo.getPageSearch();
+		for(int i=page.getStartnum()-1; i<page.getEndnum(); i++) {
+			feedList.add(sortList.get(i));
+		}
+		
+		req.setAttribute("feedList", feedList);
+		
+		// 팔로우피드 댓글
+		feed.setFeedList(followFeed);
+		req.setAttribute("followComment", newsDao.followCommentSelectAll(feed));
+		
+		// 그룹피드 댓글
+		feed.setFeedList(groupFeed);
+		req.setAttribute("groupComment", newsDao.joinGroupCommentSelectAll(feed));
 	}
 
 	//뉴스피드 댓글등록(그룹피드,개인피드 구별해서 등록)
 	@Override
 	public void newsFeedCmmtInsertOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo) {
-		// TODO Auto-generated method stub
-		
+		if (groupCommentVo.getGpnum() == 0) {
+			newsDao.myFeedCmmtInsertOne(myCommentVo);
+		} else {
+			newsDao.groupFeedCmmtInsertOne(groupCommentVo);
+			System.out.println(groupCommentVo);
+		}
 	}
 
 	//뉴스피드 댓글삭제(그룹피드,개인피드 구별해서 삭제)
 	@Override
 	public void newsFeedCmmtDeleteOne(Model model, GroupCommentVo groupCommentVo, MyCommentVo myCommentVo) {
-		// TODO Auto-generated method stub
-		
+		if(groupCommentVo.getGcnum()==0) {
+			newsDao.myFeedCmmtDeleteOne(myCommentVo);
+		} else {
+			newsDao.groupFeedCmmtDeleteOne(groupCommentVo);
+		}
 	}
 
 	//뉴스피드 좋아요등록(그룹피드,개인피드 구별해서 좋아요등록)
@@ -155,9 +204,9 @@ public class NewsServiceImpl implements NewsService{
 	@Override
 	public void newsFeedSelectOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
 		if(groupPostVo.getGpnum()==0) {
-			model.addAttribute("edit", newsDao.myFeedSelectOne(myPostVo));
+			model.addAttribute("feed", newsDao.myFeedSelectOne(myPostVo));
 		} else {
-			model.addAttribute("edit", newsDao.groupFeedSelectOne(groupPostVo));
+			model.addAttribute("feed", newsDao.groupFeedSelectOne(groupPostVo));
 		}
 	}
 	
@@ -200,8 +249,10 @@ public class NewsServiceImpl implements NewsService{
 	//뉴스피드 삭제(그룹피드,개인피드 구별해서 삭제)
 	@Override
 	public void newsFeedDeleteOne(Model model, GroupPostVo groupPostVo, MyPostVo myPostVo) {
-		// TODO Auto-generated method stub
-		
+		if(groupPostVo.getGpnum()==0) {
+			newsDao.myFeedDeleteOne(myPostVo);
+		} else {
+			newsDao.groupFeedDeleteOne(groupPostVo);
+		}
 	}
-
 }
