@@ -7,6 +7,10 @@
 <!DOCTYPE html>
 <head> 
 <script type="text/javascript">
+var url = window.location.href;
+if(url.indexOf('out')>0){
+	window.location.href='${root}empty';
+}
 $(document).ready(function(){
 	$('#recheck').focusout(function(){
 		if($('#check').text() == $('#recheck').val()){
