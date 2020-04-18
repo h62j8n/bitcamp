@@ -142,7 +142,14 @@
 	}
 	
 	$(document).ready(function(){
-
+		setTimeout(function() {
+			var scr = $('.text.box .scrBar');
+			var slide = $('.feed_viewer .thumb_slide');
+			var images = $('.feed_viewer .thumb_slide img');
+			sliderLoad(slide);
+			scrBar(scr);
+			squareTrim(images, 290);
+		}, 1000);
 		//좋아요버튼 갯수조절
 	    var good = $('.feed_viewer .feed_options');
 		//로그인상태일때
@@ -192,6 +199,8 @@
 				}
 			}
 		});
+		
+		
 	});
 </script>
 <!-- #팝업 피드 -->

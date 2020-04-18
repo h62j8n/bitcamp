@@ -201,7 +201,7 @@
 		 		var grtotal=$('#grtotal')
 		 		if(keymsg == sucmsg){
 		 			$('#delcheck').removeAttr("disabled");
-		 			$('#delcheck').removeClass('cnc');
+		 			$('#delcheck').removeClass('sbm');
 		 			$('#delcheck').addClass('cfm');
 
 		 			var grnum=$('#grnum').val();
@@ -227,7 +227,7 @@
 		 		}else{
 		 			$('#delcheck').attr("disabled", "disabled");
 		 			$('#delcheck').removeClass('cfm');
-		 			$('#delcheck').addClass('cnc');
+		 			$('#delcheck').addClass('sbm');
 		 		}
 		 	});
 	 	});
@@ -547,7 +547,7 @@
 							<li class="set_chk box">
 								<p>그룹 설정</p>
 								<div>
-									<input type="checkbox" class="comm_rdo rdo_pop btn_pop" id="festa8" name="festa8" data-layer="del">
+									<input type="checkbox" class="comm_rdo rdo_pop" id="festa8" name="festa8" data-layer="del">
 									<label for="festa8">그룹 삭제</label>
 									<p class="txt_explan">
 										그룹 삭제 시 프로필 및 공유한 피드가 모두 삭제되며, 복구가 불가능합니다.<br>
@@ -594,8 +594,8 @@
 	</div>
 	
 	
-	<div class="fstPop">
-		<div class="out_wrap pop_wrap" id="del">
+	<div class="fstPop" id="del">
+		<div class="out_wrap pop_wrap" >
 			<h3 class="pop_tit">그룹을 삭제하시겠습니까?</h3>
 			<div class="info_box">
 				<ul>
@@ -616,12 +616,11 @@
 					<input type="hidden" id="pronum" value="" />
 					<ul class="comm_buttons">
 						<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-						<li><button type="button" id="delcheck" class="btn_close comm_btn cnc" disabled="disabled">확인</button></li>
+						<li><button type="button" id="delcheck" class="btn_close comm_btn sbm" disabled="disabled">확인</button></li>
 					</ul>
 				</div>
 			</form>
 		</div>
-		<button type="button" class="btn_close"><em class="snd_only">창 닫기</em></button>
 	</div>
 	
 	<div id="groupfail" class="fstPop">
@@ -645,7 +644,7 @@
 	</div>
 	
 	<div id="edit" class="fstPop">
-		<div class="out_wrap pop_wrap">
+		<div class="confirm_wrap pop_wrap">
 			<h3 class="pop_tit">정보를 수정하시겠습니까?</h3>
 			<input type="hidden" id="num" value="">
 			<div class="btn_box">
@@ -655,9 +654,6 @@
 				</ul>
 			</div>
 		</div>
-		<button type="button" class="btn_close">
-			<em class="snd_only">창 닫기</em>
-		</button>
 	</div>
 	
 	<!-- #팝업 처리완료 { -->
@@ -683,7 +679,6 @@
 	<script type="text/javascript">
 		rdoPop();
 		setOneFile();
-		btnPop('btn_pop2');
 	</script>
 </body>
 </html>
