@@ -18,48 +18,8 @@
    <link rel="shortcut icon" href="${root }resources/favicon.ico">
    <title>FESTA</title>
    <script type="text/javascript">
-   function btn_close(){
-       document.cookie = 'loginCookie' + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;path=/';
-       var url = window.location.href;
-   	if(url.indexOf('group')>0||url.indexOf('news')>0||url.indexOf('user')>0||url.indexOf('admin')>0||url.indexOf('empty')>0){
-   		window.location.href='${root}';
-   	}
-}
-      $(document).ready(function(){
-    	  var cookie = '${cookie.loginCookie.value}';
-    	  var login = '${login ne null}';
-
-    	  if(cookie!=''&&login=='false'){
-    	     openPop('loginCookie',none,btn_close);
-    	  }
-    	  
-    	  
-    	  setInterval(function(){
-    		  setInterval(function(){
-    	 		   $.post('${root}member/loginSession','',function(data){
-    	 		      if(data==''&&document.cookie!=''){
-    	 		         clearInterval();
-    	 		         openPop('loginCookie',none,btn_close);
-    	 		      }
-    	 		   });
-    	 		},1000*60);
-
-    	  $('#btnCookie').on('click',function(){
-    	  	$.post('${root}member/loginCookie','id='+cookie,function(data){
-    	  		if (data.prorn == '0') {
-    	  			location.reload();
-    	  		} else if (data.prorn == '1') {
-    	  			location.href = "${root}member/stop";
-    	  		} else if (data.prorn == '2') {
-    	  			location.href = "${root}member/kick";
-    	  		} else if (data.prorn == '3') {
-    	  			location.reload();
-    	  		} else if (data.prorn == '4') {
-    	  			location.href = "${root}";
-    	  		}
-    	  	});
-    	  });
-            
+      $(document).ready(function(){ 
+        
          //parameter 추출
             $.urlParam = function(name){
                 var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -72,29 +32,34 @@
                 }
             }
             var proid =$.urlParam("proid");
-			var proname = decodeURI($.urlParam("proname"));
+         var proname = decodeURI($.urlParam("proname"));
             var proprovide =$.urlParam("proprovide");
             
             if(proprovide==1){
                 $('#proid').val(proid);
-    	        $('#proname').val(proname);
+               $('#proname').val(proname);
                 $('#proprovide').val(proprovide);
-            	$('#proid').attr("readonly",true);
-            	$('#propwCheck').val('123123123a');
-            	$('#propw').val('123123123a');
-            	$('#propwCheck').hide();
-            	$('#propw').hide();
-       			$('#festa3').hide();
-       			$('#festa4').hide();
+               $('#proid').attr("readonly",true);
+               $('#propwCheck').val('123123123a');
+               $('#propw').val('123123123a');
+               $('#propwCheck').hide();
+               $('#propw').hide();
+                $('#festa3').hide();
+                $('#festa4').hide();
             }
             else{
-            	$('#proprovide').val(0);
+               $('#proprovide').val(0);
             }
+            if($('#propw').val()=='123123123a'){
+               $('#pwok').text('');
+               $('#pwok').show();
+            } 
             
          //이메일 형식 유효성 검사
          $('#email_check').on('click',function(){
             var id = $('#proid').val();
-            var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+            var regExp = /^[0-9a-zA-Z]([a-zA-Z0-9_\-])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+            
             if(id.match(regExp)!=null){ 
                $.post('${root}member/join/idcheck','id='+id,function(data){
                    if(data == '0'){
@@ -118,196 +83,212 @@
                $("#idfail").hide();
                $("#idok").hide();
             }
-            if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-         			$('#joinBtn').prop('type','submit');
-	            }
-	            else{
-	            	$('#joinBtn').prop('type','button');
-	            }
+            if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                  $('#joinBtn').prop('type','submit');
+               }
+               else{
+                  $('#joinBtn').prop('type','button');
+               }
          });//아이디 유효성 검사 끝
+         
+         //이름 유효성 검사
+         $('#proname').on('propertychange change keyup paste input',function() {
+            if($('#proname').val().length>5){
+            $('#namefail').show();
+            $('#joinBtn').prop('type','button');
+            }
+            else{
+               $('#namefail').hide();
+               if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                  $('#joinBtn').prop('type','submit');
+               }
+            }
+         });
+         //이름 유효성 검사 종료
          
          //비밀번호 형식 유효성 검사
          $("#propwCheck").on('propertychange change keyup paste input',function() {
-        	 if($('#propw').val() != ""){
-	            var regExp = /^[A-Za-z0-9+]{8,13}$/;
-	            var propw = $("#propw").val();
-	            var propwCheck = $("#propwCheck").val();
-	            var pw_num = propw.search(/[0-9]/g);
-	            var pw_eng = propw.search(/[a-z]/gi);
-	            var pwchk_num = propwCheck.search(/[0-9]/g);
-	            var pwchk_eng = propwCheck.search(/[a-z]/gi);
-	            if (regExp.test(propw) && regExp.test(propwCheck)) {
-	               if (pw_num >= 0 && pw_eng >= 0   && pwchk_num >= 0 && pwchk_eng >= 0) {
-	                  if (propw != propwCheck) {
-	                     $("#pwfail").show();
-	                     $("#pwok").hide();
-	                     $("#pwif").hide();
-	                  } else if (propw == propwCheck) {
-	                     $("#pwfail").hide();
-	                     $("#pwok").show();
-	                     $("#pwif").hide();
-	                  }
-	               } else {
-	                  $("#pwfail").hide();
-	                  $("#pwok").hide();
-	                  $("#pwif").show();
-	               }
-	            } else {
-	               $("#pwfail").hide();
-	               $("#pwok").hide();
-	               $("#pwif").show();
-	            }
-        	 }
-        	 if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-          			$('#joinBtn').prop('type','submit');
-	            }
-	            else{
-          			$('#joinBtn').prop('type','button');
-	            }
+            if($('#propw').val() != ""){
+               var regExp = /^[A-Za-z0-9+]{8,13}$/;
+               var propw = $("#propw").val();
+               var propwCheck = $("#propwCheck").val();
+               var pw_num = propw.search(/[0-9]/g);
+               var pw_eng = propw.search(/[a-z]/gi);
+               var pwchk_num = propwCheck.search(/[0-9]/g);
+               var pwchk_eng = propwCheck.search(/[a-z]/gi);
+               if (regExp.test(propw) && regExp.test(propwCheck)) {
+                  if (pw_num >= 0 && pw_eng >= 0   && pwchk_num >= 0 && pwchk_eng >= 0) {
+                     if (propw != propwCheck) {
+                        $("#pwfail").show();
+                        $("#pwok").hide();
+                        $("#pwif").hide();
+                     } else if (propw == propwCheck) {
+                        $("#pwfail").hide();
+                        $("#pwok").show();
+                        $("#pwif").hide();
+                     }
+                  } else {
+                     $("#pwfail").hide();
+                     $("#pwok").hide();
+                     $("#pwif").show();
+                  }
+               } else {
+                  $("#pwfail").hide();
+                  $("#pwok").hide();
+                  $("#pwif").show();
+               }
+            }
+            if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                   $('#joinBtn').prop('type','submit');
+               }
+               else{
+                   $('#joinBtn').prop('type','button');
+               }
          });
 
          $("#propw").on('propertychange change keyup paste input',function() {
-        	if($('#propwCheck').val() != ""){
-	            var regExp = /^[A-Za-z0-9+]{8,13}$/;
-	            var propw = $("#propw").val();
-	            var propwCheck = $("#propwCheck").val();
-	            var pw_num = propw.search(/[0-9]/g);
-	            var pw_eng = propw.search(/[a-z]/gi);
-	            var pwchk_num = propwCheck.search(/[0-9]/g);
-	            var pwchk_eng = propwCheck.search(/[a-z]/gi);
-	            if (regExp.test(propw) && regExp.test(propwCheck)) {
-	               if (pw_num >= 0 && pw_eng >= 0 && pwchk_num >= 0 && pwchk_eng >= 0) {
-	                  if (propw != propwCheck) {
-	                     $("#pwfail").show();
-	                     $("#pwok").hide();
-	                     $("#pwif").hide();
-	                  } else if (propw == propwCheck) {
-	                     $("#pwfail").hide();
-	                     $("#pwok").show();
-	                     $("#pwif").hide();
-	                  }
-	               } else {
-	                  $("#pwfail").hide();
-	                  $("#pwok").hide();
-	                  $("#pwif").show();
-	               }
-	            } else {
-	               $("#pwfail").hide();
-	               $("#pwok").hide();
-	               $("#pwif").show();
-	            }
-        	}
-        	if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-         			$('#joinBtn').prop('type','submit');
-	        }
-	        else{
-	            $('#joinBtn').prop('type','button');
-	        }
+               var regExp = /^[A-Za-z0-9+]{8,13}$/;
+               var propw = $("#propw").val();
+               var propwCheck = $("#propwCheck").val();
+               var pw_num = propw.search(/[0-9]/g);
+               var pw_eng = propw.search(/[a-z]/gi);
+               var pwchk_num = propwCheck.search(/[0-9]/g);
+               var pwchk_eng = propwCheck.search(/[a-z]/gi);
+               if (regExp.test(propw) && regExp.test(propwCheck)) {
+                  if (pw_num >= 0 && pw_eng >= 0 && pwchk_num >= 0 && pwchk_eng >= 0) {
+                     if (propw != propwCheck) {
+                        $("#pwfail").show();
+                        $("#pwok").hide();
+                        $("#pwif").hide();
+                     } else if (propw == propwCheck) {
+                        $("#pwfail").hide();
+                        $("#pwok").show();
+                        $("#pwif").hide();
+                     }
+                  } else {
+                     $("#pwfail").hide();
+                     $("#pwok").hide();
+                     $("#pwif").show();
+                  }
+               } else {
+                  $("#pwfail").hide();
+                  $("#pwok").hide();
+                  $("#pwif").show();
+               }
+               if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                  $('#joinBtn').prop('type','submit');
+           }
+           else{
+               $('#joinBtn').prop('type','button');
+           }
          });//비밀번호 유효성 검사 끝
          
          
          //생년월일 유효성
-         $('#proidnum').focusout(function(){
-        	 var proidnum = $(this).val();
-        	 var year = Number(proidnum.substr(0,4));
-        	 var month = Number(proidnum.substr(4,2));
-        	 var day = Number(proidnum.substr(6,2));
-        	 var today = new Date();
-        	 var yearNow = today.getFullYear();
-        	 var adultYear = yearNow-20;
-			if(proidnum.length != 8){
-				 $('#datefail').text('생년월일이 8자리여야 합니다.');
-	           	 $('#datefail').show();
-			}
-			else  if (month < 1 || month > 12) { 
-		    	  $('#datefail').text('1월에서 12월 사이의 달을 입력하세요.');
-	           	 $('#datefail').show();
-	             return false;
-	        }
-	        else if (day < 1 || day > 31) {
-	        	 $('#datefail').text('1일에서 31일 사이의 일을 입력하세요.'); 
-	            $('#datefail').show();
-	            return false;
-	        }
-	        else if ((month==4 || month==6 || month==9 || month==11) && day==31) {
-	        	  $('#datefail').text(month+'월은 31일이 없습니다.');
-	        	  $('#datefail').show();
-	              return false;
-	        }
-	        else if (month == 2) {
-	              var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-	              if (day>29 || (day==29 && !isleap)) {
-	              	  $('#datefail').text(year+'년 2월은 '+day+"일이 없습니다."); 
-	               	  $('#datefail').show();
-	                  return false;
-	             }
-	        }
-	        else{
-	        	  $('#datefail').hide();
-	        }
-			if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-         			$('#joinBtn').prop('type','submit');
-	            }
-	            else{
-	            	$('#joinBtn').prop('type','button');
-	            }
-             return true;
+         $('#proidnum').on('propertychange change keyup paste input',function(){
+            var tmp =$(this).val($(this).val().replace(/[^0-9]/gi,""));
+            var proidnum = $(this).val();
+            var year = Number(proidnum.substr(0,4));
+            var month = Number(proidnum.substr(4,2));
+            var day = Number(proidnum.substr(6,2));
+            var today = new Date();
+            var yearNow = today.getFullYear();
+            var adultYear = yearNow-20;
+            if(proidnum.length != 0){
+            if(proidnum.length != 8){
+                $('#datefail').text('생년월일이 8자리여야 합니다.');
+                     $('#datefail').show();
+            }
+            else  if (month < 1 || month > 12) { 
+                  $('#datefail').text('1월에서 12월 사이의 달을 입력하세요.');
+                     $('#datefail').show();
+                   return false;
+              }
+              else if (day < 1 || day > 31) {
+                  $('#datefail').text('1일에서 31일 사이의 일을 입력하세요.'); 
+                  $('#datefail').show();
+                  return false;
+              }
+              else if ((month==4 || month==6 || month==9 || month==11) && day==31) {
+                   $('#datefail').text(month+'월은 31일이 없습니다.');
+                   $('#datefail').show();
+                    return false;
+              }
+              else if (month == 2) {
+                    var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+                    if (day>29 || (day==29 && !isleap)) {
+                         $('#datefail').text(year+'년 2월은 '+day+"일이 없습니다."); 
+                          $('#datefail').show();
+                        return false;
+                   }
+              }
+              else{
+                   $('#datefail').hide();
+              }
+            if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                     $('#joinBtn').prop('type','submit');
+                  }
+                  else{
+                     $('#joinBtn').prop('type','button');
+                  }
+                return true;
+            }
          });//생년월일 유효성 종료
          
          //관심지역 유효성 검사
          $('#proaddr').change(function(){
-        	 if($('#proaddr option:selected').val() ==""){
-         		$('#selectfail').show();
-         	}
-         	else{
-         		$('#selectfail').hide();
-         	}
-        	 if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-          			$('#joinBtn').prop('type','submit');
-	            }
-	            else{
-	            	$('#joinBtn').prop('type','button');
-	            }
+            if($('#proaddr option:selected').val() ==""){
+               $('#selectfail').show();
+            }
+            else{
+               $('#selectfail').hide();
+            }
+            if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                   $('#joinBtn').prop('type','submit');
+               }
+               else{
+                  $('#joinBtn').prop('type','button');
+               }
          });//관심지역 유효성 검사 종료
          
          //전체 체크했는지 혹은 필수 항목 입력했는지
          $('#festa10').on('change',function(){
-        	 if($("input:checkbox[id='festa11']").is(":checked")==false && $("input:checkbox[id='festa12']").is(":checked")==false){
-        		 $('#festa10').prop('checked','');
-        	 }
-        		//id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부
-        		if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-           			$('#joinBtn').prop('type','submit');
- 	            }
- 	            else{
-           			$('#joinBtn').prop('type','button');
- 	            }
+            if($("input:checkbox[id='festa11']").is(":checked")==false && $("input:checkbox[id='festa12']").is(":checked")==false){
+               $('#festa10').prop('checked','');
+            }
+              //id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부
+              if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                    $('#joinBtn').prop('type','submit');
+                }
+                else{
+                    $('#joinBtn').prop('type','button');
+                }
          });
          
          $('#festa11').on('change',function(){
-        		if($("input:checkbox[id='festa11']").is(":checked") && $("input:checkbox[id='festa12']").is(":checked")){
-        			$("#festa10").prop('checked','checked');
-        		}
-         		//id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부
-         		if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-           			$('#joinBtn').prop('type','submit');
- 	            }
- 	            else{
-           			$('#joinBtn').prop('type','button');
- 	            } 
+              if($("input:checkbox[id='festa11']").is(":checked") && $("input:checkbox[id='festa12']").is(":checked")){
+                 $("#festa10").prop('checked','checked');
+              }
+               //id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부
+               if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                    $('#joinBtn').prop('type','submit');
+                }
+                else{
+                    $('#joinBtn').prop('type','button');
+                } 
           });
          
          $('#festa12').on('change',function(){
-        		 if($("input:checkbox[id='festa11']").is(":checked") && $("input:checkbox[id='festa12']").is(":checked")){
-     				$("#festa10").prop('checked','checked');
-     			}
-         		//id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부 && 관심지역 체크
-         		if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&	$('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역"){
-           			$('#joinBtn').prop('type','submit');
- 	            }
- 	            else{
- 	            	$('#joinBtn').prop('type','button');
- 	            } 
+               if($("input:checkbox[id='festa11']").is(":checked") && $("input:checkbox[id='festa12']").is(":checked")){
+                 $("#festa10").prop('checked','checked');
+              }
+               //id유효성 체크 && 이름 유효성 체크 && 비밀번호 유효성 체크 && 생년월일 유효성 체크 && 성별 유효성 && 전체동의 , 이용약관 , 개인정보 체크 여부 && 관심지역 체크
+               if($('#proid').attr("readonly")=="readonly" && $('#proname').val() != "" && $('#pwok').attr("style")=="display: block;"  && $('#datefail').attr("style")=="display: none;" && $('input:radio[name=projender]').is(':checked') ==true &&   $('input:checkbox[id=festa10]').is(':checked')==true && $('input:checkbox[id=festa11]').is(':checked')==true && $('input:checkbox[id=festa12]').is(':checked')==true && $('#proaddr').val() != "관심지역" && $('#namefail').attr("style")=="display: none;"){
+                    $('#joinBtn').prop('type','submit');
+                }
+                else{
+                   $('#joinBtn').prop('type','button');
+                } 
           });
       });
    </script>
@@ -366,7 +347,8 @@
                      <div class="ip_box">
                         <input type="text" id="proname" name="proname" required="required">
                         <label for="festa2" class="comm_label">이름</label>
-                        <p class="f_message"></p>
+                        <p hidden="hidden" id="namefail"
+                              class="f_message rst">5자 이내로 입력하세요.</p>
                      </div>
                         <div class="ip_box">
                            <input type="password" id="propw" name="propw"
@@ -389,7 +371,7 @@
                   </div>
                   <div>
                      <div class="ip_box">
-                        <input type="text" id="proidnum" name="proidnum" required="required">
+                        <input type="text" id="proidnum" name="proidnum" required="required" numberonly="true">
                         <label for="festa5" class="comm_label">생년월일<span>을 입력해주세요 (예: 19940415)</span></label>
                         <p hidden="hidden" id="datefail"
                               class="f_message rst">생년월일을 양식에 맞게 입력해주세요.</p>
@@ -469,14 +451,25 @@
                         <input type="checkbox" class="comm_chk" id="festa11" name="serviceCheck">
                         <label for="festa11">페스타 이용약관 동의</label>
                         <div class="scrBar">
-                           이용약관을 입력해주세요.
+                           여러분을 환영합니다.
+페스타 서비스 및 제품(이하 ‘서비스’)을 이용해 주셔서 감사합니다.<br> 본 약관은 다양한 페스타 서비스의 이용과 관련하여 페스타 서비스를 제공하는 페스타 주식회사(이하 ‘페스타’)와 이를 이용하는 페스타 서비스 회원(이하 ‘회원’) 또는 비회원과의 관계를 설명하며, 
+<br>아울러 여러분의 페스타 서비스 이용에 도움이 될 수 있는 유익한 정보를 포함하고 있습니다.
+<br>페스타 서비스를 이용하시거나 페스타 서비스 회원으로 가입하실 경우 여러분은 본 약관 및 관련 운영 정책을 확인하거나 동의하게 되므로, 
+<br>잠시 시간을 내시어 주의 깊게 살펴봐 주시기 바랍니다.<br>
+<br><b>여러분이 제공한 콘텐츠를 소중히 다룰 것입니다.</b><br>
+<br>페스타는 여러분이 게재한 게시물이 페스타는 서비스를 통해 다른 이용자들에게 전달되어 우리 모두의 삶을 더욱 풍요롭게 해줄 것을 기대합니다.
+<br>게시물은 여러분이 타인 또는 자신이 보게 할 목적으로 페스타는 서비스 상에 게재한 부호, 문자, 음성, 음향, 그림, 사진, 동영상, 링크 등으로 구성된 각종 콘텐츠 자체 또는 파일을 말합니다.
                         </div>
                      </dd>
                      <dd>
                         <input type="checkbox" class="comm_chk" id="festa12" name="privacyCheck">
                         <label for="festa12">개인정보 수집 및 이용에 동의</label>
                         <div class="scrBar">
-                           개인정보 처리방침을 입력해주세요.
+                           정보통신망법 규정에 따라 페스타에 회원가입 신청하시는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및 이용목적, 개인정보의 보유 및 이용기간을 안내 드리오니 자세히 읽은 후 동의하여 주시기 바랍니다.<br>
+<br>
+1. 수집하는 개인정보<br>
+<br>이용자는 회원가입을 하지 않아도 정보 검색, 뉴스 보기 등 대부분의 페스타 서비스를 회원과 동일하게 이용할 수 있습니다. 
+<br>이용자가 메일, 캘린더, 카페, 블로그 등과 같이 개인화 혹은 회원제 서비스를 이용하기 위해 회원가입을 할 경우, 페스타 서비스 이용을 위해 필요한 최소한의 개인정보를 수집합니다.
                         </div>
                      </dd>
                   </dl>
@@ -516,12 +509,12 @@
 </body>
 <!-- #팝업 처리완료 { -->
 <div id="loginCookie" class="fstPop">
-	<div class="confirm_wrap pop_wrap">
-		<p class="pop_tit">기존 정보로 로그인 하시겠습니까?</p>
-		<ul class="comm_buttons">
-			<li><button type="button" class="btn_close btnCookieClose comm_btn cnc">로그아웃</button></li>
-			<li><button type="button" id="btnCookie" class="ok comm_btn cfm">로그인</button></li>
-		</ul>
-	</div>
+   <div class="confirm_wrap pop_wrap">
+      <p class="pop_tit">기존 정보로 로그인 하시겠습니까?</p>
+      <ul class="comm_buttons">
+         <li><button type="button" class="btn_close btnCookieClose comm_btn cnc">로그아웃</button></li>
+         <li><button type="button" id="btnCookie" class="ok comm_btn cfm">로그인</button></li>
+      </ul>
+   </div>
 </div>
 </html>

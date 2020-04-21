@@ -138,7 +138,7 @@
 			 		var sucmsg='웃어라, 함께 웃을 것이다. 울어라, 혼자 울 것이다.'
 			 		if(keymsg == sucmsg){
 			 			$('#outgroup').removeAttr("disabled");
-			 			$('#outgroup').removeClass('cnc');
+			 			$('#outgroup').removeClass('sbm');
 			 			$('#outgroup').addClass('cfm');
 	
 			 			var grnum=$('#grnum').val();
@@ -158,7 +158,7 @@
 			 		}else{
 			 			$('#outgroup').attr("disabled", "disabled");
 			 			$('#outgroup').removeClass('cfm');
-			 			$('#outgroup').addClass('cnc');
+			 			$('#outgroup').addClass('sbm');
 			 		}
 			 	});
 				
@@ -210,7 +210,7 @@
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
 												<c:choose>
-													<c:when test="${joinGroup.group.grphoto eq null }">
+													<c:when test="${joinGroup.group.grphoto eq null || joinGroup.group.grphoto eq '' }">
 														<li><a
 															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
 																<span><img src="${root }resources/upload/thumb/no_profile.png"
@@ -235,7 +235,7 @@
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
 												<c:choose>
-													<c:when test="${joinGroup.group.grphoto eq null }"> 
+													<c:when test="${joinGroup.group.grphoto eq null || joinGroup.group.grphoto eq '' }"> 
 														<li>
 															<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
 																<span><img src="${root}resources/images/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
@@ -361,7 +361,7 @@
 								</c:if>
 							</dd>
 							<c:choose>
-								<c:when test="${detail.grphoto eq null }">
+								<c:when test="${detail.grphoto eq null || detail.grphoto eq '' }">
 									<dd class="pf_picture">
 										<img src="${root }resources/upload/thumb/no_profile.png" alt="${detail.grname } 그룹 썸네일">
 									</dd>
@@ -585,7 +585,7 @@
 				<div class="btn_box">
 					<ul class="comm_buttons">
 						<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-						<li><button type="button" id="outgroup" class="btn_close comm_btn cnc" disabled="disabled">확인</button></li>
+						<li><button type="button" id="outgroup" class="btn_close comm_btn sbm" disabled="disabled">확인</button></li>
 					</ul>
 				</div>
 			</form>

@@ -268,6 +268,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			var prophototag;
 			var feedprophototag;
 			var msgTag;
+			var grnum;
 			
 			//해시태그 선언부
 			if(hash1==''&&hash2==''&&hash3==''){
@@ -295,6 +296,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			
 			//개인피드일때
 			if(data[0][index].gpnum==0){
+				grnum='';
 				grname='';
 				author=data[0][index].mpauthor;
 				num=data[0][index].mpnum;
@@ -303,6 +305,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				msgTag='<input type="text" class="msg_txt" name="mccontent" placeholder="메세지를 입력해주세요" required="required">';
 				//로그인상태일때
 				if(logincheck!=''){
+					editBtn='<li><a href="/festa/hot/maker?mpnum='+num+'" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>';
 					if(data[3]!=''){
 						$(data[3]).each(function(idx){
 							//좋아요목록의 개인피드번호와 가져온개인피드번호가 같을때 하트버튼생성
@@ -319,7 +322,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				}
 				//게시글갯수가 3개초과일때 댓글더보기버튼 생성
 				if(data[0][index].mptotal>3){
-					moreBtn='<button class="cmt_btn_more mc"><span class="snd_only">1</span>3개의 댓글 더 보기</button>';
+					moreBtn='<button class="cmt_btn_more mc"><span class="snd_only">1</span>댓글 더 보기</button>';
 				//3개이하일때 댓글더보기버튼 삭제
 				}else{
 					moreBtn='';
@@ -362,6 +365,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 					}
 				});
 			}else{
+				grnum='<input type="hidden" value="'+data[0][index].grnum+'">';
 				author=data[0][index].gpauthor;
 				num=data[0][index].gpnum;
 				content=data[0][index].gpcontent;
@@ -370,6 +374,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				//로그인상태일때
 				//로그인 그룹접속시 프로필번호생성
 				if(logincheck!=''){
+					editBtn='<li><a href="/festa/hot/maker?gpnum='+num+'" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>';
 					grname='<a href="/festa/group/?grnum='+data[0][index].grnum+'&pronum='+pronum+'">'
 						+'<span class="fd_group">'+data[0][index].group.grname+'</span>'
 						+'</a>';
@@ -396,7 +401,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				}
 				//게시글갯수가 3개초과일때 댓글더보기버튼 생성
 				if(data[0][index].gptotal>3){
-					moreBtn='<button class="cmt_btn_more gc"><span class="snd_only">1</span>3개의 댓글 더 보기</button>';
+					moreBtn='<button class="cmt_btn_more gc"><span class="snd_only">1</span>댓글 더 보기</button>';
 				//3개이하일때 댓글더보기버튼 삭제
 				}else{
 					moreBtn='';
@@ -455,7 +460,6 @@ function feedList(data,view,pronum,prophoto,logincheck){
 				//같을때 신고버튼삭제//수정,삭제버튼생성
 				}else{
 					reportBtn='';
-					editBtn='<li><a href="/festa/hot/maker?gpnum='+num+'" class="btn_pop btn_edit"><em class="snd_only">수정하기</em></a></li>';
 					delBtn='<li><button class="btn_pop btn_delete btn_feed" data-layer="delete_feed" data-value="'+num+'"><em class="snd_only">삭제하기</em></button></li>';
 				}
 				//로그인상태일때 댓글작성태그 생성
@@ -503,6 +507,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			+'<a href="/festa/user/?pronum='+data[0][index].pronum+'">'
 			+'<input type="hidden" value="'+data[0][index].pronum+'">'
 			+'<input type="hidden" value="'+num+'">'
+			+grnum
 			+'<span class="pf_picture">'+feedprophototag+'</span>'
 			+'<span class="fd_name">'+author+'</span>'
 			+grname
@@ -587,7 +592,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			var adminprophototag;
 			
 			if(data[0][index].gptotal>3){
-				moreBtn='<button class="cmt_btn_more dt"><span class="snd_only">1</span>3개의 댓글 더 보기</button>';
+				moreBtn='<button class="cmt_btn_more dt"><span class="snd_only">1</span>댓글 더 보기</button>';
 			}else{
 				moreBtn='';
 			}
@@ -724,7 +729,7 @@ function feedList(data,view,pronum,prophoto,logincheck){
 			var adminprophototag;
 			
 			if(data[0][index].mptotal>3){
-				moreBtn='<button class="cmt_btn_more"><span class="snd_only">1</span>3개의 댓글 더 보기</button>';
+				moreBtn='<button class="cmt_btn_more"><span class="snd_only">1</span>댓글 더 보기</button>';
 			}else{
 				moreBtn='';
 			}

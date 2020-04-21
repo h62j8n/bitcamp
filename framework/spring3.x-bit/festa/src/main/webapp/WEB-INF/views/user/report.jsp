@@ -31,10 +31,10 @@
 					cache: false,
 					success: function (data) {
 						$('.comm_buttons .btn_close').click();
-						openPop('ok');
+						openPop('ok1');
 					},
 					error: function (e) { 
-						openPop('fail');
+						openPop('fail1');
 					}
 				});
 			}
@@ -124,7 +124,7 @@
 		</ul>
 	</div>
 </div>
-<div id="ok" class="fstPop">
+<div id="ok1" class="fstPop">
 	<div class="confirm_wrap pop_wrap">
 		<p class="pop_tit">신고가 정상적으로 접수되었습니다.</p>
 		<ul class="comm_buttons">
@@ -132,7 +132,7 @@
 		</ul>
 	</div>
 </div>
-<div id="fail" class="fstPop">
+<div id="fail1" class="fstPop">
 	<div class="confirm_wrap pop_wrap">
 		<p class="pop_tit">신고등록에 실패 하였습니다.</p>
 		<ul class="comm_buttons">

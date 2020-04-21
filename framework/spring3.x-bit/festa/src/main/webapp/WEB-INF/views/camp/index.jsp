@@ -20,6 +20,17 @@
 	$(function(){
 		paramTop();
 		
+		if ('${login eq null}' == 'true') {
+			var newfeedBtn = $('#gnb').find('li').eq(2).find('a');
+			newfeedBtn.on('click', function(e) {
+				e.preventDefault();
+				openPop('alert');
+			});
+		}
+		$('#loginBtn').on('click', function() {
+			$('#alert').bPopup().close();
+		});
+		
 		var container = $('.result_area .camp_list'),
 		li = container.find('li'),
 		btn = $('.btn_view_more');
@@ -312,6 +323,17 @@
 		</div>
 	</div>
 </div>
+<!-- #팝업 { -->
+<div id="alert" class="fstPop">
+	<div class="confirm_wrap pop_wrap">
+		<h4 class="pop_tit">로그인이 필요한 서비스입니다.</h4>
+		<ul class="comm_buttons">
+			<li><button type="button" class="btn_close comm_btn cnc">닫기</button></li>
+			<li><a href="${root}member/login" id="loginBtn" class="comm_btn cfm btn_pop">로그인</a></li>
+		</ul>
+	</div>
+</div>
+<!-- } #팝업 -->
 <script type="text/javascript">
 	campSlider();
 </script>

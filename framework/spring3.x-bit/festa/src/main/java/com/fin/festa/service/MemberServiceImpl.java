@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.Future;
 
 import javax.inject.Inject;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -195,31 +197,70 @@ public class MemberServiceImpl implements MemberService {
 
 			String setfrom = "ekema572@gmail.com";
 			String tomail = profile.getProid();
-			String title = "메롱"; // ����
-			String content =
+			String title = "FESTA 이메일 인증번호입니다.";
+			StringBuffer sb1 = new StringBuffer();
+			String content = dice+"";
+			sb1.append("<!DOCTYPE html>");
 
-					System.getProperty("line.separator") +
+			sb1.append("<html lang=\"ko\">"); 
 
-							System.getProperty("line.separator") +
+			sb1.append("<head>");
 
-							System.getProperty("line.separator") +
+			sb1.append("<meta charset=\"UTF-8\">");
 
-							"인증번호 " + dice 
+			sb1.append("<meta http-equiv=\"Content-Type\" content=\"text/html\" />");
 
-							+ System.getProperty("line.separator") +
+			sb1.append("<title>FESTA</title>");
 
-							System.getProperty("line.separator");
+			sb1.append("</head>");
 
+			sb1.append("<body style=\"font-size: 15px;\">");
 
+			sb1.append("<div id=\"wrap\" style=\"width: 720px; margin: 0 auto; padding: 30px 0 10px; border-top: 3px solid #1edeb9; border-bottom: 1px solid #dcdcdc;\">");
+
+			sb1.append("<h1 style=\"margin: 0;\"><img src=\"https://h62j8n.github.io/images/ico/logo.png\" alt=\"FESTA\"></h1>");
+			
+			sb1.append("<h2 style=\"margin-top: 50px; font-size: 18px; font-weight: 500;\">이메일 인증번호 확인</h2>");
+			
+			sb1.append("<p>\r\n" + "안녕하세요. 페스타입니다.<br>");
+
+			sb1.append("<b style=\"color:#1edeb9\">");
+			
+			sb1.append(profile.getProname());
+
+			sb1.append("</b> 회원님, 비밀번호 변경을 위해 아래 인증번호를 입력해주세요.<br>");
+
+			sb1.append("</p>");
+
+			sb1.append("<p style=\"width: 300px; margin: 50px auto; border: 1px solid #ddd; background: #eee; padding: 25px; text-align: center;\">");
+			
+			sb1.append("<b style=\"font-size: 18px;\">"+content+"</b>"+"</p>");
+
+			sb1.append("<p style=\"text-align: right; font-size: 13px; color: #999;\">\r\n" + 
+					"		FESTA<br>\r\n" + 
+					"		서울 강남구 테헤란로5길 11 YBM빌딩 2층<br>\r\n" + 
+					"		02-3453-5404\r\n" + 
+					"	</p>");
+
+			sb1.append("</div>\r\n" + 
+					"</body>\r\n" + 
+					"</html>");
+
+//				Properties props = new Properties();
+//				props.setProperty("mail.tarnsport.protocol", "smtp");
+//				props.setProperty("mail.host", "smtp.mymailserver.com");
 			try {
 				MimeMessage message = mailSender.createMimeMessage();
+//				Session mailSession = Session.getDefaultInstance(props,null);
+//				MimeMessage message = new MimeMessage(mailSession);
 				MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
 				messageHelper.setFrom(setfrom); // �����»�� �����ϸ� �����۵��� ����
 				messageHelper.setTo(tomail); // �޴»�� �̸���
 				messageHelper.setSubject(title); // ���������� ������ �����ϴ�
-				messageHelper.setText(content); // ���� ����
-
+				messageHelper.setText(sb1.toString(),true); // ���� ����
+				
+//				message.setContent("<h1 style=\"color: red;\">hello world</h1>"+content+"<h2>hello world</h2>","text/html");
 				mailSender.send(message);
 			} catch (Exception e) {
 				System.out.println(e);

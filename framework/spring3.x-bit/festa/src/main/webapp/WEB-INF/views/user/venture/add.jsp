@@ -4,9 +4,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:url value="/" var="root" />
 <c:url value="/resources/upload" var="upload" />
-<c:if test="${sessionScope.login eq null and empty cookie.loginCookie.value}">
-   <c:redirect url="/empty"/>
-</c:if>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -67,11 +64,22 @@
 			
 			//사업자 등록번호 유효성 검사
 			$("#mvnumber").on('propertychange change keyup paste input',function() {
-				if($('#mvnumber').val() != "" && $('#ventureNo').text() != "사업자등록증 사본을 첨부해주세요" && $('#mvname').val() != "" && $('#mvaddr').val() != "" && $('#mvaddrsuv').val() != "" && $('input:checkbox[id=festa1]').is(':checked')==true){
-					$('#ventureSend').prop('type','submit');
+				if($('#mvnumber').val()==''){
+					$('#numberfail').hide();
 				}
-				else{
-					$('#ventureSend').prop('type','button');
+				var mvnumber= /[^0-9]/g;
+				v = $(this).val();
+				if(mvnumber.test(v)){
+					console.log('dd');
+					$('#numberfail').show();
+					if($('#mvnumber').val() != "" && $('#ventureNo').text() != "사업자등록증 사본을 첨부해주세요" && $('#mvname').val() != "" && $('#mvaddr').val() != "" && $('#mvaddrsuv').val() != "" && $('input:checkbox[id=festa1]').is(':checked')==true){
+						$('#ventureSend').prop('type','submit');
+					}
+					else{
+						$('#ventureSend').prop('type','button');
+					}
+				}else{
+					$('#numberfail').hide();
 				}
 			});//사업자 등록번호 종료
 			
@@ -145,7 +153,7 @@
 	</script> 
 </head>
 <body>
-<c:if test="${sessionScope.login eq null}">
+<c:if test="${sessionScope.login eq null and empty cookie.loginCookie.value}">
    <c:redirect url="/empty"/>
 </c:if>
 <c:if test="${sessionScope.login ne null }">
@@ -184,18 +192,29 @@
 							</button>
 							<dl class="menu_box" tabindex="0">
 								<dt>
-									<b>${login.proname }</b>
+									<b>${login.proname }님 환영합니다.</b>
 								</dt>
 								<dd>
 									<span class="btn_mylist">나의 그룹</span>
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a
-													href="${root }group?grnum=${joinGroup.group.grnum}"> <span><img
-															src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null || joinGroup.group.grphoto eq ''}">
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${root}resources/images/thumb/no_profile.png"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a
+															href="${root }group/?grnum=${joinGroup.grnum}&pronum=${login.pronum}">
+																<span><img src="${upload }/${joinGroup.group.grphoto}"
+																	alt="${joinGroup.group.grname } 그룹 썸네일"></span> <b>${joinGroup.group.grname }</b>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -205,10 +224,24 @@
 									<div class="my_list">
 										<ul>
 											<c:forEach items="${joinGroup }" var="joinGroup">
-												<li><a href=""> <span><img
-															src="http://placehold.it/45x45" alt="입돌아간다 그룹 썸네일"></span>
-														<b>${joinGroup.group.grname }</b>
-												</a></li>
+												<c:choose>
+													<c:when test="${joinGroup.group.grphoto eq null || joinGroup.group.grphoto eq ''}"> 
+														<li>
+															<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+																<span><img src="${root}resources/images/thumb/no_profile.png" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+																<b>${joinGroup.group.grname }</b>
+															</a>
+														</li>
+													</c:when>
+													<c:otherwise>
+														<li>
+															<a style="cursor: pointer" onclick="window.open('${root}group/chat?grnum=${joinGroup.grnum }','Festa chat','width=721,height=521,location=no,status=no,scrollbars=no');">
+																<span><img src="${upload }/${joinGroup.group.grphoto}" alt="${joinGroup.group.grname } 그룹 썸네일"></span>
+																<b>${joinGroup.group.grname }</b>
+															</a>
+														</li>
+													</c:otherwise>
+												</c:choose>
 											</c:forEach>
 										</ul>
 									</div>
@@ -217,12 +250,19 @@
 									<span class="btn_mylist">나의 캠핑장</span>
 									<div class="my_list">
 										<ul>
-											<c:forEach items="${bookMark }" var="bookMark">
-												<li><a href="${root }camp?canum=${bookMark.camp.canum}">
-														<span><img src="http://placehold.it/45x45"
-															alt="캠핑장 썸네일"></span> <b>${bookMark.camp.caname }</b>
-												</a></li>
-											</c:forEach>
+										<c:forEach items="${bookMark}" var="bookMark">
+											<li>
+												<a href="${root}camp/detail?canum=${bookMark.camp.canum}&caaddrsel=${bookMark.camp.caaddrsel}">
+													<span>
+														<c:set var="image" value="${fn:substringBefore(bookMark.camp.caphoto,',')}"></c:set>
+														<c:if test="${!empty bookMark.camp.caphoto && empty image}"><img src="${upload}/${bookMark.camp.caphoto}" alt="${bookMark.camp.caname}"></c:if>
+														<c:if test="${!empty bookMark.camp.caphoto && !empty image}"><img src="${upload}/${image}" alt="${bookMark.camp.caname}"></c:if>
+														<c:if test="${empty bookMark.camp.caphoto && empty image}"><img src="${root}resources/images/thumb/no_profile.png" alt="${bookMark.camp.caname}"></c:if>
+													</span>
+													<b>${bookMark.camp.caname}</b>
+												</a>
+											</li>
+										</c:forEach>
 										</ul>
 									</div>
 								</dd>
@@ -361,6 +401,7 @@
 							<p><label for="festa3">사업자 등록번호</label></p>
 							<div>
 								<input type="text" id="mvnumber" name="mvnumber" placeholder="사업자 등록번호를 입력해주세요">
+								<p hidden="hidden" id="numberfail" class="f_message rst">숫자만 입력 가능합니다.</p>
 							</div>
 						</li>
 						<li class="set_half box">

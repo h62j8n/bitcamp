@@ -314,7 +314,7 @@
 						</c:forEach>
 					</ul>
 					<c:if test="${feedDetail.mptotal gt 3 }">
-						<button class="cmt_btn_more mc" onclick="mored($(this))"><span class="snd_only">1</span>3개의 댓글 더 보기</button>
+						<button class="cmt_btn_more mc" onclick="mored($(this))"><span class="snd_only">1</span>댓글 더 보기</button>
 					</c:if>
 				</div>
 				<c:if test="${login ne null }">
@@ -474,7 +474,7 @@
 						</c:forEach>
 					</ul>
 					<c:if test="${feedDetail.gptotal gt 3 }">
-						<button class="cmt_btn_more gc" onclick="mored($(this))"><span class="snd_only">1</span>3개의 댓글 더 보기</button>
+						<button class="cmt_btn_more gc" onclick="mored($(this))"><span class="snd_only">1</span>댓글 더 보기</button>
 					</c:if>
 				</div>
 				<c:if test="${login ne null }">

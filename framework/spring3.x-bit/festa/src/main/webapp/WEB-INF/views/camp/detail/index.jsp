@@ -43,12 +43,6 @@
 			i=0;
 		});
 		
-		// 로그인 유무에 따른 버튼 처리
-		var login = '${login ne null}';
-		if (login == 'false') {
-			$('.btn_go a').on('click', function(e) {openLayer(e, '${root}member/login')});
-		}
-		
 		// 신고하기
 		$('.btn_report').on('click', function(e) {
 			openLayer(e, '${root}camp/detail/report?canum=${camp.canum}&profile.pronum=${camp.profile.pronum}&profile.proname=${camp.profile.proname}&profile.proid=${camp.profile.proid}');
@@ -57,6 +51,7 @@
 		// 한줄평 등록
 		var rvForm = $('.rate_form');
 		rvForm.on('submit', function(e) {
+			e.preventDefault();
 			var rvParam = {
 				'crauthor': $('[name=crauthor]').val(),
 				'crcontent': $('[name=crcontent]').val(),
@@ -71,7 +66,6 @@
 				$.post('${root}camp/detail/revadd', rvParam)
 					.done(refresh);
 			}
-			e.preventDefault();
 		});
 		
 		// 한줄평 페이지네이션
@@ -89,43 +83,68 @@
 			e.preventDefault();
 		});
 		
-		// 삭제하기
-		var alertText = $('#layer').find('.pop_tit');
-		var buttons = $('#layer .comm_buttons');
-		var deleteBtn = $('#layer').find('#deleteBtn');
-		var confirmBtn = buttons.find('#confirmBtn');
-		var otherBtns = buttons.find('button').not('#confirmBtn');
+		var alertText = $('#alert').find('.pop_tit');
+		var confirmBtn = $('#alert .comm_buttons .comm_btn.cfm');
+		var cancleBtn = $('#alert .comm_buttons .comm_btn.cnc');
 		var deleteUrl;
-		var container = '.rate_list';
 		
+		// 삭제하기
 		function cfmMessage() {
 			alertText.text('한줄평을 삭제하시겠습니까?');
-			confirmBtn.hide();
-			otherBtns.show();
 		}
+		function delMessage() {
+			alertText.text('삭제가 완료되었습니다.');
+		}
+		
 		$(document).on('click', '.btn_delete', function(e) {
 			e.preventDefault();
 			deleteUrl = $(this).attr('href');
-			openPop('layer', cfmMessage, refresh);
+			confirmBtn.attr('id', 'deleteBtn');
+			openPop('alert', cfmMessage, refresh);
 		});
 		
-		function delMessage() {
-			alertText.text('삭제가 완료되었습니다.');
-			otherBtns.hide();
-			confirmBtn.show();
-		}
-		deleteBtn.on('click', function() {
-			$.ajax({
-				type: 'POST',
-				url: deleteUrl,
-				success: delMessage,
-				error: function() {
-					alertText.text('올바른 방법으로 다시 시도해주세요.');
-					otherBtns.hide();
-					confirmBtn.show();
-				}
-			});
+		confirmBtn.on('click', function() {
+			var id = $(this).attr('id');
+			if (id == 'deleteBtn') {
+				$.ajax({
+					type: 'POST',
+					url: deleteUrl,
+					success: delMessage,
+					error: function() {
+						alertText.text('올바른 방법으로 다시 시도해주세요.');
+					}
+				});
+			} else if (id == 'loginBtn') {
+				$('#alert').bPopup().close();
+				setTimeout(function() {
+					openLayer('none', '${root}member/login');
+				}, 150);
+			}
 		});
+		
+		// 로그인
+		function logOpen() {
+			cancleBtn.text('닫기');
+			confirmBtn.attr('id', 'loginBtn').text('로그인');
+			alertText.text('로그인이 필요한 서비스입니다.');
+		}
+		function logClose() {
+			cancleBtn.text('취소');
+			confirmBtn.removeAttr('id').text('확인');
+		}
+		if ('${login eq null}' == 'true') {
+			$('.btn_go a').on('click', function(e) {
+				e.preventDefault();
+				openPop('alert', logOpen, logClose);
+			});
+			$('#gnb').find('li').eq(2).find('a').on('click', function(e) {
+				e.preventDefault();
+				openPop('alert', logOpen, logClose);
+			});
+			$('.btn_liked2, .btn_bookmark2').on('click', function() {
+				openPop('alert', logOpen, logClose);
+			});
+		}
 	});
 	// 좋아요/북마크
 	function liked(button) {
@@ -312,9 +331,9 @@
 										<c:set var="active" value=" act"></c:set>
 									</c:if>
 								</c:forEach>
-									<button class="btn_liked${active}" onclick="liked($(this));"><em class="snd_only">하트</em></button>
+									<button type="button" class="btn_liked${active}" onclick="liked($(this));"><em class="snd_only">하트</em></button>
 								</c:when>
-								<c:otherwise><a class="btn_liked2 btn_pop" href="${root}member/login"><em class="snd_only">하트</em></a></c:otherwise>
+								<c:otherwise><button type="button" class="btn_liked2"><em class="snd_only">하트</em></button></c:otherwise>
 							</c:choose>
 							</li>
 							<li>
@@ -325,9 +344,9 @@
 										<c:set var="active2" value=" act"></c:set>
 									</c:if>
 								</c:forEach>
-								<button class="btn_bookmark${active2}" onclick="liked($(this));"><em class="snd_only">저장하기</em></button>
+								<button type="button" class="btn_bookmark${active2}" onclick="liked($(this));"><em class="snd_only">저장하기</em></button>
 								</c:when>
-								<c:otherwise><a class="btn_bookmark2 btn_pop" href="${root}member/login"><em class="snd_only">저장하기</em></a></c:otherwise>
+								<c:otherwise><button type="button" class="btn_bookmark2"><em class="snd_only">저장하기</em></button></c:otherwise>
 							</c:choose>
 							</li>
 							<c:if test="${login ne null}">
@@ -375,6 +394,7 @@
 		</section>
 		<section class="photo_area">
 			<div class="container">
+				<h4 class="sub_tit">캠핑장 사진</h4>
 				<div class="thumb_slide">
 					<div class="swiper-wrapper">
 					<c:choose>
@@ -405,7 +425,7 @@
 					<p>
 						한줄평 <c:if test="${campReviewCount ne null}"><span><fmt:formatNumber value='${campReviewCount}' pattern='000' />개</span></c:if>
 					</p>
-					<p>평점 <span><fmt:formatNumber value="${camp.caavg}" pattern=".0" /></span></p>
+					<p>평점 <span><fmt:formatNumber value="${camp.caavg}" pattern=".0" />점</span></p>
 				</h4>
 				<ul class="rate_list">
 				<c:choose>
@@ -451,19 +471,18 @@
 						<c:otherwise><c:set var="end" value="${paging.totalPage}" /></c:otherwise>
 					</c:choose>
 					<c:choose>
-						<c:when test="${paging.beginPage-5 lt 1}">
+						<c:when test="${paging.page2 eq 1}">
 						<li><span class="pg_start off"><em class="snd_only">맨 앞으로</em></span></li>
+						<li><span class="pg_prev off ${paging.page2}"><em class="snd_only">이전 페이지</em></span></li>
 						</c:when>
 						<c:otherwise>
-						<li><a class="pg_start" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.beginPage-5}"><em class="snd_only">맨 앞으로</em></a></li>
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${paging.prev eq true}">
-						<li><a class="pg_prev" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.page2-1}"><em class="snd_only">이전 페이지</em></a></li>
-						</c:when>
-						<c:otherwise>
-						<li><span class="pg_prev off"><em class="snd_only">이전 페이지</em></span></li>
+							<c:if test="${paging.beginPage eq 1}">
+							<li><a class="pg_start" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=1"><em class="snd_only">맨 앞으로</em></a></li>
+							</c:if>
+							<c:if test="${paging.beginPage gt 1}">
+							<li><a class="pg_start" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.beginPage-1}"><em class="snd_only">맨 앞으로</em></a></li>
+							</c:if>
+						<li><a class="pg_prev ${paging.page2}" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.page2-1}"><em class="snd_only">이전 페이지</em></a></li>
 						</c:otherwise>
 					</c:choose>
 					<c:forEach var="i" begin="${paging.beginPage}" end="${end}">
@@ -476,17 +495,17 @@
 					</c:forEach>
 					<c:choose>
 						<c:when test="${paging.next eq true}">
-						<li><a class="pg_next" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.page2+1}"><em class="snd_only">다음 페이지</em></a></li>
+						<li>
+							<a class="pg_next" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.page2+1}"><em class="snd_only">다음 페이지</em></a></li>
+							<c:if test="${paging.endPage ne paging.totalPage}">
+							<li><a class="pg_end" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.endPage+1}"><em class="snd_only">맨 끝으로</em></a></li>
+							</c:if>
+							<c:if test="${paging.endPage eq paging.totalPage}">
+							<li><a class="pg_end" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.endPage}"><em class="snd_only">맨 끝으로</em></a></li>
+							</c:if>
 						</c:when>
 						<c:otherwise>
 						<li><span class="pg_next off"><em class="snd_only">다음 페이지</em></span></li>
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${paging.endPage lt paging.totalPage}">
-						<li><a class="pg_end" href="${root}camp/detail?canum=${camp.canum}&caaddrsel=${camp.caaddrsel}&pageSearch.page2=${paging.beginPage+5}"><em class="snd_only">맨 끝으로</em></a></li>
-						</c:when>
-						<c:otherwise>
 						<li><span class="pg_end off"><em class="snd_only">맨 끝으로</em></span></li>
 						</c:otherwise>
 					</c:choose>
@@ -496,7 +515,7 @@
 				<h4 class="snd_only">한줄평 작성</h4>
 				<c:choose>
 				<c:when test="${login ne null}">
-				<form class="rate_form" method="POST" action="${root}camp/detail/revadd">
+				<form class="rate_form">
 					<input type="hidden" name="pronum" value="${login.pronum}">
 					<input type="hidden" name="canum" value="${camp.canum}">
 					<input type="hidden" name="caavg" value="${camp.caavg}">
@@ -601,13 +620,12 @@
 	</div>
 </div>
 <!-- #팝업 { -->
-<div id="layer" class="fstPop">
+<div id="alert" class="fstPop">
 	<div class="confirm_wrap pop_wrap">
 		<h4 class="pop_tit"></h4>
 		<ul class="comm_buttons">
 			<li><button type="button" class="btn_close comm_btn cnc">취소</button></li>
-			<li><button type="button" id="deleteBtn" class="comm_btn cfm">확인</button></li>
-			<li><button type="button" id="confirmBtn" class="btn_close comm_btn cfm">확인</button></li>
+			<li><button type="button" class="btn_close comm_btn cfm">확인</button></li>
 		</ul>
 	</div>
 </div>
