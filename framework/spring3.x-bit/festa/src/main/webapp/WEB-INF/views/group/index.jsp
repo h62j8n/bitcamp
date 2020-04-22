@@ -971,15 +971,15 @@
 				</div>
 				<div class="text_box">
 					<p>
-						<span>경기도 성남시 분당구 느티로 2, AK와이즈플레이스</span> <span>김채찍과노예들</span> <span>사업자등록번호
-							: 123-45-67890</span>
+						<span>FESTA</span>
+						<span>서울 강남구 테헤란로5길 11 YBM빌딩 2층</span>
 					</p>
 					<p>
-						<span>통신판매신고번호 : 제 2020-서울강남-0000</span> <span>대표번호 :
-							010-3332-8616</span> <span>담당자 : 김덕수</span> <span>문의 :
-							010-3332-8616</span>
+						<span>사업자등록번호 : 123-45-67890</span>
+						<span>대표번호 : 02-3453-5404</span>
+						<span>담당자 : 김진혁</span>
 					</p>
-					<p>&copy; DEOKSOORR. All RIGHTS RESERVED.</p>
+					<p>&copy; FESTA. All RIGHTS RESERVED.</p>
 				</div>
 			</div>
 		</div>
