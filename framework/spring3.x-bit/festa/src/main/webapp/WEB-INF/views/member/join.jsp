@@ -36,8 +36,10 @@
             var proprovide =$.urlParam("proprovide");
             
             if(proprovide==1){
+               $('#proid').siblings('.comm_label').addClass('size_s');
                 $('#proid').val(proid);
                $('#proname').val(proname);
+               $('#proname').siblings('.comm_label').addClass('size_s');
                 $('#proprovide').val(proprovide);
                $('#proid').attr("readonly",true);
                $('#propwCheck').val('123123123a');
@@ -46,6 +48,7 @@
                $('#propw').hide();
                 $('#festa3').hide();
                 $('#festa4').hide();
+                $('#namefail').attr('style',"display: none;");
             }
             else{
                $('#proprovide').val(0);

@@ -192,14 +192,14 @@ public class UserDaoImpl implements UserDao{
 
 	//내피드 좋아요갯수 +1
 	@Override
-	public int myFeedLikeOnePlus(MyPostVo post) {
-		return sqlSession.update("user.myFeedLikeOnePlus",post);
+	public int myFeedLikeOnePlus(MyGoodVo myGoodVo) {
+		return sqlSession.update("user.myFeedLikeOnePlus",myGoodVo);
 	}
 
 	//내피드 좋아요갯수 -1
 	@Override
-	public int myFeedLikeOneMinus(MyPostVo post) {
-		return sqlSession.update("user.myFeedLikeOneMinus",post);
+	public int myFeedLikeOneMinus(MyGoodVo myGoodVo) {
+		return sqlSession.update("user.myFeedLikeOneMinus",myGoodVo);
 	}
 
 	//내 좋아요 목록 갱신

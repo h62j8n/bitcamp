@@ -150,6 +150,7 @@ public class MemberServiceImpl implements MemberService {
 			memberDao.memberInsert_social(profileVo);
 			profileVo = memberDao.find_pronum(profileVo);
 			memberDao.myadminInsert(profileVo);
+			model.addAttribute("join",profileVo);
 		}
 
 	}

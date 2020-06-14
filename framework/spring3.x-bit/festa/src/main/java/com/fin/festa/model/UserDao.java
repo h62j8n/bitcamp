@@ -97,10 +97,6 @@ public interface UserDao {
 	
 	void userReportInsertOne(ReportListVo report);
 	
-	int myFeedLikeOnePlus(MyPostVo post);
-	
-	int myFeedLikeOneMinus(MyPostVo post);
-	
 	int groupUserCount(GroupVo group);
 	
 	MyVentureVo myVentureInfo(ProfileVo profile);
@@ -130,5 +126,9 @@ public interface UserDao {
 	CampVo myCampPage(MyVentureVo myVenture);
 
 	int isFollow(MyFollowerVo myFollowerVo);
+
+	int myFeedLikeOnePlus(MyGoodVo myGoodVo);
+
+	int myFeedLikeOneMinus(MyGoodVo myGoodVo);
 	
 }

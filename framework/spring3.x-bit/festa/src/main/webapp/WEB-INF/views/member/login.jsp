@@ -372,9 +372,9 @@
 			</div>
 			<ul class="comm_buttons">
 				<li><button type="button"
-						class="btn_move comm_btn cfm btn_close btn_move">로그인 하기</button></li>
+						class="btn_move comm_btn btn_close btn_move cnc">확인</button></li>
 				<li><button type="button"
-						class="comm_btn sbm btn_close btn_move" data-layer="log3">비밀번호
+						class="comm_btn btn_close btn_move cfm" data-layer="log3">비밀번호
 						찾기</button></li>
 			</ul>
 		</div>
